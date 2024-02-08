@@ -14,23 +14,22 @@ public class UserService implements IService<User>{
     }
 
 
-    public void setStatements(PreparedStatement pst, User user) throws SQLException {
-        pst.setString(1, user.getUsername());
-        pst.setString(2, user.getLastname());
-        pst.setString(3, user.getDate_naiss());
-        pst.setString(4, user.getPassword());
-        pst.setString(5, user.getEmail());
-        pst.setString(6, user.getPoste());
-        pst.setString(7, user.getRole());
-        pst.setString(8, user.getNum_tel());
-        pst.setString(9, user.getAdresse());
-        pst.setString(10, user.getPhoto());
-    }
     @Override
     public void add(User user) throws SQLException {
-        String query = "INSERT INTO user (username, lastname, date_naiss, password, email, poste, role, num_tel, adresse, photo) VALUES (?,?,?,?,?,?,?,?,?,?)";
+        String query = "INSERT INTO user (id, username,firstname, lastname, date_naiss, password, email, poste, role, num_tel, adresse, photo) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
         PreparedStatement pst = connection.prepareStatement(query);
-        setStatements(pst, user);
+        pst.setInt(1, user.getId());
+        pst.setString(2, user.getUsername());
+        pst.setString(3, user.getFirstname());
+        pst.setString(4, user.getLastname());
+        pst.setString(5, user.getDate_naiss());
+        pst.setString(6, user.getPassword());
+        pst.setString(7, user.getEmail());
+        pst.setString(8, user.getPoste());
+        pst.setString(9, user.getRole());
+        pst.setString(10, user.getNum_tel());
+        pst.setString(11, user.getAdresse());
+        pst.setString(12, user.getPhoto());
         pst.executeUpdate();
     }
 
@@ -44,9 +43,20 @@ public class UserService implements IService<User>{
 
     @Override
     public void update(User user) throws SQLException {
-        String query = "UPDATE user SET username = ?, lastname = ?, date_naiss = ?, password = ?, email = ?, poste = ?, role = ?, num_tel = ?, adresse = ?, photo = ? WHERE id = ?";
+        String query = "UPDATE user SET username = ?, firstname = ?, lastname = ?, date_naiss = ?, password = ?, email = ?, poste = ?, role = ?, num_tel = ?, adresse = ?, photo = ? WHERE id = ?";
         PreparedStatement pst = connection.prepareStatement(query);
-        setStatements(pst, user);
+        pst.setString(1, user.getUsername());
+        pst.setString(2, user.getFirstname());
+        pst.setString(3, user.getLastname());
+        pst.setString(4, user.getDate_naiss());
+        pst.setString(5, user.getPassword());
+        pst.setString(6, user.getEmail());
+        pst.setString(7, user.getPoste());
+        pst.setString(8, user.getRole());
+        pst.setString(9, user.getNum_tel());
+        pst.setString(10, user.getAdresse());
+        pst.setString(11, user.getPhoto());
+        pst.setInt(12, user.getId());
         pst.executeUpdate();
     }
 
@@ -57,7 +67,7 @@ public class UserService implements IService<User>{
         ResultSet rs = st.executeQuery(query);
         List<User> users = new ArrayList<>();
         while (rs.next())
-            users.add(new User(rs.getInt("id"), rs.getString("username"), rs.getString("lastname"), rs.getString("date_naiss"), rs.getString("password"), rs.getString("email"), rs.getString("poste"), rs.getString("role"), rs.getString("num_tel"), rs.getString("adresse"), rs.getString("photo")));
+            users.add(new User(rs.getInt("id"), rs.getString("username"), rs.getString("firstname"), rs.getString("lastname"), rs.getString("date_naiss"), rs.getString("password"), rs.getString("email"), rs.getString("poste"), rs.getString("role"), rs.getString("num_tel"), rs.getString("adresse"), rs.getString("photo")));
         return users;
     }
 }

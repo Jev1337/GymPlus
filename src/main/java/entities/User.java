@@ -32,9 +32,10 @@ public class User {
     public User() {
     }
 
-    public User(int id, String username, String lastname, String date_naiss, String password, String email, String poste, String role, String num_tel, String adresse, String photo) {
+    public User(int id, String username, String firstname, String lastname, String date_naiss, String password, String email, String poste, String role, String num_tel, String adresse, String photo) {
         this.id = id;
         this.username = username;
+        this.firstname = firstname;
         this.lastname = lastname;
         this.date_naiss = date_naiss;
         this.password = password;

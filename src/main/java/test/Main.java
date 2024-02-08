@@ -2,7 +2,6 @@ package test;
 
 import entities.*;
 import services.*;
-import utils.MyDatabase;
 
 import java.sql.SQLException;
 
@@ -12,9 +11,10 @@ public class Main {
 
         UserService userService = new UserService();
         try {
-            userService.add(new User(2, "user1", "user1", "user1", "2021-01-01", "password","user@user.user", "user", "user", "12345678", "user1", "user1"));
+            userService.add(new User(4, "user1", "user1", "user1", "2001-01-01", "user1", "user1" , "user1", "user1", "user1", "user1", "user1"));
+            System.out.println("User added successfully");
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
     }
 }

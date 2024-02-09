@@ -1,6 +1,7 @@
-package services;
-import entities.Admin;
+package services.gestionuser;
+import entities.gestionuser.Admin;
 
+import services.IService;
 import utils.MyDatabase;
 import java.sql.*;
 import java.util.ArrayList;

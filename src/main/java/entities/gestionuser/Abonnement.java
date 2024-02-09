@@ -1,4 +1,4 @@
-package entities;
+package entities.gestionuser;
 
 /*
 Database Schema:

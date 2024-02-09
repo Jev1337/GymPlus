@@ -23,8 +23,6 @@ public class User {
     private String date_naiss;
     private String password;
     private String email;
-    private String poste;
-    private String role;
     private String num_tel;
     private String adresse;
     private String photo;
@@ -32,7 +30,7 @@ public class User {
     public User() {
     }
 
-    public User(int id, String username, String firstname, String lastname, String date_naiss, String password, String email, String poste, String role, String num_tel, String adresse, String photo) {
+    public User(int id, String username, String firstname, String lastname, String date_naiss, String password, String email, String num_tel, String adresse, String photo) {
         this.id = id;
         this.username = username;
         this.firstname = firstname;
@@ -40,8 +38,6 @@ public class User {
         this.date_naiss = date_naiss;
         this.password = password;
         this.email = email;
-        this.poste = poste;
-        this.role = role;
         this.num_tel = num_tel;
         this.adresse = adresse;
         this.photo = photo;
@@ -103,21 +99,6 @@ public class User {
         this.email = email;
     }
 
-    public String getPoste() {
-        return poste;
-    }
-
-    public void setPoste(String poste) {
-        this.poste = poste;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
 
     public String getNum_tel() {
         return num_tel;
@@ -152,8 +133,6 @@ public class User {
                 ", date_naiss='" + date_naiss + '\'' +
                 ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
-                ", poste='" + poste + '\'' +
-                ", role='" + role + '\'' +
                 ", num_tel='" + num_tel + '\'' +
                 ", adresse='" + adresse + '\'' +
                 ", photo='" + photo + '\'' +

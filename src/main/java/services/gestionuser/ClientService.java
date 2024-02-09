@@ -1,11 +1,12 @@
-package services;
-import entities.Client;
+package services.gestionuser;
+import entities.gestionuser.Client;
 
+import services.IService;
 import utils.MyDatabase;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-public class ClientService implements IService<Client>{
+public class ClientService implements IService<Client> {
 
     private Connection connection;
     public ClientService() {

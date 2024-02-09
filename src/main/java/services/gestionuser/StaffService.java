@@ -1,11 +1,12 @@
-package services;
-import entities.Staff;
+package services.gestionuser;
+import entities.gestionuser.Staff;
 
+import services.IService;
 import utils.MyDatabase;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-public class StaffService implements IService<Staff>{
+public class StaffService implements IService<Staff> {
 
     private Connection connection;
     public StaffService() {

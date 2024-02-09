@@ -1,13 +1,13 @@
 package test;
 
-import entities.Abonnement;
-import entities.Admin;
-import entities.Client;
-import entities.Staff;
-import services.AbonnementService;
-import services.AdminService;
-import services.ClientService;
-import services.StaffService;
+import entities.gestionuser.Abonnement;
+import entities.gestionuser.Admin;
+import entities.gestionuser.Client;
+import entities.gestionuser.Staff;
+import services.gestionuser.AbonnementService;
+import services.gestionuser.AdminService;
+import services.gestionuser.ClientService;
+import services.gestionuser.StaffService;
 
 import java.sql.SQLException;
 import java.util.Scanner;

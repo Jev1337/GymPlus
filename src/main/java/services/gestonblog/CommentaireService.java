@@ -1,9 +1,8 @@
 package services.gestonblog;
 
-import entities.Commentaire;
+
 import entities.gestionblog.Commentaire;
 import services.IService;
-import utils.MyDataBase;
 import utils.MyDatabase;
 
 import java.sql.*;

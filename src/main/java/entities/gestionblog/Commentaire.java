@@ -1,4 +1,4 @@
-package entities;
+package entities.gestionblog;
 
 import java.sql.Date;
 

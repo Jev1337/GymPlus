@@ -1,34 +1,38 @@
-package services;
+package services.gestonblog;
 
-import entities.Post;
-import utils.MyDataBase;
+
+import entities.gestionblog.Post;
+import services.IService;
+import utils.MyDatabase;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PostServices implements IPostService {
+public class PostServices implements IService {
     private final Connection connection;
 
     public PostServices(){
-        connection = MyDataBase.getInstance().getConnection();
+        connection = MyDatabase.getInstance().getConnection();
     }
     @Override
-    public void ajouter(Post p) throws SQLException {
+    public void add(Object o) throws SQLException {
+        Post p = (Post) o;
         String sql = "insert into post (id_post, user_id, mode, content, date, photo, likes) values ("+p.getId_post() + ", " + p.getUser_id() + ", '"+ p.getMode() + "', '" + p.getContent() +"', '" + p.getDate()+ "', '" + p.getPhoto()+ "', " + p.getLikes() + ");";
         Statement st = connection.createStatement();
         st.executeUpdate(sql);
     }
 
     @Override
-    public void supprimer(int id) throws SQLException {
+    public void delete(int id) throws SQLException {
         String sql = "DELETE FROM post WHERE id_post = "+id+";";
         Statement st = connection.createStatement();
         st.executeUpdate(sql);
     }
 
     @Override
-    public void modifier(Post p) throws SQLException {
+    public void update(Object o) throws SQLException {
+        Post p = (Post) o;
         String sql = "update post set id_post = ?, user_id = ?, mode = ? , content = ?, date = ?, photo = ?, likes = ?";
         PreparedStatement ps = connection.prepareStatement(sql);
         ps.setInt(1, p.getId_post());
@@ -42,7 +46,7 @@ public class PostServices implements IPostService {
     }
 
     @Override
-    public List<Post> recuperer() throws SQLException {
+    public List<Post> getAll() throws SQLException {
         String sql = "select * from post";
         Statement st = connection.createStatement();
         ResultSet rs = st.executeQuery(sql);

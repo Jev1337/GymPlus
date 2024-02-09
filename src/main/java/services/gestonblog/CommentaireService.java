@@ -1,50 +1,52 @@
-package services;
+package services.gestonblog;
 
-import entities.Commentaire;
-import utils.MyDataBase;
+
+import entities.gestionblog.Commentaire;
+import services.IService;
+import utils.MyDatabase;
 
 import java.sql.*;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CommentaireService implements ICommentaireService{
+public class CommentaireService implements IService {
 
     private final Connection connection;
 
     public CommentaireService(){
-        connection = MyDataBase.getInstance().getConnection();
+        connection = MyDatabase.getInstance().getConnection();
     }
     @Override
-    public void ajouter(Commentaire p) throws SQLException {
-        String sql = "insert into commentaire (id_comment, user_id, id_post, content, date, likes) values ("+p.getId_comment() + ", " + p.getUser_id()  + ", "+p.getId_post()+ ", '" + p.getContent() +"', '" + p.getDate()+  "', " + p.getLikes() + ");";
+    public void add(Object o) throws SQLException {
+        Commentaire c = (Commentaire) o;
+        String sql = "insert into commentaire (id_comment, user_id, id_post, content, date, likes) values ("+c.getId_comment() + ", " + c.getUser_id()  + ", "+c.getId_post()+ ", '" + c.getContent() +"', '" + c.getDate()+  "', " + c.getLikes() + ");";
         Statement st = connection.createStatement();
         st.executeUpdate(sql);
     }
 
     @Override
-    public void supprimer(int id) throws SQLException {
+    public void delete(int id) throws SQLException {
         String sql = "DELETE FROM commentaire WHERE id_comment = "+id+";";
         Statement st = connection.createStatement();
         st.executeUpdate(sql);
     }
 
     @Override
-    public void modifier(Commentaire p) throws SQLException {
+    public void update(Object o) throws SQLException {
+        Commentaire c = (Commentaire) o;
         String sql = "update commentaire set id_comment = ?, user_id = ?, id_post = ?, content = ?, date = ?, likes = ?";
         PreparedStatement ps = connection.prepareStatement(sql);
-        ps.setInt(1, p.getId_comment());
-        ps.setInt(2, p.getUser_id());
-        ps.setInt(3, p.getId_post());
-        ps.setString(4, p.getContent());
-        ps.setDate(4, p.getDate());
-        ps.setInt(5, p.getLikes());
+        ps.setInt(1, c.getId_comment());
+        ps.setInt(2, c.getUser_id());
+        ps.setInt(3, c.getId_post());
+        ps.setString(4, c.getContent());
+        ps.setDate(4, c.getDate());
+        ps.setInt(5, c.getLikes());
         ps.executeUpdate();
     }
 
     @Override
-    public List<Commentaire> recuperer() throws SQLException {
+    public List<Commentaire> getAll() throws SQLException {
         String sql = "select * from commentaire";
         Statement st = connection.createStatement();
         ResultSet rs = st.executeQuery(sql);

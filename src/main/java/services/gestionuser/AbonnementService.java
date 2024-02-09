@@ -1,12 +1,13 @@
-package services;
-import entities.Abonnement;
+package services.gestionuser;
+import entities.gestionuser.Abonnement;
+import services.IService;
 import utils.MyDatabase;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AbonnementService implements IService<Abonnement>{
+public class AbonnementService implements IService<Abonnement> {
     private Connection connection;
     public AbonnementService() {
         connection = MyDatabase.getInstance().getConnection();

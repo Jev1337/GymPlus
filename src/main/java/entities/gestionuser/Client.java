@@ -1,6 +1,6 @@
-package entities;
+package entities.gestionuser;
 
-public class Client extends User{
+public class Client extends User {
 
     public Client() {
     }

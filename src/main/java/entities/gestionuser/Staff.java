@@ -1,6 +1,6 @@
-package entities;
+package entities.gestionuser;
 
-public class Staff extends User{
+public class Staff extends User {
     private final String role = "staff";
     private String poste;
 

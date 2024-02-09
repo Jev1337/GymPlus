@@ -86,12 +86,14 @@ CREATE TABLE `equipements_details` (
 --
 
 CREATE TABLE `event_details` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,
   `type` varchar(255) DEFAULT NULL,
   `event_date` datetime DEFAULT NULL,
-  `duree` varchar(255) DEFAULT NULL
+  `duree` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 
 -- --------------------------------------------------------
 
@@ -260,10 +262,7 @@ ALTER TABLE `equipements_details`
   ADD PRIMARY KEY (`id`);
 
 --
--- Index pour la table `event_details`
---
-ALTER TABLE `event_details`
-  ADD PRIMARY KEY (`id`);
+
 
 --
 -- Index pour la table `event_participants`
@@ -365,8 +364,9 @@ ALTER TABLE `detailfacture`
 -- Contraintes pour la table `event_participants`
 --
 ALTER TABLE `event_participants`
-  ADD CONSTRAINT `event_participants_ibfk_1` FOREIGN KEY (`event_details_id`) REFERENCES `event_details` (`id`),
-  ADD CONSTRAINT `event_participants_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
+ADD CONSTRAINT `event_participants_ibfk_1` FOREIGN KEY (`event_details_id`) REFERENCES `event_details` (`id`),
+ADD CONSTRAINT `event_participants_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
+
 
 --
 -- Contraintes pour la table `facture`

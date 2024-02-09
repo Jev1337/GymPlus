@@ -1,25 +1,28 @@
-package services;
+package services.gestionStore;
 
-import entities.detailfacture;
+import entities.gestionStore.detailfacture;
 
 import java.sql.SQLException;
 import java.util.List;
 
-import entities.facture;
-import utils.MyDataBase;
+import entities.gestionStore.facture;
+import services.IService;
+import utils.MyDatabase;
+
 import java.sql.*;
 import java.util.ArrayList;
-public class DetailFactureService implements IServiceDetailFacture{
+public class DetailFactureService implements IService {
 
     private final Connection connection;
 
     public DetailFactureService() {
-        connection = MyDataBase.getInstance().getConnection();
+        connection = MyDatabase.getInstance().getConnection();
     }
     @Override
 
 
-    public void ajouterDetailFacture(detailfacture p) throws SQLException {
+    public void add(Object o) throws SQLException {
+        detailfacture p = (detailfacture) o;
         // Vérifier si la facture existe
         String checkFactureExistsQuery = "SELECT idFacture FROM facture WHERE idFacture = ?";
         PreparedStatement checkFactureExistsStatement = connection.prepareStatement(checkFactureExistsQuery);
@@ -71,7 +74,8 @@ public class DetailFactureService implements IServiceDetailFacture{
 
 
     @Override
-    public void modifierDetailfacture(detailfacture p) throws SQLException {
+    public void update(Object o) throws SQLException {
+        detailfacture p = (detailfacture) o;
         // Vérifier si la facture associée à ce détail existe
         String checkFactureExistsQuery = "SELECT idFacture FROM facture WHERE idFacture = ?";
         PreparedStatement checkFactureExistsStatement = connection.prepareStatement(checkFactureExistsQuery);
@@ -120,7 +124,7 @@ public class DetailFactureService implements IServiceDetailFacture{
 
 
     @Override
-    public void supprimerDetailfacture(int id) throws SQLException {
+    public void delete(int id) throws SQLException {
 
         String sql = "DELETE FROM detailfacture WHERE idDetailFacture = ?";
         PreparedStatement ps = connection.prepareStatement(sql);
@@ -129,7 +133,7 @@ public class DetailFactureService implements IServiceDetailFacture{
     }
 
     @Override
-    public List<detailfacture> recupererDetailfacture() throws SQLException {
+    public List<detailfacture> getAll() throws SQLException {
         String sql = "select * from detailfacture";
         Statement st = connection.createStatement();
         ResultSet rs = st.executeQuery(sql);

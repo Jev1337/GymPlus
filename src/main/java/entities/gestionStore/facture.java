@@ -1,4 +1,4 @@
-package entities;
+package entities.gestionStore;
 
 import java.util.Date;
 

@@ -1,21 +1,23 @@
-package services;
+package services.gestionStore;
 
-import entities.produit;
-import utils.MyDataBase;
+import entities.gestionStore.produit;
+import services.IService;
+import utils.MyDatabase;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProduitService implements IServiceProduit{
+public class ProduitService implements IService {
 
     private final Connection connection;
 
     public ProduitService() {
-        connection = MyDataBase.getInstance().getConnection();
+        connection = MyDatabase.getInstance().getConnection();
     }
 
     @Override
-    public void ajouterProduit(produit p) throws SQLException {
+    public void add(Object o) throws SQLException {
+        produit p = (produit) o;
         String sql = "insert into produit (name,prix,stock,description,categorie,photo,seuil,promo) " +
                 "values('" + p.getName() + "','" + p.getPrix() + "','" + p.getStock() + "','" + p.getDescription() + "','" + p.getCategorie() + "','" + p.getPhoto() + "','" + p.getSeuil() + "','" + p.getPromo() + "')";
         Statement st = connection.createStatement();
@@ -23,7 +25,8 @@ public class ProduitService implements IServiceProduit{
     }
 
     @Override
-    public void modifierProduit(produit p) throws SQLException {
+    public void update(Object o) throws SQLException {
+        produit p = (produit) o;
         String sql = "update produit set name = ?, prix = ?, stock = ?, description = ?, categorie = ?, photo = ? , seuil = ?, promo = ?";
         PreparedStatement ps = connection.prepareStatement(sql);
         ps.setString(1, p.getName());
@@ -38,7 +41,7 @@ public class ProduitService implements IServiceProduit{
     }
 
     @Override
-    public void supprimerProduit(int id) throws SQLException {
+    public void delete(int id) throws SQLException {
 
         String sql = "DELETE FROM produit WHERE idProduit = ?";
         PreparedStatement ps = connection.prepareStatement(sql);
@@ -47,7 +50,7 @@ public class ProduitService implements IServiceProduit{
     }
 
     @Override
-    public List<produit> recupererProduit() throws SQLException {
+    public List<produit> getAll() throws SQLException {
         String sql = "select * from produit";
         Statement st = connection.createStatement();
         ResultSet rs = st.executeQuery(sql);

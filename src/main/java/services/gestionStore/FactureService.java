@@ -1,21 +1,25 @@
-package services;
+package services.gestionStore;
 
-import entities.facture;
+import entities.gestionStore.facture;
 import java.sql.SQLException;
 import java.util.List;
-import utils.MyDataBase;
+
+import services.IService;
+import utils.MyDatabase;
+
 import java.sql.*;
 import java.util.ArrayList;
 
 
-public class FactureService implements IServicefacture{
+public class FactureService implements IService {
 
     private final Connection connection;
     public FactureService() {
-        connection = MyDataBase.getInstance().getConnection();
+        connection = MyDatabase.getInstance().getConnection();
     }
 
-    public void ajouterFacture(facture p) throws SQLException {
+    public void add(Object o) throws SQLException {
+        facture p = (facture) o;
         // Vérifier si l'utilisateur avec l'ID spécifié existe avant d'insérer la facture
         String checkUserExistsQuery = "SELECT id FROM user WHERE id = ?";
         PreparedStatement checkUserExistsStatement = connection.prepareStatement(checkUserExistsQuery);
@@ -60,7 +64,8 @@ public class FactureService implements IServicefacture{
 
  */
 
-    public void modifierfacture(facture p) throws SQLException {
+    public void update(Object o) throws SQLException {
+        facture p = (facture) o;
         // Vérifier si l'utilisateur avec l'ID spécifié existe avant de modifier la facture
         String checkUserExistsQuery = "SELECT id FROM user WHERE id = ?";
         PreparedStatement checkUserExistsStatement = connection.prepareStatement(checkUserExistsQuery);
@@ -88,7 +93,7 @@ public class FactureService implements IServicefacture{
     }
 
     @Override
-    public void supprimerfacture(int id) throws SQLException {
+    public void delete(int id) throws SQLException {
         String sql = "DELETE FROM facture WHERE idFacture = ?";
         PreparedStatement ps = connection.prepareStatement(sql);
         ps.setInt(1, id);
@@ -96,7 +101,7 @@ public class FactureService implements IServicefacture{
     }
 
     @Override
-    public List<facture> recupererfacture() throws SQLException {
+    public List<facture> getAll() throws SQLException {
         String sql = "select * from facture";
         Statement st = connection.createStatement();
         ResultSet rs = st.executeQuery(sql);

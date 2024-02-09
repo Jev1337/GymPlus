@@ -11,7 +11,7 @@ public class MyDatabase {
     private Connection connection;
     private static MyDatabase instance;
 
-    private MyDatabase() {
+    public MyDatabase() {
         try {
             connection = DriverManager.getConnection(URL, USER, PASS);
             System.out.println("Connected to the database");

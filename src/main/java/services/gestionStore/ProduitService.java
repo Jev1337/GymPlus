@@ -7,7 +7,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProduitService implements IService {
+public class ProduitService implements IService<produit> {
 
     private final Connection connection;
 
@@ -16,8 +16,7 @@ public class ProduitService implements IService {
     }
 
     @Override
-    public void add(Object o) throws SQLException {
-        produit p = (produit) o;
+    public void add(produit p) throws SQLException {
         String sql = "insert into produit (name,prix,stock,description,categorie,photo,seuil,promo) " +
                 "values('" + p.getName() + "','" + p.getPrix() + "','" + p.getStock() + "','" + p.getDescription() + "','" + p.getCategorie() + "','" + p.getPhoto() + "','" + p.getSeuil() + "','" + p.getPromo() + "')";
         Statement st = connection.createStatement();
@@ -25,9 +24,8 @@ public class ProduitService implements IService {
     }
 
     @Override
-    public void update(Object o) throws SQLException {
-        produit p = (produit) o;
-        String sql = "update produit set name = ?, prix = ?, stock = ?, description = ?, categorie = ?, photo = ? , seuil = ?, promo = ?";
+    public void update(produit p) throws SQLException {
+        String sql = "UPDATE produit SET name = ?, prix = ?, stock = ?, description = ?, categorie = ?, photo = ? , seuil = ?, promo = ? WHERE idProduit = ?";
         PreparedStatement ps = connection.prepareStatement(sql);
         ps.setString(1, p.getName());
         ps.setFloat(2, p.getPrix());
@@ -37,8 +35,12 @@ public class ProduitService implements IService {
         ps.setString(6, p.getPhoto());
         ps.setInt(7, p.getSeuil());
         ps.setFloat(8, p.getPromo());
+        ps.setInt(9, p.getIdProduit());
         ps.executeUpdate();
+
     }
+
+
 
     @Override
     public void delete(int id) throws SQLException {

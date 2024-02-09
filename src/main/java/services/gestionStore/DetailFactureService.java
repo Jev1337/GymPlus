@@ -47,7 +47,7 @@ public class DetailFactureService implements IService {
         float prixVenteUnitaire = produitResultSet.getFloat("prix");
 
         // Calculer le prix total de l'article
-        float prixTotalArticle = prixVenteUnitaire * p.getQuantite() * p.getTauxRemise();
+        float prixTotalArticle = prixVenteUnitaire * p.getQuantite() * (1-p.getTauxRemise() );
 
 
         // Insérer les détails de la facture
@@ -99,7 +99,7 @@ public class DetailFactureService implements IService {
         float prixVenteUnitaire = produitResultSet.getFloat("prix");
 
         // Calculer le prix total de l'article
-        float prixTotalArticle = prixVenteUnitaire * p.getQuantite() * p.getTauxRemise();
+        float prixTotalArticle = prixVenteUnitaire * p.getQuantite() * (1- p.getTauxRemise());
 
         // Mettre à jour les détails de la facture
         String sql = "UPDATE detailfacture SET prixVenteunitaire = ?, quantite = ?, tauxRemise = ?, prixTotalArticle = ? WHERE idFacture = ? AND idDetailFacture = ? AND idProduit = ?";

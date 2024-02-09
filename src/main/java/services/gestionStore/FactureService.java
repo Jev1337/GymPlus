@@ -66,23 +66,21 @@ public class FactureService implements IService {
 
     public void update(Object o) throws SQLException {
         facture p = (facture) o;
-        // Vérifier si l'utilisateur avec l'ID spécifié existe avant de modifier la facture
+        // Vérifier si l'utilisateur avec l'ID spécifié existe
         String checkUserExistsQuery = "SELECT id FROM user WHERE id = ?";
         PreparedStatement checkUserExistsStatement = connection.prepareStatement(checkUserExistsQuery);
         checkUserExistsStatement.setInt(1, p.getId());
         ResultSet resultSet = checkUserExistsStatement.executeQuery();
 
         if (!resultSet.next()) {
-            // L'utilisateur avec l'ID spécifié n'existe pas, vous pouvez gérer cette situation en levant une exception ou en affichant un message d'erreur
             throw new SQLException("L'utilisateur avec l'ID spécifié n'existe pas.");
         }
 
-        // Mettre à jour la facture une fois que l'utilisateur existe
-        String sql = "UPDATE facture SET prixTatalPaye = ?, methodeDePaiement = ? WHERE id = ?";
+        String sql = "UPDATE facture SET prixTatalPaye = ?, methodeDePaiement = ? WHERE idFacture = ?";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         preparedStatement.setFloat(1, p.getPrixtotalPaye());
         preparedStatement.setString(2, p.getMethodeDePaiement());
-        preparedStatement.setInt(3, p.getId());
+        preparedStatement.setInt(3, p.getIdFacture());
 
         preparedStatement.executeUpdate();
 

@@ -1,6 +1,8 @@
 package entities.gestionStore;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class facture {
 
@@ -9,6 +11,7 @@ public class facture {
     private float prixtatalPaye;
     private String methodeDePaiement;
     private int id;
+    public List<detailfacture> ListeDetails = new ArrayList<>();
 
     public int getIdFacture() {
         return idFacture;

@@ -73,5 +73,44 @@ public class ProduitService implements IService<produit> {
         }
         return produit;
     }
+
+    public produit getOne(int id) throws SQLException {
+        String sql = "SELECT * FROM produit WHERE idProduit = ?";
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ps.setInt(1, id);
+        ResultSet rs = ps.executeQuery();
+
+        produit p = null; // Initialize the product as null
+
+        if (rs.next()) { // Check if the result set has any rows
+            p = new produit();
+            p.setIdProduit(rs.getInt("idProduit"));
+            p.setName(rs.getString("name"));
+            p.setPrix(rs.getFloat("prix"));
+            p.setStock(rs.getInt("stock"));
+            p.setDescription(rs.getString("description"));
+            p.setCategorie(rs.getString("categorie"));
+            p.setPhoto(rs.getString("photo"));
+            p.setSeuil(rs.getInt("seuil"));
+            p.setPromo(rs.getFloat("promo"));
+        }
+
+        rs.close();
+        ps.close();
+
+        return p;
+    }
+
+    public void MAJ_Stock(int nb_article , int id) throws SQLException {
+        //produit p = new produit();
+        produit p = getOne(id);
+        int n = p.getStock()-nb_article;
+        p.setStock(n);
+
+        //p.setIdProduit(id);
+        update(p);
+    }
+
+
 }
 

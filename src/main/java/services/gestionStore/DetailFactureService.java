@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import entities.gestionStore.facture;
+import entities.gestionStore.produit;
 import services.IService;
 import utils.MyDatabase;
 
@@ -47,7 +48,7 @@ public class DetailFactureService implements IService {
         float prixVenteUnitaire = produitResultSet.getFloat("prix");
 
         // Calculer le prix total de l'article
-        float prixTotalArticle = prixVenteUnitaire * p.getQuantite() * (1-p.getTauxRemise() );
+        float prixTotalArticle = prixVenteUnitaire * p.getQuantite() * (1-p.getTauxRemise());
 
 
         // Insérer les détails de la facture
@@ -59,6 +60,10 @@ public class DetailFactureService implements IService {
         preparedStatement.setInt(3, p.getIdProduit());
         preparedStatement.setFloat(4, prixVenteUnitaire);
         preparedStatement.setInt(5, p.getQuantite());
+
+        ProduitService prd = new ProduitService();
+        prd.MAJ_Stock(p.getQuantite() , p.getIdProduit());
+
         preparedStatement.setFloat(6, p.getTauxRemise());
         preparedStatement.setFloat(7, prixTotalArticle);
 
@@ -150,6 +155,28 @@ public class DetailFactureService implements IService {
             p.setPrixtotalArticle(rs.getFloat("prixTotalArticle"));
             detailfacture.add(p);
         }
+        return detailfacture;
+    }
+
+    public List<detailfacture> getDetailFacture(int id) throws SQLException {
+        String sql = "select * from detailfacture WHERE idFacture = ?";
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ps.setInt(1, id);
+        ResultSet rs = ps.executeQuery();
+        List<detailfacture> detailfacture = new ArrayList<>();
+        while (rs.next())
+        {
+            detailfacture p = new detailfacture();
+            p.setIdFacture(rs.getInt("idFacture"));
+            p.setIdDetailFacture(rs.getInt("idDetailFacture"));
+            p.setIdProduit(rs.getInt("idProduit"));
+            p.setPrixVenteUnitaire(rs.getFloat("prixVenteUnitaire"));
+            p.setQuantite(rs.getInt("quantite"));
+            p.setTauxRemise(rs.getFloat("tauxRemise"));
+            p.setPrixtotalArticle(rs.getFloat("prixTotalArticle"));
+            detailfacture.add(p);
+        }
+        rs.close();
         return detailfacture;
     }
 }

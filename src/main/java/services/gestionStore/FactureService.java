@@ -1,5 +1,6 @@
 package services.gestionStore;
 
+import entities.gestionStore.detailfacture;
 import entities.gestionStore.facture;
 import java.sql.SQLException;
 import java.util.List;
@@ -38,6 +39,12 @@ public class FactureService implements IService {
         preparedStatement.setFloat(1, p.getPrixtotalPaye());
         preparedStatement.setString(2, p.getMethodeDePaiement());
         preparedStatement.setInt(3, p.getId());
+
+        DetailFactureService dfs = new DetailFactureService();
+        for (detailfacture df : p.ListeDetails)
+        {
+            dfs.add(df);
+        }
 
         preparedStatement.executeUpdate();
 
@@ -82,6 +89,12 @@ public class FactureService implements IService {
         preparedStatement.setString(2, p.getMethodeDePaiement());
         preparedStatement.setInt(3, p.getIdFacture());
 
+        DetailFactureService dfs = new DetailFactureService();
+        for (detailfacture df : p.ListeDetails)
+        {
+            dfs.update(df);
+        }
+
         preparedStatement.executeUpdate();
 
         // Fermer les ressources
@@ -104,6 +117,7 @@ public class FactureService implements IService {
         Statement st = connection.createStatement();
         ResultSet rs = st.executeQuery(sql);
         List<facture> facture = new ArrayList<>();
+        DetailFactureService dfs = new DetailFactureService();
         while (rs.next())
         {
             facture p = new facture();
@@ -112,6 +126,9 @@ public class FactureService implements IService {
             p.setPrixtotalPaye(rs.getFloat("prixTatalPaye"));
             p.setMethodeDePaiement(rs.getString("methodeDePaiement"));
             p.setId(rs.getInt("id"));
+
+            p.ListeDetails = dfs.getDetailFacture(p.getIdFacture());
+
             facture.add(p);
         }
         return facture;

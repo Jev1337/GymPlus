@@ -13,18 +13,16 @@ public class Planning {
 
     }
 
-    public Planning(int id_Objectif,int id_Coach,String trainningProg,String foodProg){
+    public Planning(int id_Objectif,String trainningProg,String foodProg){
         this.setIdObjectif(id_Objectif);
-        this.setIdCoach(id_Coach);
         this.setTrainingProg(trainningProg);
         this.setFoodProg(foodProg);
 
     }
 
-    public Planning(int id_Planning,int id_Objectif,int id_Coach,String trainningProg,String foodProg){
+    public Planning(int id_Planning,int id_Objectif,String trainningProg,String foodProg){
         this.setId_Planning(id_Planning);
         this.setIdObjectif(id_Objectif);
-        this.setIdCoach(id_Coach);
         this.setTrainingProg(trainningProg);
         this.setFoodProg(foodProg);
 
@@ -78,5 +76,15 @@ public class Planning {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "Planning{" +
+                "id_Planning=" + id_Planning +
+                ", idObjectif=" + idObjectif +
+                ", trainingProg='" + trainingProg + '\'' +
+                ", foodProg='" + foodProg + '\'' +
+                '}' +"\n";
     }
 }

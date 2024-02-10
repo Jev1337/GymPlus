@@ -30,8 +30,21 @@ public class Objectif {
 
     }
 
-    public Objectif(int id_objectif,float poids_Obj,Date dateF,float poids_Act,float taille,String alergie,String typeObj,int CoachId){
+    public Objectif(int id_user,float poids_Obj,Date dateF,float poids_Act,float taille,String alergie,String typeObj,int CoachId){
+        this.setId_user(id_user);
+        this.setPoids_Obj(poids_Obj);
+        this.setDateF(dateF);
+        this.setPoids_Act(poids_Act);
+        this.setTaille(taille);
+        this.setAlergie(alergie);
+        this.setTypeObj(typeObj);
+        this.setCoachId(CoachId);
+
+    }
+
+    public Objectif(int id_objectif,int id_user, float poids_Obj,Date dateF,float poids_Act,float taille,String alergie,String typeObj,int CoachId){
         this.setId_objectif(id_objectif);
+        this.setId_user(id_user);
         this.setPoids_Obj(poids_Obj);
         this.setDateF(dateF);
         this.setPoids_Act(poids_Act);
@@ -138,4 +151,22 @@ public class Objectif {
     public void setCoachId(int coachId) {
         this.coachId = coachId;
     }
+
+    @Override
+    public String toString() {
+            return "objectif{" +
+                    "id Objectif=" + id_objectif +
+                    ", poids Objectif=" + poids_Obj +
+                    ", Date Debut=" + dateD +
+                    ", Date Fin='" + dateF +
+                    ", Poids Actuelle=" + poids_Act +
+                    ", Taille=" + taille +
+                    ", Alergie=" + alergie +
+                    ", Type Objectif=" + typeObj +
+                    ", Coach Name=" + coachName +
+                    '}'+"\n";
+        }
+
+
 }
+

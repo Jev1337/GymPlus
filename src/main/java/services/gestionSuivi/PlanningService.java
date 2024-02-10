@@ -1,14 +1,12 @@
 package services.gestionSuivi;
 
+import entities.gestionSuivi.Objectif;
 import entities.gestionSuivi.Planning;
 import entities.gestionuser.Staff;
 import services.IService;
 import utils.MyDatabase;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,11 +18,10 @@ public class PlanningService implements IService<Planning> {
     @Override
     public void add(Planning plan) throws SQLException {
         try {
-            java.sql.PreparedStatement ps=connection.prepareStatement("INSERT INTO PLANNING(id_Objectif,id_Coach,TrainningProg,FoodProg) VALUES(?,?,?,?,?,?,?)");
+            java.sql.PreparedStatement ps=connection.prepareStatement("INSERT INTO PLANNING(idObjectif,TrainningProg,FoodProg) VALUES(?,?,?)");
             ps.setInt(1,plan.getIdObjectif());
-            ps.setInt(2,plan.getIdCoach());
-            ps.setString(3,plan.getTrainingProg());
-            ps.setString(4,plan.getFoodProg());
+            ps.setString(2,plan.getTrainingProg());
+            ps.setString(3,plan.getFoodProg());
             ps.execute();
             ps.close();
         }catch (Exception e ){
@@ -35,7 +32,7 @@ public class PlanningService implements IService<Planning> {
     @Override
     public void delete(int id) throws SQLException {
         try {
-            java.sql.PreparedStatement ps=  connection.prepareStatement("DELETE FROM PLANNING WHERE `idObjectif `=?");
+            java.sql.PreparedStatement ps=  connection.prepareStatement("DELETE FROM PLANNING WHERE `id_Planning`= ?");
             ps.setInt(1,id);
             ps.executeUpdate();
             ps.close();
@@ -48,15 +45,14 @@ public class PlanningService implements IService<Planning> {
     @Override
     public void update(Planning plan) throws SQLException {
         try {
-            int coachId = 2;
             java.sql.PreparedStatement ps = connection.prepareStatement("UPDATE `PLANNING` \n "
                     +"SET  \n "
                     +"`TrainningProg`=?, \n"
-                    +"`FoodProg`=?\n"
-                    + "WHERE `id_Coach`=?");
+                    +"`FoodProg`=? \n"
+                    + "WHERE `id_Planning`=?");
             ps.setString(1, plan.getTrainingProg());
             ps.setString(2, plan.getFoodProg());
-            ps.setInt(3, coachId);
+            ps.setInt(3, plan.getId_Planning());
             ps.executeUpdate();
             ps.close();
 
@@ -68,15 +64,20 @@ public class PlanningService implements IService<Planning> {
 
     @Override
     public List<Planning> getAll() throws SQLException {
+       int userId =2;
         List<Planning> plans =new ArrayList<>();
-        String query ="SELECT * FROM PLANNING";
-        Statement st = connection.createStatement();
-        ResultSet rs = st.executeQuery(query);
+        String query = "SELECT p.id_Planning, p.idObjectif, p.TrainningProg, p.FoodProg " +
+                "FROM PLANNING p " +
+                "JOIN OBJECTIF o ON o.idObjectif = p.idObjectif " +
+                "WHERE o.userId = ?";
+
+        PreparedStatement ps = connection.prepareStatement(query);
+        ps.setInt(1, userId);
+        ResultSet rs = ps.executeQuery();
         while (rs.next()) {
             Planning plannings = new Planning();
             plannings.setId_Planning(rs.getInt("id_Planning"));
             plannings.setIdObjectif(rs.getInt("idObjectif"));
-            plannings.setIdCoach(rs.getInt("id_Coach"));
             plannings.setTrainingProg(rs.getString("TrainningProg"));
             plannings.setFoodProg(rs.getString("FoodProg"));
             plans.add(plannings);

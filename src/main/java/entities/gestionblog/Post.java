@@ -12,8 +12,8 @@ public class Post {
     private String photo;
     private int likes;
 
-    public Post(int id_post, int user_id, String mode, String content, Date date, String photo, int likes) {
-        this.id_post = id_post;
+    public Post( int user_id, String mode, String content, Date date, String photo, int likes) {
+        //this.id_post = id_post;
         this.user_id = user_id;
         this.mode = mode;
         this.content = content;

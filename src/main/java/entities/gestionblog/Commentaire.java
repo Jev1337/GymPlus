@@ -10,8 +10,8 @@ public class Commentaire {
     private Date date;
     private int likes;
 
-    public Commentaire(int id_comment, int user_id, int id_post, String content, Date date, int likes) {
-        this.id_comment = id_comment;
+    public Commentaire( int user_id, int id_post, String content, Date date, int likes) {
+        //this.id_comment = id_comment;
         this.user_id = user_id;
         this.id_post = id_post;
         this.content = content;
@@ -79,6 +79,6 @@ public class Commentaire {
                 ", content='" + content + '\'' +
                 ", date=" + date +
                 ", likes=" + likes +
-                '}';
+                '}'+ "\n";
     }
 }

@@ -12,7 +12,7 @@
    <children>
       <Pane fx:id="signup_pane" layoutX="300.0" prefHeight="400.0" prefWidth="300.0" visible="false">
          <children>
-            <Button fx:id="signup_btn" layoutX="84.0" layoutY="337.0" mnemonicParsing="false" onAction="#signup_btn_act" prefHeight="41.0" prefWidth="132.0" style="-color-button-fg: white; -color-button-bg: #ff4b2b; -color-button-border-focused: white;" styleClass="rounded" text="Next">
+            <Button fx:id="signup_btn" layoutX="84.0" layoutY="337.0" mnemonicParsing="false" onAction="#signup_btn_act" prefHeight="41.0" prefWidth="132.0" style="-color-button-fg: white; -color-button-bg: #00aaff; -color-button-border-focused: white;" styleClass="rounded" text="Next">
                <font>
                   <Font name="Open Sans Regular" size="12.0" />
                </font>
@@ -21,7 +21,7 @@
                </cursor>
             </Button>
             <TextField layoutX="49.0" layoutY="87.0" prefHeight="41.0" prefWidth="202.0" promptText="Email" />
-            <Label layoutX="112.0" layoutY="21.0" text="Sign Up">
+            <Label layoutX="112.0" layoutY="31.0" text="Sign Up">
                <font>
                   <Font name="Open Sans Regular" size="22.0" />
                </font>
@@ -33,7 +33,7 @@
       </Pane>
       <Pane fx:id="signin_pane" prefHeight="400.0" prefWidth="300.0">
          <children>
-            <Button fx:id="signin_btn" layoutX="85.0" layoutY="272.0" mnemonicParsing="false" onAction="#signin_btn_act" prefHeight="41.0" prefWidth="132.0" style="-color-button-fg: white; -color-button-bg: #ff4b2b; -color-button-border-focused: white;" styleClass="rounded" text="Sign In">
+            <Button fx:id="signin_btn" layoutX="85.0" layoutY="272.0" mnemonicParsing="false" onAction="#signin_btn_act" prefHeight="41.0" prefWidth="132.0" style="-color-button-fg: white; -color-button-bg: #00aaff; -color-button-border-focused: white;" styleClass="rounded" text="Sign In">
                <font>
                   <Font name="Open Sans Regular" size="12.0" />
                </font>
@@ -48,32 +48,13 @@
                </font>
             </Label>
             <TextField layoutX="50.0" layoutY="193.0" prefHeight="41.0" prefWidth="202.0" promptText="Password" />
-            <Label layoutX="90.0" layoutY="241.0" style="-fx-cursor: hand;" text="Forgot your password?" />
-         </children>
-      </Pane>
-      <Pane fx:id="signup_switch_pane" layoutX="300.0" prefHeight="400.0" prefWidth="300.0" style="-fx-background-color: linear-gradient(to right,#ff4b2b,#ff416c);;">
-         <children>
-            <Label layoutX="52.0" layoutY="91.0" style="-fx-text-fill: -color-light;" text="Hello, Friend!">
-               <font>
-                  <Font name="Open Sans Regular" size="32.0" />
-               </font>
-            </Label>
-            <Label layoutX="27.0" layoutY="147.0" prefHeight="53.0" prefWidth="246.0" style="-fx-text-fill: -color-light;" text="Enter your personal details and&#10;start journey with us" textAlignment="CENTER">
-               <font>
-                  <Font name="Open Sans Regular" size="16.0" />
-               </font>
-            </Label>
-            <Button fx:id="signup_switch_btn" layoutX="84.0" layoutY="216.0" mnemonicParsing="false" onAction="#signup_switch_btn_act" prefHeight="41.0" prefWidth="132.0" style="-color-button-fg: white; -color-button-bg: linear-gradient(to right,#ff4b2b,#ff416c); -color-button-fg-hover: black; -color-button-bg-hover: white; -color-button-border-focused: white;" styleClass="rounded" text="Sign Up">
+            <Label layoutX="90.0" layoutY="241.0" style="-fx-cursor: hand;" text="Forgot your password?">
                <font>
                   <Font name="Open Sans Regular" size="12.0" />
-               </font>
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-            </Button>
+               </font></Label>
          </children>
       </Pane>
-      <Pane fx:id="signin_switch_pane" prefHeight="400.0" prefWidth="300.0" style="-fx-background-color: linear-gradient(to right,#ff4b2b,#ff416c);;" visible="false">
+      <Pane fx:id="signin_switch_pane" prefHeight="400.0" prefWidth="300.0" style="-fx-background-color: linear-gradient(to right, #00aaff, #00688b);;" visible="false">
          <children>
             <Label layoutX="37.0" layoutY="91.0" style="-fx-text-fill: -color-light;" text="Welcome Back!">
                <font>
@@ -85,9 +66,50 @@
                   <Font name="Open Sans Regular" size="16.0" />
                </font>
             </Label>
-            <Button fx:id="signin_switch_btn" layoutX="84.0" layoutY="216.0" mnemonicParsing="false" onAction="#signin_switch_btn_act" prefHeight="41.0" prefWidth="132.0" style="-color-button-fg: white; -color-button-bg: linear-gradient(to right,#ff4b2b,#ff416c); -color-button-fg-hover: black; -color-button-bg-hover: white; -color-button-border-focused: white;" styleClass="rounded" text="Sign In">
+            <Button fx:id="signin_switch_btn" layoutX="84.0" layoutY="216.0" mnemonicParsing="false" onAction="#signin_switch_btn_act" prefHeight="41.0" prefWidth="132.0" style="-color-button-fg: white; -color-button-bg: linear-gradient(to right, #00aaff, #00688b);; -color-button-fg-hover: black; -color-button-bg-hover: white; -color-button-border-focused: white;" styleClass="rounded" text="Sign In">
                <font>
                   <Font name="Open Sans Regular" size="12.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+         </children>
+      </Pane>
+      <Pane fx:id="signup_switch_pane" layoutX="300.0" prefHeight="400.0" prefWidth="300.0" style="-fx-background-color: linear-gradient(to right, #00aaff, #00688b);;">
+         <children>
+            <Label layoutX="52.0" layoutY="91.0" style="-fx-text-fill: -color-light;" text="Hello, Friend!">
+               <font>
+                  <Font name="Open Sans Regular" size="32.0" />
+               </font>
+            </Label>
+            <Label layoutX="27.0" layoutY="147.0" prefHeight="53.0" prefWidth="246.0" style="-fx-text-fill: -color-light;" text="Enter your personal details and&#10;start journey with us" textAlignment="CENTER">
+               <font>
+                  <Font name="Open Sans Regular" size="16.0" />
+               </font>
+            </Label>
+            <Button fx:id="signup_switch_btn" layoutX="84.0" layoutY="216.0" mnemonicParsing="false" onAction="#signup_switch_btn_act" prefHeight="41.0" prefWidth="132.0" style="-color-button-fg: white; -color-button-bg: linear-gradient(to right, #00aaff, #00688b);; -color-button-fg-hover: black; -color-button-bg-hover: white; -color-button-border-focused: white;" styleClass="rounded" text="Sign Up">
+               <font>
+                  <Font name="Open Sans Regular" size="12.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+         </children>
+      </Pane>
+      <Pane prefHeight="17.0" prefWidth="600.0" style="-fx-background-color: linear-gradient(to right, #00aaff, #005f7a);;">
+         <children>
+            <Button fx:id="close_btn" layoutX="570.0" layoutY="-7.0" mnemonicParsing="false" onAction="#close_btn_act" style="-fx-background-color: transparent;" styleClass="rounded" text="X" textFill="WHITE">
+               <font>
+                  <Font name="Open Sans Regular" size="11.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor></Button>
+            <Button fx:id="minimize_btn" layoutX="548.0" layoutY="-7.0" mnemonicParsing="false" onAction="#minimize_btn_act" style="-fx-background-color: transparent;" styleClass="rounded" text="_" textFill="WHITE">
+               <font>
+                  <Font name="Open Sans Regular" size="11.0" />
                </font>
                <cursor>
                   <Cursor fx:constant="HAND" />

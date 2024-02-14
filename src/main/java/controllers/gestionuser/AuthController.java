@@ -1,11 +1,15 @@
 package controllers.gestionuser;
 
 import animatefx.animation.*;
+import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 
@@ -16,7 +20,11 @@ public class AuthController {
     private FadeOutLeft fadeOutLeftAnimation = new FadeOutLeft();
     private FadeOutRight fadeOutRightAnimation = new FadeOutRight();
 
+    @FXML
+    private Button close_btn;
 
+    @FXML
+    private Button minimize_btn;
     @FXML
     private Button signin_btn;
 
@@ -41,10 +49,27 @@ public class AuthController {
     @FXML
     private Pane signup_switch_pane;
 
-
+    @FXML
+    void close_btn_act(ActionEvent event) {
+        Stage stage = (Stage) close_btn.getScene().getWindow();
+        stage.close();
+    }
+    @FXML
+    void minimize_btn_act(ActionEvent event) {
+        Stage stage = (Stage) minimize_btn.getScene().getWindow();
+        stage.setIconified(true);
+    }
     @FXML
     void signin_btn_act(ActionEvent event) {
-
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/userDashboard.fxml"));
+            Parent root = loader.load();
+            signin_btn.getScene().getWindow().setWidth(1200);
+            signin_btn.getScene().getWindow().setHeight(720);
+            signin_btn.getScene().setRoot(root);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
     @FXML
     void signup_btn_act(ActionEvent event) {

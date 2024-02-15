@@ -98,7 +98,7 @@
             </Button>
          </children>
       </Pane>
-      <Pane prefHeight="17.0" prefWidth="600.0" style="-fx-background-color: linear-gradient(to right, #00aaff, #005f7a);;">
+      <Pane fx:id="dragpane" prefHeight="17.0" prefWidth="600.0" style="-fx-background-color: linear-gradient(to right, #00aaff, #005f7a);;">
          <children>
             <Button fx:id="close_btn" layoutX="570.0" layoutY="-7.0" mnemonicParsing="false" onAction="#close_btn_act" style="-fx-background-color: transparent;" styleClass="rounded" text="X" textFill="WHITE">
                <font>

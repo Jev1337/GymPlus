@@ -3,11 +3,13 @@ package controllers.gestionuser;
 import animatefx.animation.*;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -48,6 +50,8 @@ public class AuthController {
 
     @FXML
     private Pane signup_switch_pane;
+    @FXML
+    private Pane dragpane;
 
     @FXML
     void close_btn_act(ActionEvent event) {
@@ -123,9 +127,29 @@ public class AuthController {
         fadeInLeftAnimation.play();
         fadeInRightAnimation.setNode(signup_switch_pane);
         fadeInRightAnimation.play();
+        initDecoratedStage();
     }
 
-
+    private double xOffset = 0;
+    private double yOffset = 0;
+    private void initDecoratedStage(){
+        dragpane.setOnMousePressed(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                Stage primaryStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                xOffset = primaryStage.getX() - event.getScreenX();
+                yOffset = primaryStage.getY() - event.getScreenY();
+            }
+        });
+        dragpane.setOnMouseDragged(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                Stage primaryStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                primaryStage.setX(event.getScreenX() + xOffset);
+                primaryStage.setY(event.getScreenY() + yOffset);
+            }
+        });
+    }
 
 
 }

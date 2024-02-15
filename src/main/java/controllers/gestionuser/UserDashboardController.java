@@ -7,7 +7,9 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
@@ -23,14 +25,21 @@ import javafx.util.Duration;
 
 public class UserDashboardController {
 
-    private FadeIn fadeInAnimation = new FadeIn();
+    private FadeIn[] fadeInAnimation = new FadeIn[8];
+
     private FadeOutRight fadeOutRightAnimation = new FadeOutRight();
     private FadeInRight fadeInRightAnimation = new FadeInRight();
 
     @FXML
     private ScrollPane UserHomePane;
+
     @FXML
     private ScrollPane UserInfoPane;
+
+    @FXML
+    private ScrollPane UserSubscriptionPane;
+    @FXML
+    private ScrollPane UserStorePane;
 
     @FXML
     private FontAwesomeIconView bars_btn;
@@ -39,7 +48,19 @@ public class UserDashboardController {
     private Pane bars_pane;
 
     @FXML
+    private Button blog_btn;
+
+    @FXML
     private Button close_btn;
+
+    @FXML
+    private ImageView cover_imageview;
+
+    @FXML
+    private Pane dragpane;
+
+    @FXML
+    private Button event_btn;
 
     @FXML
     private Button home_btn;
@@ -51,31 +72,19 @@ public class UserDashboardController {
     private Button minimize_btn;
 
     @FXML
+    private Button objective_btn;
+
+    @FXML
     private Button settings_btn;
 
     @FXML
     private Button shop_btn;
 
-    @FXML
-    private Button subscription_btn;
 
     @FXML
-    private FontAwesomeIconView user_btn;
-
-    @FXML
-    private ComboBox<String> stat_combobox;
-
-    @FXML
-    private LineChart<String, Number> stat_linechart;
-
-    @FXML
-    private BarChart<String, Number> stat_barchart;
-
-    @FXML
-    private Pane dragpane;
-
-    @FXML
-    private ImageView cover_imageview;
+    void settings_btn_clicked(MouseEvent event) {
+        switchToPane(UserSettingsPane);
+    }
 
     @FXML
     void home_btn_act(ActionEvent event) {
@@ -84,30 +93,42 @@ public class UserDashboardController {
 
     @FXML
     void logout_btn_act(ActionEvent event) {
-
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/authInterface.fxml"));
+            Parent root = loader.load();
+            logout_btn.getScene().getWindow().setWidth(600);
+            logout_btn.getScene().getWindow().setHeight(400);
+            logout_btn.getScene().setRoot(root);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    @FXML
+    void logout_btn_clicked(MouseEvent event) {
+        logout_btn_act(null);
     }
 
     @FXML
     void settings_btn_act(ActionEvent event) {
-
+        switchToPane(UserSettingsPane);
     }
 
     @FXML
     void shop_btn_act(ActionEvent event) {
-
+        switchToPane(UserStorePane);
     }
 
     @FXML
     void subscription_btn_act(ActionEvent event) {
-
+        switchToPane(UserSubscriptionPane);
     }
     @FXML
     void subscription_btn_clicked(MouseEvent event) {
-
+        switchToPane(UserSubscriptionPane);
     }
     @FXML
     void shop_btn_clicked(MouseEvent event) {
-
+        switchToPane(UserStorePane);
     }
     @FXML
     void home_btn_clicked(MouseEvent event) {
@@ -126,16 +147,9 @@ public class UserDashboardController {
             nullOpacityAll();
         } else {
             visibleAll();
-            fadeInAnimation.setNode(home_btn);
-            fadeInAnimation.play();
-            fadeInAnimation.setNode(settings_btn);
-            fadeInAnimation.play();
-            fadeInAnimation.setNode(shop_btn);
-            fadeInAnimation.play();
-            fadeInAnimation.setNode(logout_btn);
-            fadeInAnimation.play();
-            fadeInAnimation.setNode(subscription_btn);
-            fadeInAnimation.play();
+            for (FadeIn fadeIn : fadeInAnimation)
+                fadeIn.play();
+
         }
         Duration cycleDuration = Duration.millis(250);
         Timeline timeline = new Timeline(
@@ -145,6 +159,62 @@ public class UserDashboardController {
         timeline.play();
         timeline.setOnFinished(e -> bars_btn.setDisable(false));
 
+    }
+
+    @FXML
+    private Button subscription_btn;
+
+    @FXML
+    private FontAwesomeIconView user_btn;
+
+    @FXML
+    private BarChart<String, Number> stat_barchart;
+
+    @FXML
+    private ComboBox<String> stat_combobox;
+
+    @FXML
+    private LineChart<String, Number> stat_linechart;
+
+    @FXML
+    private ScrollPane UserObjectivePane;
+
+    @FXML
+    private ScrollPane UserBlogPane;
+
+    @FXML
+    private ScrollPane UserEventPane;
+    @FXML
+    private ScrollPane UserSettingsPane;
+
+    @FXML
+    void blog_btn_act(ActionEvent event) {
+        switchToPane(UserBlogPane);
+    }
+
+    @FXML
+    void blog_btn_clicked(MouseEvent event) {
+        switchToPane(UserBlogPane);
+    }
+
+    @FXML
+    void event_btn_act(ActionEvent event) {
+        switchToPane(UserEventPane);
+    }
+
+    @FXML
+    void event_btn_clicked(MouseEvent event) {
+        switchToPane(UserEventPane);
+    }
+
+    @FXML
+    void objective_btn_act(ActionEvent event) {
+        switchToPane(UserObjectivePane);
+    }
+
+    @FXML
+    void objective_btn_clicked(MouseEvent event) {
+        switchToPane(UserObjectivePane);
     }
 
     @FXML
@@ -167,6 +237,15 @@ public class UserDashboardController {
     public void initialize() {
         fadeInRightAnimation.setNode(UserHomePane);
         fadeInRightAnimation.play();
+        stat_combobox.getItems().addAll(FXCollections.observableArrayList("Abonnements", "Clients", "Staff"));
+        initProfile();
+        initCharts();
+        setFitToWidthAll();
+        initAnimations();
+        initDecoratedStage();
+    }
+
+    private void initDecoratedStage(){
         dragpane.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -183,21 +262,41 @@ public class UserDashboardController {
                 primaryStage.setY(event.getScreenY() + yOffset);
             }
         });
+    }
+    private void initProfile(){
         Rectangle clip = new Rectangle(cover_imageview.getFitWidth(), cover_imageview.getFitHeight());
         clip.setArcWidth(30);
         clip.setArcHeight(30);
         cover_imageview.setClip(clip);
-        UserHomePane.setFitToWidth(true);
-        UserInfoPane.setFitToWidth(true);
-        stat_combobox.getItems().addAll(FXCollections.observableArrayList("Abonnements", "Clients", "Staff"));
-        initCharts();
     }
 
+    private void setFitToWidthAll(){
+        UserHomePane.setFitToWidth(true);
+        UserInfoPane.setFitToWidth(true);
+        UserObjectivePane.setFitToWidth(true);
+        UserBlogPane.setFitToWidth(true);
+        UserEventPane.setFitToWidth(true);
+        UserSubscriptionPane.setFitToWidth(true);
+        UserStorePane.setFitToWidth(true);
+        UserSettingsPane.setFitToWidth(true);
+    }
     private ScrollPane getCurrentPane(){
         if(UserHomePane.isVisible())
             return UserHomePane;
         if(UserInfoPane.isVisible())
             return UserInfoPane;
+        if(UserObjectivePane.isVisible())
+            return UserObjectivePane;
+        if(UserBlogPane.isVisible())
+            return UserBlogPane;
+        if(UserEventPane.isVisible())
+            return UserEventPane;
+        if(UserSubscriptionPane.isVisible())
+            return UserSubscriptionPane;
+        if(UserStorePane.isVisible())
+            return UserStorePane;
+        if (UserSettingsPane.isVisible())
+            return UserSettingsPane;
         return null;
     }
 
@@ -208,10 +307,22 @@ public class UserDashboardController {
         fadeOutRightAnimation.play();
         fadeOutRightAnimation.setOnFinished(e -> {
             getCurrentPane().setVisible(false);
+            node.setOpacity(0);
             node.setVisible(true);
             fadeInRightAnimation.setNode(node);
             fadeInRightAnimation.play();
         });
+    }
+
+    private void initAnimations(){
+        fadeInAnimation[0] = new FadeIn(home_btn);
+        fadeInAnimation[1] = new FadeIn(settings_btn);
+        fadeInAnimation[2] = new FadeIn(shop_btn);
+        fadeInAnimation[3] = new FadeIn(logout_btn);
+        fadeInAnimation[4] = new FadeIn(subscription_btn);
+        fadeInAnimation[5] = new FadeIn(objective_btn);
+        fadeInAnimation[6] = new FadeIn(event_btn);
+        fadeInAnimation[7] = new FadeIn(blog_btn);
     }
     private void visibleAll(){
         home_btn.setVisible(true);
@@ -219,6 +330,9 @@ public class UserDashboardController {
         shop_btn.setVisible(true);
         logout_btn.setVisible(true);
         subscription_btn.setVisible(true);
+        objective_btn.setVisible(true);
+        event_btn.setVisible(true);
+        blog_btn.setVisible(true);
     }
 
     private void invisibleAll(){
@@ -227,6 +341,9 @@ public class UserDashboardController {
         shop_btn.setVisible(false);
         logout_btn.setVisible(false);
         subscription_btn.setVisible(false);
+        objective_btn.setVisible(false);
+        event_btn.setVisible(false);
+        blog_btn.setVisible(false);
     }
     private void nullOpacityAll(){
         home_btn.setOpacity(0);
@@ -234,6 +351,9 @@ public class UserDashboardController {
         shop_btn.setOpacity(0);
         logout_btn.setOpacity(0);
         subscription_btn.setOpacity(0);
+        objective_btn.setOpacity(0);
+        event_btn.setOpacity(0);
+        blog_btn.setOpacity(0);
     }
 
 

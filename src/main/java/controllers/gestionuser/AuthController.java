@@ -66,7 +66,7 @@ public class AuthController {
     @FXML
     void signin_btn_act(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/userDashboard.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/staffDashboard.fxml"));
             Parent root = loader.load();
             signin_btn.getScene().getWindow().setWidth(1200);
             signin_btn.getScene().getWindow().setHeight(720);

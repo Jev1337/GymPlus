@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="565.0" spacing="10.0" styleClass="postBackground" stylesheets="@../../css/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.BlogController.PostController">
+   <children>
+      <HBox alignment="CENTER_LEFT" prefHeight="60.0" spacing="10.0">
+         <children>
+            <ImageView fx:id="imgProfile" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" />
+            <VBox alignment="CENTER_LEFT" prefHeight="60.0" prefWidth="413.0">
+               <children>
+                  <Label fx:id="userNameTxt" text="Username">
+                     <font>
+                        <Font name="Segoe UI Semibold" size="18.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="dateTxt" layoutX="10.0" layoutY="10.0" text="1h" textFill="#616770">
+                     <font>
+                        <Font name="Segoe UI Historic" size="15.0" />
+                     </font>
+                  </Label>
+               </children>
+            </VBox>
+            <Pane prefHeight="60.0" prefWidth="91.0" />
+            <ImageView fitHeight="50.0" fitWidth="50.0" layoutX="30.0" layoutY="15.0" pickOnBounds="true" preserveRatio="true" />
+         </children>
+         <padding>
+            <Insets left="20.0" right="20.0" />
+         </padding></HBox>
+      <Pane maxWidth="500.0" prefHeight="1.0" style="-fx-background-color: #F0F2F1;" />
+      <Label fx:id="captionTxt" maxWidth="1.7976931348623157E308" text="Caption">
+         <VBox.margin>
+            <Insets left="20.0" right="20.0" />
+         </VBox.margin>
+         <font>
+            <Font name="Segoe UI Historic" size="18.0" />
+         </font>
+      </Label>
+      <ImageView fx:id="imgPost" fitHeight="535.0" fitWidth="535.0" pickOnBounds="true" preserveRatio="true" />
+      <HBox alignment="CENTER_RIGHT" prefHeight="10.0" prefWidth="200.0" spacing="10.0">
+         <children>
+            <Label fx:id="nbLikes" text="nb likes" textFill="#616770">
+               <font>
+                  <Font name="Segoe UI Historic" size="15.0" />
+               </font>
+            </Label>
+            <Label fx:id="nbComnts" prefWidth="97.0" text="nb comments" textFill="#616770">
+               <font>
+                  <Font name="Segoe UI Historic" size="15.0" />
+               </font>
+            </Label>
+         </children>
+         <padding>
+            <Insets left="20.0" right="20.0" />
+         </padding>
+      </HBox>
+      <Pane maxWidth="500.0" prefHeight="1.0" style="-fx-background-color: #F0F2F1;" VBox.vgrow="ALWAYS" />
+      <HBox alignment="CENTER_LEFT" nodeOrientation="LEFT_TO_RIGHT" VBox.vgrow="ALWAYS">
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+         <children>
+            <HBox fx:id="likeBtnContainer" alignment="CENTER" onMouseClicked="#addLike" prefHeight="50.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <Label fx:id="likeBtn" text="LIKE" textFill="#616770">
+                     <font>
+                        <Font name="Segoe UI Semibold" size="18.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <Pane layoutX="65.0" layoutY="10.0" prefHeight="50.0" prefWidth="1.0" style="-fx-background-color: #F0F2F5;">
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+            </Pane>
+            <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <Label text="COMMENT" textFill="#616770">
+                     <font>
+                        <Font name="Segoe UI Semibold" size="18.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+         </children>
+         <padding>
+            <Insets bottom="10.0" />
+         </padding>
+      </HBox>
+   </children>
+</VBox>

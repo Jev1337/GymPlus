@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="808.0" prefWidth="1156.0" styleClass="bodyBackground" stylesheets="@../../css/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.BlogController.AddBlogController">
+    <top>
+        <HBox alignment="CENTER" prefHeight="60.0" prefWidth="906.0" style="-fx-spacing: 10;" styleClass="navbarBackground" stylesheets="@../../css/style.css" BorderPane.alignment="CENTER_RIGHT">
+            <children>
+                <TextField minHeight="35.0" prefWidth="300.0" promptText="Search..." styleClass="textField" stylesheets="@../../css/style.css">
+                    <font>
+                        <Font size="16.0" />
+                    </font>
+                    <padding>
+                        <Insets left="15.0" />
+                    </padding>
+                </TextField>
+                <Button contentDisplay="CENTER" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" styleClass="roundButton" stylesheets="@../../css/style.css">
+                    <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" styleClass="roundButton">
+                            <image>
+                                <Image url="@../../icon/searchIcon.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+            </children>
+        </HBox>
+    </top>
+    <center>
+        <HBox prefHeight="420.0" prefWidth="906.0" BorderPane.alignment="CENTER">
+            <children>
+                <Pane prefHeight="200.0" prefWidth="200.0" styleClass="bodyBackground" HBox.hgrow="ALWAYS" />
+                <ScrollPane prefWidth="621.0" styleClass="bodyBackground" stylesheets="@../../css/style.css">
+                    <HBox.margin>
+                        <Insets top="10.0" />
+                    </HBox.margin>
+                    <content>
+                        <VBox alignment="TOP_CENTER" prefHeight="429.0" prefWidth="568.0" spacing="10.0" styleClass="bodyBackground">
+                            <children>
+                                <VBox alignment="TOP_CENTER" prefHeight="190.0" prefWidth="400.0" spacing="10.0" styleClass="postBackground" stylesheets="@../../css/style.css">
+                                    <children>
+                                        <VBox prefHeight="162.0" prefWidth="546.0">
+                                            <children>
+                                                <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="514.0" spacing="10.0">
+                                                    <children>
+                                                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                                            <image>
+                                                                <Image url="@../../icon/avatar.png" />
+                                                            </image>
+                                                        </ImageView>
+                                                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="user's name">
+                                                            <font>
+                                                                <Font size="15.0" />
+                                                            </font>
+                                                        </Text>
+                                                    </children>
+                                                    <padding>
+                                                        <Insets left="10.0" right="10.0" />
+                                                    </padding>
+                                                </HBox>
+                                                <TextArea fx:id="contentTxt" prefHeight="70.0" prefWidth="400.0" promptText="express your thoughts ...">
+                                                    <VBox.margin>
+                                                        <Insets left="10.0" right="10.0" top="5.0" />
+                                                    </VBox.margin>
+                                                </TextArea>
+                                                <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="542.0" spacing="10.0">
+                                                    <children>
+                                                        <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="60.0" mnemonicParsing="false" onAction="#addPost" styleClass="simpleButton" stylesheets="@../../css/style.css" text="Post" />
+                                                        <Pane prefHeight="12.0" prefWidth="1.0" style="-fx-background-color: #F0F2F1;">
+                                                            <HBox.margin>
+                                                                <Insets bottom="5.0" top="5.0" />
+                                                            </HBox.margin>
+                                                        </Pane>
+                                                        <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="60.0" mnemonicParsing="false" styleClass="simpleButton" text="Image" />
+                                                    </children>
+                                                    <padding>
+                                                        <Insets left="10.0" right="10.0" />
+                                                    </padding>
+                                                    <VBox.margin>
+                                                        <Insets top="10.0" />
+                                                    </VBox.margin>
+                                                </HBox>
+                                            </children>
+                                            <padding>
+                                                <Insets left="10.0" right="10.0" />
+                                            </padding>
+                                        </VBox>
+                                    </children>
+                                    <padding>
+                                        <Insets bottom="10.0" top="10.0" />
+                                    </padding>
+                                </VBox>
+                        <VBox fx:id="listPosts" prefHeight="205.0" prefWidth="548.0" spacing="10.0">
+                           <VBox.margin>
+                              <Insets top="10.0" />
+                           </VBox.margin></VBox>
+                            </children>
+                            <padding>
+                                <Insets left="10.0" right="10.0" />
+                            </padding>
+                        </VBox>
+                    </content>
+                </ScrollPane>
+                <Pane layoutX="10.0" layoutY="10.0" prefHeight="420.0" prefWidth="152.0" styleClass="bodyBackground" HBox.hgrow="ALWAYS" />
+            </children>
+        </HBox>
+    </center>
+</BorderPane>

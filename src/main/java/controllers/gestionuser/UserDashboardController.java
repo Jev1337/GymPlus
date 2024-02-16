@@ -60,6 +60,8 @@ public class UserDashboardController {
 
     @FXML
     private Pane dragpane;
+    @FXML
+    private Pane blogId = new Pane();
 
     @FXML
     private Button event_btn;
@@ -81,9 +83,6 @@ public class UserDashboardController {
 
     @FXML
     private Button shop_btn;
-
-    @FXML
-    private Pane ObjectifPan;
 
 
     @FXML
@@ -249,8 +248,8 @@ public class UserDashboardController {
         initAnimations();
         initDecoratedStage();
         try {
-            Pane pane= FXMLLoader.load(getClass().getResource("/objectif1.fxml"));
-            ObjectifPan.getChildren().setAll(pane);
+            Pane pane= FXMLLoader.load(getClass().getResource("/gestionBlog/Blog.fxml"));
+            blogId.getChildren().setAll(pane);
         } catch (IOException e) {
             e.printStackTrace();
         }

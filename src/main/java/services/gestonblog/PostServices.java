@@ -17,10 +17,13 @@ public class PostServices implements IService {
     }
     @Override
     public void add(Object o) throws SQLException {
-        Post p = (Post) o;
-        String sql = "insert into post (id_post, user_id, mode, content, date, photo, likes) values ("+p.getId_post() + ", " + p.getUser_id() + ", '"+ p.getMode() + "', '" + p.getContent() +"', '" + p.getDate()+ "', '" + p.getPhoto()+ "', " + p.getLikes() + ");";
-        Statement st = connection.createStatement();
-        st.executeUpdate(sql);
+        if ( o != null) {
+            Post p = (Post) o;
+            String sql = "insert into post (id_post, user_id, mode, content, date, photo, likes) values (" + p.getId_post() + ", " + p.getUser_id() + ", '" + p.getMode() + "', '" + p.getContent() + "', '" + p.getDate() + "', '" + p.getPhoto() + "', " + p.getLikes() + ");";
+            Statement st = connection.createStatement();
+            st.executeUpdate(sql);
+        }
+        else System.out.println("error");
     }
 
     @Override
@@ -45,6 +48,14 @@ public class PostServices implements IService {
         ps.executeUpdate();
     }
 
+    public void updateNbLikes(Object o) throws SQLException {
+        Post p = (Post) o;
+        String sql = "UPDATE post set likes = ? where post_id = ?";
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ps.setInt(1, p.getLikes()+1);
+        ps.setInt(2, p.getId_post());
+        ps.executeUpdate();
+    }
     @Override
     public List<Post> getAll() throws SQLException {
         String sql = "select * from post";

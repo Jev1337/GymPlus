@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AbonnementService implements IService<Abonnement> {
-    private Connection connection;
+    public Connection connection;
     public AbonnementService() {
         connection = MyDatabase.getInstance().getConnection();
     }

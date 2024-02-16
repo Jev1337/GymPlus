@@ -59,8 +59,6 @@ public class Suivi_Test {
         ObjectifService objectifService = new ObjectifService() ;
         System.out.println("gessing you are the user with the ( ID =2 ) These are the objectif you already has \n");
         System.out.println(objectifService.getAll().toString());
-
-
         LocalDate currentDate = LocalDate.now();
         java.sql.Date sqlDureeNow =java.sql.Date.valueOf(currentDate);
         Objectif obj1 = new Objectif(userId,20,sqlDureeNow,100,1,"none","Default",1);

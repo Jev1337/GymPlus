@@ -23,6 +23,8 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.io.IOException;
+
 public class UserDashboardController {
 
     private FadeIn[] fadeInAnimation = new FadeIn[8];
@@ -79,6 +81,9 @@ public class UserDashboardController {
 
     @FXML
     private Button shop_btn;
+
+    @FXML
+    private Pane ObjectifPan;
 
 
     @FXML
@@ -243,6 +248,12 @@ public class UserDashboardController {
         setFitToWidthAll();
         initAnimations();
         initDecoratedStage();
+        try {
+            Pane pane= FXMLLoader.load(getClass().getResource("/objectif1.fxml"));
+            ObjectifPan.getChildren().setAll(pane);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void initDecoratedStage(){

@@ -48,13 +48,33 @@ public class PostServices implements IService {
         ps.executeUpdate();
     }
 
-    public void updateNbLikes(Object o) throws SQLException {
+    public void addNbLikes(Object o) throws SQLException {
         Post p = (Post) o;
-        String sql = "UPDATE post set likes = ? where post_id = ?";
+        String sql = "UPDATE post set likes = ? where id_post = ?";
         PreparedStatement ps = connection.prepareStatement(sql);
         ps.setInt(1, p.getLikes()+1);
         ps.setInt(2, p.getId_post());
         ps.executeUpdate();
+    }
+    public void minNbLikes(Object o) throws SQLException {
+        Post p = (Post) o;
+        String sql = "UPDATE post set likes = ? where id_post = ?";
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ps.setInt(1, p.getLikes()-1);
+        ps.setInt(2, p.getId_post());
+        ps.executeUpdate();
+    }
+
+    public int getNbLikesById(int id) throws SQLException {
+        int likes = 0;
+        String sql = "select * from post where id_post = ?";
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ps.setInt(1,id);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()){
+           likes = rs.getInt("likes");
+        }
+        return likes;
     }
     @Override
     public List<Post> getAll() throws SQLException {

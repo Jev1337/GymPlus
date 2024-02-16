@@ -4,6 +4,8 @@ import animatefx.animation.FadeIn;
 import animatefx.animation.FadeInRight;
 import animatefx.animation.FadeOutRight;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+import entities.gestionuser.Admin;
+import entities.gestionuser.Client;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -18,17 +20,27 @@ import javafx.scene.Parent;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
+import services.gestionuser.AdminService;
+import services.gestionuser.ClientService;
+
+import java.io.File;
+import java.nio.file.Files;
+import java.time.LocalDate;
 
 public class AdminDashboardController {
+
+    private final AdminService adminService = new AdminService();
     private FadeIn[] fadeInAnimation = new FadeIn[9];
     private FadeOutRight fadeOutRightAnimation = new FadeOutRight();
     private FadeInRight fadeInRightAnimation = new FadeInRight();
@@ -40,6 +52,9 @@ public class AdminDashboardController {
 
     @FXML
     private ScrollPane AdminEventPane;
+
+    @FXML
+    private ScrollPane AdminHomePane;
 
     @FXML
     private ScrollPane AdminInfoPane;
@@ -57,7 +72,7 @@ public class AdminDashboardController {
     private ScrollPane AdminUserManagementPane;
 
     @FXML
-    private ScrollPane AdminHomePane;
+    private TextArea address_ta;
 
     @FXML
     private FontAwesomeIconView bars_btn;
@@ -75,7 +90,16 @@ public class AdminDashboardController {
     private ImageView cover_imageview;
 
     @FXML
+    private DatePicker dateofbirth_tf;
+
+    @FXML
     private Pane dragpane;
+
+    @FXML
+    private TextField email_tf;
+
+    @FXML
+    private Label emailinfo;
 
     @FXML
     private Button equipment_btn;
@@ -84,7 +108,16 @@ public class AdminDashboardController {
     private Button event_btn;
 
     @FXML
+    private TextField firstname_tf;
+
+    @FXML
+    private Label globalusername;
+
+    @FXML
     private Button home_btn;
+
+    @FXML
+    private TextField lastname_tf;
 
     @FXML
     private Button logout_btn;
@@ -93,7 +126,13 @@ public class AdminDashboardController {
     private Button minimize_btn;
 
     @FXML
-    private Button users_btn;
+    private Label nameinfo;
+
+    @FXML
+    private TextField phone_tf;
+
+    @FXML
+    private TextField profilepic_pf;
 
     @FXML
     private Button settings_btn;
@@ -102,6 +141,20 @@ public class AdminDashboardController {
     private Button shop_btn;
 
     @FXML
+    private Button subscription_btn;
+
+    @FXML
+    private ImageView user_imageview;
+
+    @FXML
+    private TextField username_tf;
+
+    @FXML
+    private ImageView userprofile_imageview;
+
+    @FXML
+    private Button users_btn;
+    @FXML
     private BarChart<String, Number> stat_barchart;
 
     @FXML
@@ -109,11 +162,6 @@ public class AdminDashboardController {
 
     @FXML
     private LineChart<String, Number> stat_linechart;
-    @FXML
-    private Button subscription_btn;
-
-    @FXML
-    private FontAwesomeIconView user_btn;
 
     @FXML
     void bars_btn_clicked(MouseEvent event) {
@@ -229,7 +277,7 @@ public class AdminDashboardController {
     }
 
     @FXML
-    void user_btn_clicked(MouseEvent event) {
+    void user_imageview_clicked(MouseEvent event) {
         switchToPane(AdminInfoPane);
     }
 
@@ -252,7 +300,118 @@ public class AdminDashboardController {
         Stage stage = (Stage) minimize_btn.getScene().getWindow();
         stage.setIconified(true);
     }
+    @FXML
+    void browse_btn_act(ActionEvent event) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg")
+        );
+        fileChooser.setTitle("Choose a profile picture");
+        File file = fileChooser.showOpenDialog(new Stage());
+        if (file != null) {
+            profilepic_pf.setText(file.getAbsolutePath());
+        }
+    }
+    @FXML
+    void saveacc_btn_act(ActionEvent event) {
 
+        if (firstname_tf.getText().isEmpty() || lastname_tf.getText().isEmpty() || username_tf.getText().isEmpty() || email_tf.getText().isEmpty() || phone_tf.getText().isEmpty() || address_ta.getText().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.initStyle(StageStyle.UNDECORATED);
+            alert.setTitle("Error");
+            alert.setHeaderText("Empty fields");
+            alert.setContentText("Please fill all the fields");
+            alert.showAndWait();
+            return;
+        }
+        if (dateofbirth_tf.getValue() == null) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.initStyle(StageStyle.UNDECORATED);
+            alert.setTitle("Error");
+            alert.setHeaderText("Date of birth is empty");
+            alert.setContentText("Please choose a date of birth");
+            alert.showAndWait();
+            return;
+        }
+        if (!validateEmail(email_tf.getText()))
+            return;
+        if (!validateText(username_tf.getText()))
+            return;
+        try {
+            if (profilepic_pf.getText().isEmpty()) {
+                Admin admin= new Admin(GlobalVar.getUser().getId(), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), dateofbirth_tf.getValue().toString(), GlobalVar.getUser().getPassword(), email_tf.getText(), phone_tf.getText(), address_ta.getText(), GlobalVar.getUser().getPhoto());
+                adminService.update(admin);
+                GlobalVar.setUser(admin);
+                initProfile();
+            }else{
+                File file = new File(profilepic_pf.getText());
+                if (!file.exists()) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.initStyle(StageStyle.UNDECORATED);
+                    alert.setTitle("Error");
+                    alert.setHeaderText("Profile picture not found");
+                    alert.setContentText("Please choose a valid profile picture");
+                    alert.showAndWait();
+                    return;
+                }
+                userprofile_imageview.setImage(null);
+                user_imageview.setImage(null);
+                File oldFile = new File("src/assets/profileuploads/" +GlobalVar.getUser().getPhoto());
+                oldFile.delete();
+                Files.copy(file.toPath(), new File("src/assets/profileuploads/USERIMG"+ GlobalVar.getUser().getId() + file.getName().substring(file.getName().lastIndexOf("."))).toPath());
+                Admin admin = new Admin(GlobalVar.getUser().getId(), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), dateofbirth_tf.getValue().toString(), GlobalVar.getUser().getPassword(), email_tf.getText(), phone_tf.getText(), address_ta.getText(), "USERIMG"+ GlobalVar.getUser().getId() + file.getName().substring(file.getName().lastIndexOf(".")));
+                adminService.update(admin);
+                GlobalVar.setUser(admin);
+                initProfile();
+            }
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.initStyle(StageStyle.UNDECORATED);
+            alert.setTitle("Success");
+            alert.setHeaderText("Profile picture updated");
+            alert.setContentText("Your profile picture has been updated successfully");
+            alert.showAndWait();
+        }catch (Exception e){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.initStyle(StageStyle.UNDECORATED);
+            alert.setTitle("Error");
+            alert.setHeaderText("An error has occured");
+            alert.setContentText("An error has occured while trying to update your account");
+            alert.showAndWait();
+            e.printStackTrace();
+            return;
+        }
+    }
+
+    @FXML
+    void deleteacc_btn_act(ActionEvent event) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.initStyle(StageStyle.UNDECORATED);
+        alert.setTitle("Confirmation");
+        alert.setHeaderText("Are you sure you want to delete your account?");
+        alert.setContentText("This action is irreversible");
+        alert.showAndWait();
+        if (alert.getResult() == ButtonType.OK) {
+            try {
+                userprofile_imageview.setImage(null);
+                user_imageview.setImage(null);
+                File file = new File("src/assets/profileuploads/" +GlobalVar.getUser().getPhoto());
+                file.delete();
+                adminService.delete(GlobalVar.getUser().getId());
+            }catch (Exception e){
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.initStyle(StageStyle.UNDECORATED);
+                alert.setTitle("Error");
+                alert.setHeaderText("An error has occured");
+                alert.setContentText("An error has occured while trying to delete your account");
+                alert.showAndWait();
+                e.printStackTrace();
+                return;
+
+            }
+
+            logout_btn_act(null);
+        }
+    }
     @FXML
     void stat_combobox_act(ActionEvent event) {
 
@@ -288,12 +447,7 @@ public class AdminDashboardController {
             }
         });
     }
-    private void initProfile(){
-        Rectangle clip = new Rectangle(cover_imageview.getFitWidth(), cover_imageview.getFitHeight());
-        clip.setArcWidth(30);
-        clip.setArcHeight(30);
-        cover_imageview.setClip(clip);
-    }
+
 
     private void setFitToWidthAll(){
         AdminHomePane.setFitToWidth(true);
@@ -421,5 +575,55 @@ public class AdminDashboardController {
         series2.getData().add(new XYChart.Data<>("Dec", 99));
         series2.setName("Ipsum");
         stat_barchart.getData().add(series2);
+    }
+    private boolean validateEmail(String email){
+        if(!email.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")){
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.initStyle(StageStyle.UNDECORATED);
+            alert.setTitle("Warning");
+            alert.setHeaderText("Warning");
+            alert.setContentText("Invalid email format! Please try again.");
+            alert.showAndWait();
+            return false;
+        }
+        return true;
+    }
+    private void initProfile(){
+        String photoname = GlobalVar.getUser().getPhoto();
+        user_imageview.setImage(new Image(new File("src/assets/profileuploads/" +photoname).toURI().toString()));
+        Circle clip1 = new Circle(user_imageview.getFitWidth()/2, user_imageview.getFitHeight()/2, user_imageview.getFitWidth()/2);
+        user_imageview.setClip(clip1);
+        user_imageview.setPreserveRatio(false);
+        Rectangle clip2 = new Rectangle(cover_imageview.getFitWidth(), cover_imageview.getFitHeight());
+        clip2.setArcWidth(30);
+        clip2.setArcHeight(30);
+        cover_imageview.setClip(clip2);
+        userprofile_imageview.setImage(new Image(new File("src/assets/profileuploads/" +photoname).toURI().toString()));
+        Circle clip3 = new Circle(userprofile_imageview.getFitWidth()/2, userprofile_imageview.getFitHeight()/2, userprofile_imageview.getFitWidth()/2);
+        userprofile_imageview.setPreserveRatio(false);
+        userprofile_imageview.setClip(clip3);
+        nameinfo.setText(GlobalVar.getUser().getFirstname()+" "+GlobalVar.getUser().getLastname());
+        emailinfo.setText(GlobalVar.getUser().getEmail());
+        globalusername.setText(GlobalVar.getUser().getUsername());
+        dateofbirth_tf.setValue(LocalDate.parse(GlobalVar.getUser().getDate_naiss()));
+        firstname_tf.setText(GlobalVar.getUser().getFirstname());
+        lastname_tf.setText(GlobalVar.getUser().getLastname());
+        username_tf.setText(GlobalVar.getUser().getUsername());
+        email_tf.setText(GlobalVar.getUser().getEmail());
+        phone_tf.setText(GlobalVar.getUser().getNum_tel());
+        address_ta.setText(GlobalVar.getUser().getAdresse());
+    }
+
+    private boolean validateText(String username){
+        if (username.length() < 4 && username.length() > 20){
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.initStyle(StageStyle.UNDECORATED);
+            alert.setTitle("Warning");
+            alert.setHeaderText("Warning");
+            alert.setContentText("Username must be between 4 and 20 characters long! Please try again.");
+            alert.showAndWait();
+            return false;
+        }
+        return true;
     }
 }

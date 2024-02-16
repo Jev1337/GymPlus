@@ -1,17 +1,14 @@
 package test;
 
-import entities.gestionblog.Commentaire;
-import entities.gestionblog.Post;
-import services.gestonblog.CommentaireService;
-import services.gestonblog.PostServices;
-import utils.MyDatabase;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
-import java.sql.SQLException;
-import java.time.LocalDate;
-
-public class BlogTest {
+public class BlogTest extends Application {
     public static void main(String[] args) {
-        String date = LocalDate.now().toString();
+        /*String date = LocalDate.now().toString();
         MyDatabase db = new MyDatabase();
         Post p = new Post(10, "bbb", "abcd", java.sql.Date.valueOf(date), "dbf", 10);
         Commentaire c = new Commentaire(10,1,"zsdzsf",java.sql.Date.valueOf(date), 1);
@@ -21,7 +18,7 @@ public class BlogTest {
 
         // CRUD Post
         try {
-           // ps.add(p);
+            //ps.add(p);
             //ps.modifier(p);
             //cs.supprimer(2);
             System.out.println(ps.getAll());
@@ -37,6 +34,16 @@ public class BlogTest {
             System.out.println(cs.getAll());
         } catch (SQLException e) {
             System.err.println(e.getMessage());
-        }
+        }*/
+        launch(args);
+    }
+
+    @Override
+    public void start(Stage stage) throws Exception {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/gestionBlog/Blog.fxml"));
+        Parent root = loader.load(); // container yehriti ml parent(kima Object)
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
     }
 }

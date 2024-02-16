@@ -38,6 +38,8 @@ import java.time.ZoneId;
 import java.util.Date;
 import java.util.Locale;
 
+import java.io.IOException;
+
 public class UserDashboardController {
 
     private ClientService clientService = new ClientService();
@@ -45,6 +47,58 @@ public class UserDashboardController {
 
     private FadeOutRight fadeOutRightAnimation = new FadeOutRight();
     private FadeInRight fadeInRightAnimation = new FadeInRight();
+
+    @FXML
+    private ScrollPane UserHomePane;
+
+    @FXML
+    private ScrollPane UserInfoPane;
+
+    @FXML
+    private ScrollPane UserSubscriptionPane;
+    @FXML
+    private ScrollPane UserStorePane;
+
+    @FXML
+    private FontAwesomeIconView bars_btn;
+
+    @FXML
+    private Pane bars_pane;
+
+    @FXML
+    private Button blog_btn;
+
+    @FXML
+    private Button close_btn;
+
+    @FXML
+    private ImageView cover_imageview;
+
+    @FXML
+    private Pane dragpane;
+    @FXML
+    private Pane blogId = new Pane();
+
+    @FXML
+    private Button event_btn;
+
+    @FXML
+    private Button home_btn;
+
+    @FXML
+    private Button logout_btn;
+
+    @FXML
+    private Button minimize_btn;
+
+    @FXML
+    private Button objective_btn;
+
+    @FXML
+    private Button settings_btn;
+
+    @FXML
+    private Button shop_btn;
 
 
     @FXML
@@ -415,6 +469,12 @@ public class UserDashboardController {
         setFitToWidthAll();
         initAnimations();
         initDecoratedStage();
+        try {
+            Pane pane= FXMLLoader.load(getClass().getResource("/gestionBlog/Blog.fxml"));
+            blogId.getChildren().setAll(pane);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void initDecoratedStage(){

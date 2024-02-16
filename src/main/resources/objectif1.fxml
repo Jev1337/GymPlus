@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="869.0" prefWidth="1231.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionsuivi.ObjectifController">
+   <children>
+      <ImageView fitHeight="348.0" fitWidth="1284.0" layoutX="-2.0" opacity="0.94" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/cover.jpg" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="348.0" fitWidth="1291.0" layoutX="-2.0" layoutY="348.0" opacity="0.94" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/cover.jpg" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="357.0" fitWidth="1268.0" layoutX="-34.0" layoutY="518.0" opacity="0.94" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/cover.jpg" />
+         </image>
+      </ImageView>
+      <Separator layoutX="527.0" layoutY="46.0" orientation="VERTICAL" prefHeight="627.0" prefWidth="5.0" />
+      <ScrollPane layoutX="65.0" layoutY="73.0" prefHeight="459.0" prefWidth="431.0">
+         <content>
+            <VBox fx:id="pnl_scroll1" prefHeight="453.0" prefWidth="425.0" />
+         </content>
+      </ScrollPane>
+      <ScrollPane layoutX="547.0" layoutY="40.0" prefHeight="616.0" prefWidth="661.0">
+         <content>
+            <VBox fx:id="pnl_scroll2" prefHeight="614.0" prefWidth="669.0" />
+         </content>
+      </ScrollPane>
+      <ScrollPane layoutX="65.0" layoutY="556.0" prefHeight="251.0" prefWidth="420.0">
+         <content>
+            <VBox prefHeight="218.0" prefWidth="417.0" />
+         </content>
+      </ScrollPane>
+   </children>
+</AnchorPane>

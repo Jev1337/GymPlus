@@ -49,56 +49,7 @@ public class UserDashboardController {
     private FadeInRight fadeInRightAnimation = new FadeInRight();
 
     @FXML
-    private ScrollPane UserHomePane;
-
-    @FXML
-    private ScrollPane UserInfoPane;
-
-    @FXML
-    private ScrollPane UserSubscriptionPane;
-    @FXML
-    private ScrollPane UserStorePane;
-
-    @FXML
-    private FontAwesomeIconView bars_btn;
-
-    @FXML
-    private Pane bars_pane;
-
-    @FXML
-    private Button blog_btn;
-
-    @FXML
-    private Button close_btn;
-
-    @FXML
-    private ImageView cover_imageview;
-
-    @FXML
-    private Pane dragpane;
-    @FXML
     private Pane blogId = new Pane();
-
-    @FXML
-    private Button event_btn;
-
-    @FXML
-    private Button home_btn;
-
-    @FXML
-    private Button logout_btn;
-
-    @FXML
-    private Button minimize_btn;
-
-    @FXML
-    private Button objective_btn;
-
-    @FXML
-    private Button settings_btn;
-
-    @FXML
-    private Button shop_btn;
 
 
     @FXML
@@ -328,6 +279,7 @@ public class UserDashboardController {
     void event_btn_act(ActionEvent event) {
         switchToPane(UserEventPane);
     }
+
 
     @FXML
     void event_btn_clicked(MouseEvent event) {

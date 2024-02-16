@@ -73,7 +73,7 @@
                   </Pane>
                   <Pane layoutX="51.0" layoutY="50.0" prefHeight="650.0" prefWidth="1155.0" style="-fx-background-color: #e9ecef;;">
                      <children>
-                        <ScrollPane fx:id="UserHomePane" prefHeight="646.0" prefWidth="1155.0" style="-fx-border-color: transparent;" visible="false">
+                        <ScrollPane fx:id="UserHomePane" prefHeight="646.0" prefWidth="1155.0" style="-fx-border-color: transparent;">
                            <content>
                               <Pane prefHeight="757.0" prefWidth="1153.0">
                                  <children>
@@ -266,7 +266,7 @@
                               </Pane>
                            </content>
                         </ScrollPane>
-                        <ScrollPane fx:id="UserInfoPane" prefHeight="647.0" prefWidth="1155.0">
+                        <ScrollPane fx:id="UserInfoPane" prefHeight="647.0" prefWidth="1155.0" visible="false">
                            <content>
                               <Pane prefHeight="808.0" prefWidth="1147.0">
                                  <children>
@@ -531,7 +531,7 @@
                               </Pane>
                            </content>
                         </ScrollPane>
-                        <ScrollPane fx:id="UserBlogPane" prefHeight="646.0" prefWidth="1155.0">
+                        <ScrollPane fx:id="UserBlogPane" prefHeight="646.0" prefWidth="1155.0" visible="false">
                            <content>
                               <Pane fx:id="blogId" prefHeight="808.0" prefWidth="1156.0">
                                  <children>

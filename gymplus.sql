@@ -223,7 +223,6 @@ CREATE TABLE `user` (
   `date_naiss` date DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL,
   `email` varchar(255) DEFAULT NULL,
-  `poste` varchar(255) DEFAULT NULL,
   `role` varchar(255) DEFAULT NULL,
   `num_tel` varchar(255) DEFAULT NULL,
   `adresse` text DEFAULT NULL,

@@ -281,7 +281,7 @@
                                              <children>
                                                 <ImageView fx:id="cover_imageview" fitHeight="345.0" fitWidth="911.0" pickOnBounds="true" preserveRatio="true">
                                                    <image>
-                                                      <Image url="@../images/cover.jpg" />
+                                                      <Image url="@../assets/images/cover.jpg" />
                                                    </image>
                                                 </ImageView>
                                              </children>

@@ -7,11 +7,15 @@
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
@@ -270,7 +274,7 @@
                            <content>
                               <Pane prefHeight="808.0" prefWidth="1147.0">
                                  <children>
-                                    <Label layoutX="39.0" layoutY="14.0" text="Admin / Profile">
+                                    <Label fx:id="profilelabel" layoutX="39.0" layoutY="14.0" text="Admin / Profile">
                                        <font>
                                           <Font name="Open Sans Regular" size="16.0" />
                                        </font>
@@ -281,7 +285,7 @@
                                              <children>
                                                 <ImageView fx:id="cover_imageview" fitHeight="345.0" fitWidth="911.0" pickOnBounds="true" preserveRatio="true">
                                                    <image>
-                                                      <Image url="@../images/cover.jpg" />
+                                                      <Image url="@../assets/images/cover.jpg" />
                                                    </image>
                                                 </ImageView>
                                              </children>
@@ -291,7 +295,7 @@
                                                 <Font name="Open Sans Regular" size="18.0" />
                                              </font>
                                           </Label>
-                                          <Label layoutX="136.0" layoutY="309.0" text="Client" textFill="#6c757d">
+                                          <Label fx:id="role_label" layoutX="136.0" layoutY="309.0" text="Client" textFill="#6c757d">
                                              <font>
                                                 <Font name="Open Sans Regular" size="13.0" />
                                              </font>
@@ -360,7 +364,7 @@
                                              </font>
                                           </Label>
                                           <TextField fx:id="phone_tf" layoutX="26.0" layoutY="265.0" prefHeight="25.0" prefWidth="230.0" />
-                                          <Button layoutX="477.0" layoutY="330.0" mnemonicParsing="false" onAction="#saveacc_btn_act" style="-color-button-bg: -color-accent-4;" text="Save">
+                                          <Button fx:id="saveacc_btn" layoutX="462.0" layoutY="330.0" mnemonicParsing="false" onAction="#saveacc_btn_act" style="-color-button-bg: -color-accent-4;" text="Save">
                                              <cursor>
                                                 <Cursor fx:constant="HAND" />
                                              </cursor>
@@ -372,13 +376,27 @@
                                              </font>
                                           </Label>
                                           <Button layoutX="230.0" layoutY="330.0" mnemonicParsing="false" onAction="#browse_btn_act" text="..." />
-                                          <Button layoutX="354.0" layoutY="330.0" mnemonicParsing="false" onAction="#deleteacc_btn_act" style="-color-button-bg: -color-danger-4;" styleClass="flat" text="Delete Account">
+                                          <Button fx:id="deleteacc_btn" layoutX="339.0" layoutY="330.0" mnemonicParsing="false" onAction="#deleteacc_btn_act" style="-color-button-bg: -color-danger-4;" styleClass="flat" text="Delete Account">
                                              <cursor>
                                                 <Cursor fx:constant="HAND" />
                                              </cursor>
                                           </Button>
                                           <DatePicker fx:id="dateofbirth_tf" layoutX="26.0" layoutY="204.0" prefHeight="36.0" prefWidth="229.0" />
                                           <TextArea fx:id="address_ta" layoutX="289.0" layoutY="203.0" prefHeight="97.0" prefWidth="227.0" />
+                                          <Button fx:id="deleteaccmanage_btn" layoutX="339.0" layoutY="330.0" mnemonicParsing="false" onAction="#deleteaccmanage_btn" style="-color-button-bg: -color-danger-4;" styleClass="flat" text="Delete Account" visible="false">
+                                             <cursor>
+                                                <Cursor fx:constant="HAND" />
+                                             </cursor>
+                                          </Button>
+                                          <Button fx:id="saveaccmanage_btn" layoutX="462.0" layoutY="330.0" mnemonicParsing="false" onAction="#saveaccmanage_btn_act" style="-color-button-bg: -color-accent-4;" text="Save" visible="false">
+                                             <cursor>
+                                                <Cursor fx:constant="HAND" />
+                                             </cursor>
+                                          </Button>
+                                          <Button fx:id="goback_btn" layoutX="290.0" layoutY="330.0" mnemonicParsing="false" onAction="#goback_btn_act" prefHeight="36.0" prefWidth="45.0" style="-fx-background-color: -color-warning-2;" text="&lt;" visible="false">
+                                             <cursor>
+                                                <Cursor fx:constant="HAND" />
+                                             </cursor></Button>
                                        </children>
                                     </Pane>
                                     <Pane layoutX="92.0" layoutY="420.0" prefHeight="190.0" prefWidth="363.0" style="-fx-background-color: white; -fx-border-radius: 30px; -fx-background-radius: 30px;">
@@ -520,13 +538,87 @@
                         </ScrollPane>
                         <ScrollPane fx:id="AdminUserManagementPane" prefHeight="646.0" prefWidth="1155.0" visible="false">
                            <content>
-                              <Pane prefHeight="894.0" prefWidth="1156.0">
+                              <Pane prefHeight="1056.0" prefWidth="1147.0">
                                  <children>
-                                    <Label layoutX="39.0" layoutY="14.0" text="Admin / User Mgmt">
+                                    <Label layoutX="39.0" layoutY="14.0" text="Admin / User Management">
                                        <font>
                                           <Font name="Open Sans Regular" size="16.0" />
                                        </font>
                                     </Label>
+                                    <Pane layoutX="29.0" layoutY="105.0" prefHeight="448.0" prefWidth="1079.0" style="-fx-background-color: white; -fx-border-radius: 30px; -fx-background-radius: 30px;">
+                                       <children>
+                                          <Label layoutX="22.0" layoutY="22.0" text="Add User to Database">
+                                             <font>
+                                                <Font name="Open Sans Regular" size="16.0" />
+                                             </font>
+                                          </Label>
+                                          <TextField fx:id="cinmanage_tf" layoutX="30.0" layoutY="101.0" prefHeight="36.0" prefWidth="215.0" />
+                                          <Label layoutX="30.0" layoutY="78.0" text="CIN" />
+                                          <TextField fx:id="firstnamemanage_tf" layoutX="30.0" layoutY="172.0" prefHeight="36.0" prefWidth="215.0" />
+                                          <Label layoutX="30.0" layoutY="149.0" text="First Name" />
+                                          <TextField fx:id="emailmanage_tf" layoutX="30.0" layoutY="250.0" prefHeight="36.0" prefWidth="215.0" />
+                                          <Label layoutX="30.0" layoutY="221.0" text="Email" />
+                                          <TextField fx:id="usernamemanage_tf" layoutX="278.0" layoutY="101.0" prefHeight="36.0" prefWidth="215.0" />
+                                          <Label layoutX="278.0" layoutY="78.0" text="Username" />
+                                          <TextField fx:id="lastnamemanage_tf" layoutX="278.0" layoutY="172.0" prefHeight="36.0" prefWidth="215.0" />
+                                          <Label layoutX="278.0" layoutY="149.0" text="Last Name" />
+                                          <Label layoutX="278.0" layoutY="221.0" text="Password" />
+                                          <Label layoutX="30.0" layoutY="295.0" text="Date of Birth" />
+                                          <Label layoutX="278.0" layoutY="295.0" text="Type" />
+                                          <ComboBox fx:id="acctypemanage_cb" layoutX="278.0" layoutY="318.0" prefHeight="36.0" prefWidth="215.0" />
+                                          <CheckBox fx:id="setupfrmanage_check" layoutX="29.0" layoutY="381.0" mnemonicParsing="false" text="Setup FR" />
+                                          <Button fx:id="createacc_btn" layoutX="617.0" layoutY="381.0" mnemonicParsing="false" onAction="#createacc_btn_act" text="Create Account">
+                                             <cursor>
+                                                <Cursor fx:constant="HAND" />
+                                             </cursor></Button>
+                                          <ImageView fitHeight="328.0" fitWidth="279.0" layoutX="786.0" layoutY="82.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../assets/images/6405024.png" />
+                                             </image>
+                                          </ImageView>
+                                          <PasswordField fx:id="pwdmanage_pf" layoutX="278.0" layoutY="250.0" prefHeight="36.0" prefWidth="215.0" />
+                                          <DatePicker fx:id="dobmanage_dp" layoutX="30.0" layoutY="318.0" />
+                                          <TextField fx:id="phonemanage_tf" layoutX="526.0" layoutY="101.0" prefHeight="36.0" prefWidth="215.0" />
+                                          <Label layoutX="526.0" layoutY="78.0" text="Phone Number" />
+                                          <Label layoutX="526.0" layoutY="149.0" text="Address" />
+                                          <TextArea fx:id="addressmanage_ta" layoutX="526.0" layoutY="174.0" prefHeight="111.0" prefWidth="215.0" />
+                                          <TextField fx:id="photomanage_tf" layoutX="526.0" layoutY="318.0" prefHeight="36.0" prefWidth="167.0" />
+                                          <Label layoutX="526.0" layoutY="295.0" text="Profile Picture" />
+                                          <Button fx:id="browsemanage_btn" layoutX="701.0" layoutY="318.0" mnemonicParsing="false" onAction="#browsemanage_btn_act" prefHeight="36.0" prefWidth="39.0" text="...">
+                                             <cursor>
+                                                <Cursor fx:constant="HAND" />
+                                             </cursor>
+                                          </Button>
+                                       </children>
+                                    </Pane>
+                                    <Pane layoutX="28.0" layoutY="578.0" prefHeight="448.0" prefWidth="1069.0" style="-fx-background-color: white; -fx-border-radius: 30px; -fx-background-radius: 30px;">
+                                       <children>
+                                          <TableView fx:id="userlist_tableview" layoutX="16.0" layoutY="111.0" prefHeight="274.0" prefWidth="1039.0" style="-fx-background-color: #e8ecfc;">
+                                            <columns>
+                                              <TableColumn fx:id="cincol" prefWidth="133.0" text="CIN" />
+                                              <TableColumn fx:id="emailcol" minWidth="2.0" prefWidth="148.0" text="Email" />
+                                                <TableColumn fx:id="usernamecol" prefWidth="87.0" text="Username" />
+                                                <TableColumn fx:id="firstnamecol" prefWidth="87.0" text="First Name" />
+                                                <TableColumn fx:id="lastnamecol" prefWidth="88.0" text="Last Name" />
+                                                <TableColumn fx:id="dobcol" prefWidth="110.0" text="DOB" />
+                                                <TableColumn fx:id="addresscol" prefWidth="144.0" text="Address" />
+                                                <TableColumn fx:id="phonenumbercol" prefWidth="116.0" text="Phone Number" />
+                                                <TableColumn fx:id="acctypecol" prefWidth="123.0" text="Account Type" />
+                                            </columns>
+                                          </TableView>
+                                          <Button fx:id="manageacc_btn" layoutX="922.0" layoutY="398.0" mnemonicParsing="false" onAction="#manageacc_btn_act" text="Manage Account">
+                                             <cursor>
+                                                <Cursor fx:constant="HAND" />
+                                             </cursor></Button>
+                                          <Label layoutX="16.0" layoutY="25.0" text="User List">
+                                             <font>
+                                                <Font name="Open Sans Regular" size="16.0" />
+                                             </font>
+                                          </Label>
+                                          <ComboBox fx:id="type_cb" layoutX="916.0" layoutY="59.0" onAction="#type_cb_act" prefHeight="36.0" prefWidth="139.0" promptText="All" />
+                                          <TextField fx:id="searchbar_tf" layoutX="754.0" layoutY="59.0" onKeyTyped="#searchbar_tf_textchanged" prefHeight="36.0" prefWidth="147.0" promptText="Search..." />
+                                       </children>
+                                    </Pane>
                                  </children>
                               </Pane>
                            </content>

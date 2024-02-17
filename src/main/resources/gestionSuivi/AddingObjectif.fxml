@@ -23,7 +23,7 @@
          <children>
             <ImageView fitHeight="56.0" fitWidth="47.0" layoutX="25.0" layoutY="25.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../images/Goal.png" />
+                  <Image url="@../assets/images/Goal.png" />
                </image>
             </ImageView>
             <Label layoutX="74.0" layoutY="36.0" text="Ajouter Objecitf">
@@ -64,7 +64,7 @@
                <children>
                   <ImageView fitHeight="17.0" fitWidth="68.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../images/Cursor.png" />
+                        <Image url="@../assets/images/Cursor.png" />
                      </image>
                      <VBox.margin>
                         <Insets left="60.0" />

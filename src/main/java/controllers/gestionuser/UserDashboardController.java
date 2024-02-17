@@ -19,6 +19,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
@@ -359,7 +361,7 @@ public class UserDashboardController {
             alert.initStyle(StageStyle.UNDECORATED);
             alert.setTitle("Success");
             alert.setHeaderText("Profile picture updated");
-            alert.setContentText("Your profile picture has been updated successfully");
+            alert.setContentText("Your profile info has been updated successfully");
             alert.showAndWait();
         }catch (Exception e){
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -399,7 +401,6 @@ public class UserDashboardController {
                 return;
 
             }
-
             logout_btn_act(null);
         }
     }
@@ -410,6 +411,9 @@ public class UserDashboardController {
     private double xOffset = 0;
     private double yOffset = 0;
     public void initialize() {
+        Media media = new Media(new File(getClass().getResource("/assets/sounds/welcome.mp3").getFile()).toURI().toString());
+        MediaPlayer mediaPlayer = new MediaPlayer(media);
+        mediaPlayer.play();
         fadeInRightAnimation.setNode(UserHomePane);
         fadeInRightAnimation.play();
         stat_combobox.getItems().addAll(FXCollections.observableArrayList("Abonnements", "Clients", "Staff"));
@@ -472,6 +476,7 @@ public class UserDashboardController {
         return true;
     }
     private void initProfile(){
+
         String photoname = GlobalVar.getUser().getPhoto();
         user_imageview.setImage(new Image(new File("src/assets/profileuploads/" +photoname).toURI().toString()));
         Circle clip1 = new Circle(user_imageview.getFitWidth()/2, user_imageview.getFitHeight()/2, user_imageview.getFitWidth()/2);

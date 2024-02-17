@@ -132,13 +132,13 @@ CREATE TABLE `objectif` (
   `idObjectif` int(11) NOT NULL,
   `userId` int(11) DEFAULT NULL,
   `poidsObj` float DEFAULT NULL,
-  `dateDebut` date DEFAULT NULL,
-  `dateFin` date DEFAULT NULL,
-  `poidsAct` float DEFAULT NULL,
-  `taille` float DEFAULT NULL,
-  `alergie` varchar(255) DEFAULT NULL,
-  `typeObj` varchar(255) DEFAULT NULL,
-  `coachId` int(11) DEFAULT NULL
+  `dateD` date DEFAULT NULL,
+  `dateF` date DEFAULT NULL,
+  `PoidsAct` float DEFAULT NULL,
+  `Taille` float DEFAULT NULL,
+  `Alergie` varchar(255) DEFAULT NULL,
+  `TypeObj` varchar(255) DEFAULT NULL,
+  `CoachId` int(11) DEFAULT NULL
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -146,7 +146,7 @@ CREATE TABLE `objectif` (
 -- Structure de la table `planning`
 --
 CREATE TABLE `planning` (
-  `id` int(11) NOT NULL,
+  `id_Planning` int(11) NOT NULL,
   `idObjectif` int(11) DEFAULT NULL,
   `idCoach` int(11) DEFAULT NULL,
   `trainingProg` text DEFAULT NULL,

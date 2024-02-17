@@ -15,7 +15,7 @@ public class ClientService implements IService<Client> {
     }
     @Override
     public void add(Client client) throws SQLException {
-        String query = "INSERT INTO user (id, username, firstname, lastname, date_naiss, password, email, num_tel, adresse, photo) VALUES (?,?,?,?,?,?,?,?,?,?)";
+        String query = "INSERT INTO user (id, username, firstname, lastname, date_naiss, password, email, num_tel, adresse, photo, role) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
         PreparedStatement pst = connection.prepareStatement(query);
         pst.setInt(1, client.getId());
         pst.setString(2, client.getUsername());
@@ -27,6 +27,7 @@ public class ClientService implements IService<Client> {
         pst.setString(8, client.getNum_tel());
         pst.setString(9, client.getAdresse());
         pst.setString(10, client.getPhoto());
+        pst.setString(11, client.getRole());
         pst.executeUpdate();
     }
 
@@ -57,7 +58,7 @@ public class ClientService implements IService<Client> {
     @Override
     public List<Client> getAll() throws SQLException {
         List<Client> clients = new ArrayList<>();
-        String query = "SELECT * FROM user WHERE role is NULL";
+        String query = "SELECT * FROM user WHERE role = 'client'";
         Statement st = connection.createStatement();
         ResultSet rs = st.executeQuery(query);
         while (rs.next()) {
@@ -72,13 +73,14 @@ public class ClientService implements IService<Client> {
             client.setNum_tel(rs.getString("num_tel"));
             client.setAdresse(rs.getString("adresse"));
             client.setPhoto(rs.getString("photo"));
+            client.setRole(rs.getString("role"));
             clients.add(client);
         }
         return clients;
     }
 
     public Client getUserById(int id) throws SQLException {
-        String query = "SELECT * FROM user WHERE id = ? AND role is NULL";
+        String query = "SELECT * FROM user WHERE id = ? AND role = 'client'";
         PreparedStatement pst = connection.prepareStatement(query);
         pst.setInt(1, id);
         ResultSet rs = pst.executeQuery();
@@ -94,13 +96,14 @@ public class ClientService implements IService<Client> {
             client.setNum_tel(rs.getString("num_tel"));
             client.setAdresse(rs.getString("adresse"));
             client.setPhoto(rs.getString("photo"));
+            client.setRole(rs.getString("role"));
             return client;
         }
         return null;
     }
 
     public Client getUserByEmail(String email) throws SQLException {
-        String query = "SELECT * FROM user WHERE email = ? AND role is NULL";
+        String query = "SELECT * FROM user WHERE email = ? AND role = 'client'";
         PreparedStatement pst = connection.prepareStatement(query);
         pst.setString(1, email);
         ResultSet rs = pst.executeQuery();
@@ -116,13 +119,14 @@ public class ClientService implements IService<Client> {
             client.setNum_tel(rs.getString("num_tel"));
             client.setAdresse(rs.getString("adresse"));
             client.setPhoto(rs.getString("photo"));
+            client.setRole(rs.getString("role"));
             return client;
         }
         return null;
     }
 
     public Client getUserByUsername(String username) throws SQLException {
-        String query = "SELECT * FROM user WHERE username = ? AND role is NULL";
+        String query = "SELECT * FROM user WHERE username = ? AND role = 'client'";
         PreparedStatement pst = connection.prepareStatement(query);
         pst.setString(1, username);
         ResultSet rs = pst.executeQuery();
@@ -138,6 +142,7 @@ public class ClientService implements IService<Client> {
             client.setNum_tel(rs.getString("num_tel"));
             client.setAdresse(rs.getString("adresse"));
             client.setPhoto(rs.getString("photo"));
+            client.setRole(rs.getString("role"));
             return client;
         }
         return null;

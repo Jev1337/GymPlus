@@ -10,7 +10,7 @@
 
 <AnchorPane prefHeight="214.0" prefWidth="625.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionsuivi.ObjectifListController">
    <children>
-      <Pane prefHeight="195.0" prefWidth="625.0" style="-fx-background-color: #fff;" stylesheets="@../images/style.css">
+      <Pane prefHeight="195.0" prefWidth="625.0" style="-fx-background-color: #fff;" stylesheets="@../assets/images/style.css">
          <children>
             <Separator layoutY="87.0" prefHeight="5.0" prefWidth="635.0" />
             <Label layoutX="40.0" layoutY="34.0" text="Objectif ajoutées" textFill="#3a1c9d">
@@ -86,12 +86,12 @@
             </Label>
             <ImageView fitHeight="39.0" fitWidth="44.0" layoutX="162.0" layoutY="98.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../images/Calendar.png" />
+                  <Image url="@../assets/images/Calendar.png" />
                </image>
             </ImageView>
             <ImageView fitHeight="27.0" fitWidth="33.0" layoutX="13.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../images/Verified Badge.png" />
+                  <Image url="@../assets/images/Verified Badge.png" />
                </image>
             </ImageView>
             <Separator layoutX="148.0" layoutY="104.0" orientation="VERTICAL" prefHeight="63.0" prefWidth="0.0" />
@@ -99,7 +99,7 @@
             <Separator layoutX="440.0" layoutY="106.0" orientation="VERTICAL" prefHeight="63.0" prefWidth="0.0" />
          </children>
       </Pane>
-      <Pane layoutY="176.0" prefHeight="39.0" prefWidth="625.0" styleClass="degrade-diagonal2" stylesheets="@../images/style.css">
+      <Pane layoutY="176.0" prefHeight="39.0" prefWidth="625.0" styleClass="degrade-diagonal2" stylesheets="@../assets/images/style.css">
          <children>
             <Label layoutX="172.0" layoutY="10.0" text="Vous aurez notifier quand votre planning est complet" textFill="#504df2">
                <font>
@@ -108,7 +108,7 @@
             </Label>
             <ImageView fitHeight="27.0" fitWidth="26.0" layoutX="486.0" layoutY="1.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../images/About.png" />
+                  <Image url="@../assets/images/About.png" />
                </image>
             </ImageView>
          </children>

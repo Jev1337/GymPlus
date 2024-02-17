@@ -10,7 +10,6 @@ public class User {
       `date_naiss` date DEFAULT NULL,
       `password` varchar(255) DEFAULT NULL,
       `email` varchar(255) DEFAULT NULL,
-      `poste` varchar(255) DEFAULT NULL,
       `role` varchar(255) DEFAULT NULL,
       `num_tel` varchar(255) DEFAULT NULL,
       `adresse` text DEFAULT NULL,
@@ -26,11 +25,12 @@ public class User {
     private String num_tel;
     private String adresse;
     private String photo;
+    private String role;
 
     public User() {
     }
 
-    public User(int id, String username, String firstname, String lastname, String date_naiss, String password, String email, String num_tel, String adresse, String photo) {
+    public User(int id, String username, String firstname, String lastname, String date_naiss, String password, String email, String num_tel, String adresse, String photo, String role) {
         this.id = id;
         this.username = username;
         this.firstname = firstname;
@@ -41,6 +41,7 @@ public class User {
         this.num_tel = num_tel;
         this.adresse = adresse;
         this.photo = photo;
+        this.role = role;
     }
 
     public int getId() {
@@ -124,6 +125,14 @@ public class User {
         this.photo = photo;
     }
 
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -136,6 +145,7 @@ public class User {
                 ", num_tel='" + num_tel + '\'' +
                 ", adresse='" + adresse + '\'' +
                 ", photo='" + photo + '\'' +
+                ", role='" + role + '\'' +
                 '}';
     }
 }

@@ -653,7 +653,6 @@ public class AdminDashboardController {
         try {
             User user = userlist_tableview.getSelectionModel().getSelectedItem();
             if (profilepic_pf.getText().isEmpty()) {
-
                 if (user.getRole().equals("client")){
                     clientService.update(new Client(user.getId(), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), dateofbirth_tf.getValue().toString(), user.getPassword(), email_tf.getText(), phone_tf.getText(), address_ta.getText(), user.getPhoto()));
                 }else if (user.getRole().equals("staff")) {
@@ -756,6 +755,17 @@ public class AdminDashboardController {
         switchToPane(AdminUserManagementPane);
     }
 
+
+    public void type_cb_act(ActionEvent actionEvent) {
+        if (type_cb.getValue().equals("All"))
+            initUserList(-1 , searchbar_tf.getText());
+        else if (type_cb.getValue().equals("Admin"))
+            initUserList(0, searchbar_tf.getText());
+        else if (type_cb.getValue().equals("Staff"))
+            initUserList(1, searchbar_tf.getText());
+        else if (type_cb.getValue().equals("Client"))
+            initUserList(2, searchbar_tf.getText());
+    }
 
     public void searchbar_tf_textchanged(KeyEvent keyEvent) {
         if (type_cb.getValue() == null || type_cb.getValue().equals("All"))

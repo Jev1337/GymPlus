@@ -615,7 +615,7 @@
                                                 <Font name="Open Sans Regular" size="16.0" />
                                              </font>
                                           </Label>
-                                          <ComboBox fx:id="type_cb" layoutX="916.0" layoutY="59.0" prefHeight="36.0" prefWidth="139.0" promptText="All" />
+                                          <ComboBox fx:id="type_cb" layoutX="916.0" layoutY="59.0" onAction="#type_cb_act" prefHeight="36.0" prefWidth="139.0" promptText="All" />
                                           <TextField fx:id="searchbar_tf" layoutX="754.0" layoutY="59.0" onKeyTyped="#searchbar_tf_textchanged" prefHeight="36.0" prefWidth="147.0" promptText="Search..." />
                                        </children>
                                     </Pane>

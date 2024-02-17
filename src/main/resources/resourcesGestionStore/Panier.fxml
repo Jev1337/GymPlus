@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionStore.PanierController">
+   <children>
+      <ScrollPane layoutX="2.0" layoutY="3.0" prefHeight="392.0" prefWidth="462.0">
+         <content>
+            <VBox fx:id="PanierVboxFx" prefHeight="397.0" prefWidth="470.0" />
+         </content>
+      </ScrollPane>
+      <Button layoutX="485.0" layoutY="361.0" mnemonicParsing="false" onAction="#ValiderPanier" prefHeight="25.0" prefWidth="102.0" text="Valider Panier" />
+      <Button layoutX="485.0" layoutY="326.0" mnemonicParsing="false" onAction="#ContinuerAchat" text="Continuer Achat" />
+      <Label fx:id="TotalPanierFX" layoutX="485.0" layoutY="282.0" prefHeight="17.0" prefWidth="102.0" text="Total Panier" />
+      <Label layoutX="485.0" layoutY="259.0" prefHeight="17.0" prefWidth="102.0" text="Total Panier :" />
+      <Label alignment="CENTER" layoutX="482.0" layoutY="14.0" prefHeight="25.0" prefWidth="96.0" text="Panier :">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

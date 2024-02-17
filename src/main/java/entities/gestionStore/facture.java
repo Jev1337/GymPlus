@@ -77,6 +77,11 @@ public class facture {
         this.id = id;
     }
 
+    public facture( String methodeDePaiement, int id) {
+        this.methodeDePaiement = methodeDePaiement;
+        this.id = id;
+    }
+
     @Override
     public String toString() {
         return "facture{" +
@@ -87,4 +92,6 @@ public class facture {
                 ", id=" + id +
                 '}';
     }
+
+
 }

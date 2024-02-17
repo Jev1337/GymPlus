@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionStore.GetAllFactureContoller">
+   <children>
+      <TableView fx:id="GetAllFacture" layoutX="106.0" layoutY="100.0" prefHeight="200.0" prefWidth="373.0">
+        <columns>
+          <TableColumn fx:id="idFactureCol" prefWidth="75.0" text="id Facture" />
+          <TableColumn fx:id="idClientCol" prefWidth="75.0" text="id Client" />
+            <TableColumn fx:id="DateCol" prefWidth="75.0" text="Date Vente" />
+            <TableColumn fx:id="TotalCol" prefWidth="82.0" text="Total Facture" />
+            <TableColumn fx:id="MethodeP" prefWidth="68.0" text="MethodeP" />
+        </columns>
+      </TableView>
+      <Label layoutX="215.0" layoutY="20.0" text="Get All Facture">
+         <font>
+            <Font size="25.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

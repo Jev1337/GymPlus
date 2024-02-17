@@ -1,5 +1,8 @@
 package utils;
 
+import javafx.scene.control.Alert;
+import javafx.stage.StageStyle;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -17,7 +20,13 @@ public class MyDatabase {
             connection = DriverManager.getConnection(URL,USER,PASS);
             System.out.println("Connected");
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.initStyle(StageStyle.UNDECORATED);
+            alert.setTitle("Error");
+            alert.setHeaderText("Error");
+            alert.setContentText("An error occurred while trying to connect to the database! Please try again later.");
+            alert.showAndWait();
+            System.exit(1);
         }
     }
     private static MyDatabase instance;

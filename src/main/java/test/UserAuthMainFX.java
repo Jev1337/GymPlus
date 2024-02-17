@@ -1,6 +1,7 @@
 package test;
 
 import atlantafx.base.theme.PrimerLight;
+import com.password4j.Password;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

@@ -29,13 +29,14 @@ public class AddBlogController implements Initializable {
 
     @FXML
     void addPost(ActionEvent event) {
-        Post p = new Post(10, "bbb", contentTxt.getText(), java.sql.Date.valueOf(date), null, 10);
+        Post p = new Post(10, "bbb", contentTxt.getText(), java.sql.Date.valueOf(date), "", 10);
         try {
             ps.add(p);
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Info");
             alert.setContentText("post added");
             alert.show();
+            getAllFromDB();
         } catch (SQLException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
@@ -44,9 +45,7 @@ public class AddBlogController implements Initializable {
         }
 
     }
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-
+    public void getAllFromDB (){
         try {
             List<Post> postList = new ArrayList<>(ps.getAll());
             for (Post post : postList) {
@@ -63,5 +62,9 @@ public class AddBlogController implements Initializable {
             alert.setContentText(e.getMessage());
             alert.show();
         }
+    }
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        getAllFromDB();
     }
 }

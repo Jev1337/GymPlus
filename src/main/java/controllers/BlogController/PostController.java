@@ -47,24 +47,28 @@ public class PostController {
 
     @FXML
     private HBox likeBtnContainer;
-    @FXML
-    private VBox idPost;
-    private String date = LocalDate.now().toString();
+
+    private int idPost;
+    private final String date = LocalDate.now().toString();
     private boolean isClicked = false;
-    private PostServices ps = new PostServices();
+    private final PostServices ps = new PostServices();
 
     @FXML
     public void addLike() {
         isClicked = !isClicked;
-        if (isClicked) {
-            likeBtn.setTextFill(Paint.valueOf("#005bee"));
-            /*try {
-                ps.updateNbLikes(getPost());
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }*/
-        } else {
-            likeBtn.setTextFill(Paint.valueOf("#616770"));
+        Post p = getPost();
+        try {
+            if (isClicked) {
+                likeBtn.setTextFill(Paint.valueOf("#005bee"));
+                ps.addNbLikes(p);
+                nbLikes.setText(ps.getNbLikesById(idPost) + " Likes");
+            } else {
+                ps.minNbLikes(p);
+                likeBtn.setTextFill(Paint.valueOf("#616770"));
+                nbLikes.setText(ps.getNbLikesById(idPost) + " Likes");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -72,27 +76,25 @@ public class PostController {
     }
 
     public void setPost(Post p) {
-        //idPost.setId(String.valueOf(p.getId_post()));
+        idPost = p.getId_post();
         captionTxt.setText(p.getContent());
         userNameTxt.setText("ilyes arous");
         nbLikes.setText(p.getLikes() + " Likes");
         nbComnts.setText(p.getLikes() + " Comments");
         dateTxt.setText(p.getDate().toString());
-        if (Objects.equals(p.getPhoto(), "null") && p.getPhoto().isEmpty()) {
+        if (Objects.equals(p.getPhoto(), "") && p.getPhoto().isEmpty()) {
             imgPost.setVisible(false);
             imgPost.setManaged(false);
         }
     }
-    /*public Post getPost(){
+
+    public Post getPost() {
         Post p = new Post();
-        //p.setId_post(Integer.parseInt(idPost.getId()));
-        p.setDate(Date.valueOf(dateTxt.getText()));
-        p.setContent(captionTxt.getText());
-        p.setLikes(Integer.parseInt(nbLikes.getText()));
-        p.setPhoto(imgPost.getImage().toString());
-        p.setUser_id(10);
+        p.setId_post(idPost);
+        String[] arrOfStr = nbLikes.getText().split(" ");
+        p.setLikes(Integer.parseInt(arrOfStr[0]));
         return p;
-    }*/
+    }
 
 
 }

@@ -65,40 +65,14 @@ To get a local copy up and running follow these simple example steps.
 ### Prerequisites
 
 This is an example of how to list things you need to use the software and how to install them.
-
-* npm
-
-```sh
-npm install npm@latest -g
-```
-
-### Installation
-
-1. Get a free API Key at [https://example.com](https://example.com)
-
-2. Clone the repo
-
-```sh
-git clone https://github.com/your_username_/Project-Name.git
-```
-
-3. Install NPM packages
-
-```sh
-npm install
-```
-
-4. Enter your API in `config.js`
-
-```JS
-const API_KEY = 'ENTER YOUR API';
-```
+* JavaFX [https://openjfx.io/](https://openjfx.io/)
+* Symphony [https://symfony.com/](https://symfony.com/)
+* MySQL via XAMPP [https://www.apachefriends.org/index.html](https://www.apachefriends.org/index.html)
 
 ## Usage
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
-
-_For more examples, please refer to the [Documentation](https://example.com)_
+The only thing you need to do is to run the project and you are good to go. One note however is that in order to create an Admin account you have to create a Member account with the sign up
+then change the role in the database to Admin. This is a temporary solution and will be fixed in the future.
 
 ## Roadmap
 
@@ -124,9 +98,6 @@ Contributions are what make the open source community such an amazing place to b
 
 Distributed under the MIT License. See [LICENSE](https://github.com/Jev1337/GymPlus/blob/main/LICENSE.md) for more information.
 
-## Authors
-
-* **Shaan Khan** - *Comp Sci Student* - [Shaan Khan](https://github.com/ShaanCoding/) - *Built ReadME Template*
 
 ## Acknowledgements
 

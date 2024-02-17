@@ -546,7 +546,7 @@
                         </ScrollPane>
                         <ScrollPane fx:id="StaffEquipmentManagementPane" prefHeight="646.0" prefWidth="1155.0" visible="false">
                            <content>
-                              <Pane prefHeight="808.0" prefWidth="1156.0">
+                              <Pane fx:id="EquipmentIdAdminStaff" prefHeight="808.0" prefWidth="1156.0">
                                  <children>
                                     <Label layoutX="39.0" layoutY="14.0" text="Staff / Equipments">
                                        <font>

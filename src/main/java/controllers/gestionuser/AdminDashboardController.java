@@ -44,6 +44,7 @@ import services.gestionuser.ClientService;
 import services.gestionuser.StaffService;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.time.LocalDate;
 import java.util.List;
@@ -276,6 +277,9 @@ public class AdminDashboardController {
 
     @FXML
     private LineChart<String, Number> stat_linechart;
+
+    @FXML
+    private Pane EquipmentIdAdminStaff;
 
     @FXML
     void bars_btn_clicked(MouseEvent event) {
@@ -806,6 +810,12 @@ public class AdminDashboardController {
         setFitToWidthAll();
         initAnimations();
         initDecoratedStage();
+        try {
+            Pane pane_event= FXMLLoader.load(getClass().getResource("/gestionequipement/equipement.fxml"));
+            EquipmentIdAdminStaff.getChildren().setAll(pane_event);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         initUserList(-1, "");
     }
 

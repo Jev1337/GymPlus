@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="808.0" prefWidth="1155.0" style="-fx-background-color: #e9ecef;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionequipement.EquipementController">
+   <children>
+      <Pane fx:id="maintPane" prefHeight="818.0" prefWidth="1165.0" visible="false">
+         <children>
+            <Pane layoutX="42.0" layoutY="74.0" prefHeight="644.0" prefWidth="499.0" style="-fx-background-color: white; -fx-border-radius: 30px; -fx-background-radius: 30px;">
+               <children>
+                  <Label layoutX="30.0" layoutY="39.0" prefHeight="27.0" prefWidth="147.0" style="-fx-font-size: 18;" text="Add Maintenance">
+                     <font>
+                        <Font name="Open Sans Regular" size="17.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="add_idm" layoutX="21.0" layoutY="143.0" />
+                  <TextField fx:id="add_status" layoutX="21.0" layoutY="448.0" />
+                  <Button fx:id="add_button1" layoutX="378.0" layoutY="542.0" mnemonicParsing="false" onAction="#addMaint" text="Add" />
+                  <Label layoutX="21.0" layoutY="111.0" prefHeight="20.0" prefWidth="136.0" text="Id Maintenance" />
+                  <Label layoutX="21.0" layoutY="205.0" prefHeight="20.0" prefWidth="136.0" text="Id Equipment" />
+                  <Label layoutX="22.0" layoutY="322.0" prefHeight="20.0" prefWidth="147.0" text="Date maintenance" />
+                  <Label layoutX="23.0" layoutY="418.0" prefHeight="20.0" prefWidth="65.0" text="Status" />
+                  <ComboBox fx:id="add_ide" layoutX="21.0" layoutY="238.0" prefWidth="150.0" />
+                  <DatePicker fx:id="add_date" layoutX="20.0" layoutY="357.0" />
+               </children>
+            </Pane>
+            <Pane layoutX="557.0" layoutY="74.0" prefHeight="644.0" prefWidth="576.0" style="-fx-background-color: white; -fx-border-radius: 30px; -fx-background-radius: 30px;">
+               <children>
+                  <Label layoutX="20.0" layoutY="30.0" prefHeight="27.0" prefWidth="181.0" style="-fx-font-size: 18;" text="Maintenance List">
+                     <font>
+                        <Font name="Open Sans Regular" size="17.0" />
+                     </font>
+                  </Label>
+                  <TableView fx:id="tableviewMaint" layoutX="19.0" layoutY="68.0" prefHeight="503.0" prefWidth="539.0">
+                     <columns>
+                        <TableColumn fx:id="show_idm" prefWidth="97.0" text="Id Maint" />
+                        <TableColumn fx:id="show_ide" prefWidth="100.0" text="Id equip" />
+                        <TableColumn fx:id="show_datem" prefWidth="202.0" text="Date Maint" />
+                        <TableColumn fx:id="show_status" prefWidth="139.0" text="status" />
+                     </columns>
+                  </TableView>
+                  <Button fx:id="delete_button1" layoutX="414.0" layoutY="591.0" mnemonicParsing="false" onAction="#deleteMaint" text="Delete" />
+                  <Button fx:id="modify_button1" layoutX="494.0" layoutY="591.0" mnemonicParsing="false" onAction="#modifyMaint" text="Modify" />
+               </children>
+            </Pane>
+            <Button fx:id="gotoequip_btn" layoutX="40.0" layoutY="25.0" mnemonicParsing="false" onAction="#gotoequip_btn_act" text="Go to Equipment" />
+         </children>
+      </Pane>
+      <Pane fx:id="EquipPane" prefHeight="818.0" prefWidth="1165.0">
+         <children>
+            <Pane layoutX="42.0" layoutY="74.0" prefHeight="644.0" prefWidth="499.0" style="-fx-background-color: white; -fx-border-radius: 30px; -fx-background-radius: 30px;">
+               <children>
+                  <Label layoutX="30.0" layoutY="39.0" prefHeight="27.0" prefWidth="147.0" style="-fx-font-size: 18;" text="Add Equipment">
+                     <font>
+                        <Font name="Open Sans Regular" size="17.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="add_id" layoutX="21.0" layoutY="129.0" />
+                  <TextField fx:id="add_name" layoutX="21.0" layoutY="221.0" />
+                  <TextField fx:id="add_desc" layoutX="21.0" layoutY="302.0" />
+                  <TextField fx:id="add_lp" layoutX="21.0" layoutY="391.0" />
+                  <TextField fx:id="add_state" layoutX="21.0" layoutY="484.0" />
+                  <Button fx:id="add_button" layoutX="378.0" layoutY="542.0" mnemonicParsing="false" onAction="#addEquipement" text="Add" />
+                  <Label layoutX="21.0" layoutY="103.0" prefHeight="20.0" prefWidth="82.0" text="Id" />
+                  <Label layoutX="23.0" layoutY="193.0" prefHeight="20.0" prefWidth="95.0" text="Name" />
+                  <Label layoutX="25.0" layoutY="276.0" text="Description" />
+                  <Label layoutX="25.0" layoutY="367.0" prefHeight="20.0" prefWidth="105.0" text="Life Span" />
+                  <Label layoutX="27.0" layoutY="455.0" prefHeight="20.0" prefWidth="65.0" text="State" />
+               </children>
+            </Pane>
+            <Pane layoutX="557.0" layoutY="74.0" prefHeight="644.0" prefWidth="576.0" style="-fx-background-color: white; -fx-border-radius: 30px; -fx-background-radius: 30px;">
+               <children>
+                  <Label layoutX="20.0" layoutY="30.0" prefHeight="27.0" prefWidth="147.0" style="-fx-font-size: 18;" text="Equipment List">
+                     <font>
+                        <Font name="Open Sans Regular" size="17.0" />
+                     </font>
+                  </Label>
+                  <TableView fx:id="tableviewEq" layoutX="19.0" layoutY="68.0" prefHeight="503.0" prefWidth="539.0">
+                    <columns>
+                      <TableColumn fx:id="show_id" prefWidth="75.0" text="Id" />
+                      <TableColumn fx:id="show_name" prefWidth="75.0" text="Name" />
+                        <TableColumn fx:id="show_desc" prefWidth="149.0" text="Description" />
+                        <TableColumn fx:id="show_lp" prefWidth="102.0" text="Life Period" />
+                        <TableColumn fx:id="show_state" prefWidth="137.0" text="State" />
+                    </columns>
+                  </TableView>
+                  <Button fx:id="delete_button" layoutX="418.0" layoutY="585.0" mnemonicParsing="false" onAction="#deleteEquipment" text="Delete" />
+                  <Button fx:id="modify_button" layoutX="494.0" layoutY="585.0" mnemonicParsing="false" onAction="#modifyEquipment" text="Modify" />
+               </children>
+            </Pane>
+            <Button fx:id="gotomaint_btn" layoutX="984.0" layoutY="25.0" mnemonicParsing="false" onAction="#gotomaint_btn_act" text="Go to Maintenances" />
+         </children>
+      </Pane>
+      <Pane fx:id="editEquip" prefHeight="818.0" prefWidth="1165.0" visible="false" />
+      <Pane fx:id="ModifyEquipPane" layoutX="52.0" layoutY="84.0" prefHeight="644.0" prefWidth="1056.0" style="-fx-background-color: white; -fx-border-radius: 30px; -fx-background-radius: 30px;" visible="false">
+         <children>
+            <Label layoutX="27.0" layoutY="88.0" prefHeight="27.0" prefWidth="217.0" style="-fx-font-size: 18;" text="Modify Equipment">
+               <font>
+                  <Font name="Open Sans Regular" size="17.0" />
+               </font>
+            </Label>
+            <TextField fx:id="add_name1" layoutX="21.0" layoutY="221.0" />
+            <TextField fx:id="add_desc1" layoutX="21.0" layoutY="302.0" />
+            <TextField fx:id="add_lp1" layoutX="21.0" layoutY="391.0" />
+            <TextField fx:id="add_state1" layoutX="21.0" layoutY="484.0" />
+            <Button fx:id="editEquip_btn" layoutX="956.0" layoutY="572.0" mnemonicParsing="false" onAction="#editEquip" text="Modify" />
+            <Label layoutX="23.0" layoutY="193.0" prefHeight="20.0" prefWidth="95.0" text="Name" />
+            <Label layoutX="25.0" layoutY="276.0" text="Description" />
+            <Label layoutX="25.0" layoutY="367.0" prefHeight="20.0" prefWidth="105.0" text="Life Span" />
+            <Label layoutX="27.0" layoutY="455.0" prefHeight="20.0" prefWidth="65.0" text="State" />
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>

@@ -35,6 +35,7 @@ import javafx.util.Duration;
 import services.gestionuser.StaffService;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.time.LocalDate;
 
@@ -152,6 +153,10 @@ public class StaffDashboardController {
 
     @FXML
     private LineChart<String, Number> stat_linechart;
+
+    @FXML
+    private Pane EquipmentIdAdminStaff;
+
     @FXML
     void user_imageview_clicked(MouseEvent event) {
         switchToPane(StaffInfoPane);
@@ -526,6 +531,12 @@ public class StaffDashboardController {
         setFitToWidthAll();
         initAnimations();
         initDecoratedStage();
+        try {
+            Pane pane_event= FXMLLoader.load(getClass().getResource("/gestionequipement/equipement.fxml"));
+            EquipmentIdAdminStaff.getChildren().setAll(pane_event);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void initCharts(){

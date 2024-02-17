@@ -815,9 +815,6 @@ public class AdminDashboardController {
         try {
             Pane pane= FXMLLoader.load(getClass().getResource("/gestionevents/eventstaffadmin.fxml"));
             affichage_events_adstaff.getChildren().setAll(pane);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
             Pane pane_event= FXMLLoader.load(getClass().getResource("/gestionequipement/equipement.fxml"));
             EquipmentIdAdminStaff.getChildren().setAll(pane_event);
         } catch (IOException e) {

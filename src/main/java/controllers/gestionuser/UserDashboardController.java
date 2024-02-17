@@ -184,6 +184,9 @@ public class UserDashboardController {
     private ScrollPane UserObjectivePane;
 
     @FXML
+    private Pane ObjectifPan;
+
+    @FXML
     private ScrollPane UserBlogPane;
 
     @FXML
@@ -248,8 +251,8 @@ public class UserDashboardController {
         initAnimations();
         initDecoratedStage();
         try {
-            Pane pane= FXMLLoader.load(getClass().getResource("/gestionBlog/Blog.fxml"));
-            blogId.getChildren().setAll(pane);
+            Pane pane= FXMLLoader.load(getClass().getResource("/gestionSuivi/objectif1.fxml"));
+            ObjectifPan.getChildren().setAll(pane);
         } catch (IOException e) {
             e.printStackTrace();
         }

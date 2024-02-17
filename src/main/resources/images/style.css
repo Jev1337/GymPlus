@@ -3,3 +3,12 @@
      -fx-background-color: linear-gradient(to right, #00aaff, #005f7a)
 ;
 }
+.degrade-diagonal {
+     -fx-background-color: linear-gradient(to bottom right, gray, darkgray);
+}
+
+.degrade-diagonal2 {
+     -fx-background-color: linear-gradient(to bottom right, lightgray, floralwhite);
+}
+
+

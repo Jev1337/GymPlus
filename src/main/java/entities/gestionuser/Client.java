@@ -2,10 +2,12 @@ package entities.gestionuser;
 
 public class Client extends User {
 
+    private final String role = "client";
+
     public Client() {
     }
 
     public Client(int id, String username, String firstname, String lastname, String date_naiss, String password, String email, String num_tel, String adresse, String photo) {
-        super(id, username, firstname, lastname, date_naiss, password, email, num_tel, adresse, photo);
+        super(id, username, firstname, lastname, date_naiss, password, email, num_tel, adresse, photo, "client");
     }
 }

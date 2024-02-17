@@ -14,12 +14,12 @@
          <children>
             <ImageView fitHeight="234.0" fitWidth="426.0" layoutX="-7.0" layoutY="11.0" opacity="0.73" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../images/backgroundChatbot2.png" />
+                  <Image url="@../assets/images/backgroundChatbot2.png" />
                </image>
             </ImageView>
             <ImageView fitHeight="43.0" fitWidth="47.0" layoutX="-2.0" layoutY="-3.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../images/ChatGPT.png" />
+                  <Image url="@../assets/images/ChatGPT.png" />
                </image>
             </ImageView>
          </children>

@@ -11,17 +11,17 @@
    <children>
       <ImageView fitHeight="348.0" fitWidth="1284.0" layoutX="-2.0" opacity="0.94" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../images/cover.jpg" />
+            <Image url="@../assets/images/cover.jpg" />
          </image>
       </ImageView>
       <ImageView fitHeight="348.0" fitWidth="1291.0" layoutX="-2.0" layoutY="348.0" opacity="0.94" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../images/cover.jpg" />
+            <Image url="@../assets/images/cover.jpg" />
          </image>
       </ImageView>
       <ImageView fitHeight="357.0" fitWidth="1268.0" layoutX="-34.0" layoutY="518.0" opacity="0.94" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../images/cover.jpg" />
+            <Image url="@../assets/images/cover.jpg" />
          </image>
       </ImageView>
       <Separator layoutX="480.0" layoutY="105.0" orientation="VERTICAL" prefHeight="627.0" prefWidth="5.0" />

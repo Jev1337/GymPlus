@@ -1,4 +1,5 @@
 package services.gestionevents;
+import javafx.scene.control.Alert;
 import services.IService;
 import utils.MyDatabase;
 
@@ -17,12 +18,28 @@ public class Event_detailsService implements IService<Event_details> {
 
     @Override
     public void add(Event_details eventDetails) throws SQLException {
+        //check if event date and type are taken
+        String query1="SELECT * From event_details where event_date=? and type=?";
+        PreparedStatement ps1=connection.prepareStatement(query1);
+        ps1.setString(1, eventDetails.getEvent_date());
+        ps1.setString(2, eventDetails.getType());
+        ResultSet rs=ps1.executeQuery();
+        if(rs.next())
+        {
+            Alert alert=new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText(null);
+            alert.setContentText("Event date and type are already taken");
+            alert.showAndWait();
+            return;
+        }
         String query="INSERT INTO event_details (name, type, event_date, duree) VALUES (?,?,?,?)";
         PreparedStatement ps= connection.prepareStatement(query);
         ps.setString(1, eventDetails.getName());
         ps.setString(2, eventDetails.getType());
         ps.setString(3, eventDetails.getEvent_date());
-        ps.setInt(4, eventDetails.getDuree());
+        ps.setString(4, eventDetails.getDuree());
+
         ps.executeUpdate();
     }
 
@@ -41,7 +58,7 @@ public class Event_detailsService implements IService<Event_details> {
     ps.setString(1, eventDetails.getName());
     ps.setString(2, eventDetails.getType());
     ps.setString(3, eventDetails.getEvent_date());
-    ps.setInt(4, eventDetails.getDuree());
+    ps.setString(4, eventDetails.getDuree());
     ps.setInt(5, eventDetails.getId());
     ps.executeUpdate();
     }
@@ -53,7 +70,7 @@ public class Event_detailsService implements IService<Event_details> {
         Statement st= connection.createStatement();
         ResultSet rs= st.executeQuery(query);
         while(rs.next()){
-            Event_details eventDetails= new Event_details(rs.getString("name"), rs.getString("type"), rs.getString("event_date"), rs.getInt("duree"));
+            Event_details eventDetails= new Event_details(rs.getString("name"), rs.getString("type"), rs.getString("event_date"), rs.getString("duree"));
             eventDetails.setId(rs.getInt("id"));
             eventDetailsList.add(eventDetails);
 

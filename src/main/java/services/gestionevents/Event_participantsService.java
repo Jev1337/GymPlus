@@ -20,7 +20,7 @@ public class Event_participantsService implements IService<Event_participants> {
     }
     @Override
     public void add(Event_participants eventParticipants) throws SQLException {
-        String query="INSERT INTO event_participants (event_id, participant_id) VALUES (?,?)";
+        String query="INSERT INTO event_participants (event_details_id, user_id) VALUES (?,?)";
         PreparedStatement ps= connection.prepareStatement(query);
         ps.setInt(1, eventParticipants.getEvent_id());
         ps.setInt(2, eventParticipants.getParticipant_id());
@@ -30,7 +30,7 @@ public class Event_participantsService implements IService<Event_participants> {
 
     @Override
     public void delete(int id) throws SQLException {
-    String query="DELETE FROM event_participants WHERE id=?";
+    String query="DELETE FROM event_participants WHERE event_details_id=?";
     PreparedStatement ps= connection.prepareStatement(query);
     ps.setInt(1, id);
     ps.executeUpdate();
@@ -39,7 +39,7 @@ public class Event_participantsService implements IService<Event_participants> {
 
     @Override
     public void update(Event_participants eventParticipants) throws SQLException {
-    String query="UPDATE event_participants SET event_id=?, user_id=? WHERE id=?";
+    String query="UPDATE event_participants SET event_details_id=?, user_id=? WHERE id=?";
     PreparedStatement ps= connection.prepareStatement(query);
     ps.setInt(1, eventParticipants.getEvent_id());
     ps.setInt(2, eventParticipants.getParticipant_id());
@@ -55,7 +55,7 @@ public class Event_participantsService implements IService<Event_participants> {
         PreparedStatement ps= connection.prepareStatement(query);
         ResultSet rs= ps.executeQuery();
         while(rs.next()){
-            Event_participants eventParticipants= new Event_participants(rs.getInt("event_id"), rs.getInt("participant_id"));
+            Event_participants eventParticipants= new Event_participants(rs.getInt("event_details_id"), rs.getInt("user_id"));
             eventParticipants.setId(rs.getInt("id"));
             eventParticipantsList.add(eventParticipants);
         }

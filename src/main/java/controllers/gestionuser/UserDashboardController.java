@@ -29,14 +29,7 @@ import services.gestionuser.ClientService;
 
 import java.io.File;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
-import java.util.Locale;
 
 import java.io.IOException;
 
@@ -51,6 +44,8 @@ public class UserDashboardController {
     @FXML
     private Pane blogId = new Pane();
 
+    @FXML
+    private Pane usereventpane_id ;
 
     @FXML
     void settings_btn_clicked(MouseEvent event) {
@@ -252,6 +247,7 @@ public class UserDashboardController {
 
     @FXML
     private ImageView userprofile_imageview;
+
     @FXML
     void browse_btn_act(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
@@ -424,6 +420,12 @@ public class UserDashboardController {
         try {
             Pane pane= FXMLLoader.load(getClass().getResource("/gestionBlog/Blog.fxml"));
             blogId.getChildren().setAll(pane);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            Pane pane_event= FXMLLoader.load(getClass().getResource("/gestionevents/event.fxml"));
+            usereventpane_id.getChildren().setAll(pane_event);
         } catch (IOException e) {
             e.printStackTrace();
         }

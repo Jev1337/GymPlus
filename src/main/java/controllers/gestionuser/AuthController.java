@@ -266,7 +266,7 @@ public class AuthController {
             }
             if (client != null && Password.check(pwd_pf.getText(), client.getPassword()).withBcrypt()){
                 GlobalVar.setUser(client);
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/userDashboard.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/gestionuser/userDashboard.fxml"));
                 Parent root = loader.load();
                 signin_btn.getScene().getWindow().setWidth(1200);
                 signin_btn.getScene().getWindow().setHeight(720);
@@ -275,7 +275,7 @@ public class AuthController {
             }
             if (admin != null && Password.check(pwd_pf.getText(), admin.getPassword()).withBcrypt()){
                 GlobalVar.setUser(admin);
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/adminDashboard.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/gestionuser/adminDashboard.fxml"));
                 Parent root = loader.load();
                 signin_btn.getScene().getWindow().setWidth(1200);
                 signin_btn.getScene().getWindow().setHeight(720);
@@ -284,7 +284,7 @@ public class AuthController {
             }
             if (staff != null && Password.check(pwd_pf.getText(), staff.getPassword()).withBcrypt()){
                 GlobalVar.setUser(staff);
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/staffDashboard.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/gestionuser/staffDashboard.fxml"));
                 Parent root = loader.load();
                 signin_btn.getScene().getWindow().setWidth(1200);
                 signin_btn.getScene().getWindow().setHeight(720);

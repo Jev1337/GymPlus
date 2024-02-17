@@ -29,14 +29,7 @@ import services.gestionuser.ClientService;
 
 import java.io.File;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
-import java.util.Locale;
 
 import java.io.IOException;
 
@@ -65,7 +58,7 @@ public class UserDashboardController {
     @FXML
     void logout_btn_act(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/authInterface.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/gestionuser/authInterface.fxml"));
             Parent root = loader.load();
             logout_btn.getScene().getWindow().setWidth(600);
             logout_btn.getScene().getWindow().setHeight(400);
@@ -480,7 +473,6 @@ public class UserDashboardController {
     }
     private void initProfile(){
         String photoname = GlobalVar.getUser().getPhoto();
-            System.out.println(photoname);
         user_imageview.setImage(new Image(new File("src/assets/profileuploads/" +photoname).toURI().toString()));
         Circle clip1 = new Circle(user_imageview.getFitWidth()/2, user_imageview.getFitHeight()/2, user_imageview.getFitWidth()/2);
         user_imageview.setClip(clip1);

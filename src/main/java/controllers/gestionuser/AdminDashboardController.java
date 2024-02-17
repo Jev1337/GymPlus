@@ -5,7 +5,6 @@ import animatefx.animation.FadeInRight;
 import animatefx.animation.FadeOutRight;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import entities.gestionuser.Admin;
-import entities.gestionuser.Client;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -32,7 +31,6 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import services.gestionuser.AdminService;
-import services.gestionuser.ClientService;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -229,7 +227,7 @@ public class AdminDashboardController {
     @FXML
     void logout_btn_act(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/authInterface.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/gestionuser/authInterface.fxml"));
             Parent root = loader.load();
             logout_btn.getScene().getWindow().setWidth(600);
             logout_btn.getScene().getWindow().setHeight(400);

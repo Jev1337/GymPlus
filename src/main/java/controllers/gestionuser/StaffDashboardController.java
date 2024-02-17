@@ -4,7 +4,6 @@ import animatefx.animation.FadeIn;
 import animatefx.animation.FadeInRight;
 import animatefx.animation.FadeOutRight;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
-import entities.gestionuser.Client;
 import entities.gestionuser.Staff;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
@@ -334,7 +333,7 @@ public class StaffDashboardController {
     @FXML
     void logout_btn_act(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/authInterface.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/gestionuser/authInterface.fxml"));
             Parent root = loader.load();
             logout_btn.getScene().getWindow().setWidth(600);
             logout_btn.getScene().getWindow().setHeight(400);

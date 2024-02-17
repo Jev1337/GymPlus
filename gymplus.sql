@@ -148,9 +148,8 @@ CREATE TABLE `objectif` (
 CREATE TABLE `planning` (
   `id_Planning` int(11) NOT NULL,
   `idObjectif` int(11) DEFAULT NULL,
-  `idCoach` int(11) DEFAULT NULL,
-  `trainingProg` text DEFAULT NULL,
-  `foodProg` text DEFAULT NULL
+  `TrainingProg` text DEFAULT NULL,
+  `FoodProg` text DEFAULT NULL
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -314,7 +313,7 @@ ADD
 ADD
   KEY `userId` (`userId`),
 ADD
-  KEY `coachId` (`coachId`);
+  KEY `coachId` (`CoachId`);
 
 --
 -- Index pour la table `planning`
@@ -322,11 +321,9 @@ ADD
 ALTER TABLE
   `planning`
 ADD
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`id_Planning`),
 ADD
-  KEY `idObjectif` (`idObjectif`),
-ADD
-  KEY `idCoach` (`idCoach`);
+  KEY `idObjectif` (`idObjectif`);
 
 --
 -- Index pour la table `post`
@@ -447,9 +444,7 @@ ADD
 ALTER TABLE
   `planning`
 ADD
-  CONSTRAINT `planning_ibfk_1` FOREIGN KEY (`idObjectif`) REFERENCES `objectif` (`idObjectif`),
-ADD
-  CONSTRAINT `planning_ibfk_2` FOREIGN KEY (`idCoach`) REFERENCES `user` (`id`);
+  CONSTRAINT `planning_ibfk_1` FOREIGN KEY (`idObjectif`) REFERENCES `objectif` (`idObjectif`);
 
 --
 -- Contraintes pour la table `post`

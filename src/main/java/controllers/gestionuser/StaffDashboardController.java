@@ -4,7 +4,6 @@ import animatefx.animation.FadeIn;
 import animatefx.animation.FadeInRight;
 import animatefx.animation.FadeOutRight;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
-import entities.gestionuser.Client;
 import entities.gestionuser.Staff;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
@@ -25,6 +24,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
@@ -152,6 +153,10 @@ public class StaffDashboardController {
 
     @FXML
     private LineChart<String, Number> stat_linechart;
+
+    @FXML
+    private Pane EquipmentIdAdminStaff;
+
     @FXML
     void user_imageview_clicked(MouseEvent event) {
         switchToPane(StaffInfoPane);
@@ -337,7 +342,7 @@ public class StaffDashboardController {
     @FXML
     void logout_btn_act(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/authInterface.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/gestionuser/authInterface.fxml"));
             Parent root = loader.load();
             logout_btn.getScene().getWindow().setWidth(600);
             logout_btn.getScene().getWindow().setHeight(400);
@@ -449,6 +454,7 @@ public class StaffDashboardController {
     }
 
     private void initProfile(){
+
         String photoname = GlobalVar.getUser().getPhoto();
         user_imageview.setImage(new Image(new File("src/assets/profileuploads/" +photoname).toURI().toString()));
         Circle clip1 = new Circle(user_imageview.getFitWidth()/2, user_imageview.getFitHeight()/2, user_imageview.getFitWidth()/2);
@@ -516,6 +522,9 @@ public class StaffDashboardController {
     private double xOffset = 0;
     private double yOffset = 0;
     public void initialize() {
+        Media media = new Media(new File(getClass().getResource("/assets/sounds/welcome.mp3").getFile()).toURI().toString());
+        MediaPlayer mediaPlayer = new MediaPlayer(media);
+        mediaPlayer.play();
         fadeInRightAnimation.setNode(StaffHomePane);
         fadeInRightAnimation.play();
         stat_combobox.getItems().addAll(FXCollections.observableArrayList("Abonnements", "Clients", "Staff"));
@@ -527,6 +536,8 @@ public class StaffDashboardController {
         try {
             Pane pane= FXMLLoader.load(getClass().getResource("/gestionevents/eventstaffadmin.fxml"));
             affichage_events_adstaff.getChildren().setAll(pane);
+            Pane pane_event= FXMLLoader.load(getClass().getResource("/gestionequipement/equipement.fxml"));
+            EquipmentIdAdminStaff.getChildren().setAll(pane_event);
         } catch (IOException e) {
             e.printStackTrace();
         }

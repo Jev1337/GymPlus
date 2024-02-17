@@ -2,6 +2,8 @@ package services.gestionSuivi;
 
 import entities.gestionSuivi.Objectif;
 import entities.gestionSuivi.Planning;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import services.IService;
 import utils.MyDatabase;
 
@@ -14,6 +16,30 @@ public class ObjectifService implements IService<Objectif> {
     public ObjectifService() {
         connection = MyDatabase.getInstance().getConnection();
     }
+
+
+    public int getCoachIdByName(String name_coach_selected) {
+        String query = "SELECT id  FROM user WHERE username = ? AND role='Coach'";
+        int coachId =0 ;
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setString(1, name_coach_selected);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                coachId = rs.getInt("id");
+            }
+
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return coachId;
+    }
+
 
 
 

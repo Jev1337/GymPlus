@@ -14,6 +14,8 @@ public class Objectif {
     private String typeObj;
     private String coachName;
     private String firstName;
+    private String coachPhoto;
+
     private int coachId ;
 
     public  Objectif (){
@@ -168,5 +170,12 @@ public class Objectif {
         }
 
 
+    public String getCoachPhoto() {
+        return coachPhoto;
+    }
+
+    public void setCoachPhoto(String coachPhoto) {
+        this.coachPhoto = coachPhoto;
+    }
 }
 

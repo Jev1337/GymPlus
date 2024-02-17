@@ -63,4 +63,17 @@ public class Event_participantsService implements IService<Event_participants> {
         return eventParticipantsList;
 
     }
+    public List<String> getParticipants(int event_id) throws SQLException {
+        List<String> participantsList= new ArrayList<>();
+        String query="Select username , firstname, lastname from user u join event_participants ep on u.id=ep.user_id where ep.event_details_id=?";
+        PreparedStatement ps= connection.prepareStatement(query);
+        ps.setInt(1, event_id);
+        ResultSet rs= ps.executeQuery();
+        while(rs.next()){
+            participantsList.add(rs.getString("username"));
+            participantsList.add(rs.getString("firstname"));
+            participantsList.add(rs.getString("lastname"));
+        }
+        return participantsList;
+    }
 }

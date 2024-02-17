@@ -13,6 +13,8 @@ public class Event_details {
         this.event_date = event_date;
         this.duree = duree;
     }
+    public Event_details()
+    {}
     public int getId() {
         return id;
     }

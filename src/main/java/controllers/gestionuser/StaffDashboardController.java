@@ -34,6 +34,7 @@ import javafx.util.Duration;
 import services.gestionuser.StaffService;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.time.LocalDate;
 
@@ -155,6 +156,8 @@ public class StaffDashboardController {
     void user_imageview_clicked(MouseEvent event) {
         switchToPane(StaffInfoPane);
     }
+    @FXML
+    private Pane affichage_events_adstaff;
     @FXML
     void browse_btn_act(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
@@ -521,6 +524,12 @@ public class StaffDashboardController {
         setFitToWidthAll();
         initAnimations();
         initDecoratedStage();
+        try {
+            Pane pane= FXMLLoader.load(getClass().getResource("/gestionevents/eventstaffadmin.fxml"));
+            affichage_events_adstaff.getChildren().setAll(pane);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void initCharts(){

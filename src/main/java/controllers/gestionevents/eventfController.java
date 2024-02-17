@@ -54,21 +54,22 @@ public class eventfController {
     @FXML
     void initialize() {
         try {
-            List<Event_details> events = eventDetailsService.getAll();
-            ObservableList<Event_details> observableList = FXCollections.observableList(events);
-            event_detailsTableView.setItems(observableList);
-
-            namec.setCellValueFactory(new PropertyValueFactory<>("name"));
-            typec.setCellValueFactory(new PropertyValueFactory<>("type"));
-            datec.setCellValueFactory(new PropertyValueFactory<>("event_date"));
-            durationc.setCellValueFactory(new PropertyValueFactory<>("duree"));
-            startCountdown();
-
-
-
+            afficher();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
+        startCountdown();
+    }
+    void afficher() throws SQLException {
+        ObservableList<Event_details> event_details = FXCollections.observableArrayList();
+        List<Event_details> events = eventDetailsService.getAll();
+        event_details.addAll(events);
+        event_detailsTableView.setItems(event_details);
+        namec.setCellValueFactory(new PropertyValueFactory<>("name"));
+        typec.setCellValueFactory(new PropertyValueFactory<>("type"));
+        datec.setCellValueFactory(new PropertyValueFactory<>("event_date"));
+        durationc.setCellValueFactory(new PropertyValueFactory<>("duree"));
+
     }
     public boolean hasUserJoinedEvent(int event_id,int user_id) throws SQLException {
         Connection connection = MyDatabase.getInstance().getConnection();

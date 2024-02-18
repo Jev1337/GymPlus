@@ -29,7 +29,7 @@
 <?import javafx.scene.paint.Stop?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="720.0" prefWidth="1200.0" stylesheets="@../assets/css/font.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionuser.AdminDashboardController">
+<AnchorPane fx:id="mainPane" prefHeight="720.0" prefWidth="1200.0" stylesheets="@../assets/css/font.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionuser.AdminDashboardController">
    <children>
       <BorderPane prefHeight="720.0" prefWidth="1200.0">
          <center>
@@ -77,7 +77,7 @@
                   </Pane>
                   <Pane layoutX="51.0" layoutY="50.0" prefHeight="650.0" prefWidth="1155.0" style="-fx-background-color: #e9ecef;;">
                      <children>
-                        <ScrollPane fx:id="AdminHomePane" prefHeight="646.0" prefWidth="1155.0" style="-fx-border-color: transparent;" visible="false">
+                        <ScrollPane fx:id="AdminHomePane" prefHeight="646.0" prefWidth="1155.0" style="-fx-border-color: transparent;">
                            <content>
                               <Pane prefHeight="757.0" prefWidth="1153.0">
                                  <children>
@@ -662,7 +662,7 @@
                               </Pane>
                            </content>
                         </ScrollPane>
-                        <ScrollPane fx:id="AdminEquipmentManagementPane" prefHeight="646.0" prefWidth="1155.0">
+                        <ScrollPane fx:id="AdminEquipmentManagementPane" prefHeight="646.0" prefWidth="1155.0" visible="false">
                            <content>
                               <Pane fx:id="EquipmentIdAdminStaff" prefHeight="808.0" prefWidth="1156.0">
                                  <children>

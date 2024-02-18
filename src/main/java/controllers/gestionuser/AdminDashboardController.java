@@ -288,6 +288,8 @@ public class AdminDashboardController {
 
     @FXML
     private LineChart<String, Number> stat_linechart;
+    @FXML
+    private Pane affichage_events_adstaff= new Pane();
 
     @FXML
     private Pane EquipmentIdAdminStaff;
@@ -823,6 +825,8 @@ public class AdminDashboardController {
         initDecoratedStage();
         welcomeNotification();
         try {
+            Pane pane= FXMLLoader.load(getClass().getResource("/gestionevents/eventstaffadmin.fxml"));
+            affichage_events_adstaff.getChildren().setAll(pane);
             Pane pane_event= FXMLLoader.load(getClass().getResource("/gestionequipement/equipement.fxml"));
             EquipmentIdAdminStaff.getChildren().setAll(pane_event);
         } catch (IOException e) {

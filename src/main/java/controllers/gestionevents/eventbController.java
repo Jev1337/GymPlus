@@ -90,6 +90,7 @@ public class eventbController {
             eventDetails.setEvent_date(eventdate_id.getText());
             eventDetails.setDuree(eventduree_id.getText());
             eventDetailsService.add(eventDetails);
+            afficher();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -105,6 +106,7 @@ public class eventbController {
             if (selectedEvent != null) {
                 eventDetailsService.delete(selectedEvent.getId());
                 afficher();
+                fillParticipants();
             } else {
                 System.out.println("No event selected");
             }
@@ -192,7 +194,7 @@ public class eventbController {
         if (selectedEvent != null) {
             try {
                 List<String> participants = event_Participants.getParticipants(selectedEvent.getId());
-                if (participants.isEmpty()) {
+                if (participants.isEmpty() || participants == null) {
                     ListParticipants_id.setVisible(false);
                 } else {
                     ObservableList<ObservableList<String>> data = FXCollections.observableArrayList();

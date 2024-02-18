@@ -29,7 +29,7 @@ public class Event_detailsService implements IService<Event_details> {
             Alert alert=new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
             alert.setHeaderText(null);
-            alert.setContentText("Event date and type are already taken");
+            alert.setContentText("Cannot Add two Events with the same date and type");
             alert.showAndWait();
             return;
         }

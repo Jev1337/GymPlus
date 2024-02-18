@@ -636,7 +636,7 @@
                               </Pane>
                            </content>
                         </ScrollPane>
-                        <ScrollPane fx:id="AdminEventPane" prefHeight="646.0" prefWidth="1155.0">
+                        <ScrollPane fx:id="AdminEventPane" prefHeight="646.0" prefWidth="1155.0" visible="false">
                            <content>
                               <Pane fx:id="affichage_events_adstaff" prefHeight="808.0" prefWidth="1156.0">
                                  <children>

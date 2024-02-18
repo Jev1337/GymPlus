@@ -100,7 +100,6 @@
             <Button fx:id="gotomaint_btn" layoutX="984.0" layoutY="25.0" mnemonicParsing="false" onAction="#gotomaint_btn_act" text="Go to Maintenances" />
          </children>
       </Pane>
-      <Pane fx:id="editEquip" prefHeight="818.0" prefWidth="1165.0" visible="false" />
       <Pane fx:id="ModifyEquipPane" layoutX="52.0" layoutY="84.0" prefHeight="644.0" prefWidth="1056.0" style="-fx-background-color: white; -fx-border-radius: 30px; -fx-background-radius: 30px;" visible="false">
          <children>
             <Label layoutX="27.0" layoutY="88.0" prefHeight="27.0" prefWidth="217.0" style="-fx-font-size: 18;" text="Modify Equipment">
@@ -117,6 +116,20 @@
             <Label layoutX="25.0" layoutY="276.0" text="Description" />
             <Label layoutX="25.0" layoutY="367.0" prefHeight="20.0" prefWidth="105.0" text="Life Span" />
             <Label layoutX="27.0" layoutY="455.0" prefHeight="20.0" prefWidth="65.0" text="State" />
+         </children>
+      </Pane>
+      <Pane fx:id="ModifyMaintPane" layoutX="30.0" layoutY="50.0" prefHeight="644.0" prefWidth="1106.0" style="-fx-background-color: white; -fx-border-radius: 30px; -fx-background-radius: 30px;" visible="false">
+         <children>
+            <Label layoutX="23.0" layoutY="78.0" prefHeight="27.0" prefWidth="217.0" style="-fx-font-size: 18;" text="Modify Maintenance">
+               <font>
+                  <Font name="Open Sans Regular" size="17.0" />
+               </font>
+            </Label>
+            <TextField fx:id="add_status1" layoutX="21.0" layoutY="343.0" />
+            <Button fx:id="editMaint_btn" layoutX="1024.0" layoutY="580.0" mnemonicParsing="false" onAction="#editMaint_btn_act" text="Modify" />
+            <Label layoutX="23.0" layoutY="194.0" prefHeight="20.0" prefWidth="147.0" text="Date maintenance" />
+            <Label layoutX="23.0" layoutY="302.0" prefHeight="20.0" prefWidth="65.0" text="Status" />
+            <DatePicker fx:id="add_date1" layoutX="21.0" layoutY="222.0" />
          </children>
       </Pane>
    </children>

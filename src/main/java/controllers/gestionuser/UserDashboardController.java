@@ -60,6 +60,7 @@ public class UserDashboardController {
     private AbonnementService abonnementService = new AbonnementService();
     private FadeIn[] fadeInAnimation = new FadeIn[8];
 
+    private Notification msg = new Notification();
     private FadeOutRight fadeOutRightAnimation = new FadeOutRight();
     private FadeInRight fadeInRightAnimation = new FadeInRight();
 
@@ -68,7 +69,7 @@ public class UserDashboardController {
 
     @FXML
     private Pane usereventpane_id ;
-    
+
     @FXML
     private AnchorPane mainPane;
 
@@ -510,6 +511,14 @@ public class UserDashboardController {
             long days = diff / (24 * 60 * 60 * 1000);
             daysremain_label.setText(days + " days");
             packname_label.setText(abonnementService.getCurrentSubscription(GlobalVar.getUser().getId()).getType());
+            ByteArrayOutputStream out = QRCode.from(String.valueOf(GlobalVar.getUser().getId())).to(ImageType.PNG).withSize(168, 149).stream();
+            ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
+            QR_imageview.setImage(new Image(in));
+            MultiFormatWriter ean8Writer = new MultiFormatWriter();
+            ByteArrayOutputStream out2 = new ByteArrayOutputStream();
+            MatrixToImageWriter.writeToStream(ean8Writer.encode(String.valueOf(GlobalVar.getUser().getId()), BarcodeFormat.CODE_128, 280,73), "png", out2);
+            ByteArrayInputStream in2 = new ByteArrayInputStream(out2.toByteArray());
+            barcode_imageview.setImage(new Image(in2));
             fadeOutRightAnimation.setNode(unsubscribed_pane);
             fadeOutRightAnimation.setOnFinished(e -> {
                 unsubscribed_pane.setVisible(false);
@@ -532,6 +541,14 @@ public class UserDashboardController {
             long days = diff / (24 * 60 * 60 * 1000);
             daysremain_label.setText(days + " days");
             packname_label.setText(abonnementService.getCurrentSubscription(GlobalVar.getUser().getId()).getType());
+            ByteArrayOutputStream out = QRCode.from(String.valueOf(GlobalVar.getUser().getId())).to(ImageType.PNG).withSize(168, 149).stream();
+            ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
+            QR_imageview.setImage(new Image(in));
+            MultiFormatWriter ean8Writer = new MultiFormatWriter();
+            ByteArrayOutputStream out2 = new ByteArrayOutputStream();
+            MatrixToImageWriter.writeToStream(ean8Writer.encode(String.valueOf(GlobalVar.getUser().getId()), BarcodeFormat.CODE_128, 280,73), "png", out2);
+            ByteArrayInputStream in2 = new ByteArrayInputStream(out2.toByteArray());
+            barcode_imageview.setImage(new Image(in2));
             fadeOutRightAnimation.setNode(unsubscribed_pane);
             fadeOutRightAnimation.setOnFinished(e -> {
                 unsubscribed_pane.setVisible(false);
@@ -559,7 +576,7 @@ public class UserDashboardController {
         setFitToWidthAll();
         initAnimations();
         initDecoratedStage();
-        welcomeNotification();
+        notify("Successfully Logged In as " + GlobalVar.getUser().getUsername() + "!");
         initSubsciption();
         try {
             Pane pane= FXMLLoader.load(getClass().getResource("/gestionBlog/Blog.fxml"));
@@ -602,10 +619,11 @@ public class UserDashboardController {
             e.printStackTrace();
         }
     }
-    private void welcomeNotification(){
-        final var msg = new Notification("Successfully Logged In as " + GlobalVar.getUser().getUsername() + "!");
+
+    private void notify(String message){
+        msg.setMessage(message);
         msg.getStyleClass().addAll(
-                Styles.ACCENT, Styles.ELEVATED_1
+                Styles.SUCCESS, Styles.ELEVATED_1
         );
         msg.setPrefHeight(Region.USE_PREF_SIZE);
         msg.setMaxHeight(Region.USE_PREF_SIZE);
@@ -617,7 +635,7 @@ public class UserDashboardController {
             out.setOnFinished(f -> mainPane.getChildren().remove(msg));
             out.playFromStart();
         });
-        var in = Animations.slideInDown(msg, Duration.millis(250));
+        var in = Animations.slideInRight(msg, Duration.millis(250));
         if (!mainPane.getChildren().contains(msg)) {
             mainPane.getChildren().add(msg);
         }

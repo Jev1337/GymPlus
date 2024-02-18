@@ -216,12 +216,12 @@ VALUES
 --
 CREATE TABLE `user` (
   `id` int(11) NOT NULL,
-  `username` varchar(255) DEFAULT NULL,
+  `username` varchar(255) DEFAULT NULL UNIQUE,
   `firstname` varchar(255) DEFAULT NULL,
   `lastname` varchar(255) DEFAULT NULL,
   `date_naiss` date DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL,
-  `email` varchar(255) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL UNIQUE,
   `role` varchar(255) DEFAULT NULL,
   `num_tel` varchar(255) DEFAULT NULL,
   `adresse` text DEFAULT NULL,

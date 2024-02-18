@@ -1010,8 +1010,8 @@ public class AdminDashboardController {
         type_cb.getItems().addAll(FXCollections.observableArrayList("All", "Admin", "Staff", "Client"));
         acctypemanage_cb.getItems().addAll(FXCollections.observableArrayList("Admin", "Staff", "Client"));
         subtype_cb.getItems().addAll(FXCollections.observableArrayList( "All","GP 1", "GP 2", "GP 3"));
-        subtypeadd_cb.getItems().addAll(FXCollections.observableArrayList("GP1", "GP2", "GP3"));
-        subtypeedit_cb.getItems().addAll(FXCollections.observableArrayList("GP1", "GP2", "GP3"));
+        subtypeadd_cb.getItems().addAll(FXCollections.observableArrayList("GP 1", "GP 2", "GP 3"));
+        subtypeedit_cb.getItems().addAll(FXCollections.observableArrayList("GP 1", "GP 2", "GP 3"));
         initProfile();
         initCharts();
         setFitToWidthAll();

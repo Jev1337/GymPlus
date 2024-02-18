@@ -1,6 +1,9 @@
 package controllers.gestionuser;
 
 import animatefx.animation.*;
+import atlantafx.base.controls.Notification;
+import atlantafx.base.theme.Styles;
+import atlantafx.base.util.Animations;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import entities.gestionuser.Client;
 import javafx.animation.*;
@@ -18,7 +21,9 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.shape.Circle;
@@ -46,6 +51,8 @@ public class UserDashboardController {
     @FXML
     private Pane blogId = new Pane();
 
+    @FXML
+    private AnchorPane mainPane;
 
     @FXML
     void settings_btn_clicked(MouseEvent event) {
@@ -422,6 +429,7 @@ public class UserDashboardController {
         setFitToWidthAll();
         initAnimations();
         initDecoratedStage();
+        welcomeNotification();
         try {
             Pane pane= FXMLLoader.load(getClass().getResource("/gestionSuivi/objectif1.fxml"));
             ObjectifPan.getChildren().setAll(pane);
@@ -429,7 +437,27 @@ public class UserDashboardController {
             e.printStackTrace();
         }
     }
+    private void welcomeNotification(){
+        final var msg = new Notification("Successfully Logged In as " + GlobalVar.getUser().getUsername() + "!");
+        msg.getStyleClass().addAll(
+                Styles.ACCENT, Styles.ELEVATED_1
+        );
+        msg.setPrefHeight(Region.USE_PREF_SIZE);
+        msg.setMaxHeight(Region.USE_PREF_SIZE);
+        msg.setLayoutX(795);
+        msg.setLayoutY(80);
 
+        msg.setOnClose(e -> {
+            var out = Animations.slideOutRight(msg, Duration.millis(250));
+            out.setOnFinished(f -> mainPane.getChildren().remove(msg));
+            out.playFromStart();
+        });
+        var in = Animations.slideInDown(msg, Duration.millis(250));
+        if (!mainPane.getChildren().contains(msg)) {
+            mainPane.getChildren().add(msg);
+        }
+        in.playFromStart();
+    }
     private void initDecoratedStage(){
         dragpane.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override

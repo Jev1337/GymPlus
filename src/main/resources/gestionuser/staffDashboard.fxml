@@ -75,7 +75,7 @@
                   </Pane>
                   <Pane layoutX="51.0" layoutY="50.0" prefHeight="650.0" prefWidth="1155.0" style="-fx-background-color: #e9ecef;;">
                      <children>
-                        <ScrollPane fx:id="StaffHomePane" prefHeight="646.0" prefWidth="1155.0" style="-fx-border-color: transparent;" visible="false">
+                        <ScrollPane fx:id="StaffHomePane" prefHeight="646.0" prefWidth="1155.0" style="-fx-border-color: transparent;">
                            <content>
                               <Pane prefHeight="758.0" prefWidth="1145.0">
                                  <children>
@@ -494,7 +494,7 @@
                               </Pane>
                            </content>
                         </ScrollPane>
-                        <ScrollPane fx:id="StaffSubscriptionPane" prefHeight="646.0" prefWidth="1155.0">
+                        <ScrollPane fx:id="StaffSubscriptionPane" prefHeight="646.0" prefWidth="1155.0" visible="false">
                            <content>
                               <Pane fx:id="subpane" prefHeight="808.0" prefWidth="1156.0">
                                  <children>

@@ -8,9 +8,11 @@
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -23,7 +25,7 @@
 <?import javafx.scene.paint.Stop?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="720.0" prefWidth="1200.0" stylesheets="@font.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionuser.AdminDashboardController">
+<AnchorPane prefHeight="720.0" prefWidth="1200.0" stylesheets="@../assets/css/font.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionuser.UserDashboardController">
    <children>
       <BorderPane prefHeight="720.0" prefWidth="1200.0">
          <center>
@@ -31,26 +33,16 @@
                <children>
                   <Pane layoutX="49.0" layoutY="-1.0" prefHeight="51.0" prefWidth="1159.0" style="-fx-background-color: white;">
                      <children>
-                        <FontAwesomeIconView fx:id="user_btn" glyphName="USER" layoutX="1010.0" layoutY="34.0" onMouseClicked="#user_btn_clicked" size="24">
-                           <cursor>
-                              <Cursor fx:constant="HAND" />
-                           </cursor>
-                        </FontAwesomeIconView>
-                        <Label layoutX="1041.0" layoutY="11.0" text="Username Label">
+                        <Label fx:id="globalusername" layoutX="1041.0" layoutY="11.0" text="Username Label">
                            <font>
                               <Font name="Open Sans Regular" size="13.0" />
                            </font>
                         </Label>
-                        <Label layoutX="1041.0" layoutY="27.0" text="Admin">
+                        <Label layoutX="1041.0" layoutY="27.0" text="Client">
                            <font>
                               <Font name="Open Sans Regular" size="9.0" />
                            </font>
                         </Label>
-                        <FontAwesomeIconView glyphName="GIFT" layoutX="979.0" layoutY="34.0" size="24">
-                           <cursor>
-                              <Cursor fx:constant="HAND" />
-                           </cursor>
-                        </FontAwesomeIconView>
                         <FontAwesomeIconView glyphName="BELL" layoutX="14.0" layoutY="36.0" size="24">
                            <cursor>
                               <Cursor fx:constant="HAND" />
@@ -72,15 +64,20 @@
                               </LinearGradient>
                            </fill>
                         </FontAwesomeIconView>
+                        <ImageView fx:id="user_imageview" fitHeight="37.0" fitWidth="35.0" layoutX="1003.0" layoutY="7.0" onMouseClicked="#user_imageview_clicked" pickOnBounds="true" preserveRatio="true">
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </ImageView>
                      </children>
                   </Pane>
                   <Pane layoutX="51.0" layoutY="50.0" prefHeight="650.0" prefWidth="1155.0" style="-fx-background-color: #e9ecef;;">
                      <children>
-                        <ScrollPane fx:id="AdminHomePane" prefHeight="646.0" prefWidth="1155.0" style="-fx-border-color: transparent;">
+                        <ScrollPane fx:id="UserHomePane" prefHeight="646.0" prefWidth="1155.0" style="-fx-border-color: transparent;">
                            <content>
                               <Pane prefHeight="757.0" prefWidth="1153.0">
                                  <children>
-                                    <Label layoutX="33.0" layoutY="14.0" text="Admin / Home">
+                                    <Label layoutX="33.0" layoutY="14.0" text="Client / Home">
                                        <font>
                                           <Font name="Open Sans Regular" size="16.0" />
                                        </font>
@@ -269,11 +266,11 @@
                               </Pane>
                            </content>
                         </ScrollPane>
-                        <ScrollPane fx:id="AdminInfoPane" prefHeight="647.0" prefWidth="1155.0" visible="false">
+                        <ScrollPane fx:id="UserInfoPane" prefHeight="647.0" prefWidth="1155.0" visible="false">
                            <content>
-                              <Pane prefHeight="808.0" prefWidth="1156.0">
+                              <Pane prefHeight="808.0" prefWidth="1147.0">
                                  <children>
-                                    <Label layoutX="39.0" layoutY="14.0" text="Admin / Profile">
+                                    <Label layoutX="39.0" layoutY="14.0" text="Client / Profile">
                                        <font>
                                           <Font name="Open Sans Regular" size="16.0" />
                                        </font>
@@ -284,31 +281,36 @@
                                              <children>
                                                 <ImageView fx:id="cover_imageview" fitHeight="345.0" fitWidth="911.0" pickOnBounds="true" preserveRatio="true">
                                                    <image>
-                                                      <Image url="@images/cover.jpg" />
+                                                      <Image url="@../assets/images/cover.jpg" />
                                                    </image>
                                                 </ImageView>
                                              </children>
                                           </StackPane>
-                                          <Label layoutX="125.0" layoutY="284.0" style="-fx-font-size: 18;" text="Mitchell C.Shay">
+                                          <Label fx:id="nameinfo" layoutX="136.0" layoutY="284.0" style="-fx-font-size: 18;" text="Mitchell C.Shay">
                                              <font>
                                                 <Font name="Open Sans Regular" size="18.0" />
                                              </font>
                                           </Label>
-                                          <Label layoutX="125.0" layoutY="309.0" text="Client" textFill="#6c757d">
+                                          <Label layoutX="136.0" layoutY="309.0" text="Client" textFill="#6c757d">
                                              <font>
                                                 <Font name="Open Sans Regular" size="13.0" />
                                              </font>
                                           </Label>
-                                          <Label layoutX="290.0" layoutY="284.0" style="-fx-font-size: 18;" text="john.doe@gmail.com">
+                                          <Label fx:id="emailinfo" layoutX="301.0" layoutY="284.0" style="-fx-font-size: 18;" text="john.doe@gmail.com">
                                              <font>
                                                 <Font name="Open Sans Regular" size="18.0" />
                                              </font>
                                           </Label>
-                                          <Label layoutX="290.0" layoutY="309.0" text="Email" textFill="#6c757d">
+                                          <Label layoutX="301.0" layoutY="309.0" text="Email" textFill="#6c757d">
                                              <font>
                                                 <Font name="Open Sans Regular" size="13.0" />
                                              </font>
                                           </Label>
+                                          <ImageView fx:id="userprofile_imageview" fitHeight="111.0" fitWidth="92.0" layoutX="33.0" layoutY="219.0" pickOnBounds="true" preserveRatio="true">
+                                             <cursor>
+                                                <Cursor fx:constant="HAND" />
+                                             </cursor>
+                                          </ImageView>
                                        </children>
                                     </Pane>
                                     <Pane layoutX="469.0" layoutY="420.0" prefHeight="376.0" prefWidth="578.0" style="-fx-background-color: white; -fx-border-radius: 30px; -fx-background-radius: 30px;">
@@ -323,60 +325,60 @@
                                                 <Font name="Open Sans Regular" size="13.0" />
                                              </font>
                                           </Label>
-                                          <TextField layoutX="26.0" layoutY="74.0" prefHeight="25.0" prefWidth="230.0" />
+                                          <TextField fx:id="email_tf" layoutX="26.0" layoutY="74.0" prefHeight="25.0" prefWidth="230.0" />
                                           <Label layoutX="289.0" layoutY="48.0" text="First Name" textFill="#6c757d">
                                              <font>
                                                 <Font name="Open Sans Regular" size="13.0" />
                                              </font>
                                           </Label>
-                                          <TextField layoutX="289.0" layoutY="74.0" prefHeight="25.0" prefWidth="230.0" />
+                                          <TextField fx:id="firstname_tf" layoutX="289.0" layoutY="74.0" prefHeight="25.0" prefWidth="230.0" />
                                           <Label layoutX="26.0" layoutY="114.0" text="Last Name" textFill="#6c757d">
                                              <font>
                                                 <Font name="Open Sans Regular" size="13.0" />
                                              </font>
                                           </Label>
-                                          <TextField layoutX="26.0" layoutY="140.0" prefHeight="25.0" prefWidth="230.0" />
+                                          <TextField fx:id="lastname_tf" layoutX="26.0" layoutY="140.0" prefHeight="25.0" prefWidth="230.0" />
                                           <Label layoutX="289.0" layoutY="114.0" text="Username" textFill="#6c757d">
                                              <font>
                                                 <Font name="Open Sans Regular" size="13.0" />
                                              </font>
                                           </Label>
-                                          <TextField layoutX="289.0" layoutY="140.0" prefHeight="25.0" prefWidth="230.0" />
-                                          <Label layoutX="26.0" layoutY="178.0" text="Email" textFill="#6c757d">
+                                          <TextField fx:id="username_tf" layoutX="289.0" layoutY="140.0" prefHeight="25.0" prefWidth="230.0" />
+                                          <Label layoutX="26.0" layoutY="178.0" text="Date of Birth" textFill="#6c757d">
                                              <font>
                                                 <Font name="Open Sans Regular" size="13.0" />
                                              </font>
                                           </Label>
-                                          <TextField layoutX="26.0" layoutY="204.0" prefHeight="25.0" prefWidth="230.0" />
                                           <Label layoutX="289.0" layoutY="178.0" text="Address" textFill="#6c757d">
                                              <font>
                                                 <Font name="Open Sans Regular" size="13.0" />
                                              </font>
                                           </Label>
-                                          <TextField layoutX="289.0" layoutY="204.0" prefHeight="86.0" prefWidth="230.0" />
                                           <Label layoutX="26.0" layoutY="239.0" text="Phone" textFill="#6c757d">
                                              <font>
                                                 <Font name="Open Sans Regular" size="13.0" />
                                              </font>
                                           </Label>
-                                          <TextField layoutX="26.0" layoutY="265.0" prefHeight="25.0" prefWidth="230.0" />
-                                          <Button layoutX="477.0" layoutY="330.0" mnemonicParsing="false" style="-color-button-bg: -color-accent-4;" text="Save">
+                                          <TextField fx:id="phone_tf" layoutX="26.0" layoutY="265.0" prefHeight="25.0" prefWidth="230.0" />
+                                          <Button layoutX="477.0" layoutY="330.0" mnemonicParsing="false" onAction="#saveacc_btn_act" style="-color-button-bg: -color-accent-4;" text="Save">
                                              <cursor>
                                                 <Cursor fx:constant="HAND" />
                                              </cursor>
                                           </Button>
-                                          <TextField layoutX="26.0" layoutY="330.0" prefHeight="25.0" prefWidth="201.0" />
+                                          <TextField fx:id="profilepic_pf" layoutX="26.0" layoutY="330.0" prefHeight="25.0" prefWidth="201.0" />
                                           <Label layoutX="26.0" layoutY="303.0" text="Profile Picture" textFill="#6c757d">
                                              <font>
                                                 <Font name="Open Sans Regular" size="13.0" />
                                              </font>
                                           </Label>
-                                          <Button layoutX="230.0" layoutY="330.0" mnemonicParsing="false" text="..." />
-                                          <Button layoutX="354.0" layoutY="330.0" mnemonicParsing="false" style="-color-button-bg: -color-danger-4;" styleClass="flat" text="Delete Account">
+                                          <Button layoutX="230.0" layoutY="330.0" mnemonicParsing="false" onAction="#browse_btn_act" text="..." />
+                                          <Button layoutX="354.0" layoutY="330.0" mnemonicParsing="false" onAction="#deleteacc_btn_act" style="-color-button-bg: -color-danger-4;" styleClass="flat" text="Delete Account">
                                              <cursor>
                                                 <Cursor fx:constant="HAND" />
                                              </cursor>
                                           </Button>
+                                          <DatePicker fx:id="dateofbirth_tf" layoutX="26.0" layoutY="204.0" prefHeight="36.0" prefWidth="229.0" />
+                                          <TextArea fx:id="address_ta" layoutX="289.0" layoutY="203.0" prefHeight="97.0" prefWidth="227.0" />
                                        </children>
                                     </Pane>
                                     <Pane layoutX="92.0" layoutY="420.0" prefHeight="190.0" prefWidth="363.0" style="-fx-background-color: white; -fx-border-radius: 30px; -fx-background-radius: 30px;">
@@ -490,11 +492,11 @@
                               </Pane>
                            </content>
                         </ScrollPane>
-                        <ScrollPane fx:id="AdminSubscriptionPane" prefHeight="646.0" prefWidth="1155.0" visible="false">
+                        <ScrollPane fx:id="UserSubscriptionPane" prefHeight="646.0" prefWidth="1155.0" visible="false">
                            <content>
                               <Pane prefHeight="808.0" prefWidth="1156.0">
                                  <children>
-                                    <Label layoutX="39.0" layoutY="14.0" text="Admin / Subscriptions">
+                                    <Label layoutX="39.0" layoutY="14.0" text="Client / Store">
                                        <font>
                                           <Font name="Open Sans Regular" size="16.0" />
                                        </font>
@@ -503,11 +505,11 @@
                               </Pane>
                            </content>
                         </ScrollPane>
-                        <ScrollPane fx:id="AdminStorePane" prefHeight="646.0" prefWidth="1155.0" visible="false">
+                        <ScrollPane fx:id="UserStorePane" prefHeight="646.0" prefWidth="1155.0" visible="false">
                            <content>
                               <Pane prefHeight="808.0" prefWidth="1156.0">
                                  <children>
-                                    <Label layoutX="39.0" layoutY="14.0" text="Admin / Store">
+                                    <Label layoutX="39.0" layoutY="14.0" text="Client / Store">
                                        <font>
                                           <Font name="Open Sans Regular" size="16.0" />
                                        </font>
@@ -516,11 +518,11 @@
                               </Pane>
                            </content>
                         </ScrollPane>
-                        <ScrollPane fx:id="AdminUserManagementPane" prefHeight="646.0" prefWidth="1155.0" visible="false">
+                        <ScrollPane fx:id="UserObjectivePane" prefHeight="646.0" prefWidth="1155.0" visible="false">
                            <content>
-                              <Pane prefHeight="894.0" prefWidth="1156.0">
+                              <Pane fx:id="ObjectifPan" prefHeight="894.0" prefWidth="1156.0">
                                  <children>
-                                    <Label layoutX="39.0" layoutY="14.0" text="Admin / User Mgmt">
+                                    <Label layoutX="39.0" layoutY="14.0" text="Client / Objectives">
                                        <font>
                                           <Font name="Open Sans Regular" size="16.0" />
                                        </font>
@@ -529,11 +531,11 @@
                               </Pane>
                            </content>
                         </ScrollPane>
-                        <ScrollPane fx:id="AdminBlogPane" prefHeight="646.0" prefWidth="1155.0" visible="false">
+                        <ScrollPane fx:id="UserBlogPane" prefHeight="646.0" prefWidth="1155.0" visible="false">
                            <content>
-                              <Pane prefHeight="808.0" prefWidth="1156.0">
+                              <Pane fx:id="blogId" prefHeight="808.0" prefWidth="1156.0">
                                  <children>
-                                    <Label layoutX="39.0" layoutY="14.0" text="Admin / Blogs">
+                                    <Label layoutX="39.0" layoutY="14.0" text="Client / Blogs">
                                        <font>
                                           <Font name="Open Sans Regular" size="16.0" />
                                        </font>
@@ -542,11 +544,11 @@
                               </Pane>
                            </content>
                         </ScrollPane>
-                        <ScrollPane fx:id="AdminEventPane" prefHeight="646.0" prefWidth="1155.0" visible="false">
+                        <ScrollPane fx:id="UserEventPane" prefHeight="646.0" prefWidth="1155.0" visible="false">
                            <content>
-                              <Pane prefHeight="808.0" prefWidth="1156.0">
+                              <Pane prefHeight="808.0" prefWidth="1156.0" visible="false">
                                  <children>
-                                    <Label layoutX="39.0" layoutY="14.0" text="Admin / Events">
+                                    <Label layoutX="39.0" layoutY="14.0" text="Client / Events">
                                        <font>
                                           <Font name="Open Sans Regular" size="16.0" />
                                        </font>
@@ -555,24 +557,11 @@
                               </Pane>
                            </content>
                         </ScrollPane>
-                        <ScrollPane fx:id="AdminSettingsPane" prefHeight="646.0" prefWidth="1155.0" visible="false">
+                        <ScrollPane fx:id="UserSettingsPane" prefHeight="646.0" prefWidth="1155.0" visible="false">
                            <content>
                               <Pane prefHeight="808.0" prefWidth="1156.0">
                                  <children>
-                                    <Label layoutX="39.0" layoutY="14.0" text="Admin / Settings">
-                                       <font>
-                                          <Font name="Open Sans Regular" size="16.0" />
-                                       </font>
-                                    </Label>
-                                 </children>
-                              </Pane>
-                           </content>
-                        </ScrollPane>
-                        <ScrollPane fx:id="AdminEquipmentManagementPane" prefHeight="646.0" prefWidth="1155.0" visible="false">
-                           <content>
-                              <Pane prefHeight="808.0" prefWidth="1156.0">
-                                 <children>
-                                    <Label layoutX="39.0" layoutY="14.0" text="Admin / Equipments">
+                                    <Label layoutX="39.0" layoutY="14.0" text="Client / Settings">
                                        <font>
                                           <Font name="Open Sans Regular" size="16.0" />
                                        </font>
@@ -606,7 +595,7 @@
                               </LinearGradient>
                            </fill>
                         </FontAwesomeIconView>
-                        <FontAwesomeIconView glyphName="HOME" layoutX="15.0" layoutY="248.0" onMouseClicked="#home_btn_clicked" size="24">
+                        <FontAwesomeIconView glyphName="HOME" layoutX="15.0" layoutY="238.0" onMouseClicked="#home_btn_clicked" size="24">
                            <cursor>
                               <Cursor fx:constant="HAND" />
                            </cursor>
@@ -627,7 +616,7 @@
                               </LinearGradient>
                            </fill>
                         </FontAwesomeIconView>
-                        <FontAwesomeIconView glyphName="SHOPPING_BAG" layoutX="13.0" layoutY="285.0" onMouseClicked="#shop_btn_clicked" size="24">
+                        <FontAwesomeIconView glyphName="SHOPPING_BAG" layoutX="13.0" layoutY="275.0" onMouseClicked="#shop_btn_clicked" size="24">
                            <cursor>
                               <Cursor fx:constant="HAND" />
                            </cursor>
@@ -690,27 +679,27 @@
                               </LinearGradient>
                            </fill>
                         </FontAwesomeIconView>
-                        <Button fx:id="home_btn" layoutX="1.0" layoutY="221.0" mnemonicParsing="false" onAction="#home_btn_act" prefHeight="37.0" prefWidth="199.0" stylesheets="@buttons.css" text="Home" visible="false">
+                        <Button fx:id="home_btn" layoutX="1.0" layoutY="211.0" mnemonicParsing="false" onAction="#home_btn_act" prefHeight="37.0" prefWidth="199.0" stylesheets="@../assets/css/buttons.css" text="Home" visible="false">
                            <cursor>
                               <Cursor fx:constant="HAND" />
                            </cursor>
                         </Button>
-                        <Button fx:id="shop_btn" layoutX="1.0" layoutY="258.0" mnemonicParsing="false" onAction="#shop_btn_act" prefHeight="37.0" prefWidth="199.0" stylesheets="@buttons.css" text="Shop" visible="false">
+                        <Button fx:id="shop_btn" layoutX="1.0" layoutY="248.0" mnemonicParsing="false" onAction="#shop_btn_act" prefHeight="37.0" prefWidth="199.0" stylesheets="@../assets/css/buttons.css" text="Shop" visible="false">
                            <cursor>
                               <Cursor fx:constant="HAND" />
                            </cursor>
                         </Button>
-                        <Button fx:id="settings_btn" layoutX="1.0" layoutY="593.0" mnemonicParsing="false" onAction="#settings_btn_act" prefHeight="37.0" prefWidth="199.0" stylesheets="@buttons.css" text="Settings" visible="false">
+                        <Button fx:id="settings_btn" layoutX="1.0" layoutY="593.0" mnemonicParsing="false" onAction="#settings_btn_act" prefHeight="37.0" prefWidth="199.0" stylesheets="@../assets/css/buttons.css" text="Settings" visible="false">
                            <cursor>
                               <Cursor fx:constant="HAND" />
                            </cursor>
                         </Button>
-                        <Button fx:id="logout_btn" layoutX="1.0" layoutY="641.0" mnemonicParsing="false" onAction="#logout_btn_act" prefHeight="37.0" prefWidth="199.0" stylesheets="@buttons.css" text="Logout" visible="false">
+                        <Button fx:id="logout_btn" layoutX="1.0" layoutY="641.0" mnemonicParsing="false" onAction="#logout_btn_act" prefHeight="37.0" prefWidth="199.0" stylesheets="@../assets/css/buttons.css" text="Logout" visible="false">
                            <cursor>
                               <Cursor fx:constant="HAND" />
                            </cursor>
                         </Button>
-                        <FontAwesomeIconView glyphName="ID_CARD" layoutX="12.0" layoutY="322.0" onMouseClicked="#subscription_btn_clicked" size="24">
+                        <FontAwesomeIconView glyphName="ID_CARD" layoutX="12.0" layoutY="312.0" onMouseClicked="#subscription_btn_clicked" size="24">
                            <cursor>
                               <Cursor fx:constant="HAND" />
                            </cursor>
@@ -731,27 +720,27 @@
                               </LinearGradient>
                            </fill>
                         </FontAwesomeIconView>
-                        <Button fx:id="subscription_btn" layoutX="1.0" layoutY="295.0" mnemonicParsing="false" onAction="#subscription_btn_act" prefHeight="37.0" prefWidth="199.0" stylesheets="@buttons.css" text="Subscription" visible="false">
+                        <Button fx:id="subscription_btn" layoutX="1.0" layoutY="285.0" mnemonicParsing="false" onAction="#subscription_btn_act" prefHeight="37.0" prefWidth="199.0" stylesheets="@../assets/css/buttons.css" text="Subscription" visible="false">
                            <cursor>
                               <Cursor fx:constant="HAND" />
                            </cursor>
                         </Button>
-                        <Button fx:id="users_btn" layoutX="2.0" layoutY="332.0" mnemonicParsing="false" onAction="#users_btn_click" prefHeight="37.0" prefWidth="199.0" stylesheets="@buttons.css" text="Users" visible="false">
+                        <Button fx:id="objective_btn" layoutX="2.0" layoutY="322.0" mnemonicParsing="false" onAction="#objective_btn_act" prefHeight="37.0" prefWidth="199.0" stylesheets="@../assets/css/buttons.css" text="Objectives" visible="false">
                            <cursor>
                               <Cursor fx:constant="HAND" />
                            </cursor>
                         </Button>
-                        <Button fx:id="blog_btn" layoutX="1.0" layoutY="369.0" mnemonicParsing="false" onAction="#blog_btn_act" prefHeight="37.0" prefWidth="199.0" stylesheets="@buttons.css" text="Blogs" visible="false">
+                        <Button fx:id="blog_btn" layoutX="1.0" layoutY="359.0" mnemonicParsing="false" onAction="#blog_btn_act" prefHeight="37.0" prefWidth="199.0" stylesheets="@../assets/css/buttons.css" text="Blogs" visible="false">
                            <cursor>
                               <Cursor fx:constant="HAND" />
                            </cursor>
                         </Button>
-                        <Button fx:id="event_btn" layoutX="2.0" layoutY="406.0" mnemonicParsing="false" onAction="#event_btn_act" prefHeight="37.0" prefWidth="199.0" stylesheets="@buttons.css" text="Events" visible="false">
+                        <Button fx:id="event_btn" layoutX="2.0" layoutY="396.0" mnemonicParsing="false" onAction="#event_btn_act" prefHeight="37.0" prefWidth="199.0" stylesheets="@../assets/css/buttons.css" text="Events" visible="false">
                            <cursor>
                               <Cursor fx:constant="HAND" />
                            </cursor>
                         </Button>
-                        <FontAwesomeIconView glyphName="RSS" layoutX="17.0" layoutY="396.0" onMouseClicked="#blog_btn_clicked" size="24">
+                        <FontAwesomeIconView glyphName="RSS" layoutX="17.0" layoutY="386.0" onMouseClicked="#blog_btn_clicked" size="24">
                            <cursor>
                               <Cursor fx:constant="HAND" />
                            </cursor>
@@ -772,7 +761,7 @@
                               </LinearGradient>
                            </fill>
                         </FontAwesomeIconView>
-                        <FontAwesomeIconView glyphName="CALENDAR" layoutX="13.0" layoutY="433.0" onMouseClicked="#event_btn_clicked" size="24">
+                        <FontAwesomeIconView glyphName="CALENDAR" layoutX="13.0" layoutY="423.0" onMouseClicked="#event_btn_clicked" size="24">
                            <cursor>
                               <Cursor fx:constant="HAND" />
                            </cursor>
@@ -793,33 +782,7 @@
                               </LinearGradient>
                            </fill>
                         </FontAwesomeIconView>
-                        <FontAwesomeIconView glyphName="USERS" layoutX="13.0" layoutY="359.0" onMouseClicked="#users_btn_clicked" size="24">
-                           <cursor>
-                              <Cursor fx:constant="HAND" />
-                           </cursor>
-                           <fill>
-                              <LinearGradient endX="1.0" endY="1.0">
-                                 <stops>
-                                    <Stop>
-                                       <color>
-                                          <Color green="0.6666666865348816" blue="1.0" />
-                                       </color>
-                                    </Stop>
-                                    <Stop offset="1.0">
-                                       <color>
-                                          <Color green="0.40784314274787903" blue="0.545098066329956" />
-                                       </color>
-                                    </Stop>
-                                 </stops>
-                              </LinearGradient>
-                           </fill>
-                        </FontAwesomeIconView>
-                        <Button fx:id="equipment_btn" layoutX="2.0" layoutY="443.0" mnemonicParsing="false" onAction="#equipment_btn_act" prefHeight="37.0" prefWidth="199.0" stylesheets="@buttons.css" text="Equipments" visible="false">
-                           <cursor>
-                              <Cursor fx:constant="HAND" />
-                           </cursor>
-                        </Button>
-                        <FontAwesomeIconView glyphName="SITEMAP" layoutX="12.0" layoutY="470.0" onMouseClicked="#equipment_btn_clicked" size="24">
+                        <FontAwesomeIconView glyphName="BULLSEYE" layoutX="15.0" layoutY="349.0" onMouseClicked="#objective_btn_clicked" size="24">
                            <cursor>
                               <Cursor fx:constant="HAND" />
                            </cursor>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+
+<AnchorPane prefHeight="280.0" prefWidth="408.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <TextArea layoutY="237.0" prefHeight="43.0" prefWidth="417.0" />
+      <Pane prefHeight="237.0" prefWidth="419.0">
+         <children>
+            <ImageView fitHeight="234.0" fitWidth="426.0" layoutX="-7.0" layoutY="11.0" opacity="0.73" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../assets/images/backgroundChatbot2.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="43.0" fitWidth="47.0" layoutX="-2.0" layoutY="-3.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../assets/images/ChatGPT.png" />
+               </image>
+            </ImageView>
+         </children>
+      </Pane>
+      <Button layoutX="381.0" layoutY="239.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="34.0" text="....." />
+   </children>
+</AnchorPane>

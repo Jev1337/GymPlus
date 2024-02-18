@@ -1,7 +1,6 @@
 package test;
 
 import atlantafx.base.theme.PrimerLight;
-import com.github.javafaker.App;
 import controllers.gestionsuivi.ObjectifController;
 import javafx.application.Application;
 import javafx.application.HostServices;
@@ -29,7 +28,7 @@ public class ObjectifTestingFX extends Application {
         try {
             Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
             instance = this;
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Objectif1.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/gestionSuivi/objectif1.fxml"));
             Parent root = loader.load();
             ObjectifController objectifController = loader.getController();
             objectifController.setStage(primaryStage);

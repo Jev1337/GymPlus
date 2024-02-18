@@ -15,7 +15,7 @@ public class UserAuthMainFX extends Application {
     @Override
     public void start(javafx.stage.Stage primaryStage) throws Exception {
         Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/authInterface.fxml")); //change me
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/gestionuser/authInterface.fxml")); //change me
         Parent root = loader.load();
         Scene scene = new Scene(root);
         primaryStage.initStyle(StageStyle.UNDECORATED);

@@ -36,7 +36,7 @@ SET
 CREATE TABLE `abonnement` (
   `id` int(11) NOT NULL,
   `user_id` int(11) DEFAULT NULL,
-  `duree_abon` varchar(255) DEFAULT NULL,
+  `dureeFinAb` DATE DEFAULT NULL,
   `type` varchar(255) DEFAULT NULL
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
@@ -380,7 +380,7 @@ MODIFY
 ALTER TABLE
   `abonnement`
 ADD
-  CONSTRAINT `abonnement_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
+  CONSTRAINT `abonnement_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Contraintes pour la table `commentaire`
@@ -408,9 +408,9 @@ ADD
 ALTER TABLE
   `event_participants`
 ADD
-  CONSTRAINT `event_participants_ibfk_1` FOREIGN KEY (`event_details_id`) REFERENCES `event_details` (`id`),
+  CONSTRAINT `event_participants_ibfk_1` FOREIGN KEY (`event_details_id`) REFERENCES `event_details` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
 ADD
-  CONSTRAINT `event_participants_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
+  CONSTRAINT `event_participants_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Contraintes pour la table `facture`

@@ -68,6 +68,8 @@ public class UserDashboardController {
 
     @FXML
     private Pane usereventpane_id ;
+    
+    @FXML
     private AnchorPane mainPane;
 
     @FXML

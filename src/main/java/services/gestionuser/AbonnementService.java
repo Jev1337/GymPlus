@@ -15,12 +15,11 @@ public class AbonnementService implements IService<Abonnement> {
 
     @Override
     public void add(Abonnement abonnement) throws SQLException {
-        String query = "INSERT INTO abonnement (id, user_id, duree_abon, type) VALUES (?,?,?,?)";
+        String query = "INSERT INTO abonnement (user_id, dateFinAb, type) VALUES (?,?,?)";
         PreparedStatement pst = connection.prepareStatement(query);
-        pst.setInt(1, abonnement.getId());
-        pst.setInt(2, abonnement.getUser_id());
-        pst.setString(3, abonnement.getDuree_abon());
-        pst.setString(4, abonnement.getType());
+        pst.setInt(1, abonnement.getUser_id());
+        pst.setString(2, abonnement.getDuree_abon());
+        pst.setString(3, abonnement.getType());
         pst.executeUpdate();
     }
 
@@ -34,7 +33,7 @@ public class AbonnementService implements IService<Abonnement> {
 
     @Override
     public void update(Abonnement abonnement) throws SQLException {
-        String query = "UPDATE abonnement SET user_id = ?, duree_abon = ?, type = ? WHERE id = ?";
+        String query = "UPDATE abonnement SET user_id = ?, dateFinAb = ?, type = ? WHERE id = ?";
         PreparedStatement pst = connection.prepareStatement(query);
         pst.setInt(1, abonnement.getUser_id());
         pst.setString(2, abonnement.getDuree_abon());
@@ -53,10 +52,33 @@ public class AbonnementService implements IService<Abonnement> {
             Abonnement abonnement = new Abonnement();
             abonnement.setId(rs.getInt("id"));
             abonnement.setUser_id(rs.getInt("user_id"));
-            abonnement.setDuree_abon(rs.getString("duree_abon"));
+            abonnement.setDuree_abon(rs.getString("dateFinAb"));
             abonnement.setType(rs.getString("type"));
             abonnements.add(abonnement);
         }
         return abonnements;
+    }
+    public boolean isUserSubscribed(int user_id) throws SQLException {
+        String query = "SELECT * FROM abonnement WHERE user_id = ? AND dateFinAb > NOW()";
+        PreparedStatement pst = connection.prepareStatement(query);
+        pst.setInt(1, user_id);
+        ResultSet rs = pst.executeQuery();
+        return rs.next();
+    }
+
+    public Abonnement getCurrentSubscription(int user_id) throws SQLException {
+        String query = "SELECT * FROM abonnement WHERE user_id = ? AND dateFinAb > NOW()";
+        PreparedStatement pst = connection.prepareStatement(query);
+        pst.setInt(1, user_id);
+        ResultSet rs = pst.executeQuery();
+        if (rs.next()) {
+            Abonnement abonnement = new Abonnement();
+            abonnement.setId(rs.getInt("id"));
+            abonnement.setUser_id(rs.getInt("user_id"));
+            abonnement.setDuree_abon(rs.getString("dateFinAb"));
+            abonnement.setType(rs.getString("type"));
+            return abonnement;
+        }
+        return null;
     }
 }

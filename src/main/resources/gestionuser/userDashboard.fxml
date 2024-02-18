@@ -495,164 +495,229 @@
                         </ScrollPane>
                         <ScrollPane fx:id="UserSubscriptionPane" prefHeight="646.0" prefWidth="1155.0" visible="false">
                            <content>
-                              <Pane prefHeight="729.0" prefWidth="1156.0">
+                              <Pane prefHeight="729.0" prefWidth="1147.0">
                                  <children>
-                                    <Pane fx:id="newsub_pane" layoutX="61.0" layoutY="28.0" prefHeight="224.0" prefWidth="1035.0" style="-fx-background-color: white;">
+                                    <Pane fx:id="unsubscribed_pane" prefHeight="729.0" prefWidth="1157.0">
                                        <children>
-                                          <ImageView fitHeight="225.0" fitWidth="1055.0" layoutX="11.0" pickOnBounds="true" preserveRatio="true">
-                                             <image>
-                                                <Image url="@../assets/images/bandeau-offres.jpg" />
-                                             </image>
-                                          </ImageView>
-                                          <Label layoutX="101.0" layoutY="78.0" text="Our Offers">
-                                             <font>
-                                                <Font name="Open Sans Regular" size="24.0" />
-                                             </font>
-                                          </Label>
-                                          <Label layoutX="101.0" layoutY="113.0" text="Client / Subscriptions">
-                                             <font>
-                                                <Font name="Open Sans Regular" size="16.0" />
-                                             </font>
-                                          </Label>
+                                          <Pane fx:id="newsub_pane" layoutX="61.0" layoutY="30.0" prefHeight="224.0" prefWidth="1035.0" style="-fx-background-color: white;">
+                                             <children>
+                                                <ImageView fitHeight="225.0" fitWidth="1055.0" layoutX="11.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../assets/images/bandeau-offres.jpg" />
+                                                   </image>
+                                                </ImageView>
+                                                <Label layoutX="101.0" layoutY="78.0" text="Our Offers">
+                                                   <font>
+                                                      <Font name="Open Sans Regular" size="24.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label layoutX="101.0" layoutY="113.0" text="Client / Subscriptions">
+                                                   <font>
+                                                      <Font name="Open Sans Regular" size="16.0" />
+                                                   </font>
+                                                </Label>
+                                             </children>
+                                          </Pane>
+                                          <Pane fx:id="newsub_pane1" layoutX="61.0" layoutY="292.0" prefHeight="394.0" prefWidth="1035.0" style="-fx-background-color: white; -fx-border-color: -color-accent-fg;">
+                                             <children>
+                                                <Label layoutX="480.0" layoutY="14.0" text="Pricing">
+                                                   <font>
+                                                      <Font name="Open Sans Regular" size="24.0" />
+                                                   </font>
+                                                </Label>
+                                                <Pane layoutX="74.0" layoutY="71.0" prefHeight="273.0" prefWidth="262.0" style="-fx-background-color: #e9ecef;">
+                                                   <children>
+                                                      <Line endX="161.0" layoutX="101.0" startX="-100.0" stroke="#325bff" style="-fx-fill: blue;" />
+                                                      <Button layoutX="83.0" layoutY="223.0" mnemonicParsing="false" onAction="#buy1_btn_act" prefHeight="36.0" prefWidth="95.0" style="-color-button-bg-hover: -color-success-5; -color-button-fg-hover: white; -color-button-border: -color-accent-fg;" styleClass="rounded" text="Buy Now">
+                                                         <cursor>
+                                                            <Cursor fx:constant="HAND" />
+                                                         </cursor>
+                                                      </Button>
+                                                      <Label layoutX="59.0" layoutY="49.0" text="390 TND / 3 Months">
+                                                         <font>
+                                                            <Font size="16.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <Label layoutX="89.0" layoutY="14.0" text="GP One">
+                                                         <font>
+                                                            <Font name="Open Sans Regular" size="24.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <Label layoutX="60.0" layoutY="101.0">
+                                                         <font>
+                                                            <Font size="16.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <Label layoutX="66.0" layoutY="97.0" text="• Access to Fitness">
+                                                         <font>
+                                                            <Font size="16.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <Label layoutX="66.0" layoutY="122.0" text="• 24/7 Access">
+                                                         <font>
+                                                            <Font size="16.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <Label layoutX="66.0" layoutY="147.0" text="• 24/7 Support">
+                                                         <font>
+                                                            <Font size="16.0" />
+                                                         </font>
+                                                      </Label>
+                                                   </children>
+                                                </Pane>
+                                                <Pane layoutX="387.0" layoutY="71.0" prefHeight="273.0" prefWidth="262.0" style="-fx-background-color: #e9ecef;">
+                                                   <children>
+                                                      <Line endX="161.0" layoutX="101.0" startX="-100.0" stroke="#ebdb00" style="-fx-fill: blue;" />
+                                                      <Label layoutX="58.0" layoutY="49.0" text="690 TND / 6 Months">
+                                                         <font>
+                                                            <Font size="16.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <Label layoutX="88.0" layoutY="14.0" text="GP Two">
+                                                         <font>
+                                                            <Font name="Open Sans Regular" size="24.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <Label layoutX="67.0" layoutY="94.0" text="• Access to Fitness">
+                                                         <font>
+                                                            <Font size="16.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <Label layoutX="67.0" layoutY="144.0" text="• 24/7 Access">
+                                                         <font>
+                                                            <Font size="16.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <Label layoutX="67.0" layoutY="169.0" text="• 24/7 Support">
+                                                         <font>
+                                                            <Font size="16.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <Label layoutX="67.0" layoutY="119.0" text="• Access to Pool">
+                                                         <font>
+                                                            <Font size="16.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <Button layoutX="84.0" layoutY="223.0" mnemonicParsing="false" onAction="#buy2_btn_act" prefHeight="36.0" prefWidth="95.0" style="-color-button-bg-hover: -color-success-5; -color-button-fg-hover: white; -color-button-border: -color-accent-fg;" styleClass="rounded" text="Buy Now">
+                                                         <cursor>
+                                                            <Cursor fx:constant="HAND" />
+                                                         </cursor>
+                                                      </Button>
+                                                   </children>
+                                                </Pane>
+                                                <Pane layoutX="705.0" layoutY="71.0" prefHeight="275.0" prefWidth="262.0" style="-fx-background-color: #e9ecef;">
+                                                   <children>
+                                                      <Line endX="161.0" layoutX="101.0" startX="-100.0" stroke="#325bff" style="-fx-fill: blue;" />
+                                                      <Label layoutX="67.0" layoutY="49.0" text="1130 TND / 1 Year">
+                                                         <font>
+                                                            <Font size="16.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <Label layoutX="80.0" layoutY="14.0" text="GP Three">
+                                                         <font>
+                                                            <Font name="Open Sans Regular" size="24.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <Label layoutX="67.0" layoutY="91.0" text="• Access to Fitness">
+                                                         <font>
+                                                            <Font size="16.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <Label layoutX="67.0" layoutY="166.0" text="• 24/7 Access">
+                                                         <font>
+                                                            <Font size="16.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <Label layoutX="67.0" layoutY="191.0" text="• 24/7 Support">
+                                                         <font>
+                                                            <Font size="16.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <Label layoutX="67.0" layoutY="116.0" text="• Access to Pool">
+                                                         <font>
+                                                            <Font size="16.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <Label layoutX="67.0" layoutY="141.0" text="• Access to SPA">
+                                                         <font>
+                                                            <Font size="16.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <Button layoutX="84.0" layoutY="225.0" mnemonicParsing="false" onAction="#buy3_btn_act" prefHeight="36.0" prefWidth="95.0" style="-color-button-bg-hover: -color-success-5; -color-button-fg-hover: white; -color-button-border: -color-accent-fg;" styleClass="rounded" text="Buy Now">
+                                                         <cursor>
+                                                            <Cursor fx:constant="HAND" />
+                                                         </cursor>
+                                                      </Button>
+                                                   </children>
+                                                </Pane>
+                                                <Label layoutX="444.0" layoutY="346.0" text="Most Common Package">
+                                                   <font>
+                                                      <Font size="14.0" />
+                                                   </font>
+                                                </Label>
+                                             </children>
+                                          </Pane>
                                        </children>
                                     </Pane>
-                                    <Pane fx:id="newsub_pane1" layoutX="61.0" layoutY="290.0" prefHeight="394.0" prefWidth="1035.0" style="-fx-background-color: white; -fx-border-color: -color-accent-fg;">
+                                    <Pane fx:id="subscribed_pane" prefHeight="729.0" prefWidth="1157.0" visible="false">
                                        <children>
-                                          <Label layoutX="480.0" layoutY="14.0" text="Pricing">
-                                             <font>
-                                                <Font name="Open Sans Regular" size="24.0" />
-                                             </font>
-                                          </Label>
-                                          <Pane layoutX="74.0" layoutY="71.0" prefHeight="273.0" prefWidth="262.0" style="-fx-background-color: #e9ecef;">
+                                          <Pane layoutX="61.0" layoutY="49.0" prefHeight="224.0" prefWidth="1035.0" style="-fx-background-color: white;">
                                              <children>
-                                                <Line endX="161.0" layoutX="101.0" startX="-100.0" stroke="#325bff" style="-fx-fill: blue;" />
-                                                <Button layoutX="83.0" layoutY="223.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="95.0" style="-color-button-bg-hover: -color-success-5; -color-button-fg-hover: white; -color-button-border: -color-accent-fg;" styleClass="rounded" text="Buy Now">
-                                                   <cursor>
-                                                      <Cursor fx:constant="HAND" />
-                                                   </cursor>
-                                                </Button>
-                                                <Label layoutX="59.0" layoutY="49.0" text="390 TND / 3 Months">
-                                                   <font>
-                                                      <Font size="16.0" />
-                                                   </font>
-                                                </Label>
-                                                <Label layoutX="89.0" layoutY="14.0" text="GP One">
+                                                <ImageView fitHeight="224.0" fitWidth="1024.0" layoutX="16.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../assets/images/page-spa-banière.jpg" />
+                                                   </image>
+                                                </ImageView>
+                                                <Label layoutX="101.0" layoutY="78.0" text="Your Subscription">
                                                    <font>
                                                       <Font name="Open Sans Regular" size="24.0" />
                                                    </font>
                                                 </Label>
-                                                <Label layoutX="60.0" layoutY="101.0">
+                                                <Label layoutX="101.0" layoutY="113.0" text="Client / Subscriptions">
                                                    <font>
-                                                      <Font size="16.0" />
-                                                   </font>
-                                                </Label>
-                                                <Label layoutX="66.0" layoutY="97.0" text="• Access to Fitness">
-                                                   <font>
-                                                      <Font size="16.0" />
-                                                   </font>
-                                                </Label>
-                                                <Label layoutX="66.0" layoutY="122.0" text="• 24/7 Access">
-                                                   <font>
-                                                      <Font size="16.0" />
-                                                   </font>
-                                                </Label>
-                                                <Label layoutX="66.0" layoutY="147.0" text="• 24/7 Support">
-                                                   <font>
-                                                      <Font size="16.0" />
+                                                      <Font name="Open Sans Regular" size="16.0" />
                                                    </font>
                                                 </Label>
                                              </children>
                                           </Pane>
-                                          <Pane layoutX="387.0" layoutY="71.0" prefHeight="273.0" prefWidth="262.0" style="-fx-background-color: #e9ecef;">
+                                          <Pane layoutX="61.0" layoutY="319.0" prefHeight="227.0" prefWidth="1035.0" style="-fx-background-color: white;">
                                              <children>
-                                                <Line endX="161.0" layoutX="101.0" startX="-100.0" stroke="#ebdb00" style="-fx-fill: blue;" />
-                                                <Label layoutX="58.0" layoutY="49.0" text="690 TND / 6 Months">
-                                                   <font>
-                                                      <Font size="16.0" />
-                                                   </font>
-                                                </Label>
-                                                <Label layoutX="88.0" layoutY="14.0" text="GP Two">
+                                                <Label layoutX="74.0" layoutY="40.0" text="Days Remaining">
                                                    <font>
                                                       <Font name="Open Sans Regular" size="24.0" />
                                                    </font>
                                                 </Label>
-                                                <Label layoutX="67.0" layoutY="94.0" text="• Access to Fitness">
+                                                <Label fx:id="daysremain_label" layoutX="88.0" layoutY="75.0" text="0 Days">
                                                    <font>
-                                                      <Font size="16.0" />
+                                                      <Font name="Open Sans Regular" size="20.0" />
                                                    </font>
                                                 </Label>
-                                                <Label layoutX="67.0" layoutY="144.0" text="• 24/7 Access">
-                                                   <font>
-                                                      <Font size="16.0" />
-                                                   </font>
-                                                </Label>
-                                                <Label layoutX="67.0" layoutY="169.0" text="• 24/7 Support">
-                                                   <font>
-                                                      <Font size="16.0" />
-                                                   </font>
-                                                </Label>
-                                                <Label layoutX="67.0" layoutY="119.0" text="• Access to Pool">
-                                                   <font>
-                                                      <Font size="16.0" />
-                                                   </font>
-                                                </Label>
-                                                <Button layoutX="84.0" layoutY="223.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="95.0" style="-color-button-bg-hover: -color-success-5; -color-button-fg-hover: white; -color-button-border: -color-accent-fg;" styleClass="rounded" text="Buy Now">
-                                                   <cursor>
-                                                      <Cursor fx:constant="HAND" />
-                                                   </cursor>
-                                                </Button>
-                                             </children>
-                                          </Pane>
-                                          <Pane layoutX="705.0" layoutY="71.0" prefHeight="275.0" prefWidth="262.0" style="-fx-background-color: #e9ecef;">
-                                             <children>
-                                                <Line endX="161.0" layoutX="101.0" startX="-100.0" stroke="#325bff" style="-fx-fill: blue;" />
-                                                <Label layoutX="67.0" layoutY="49.0" text="1130 TND / 1 Year">
-                                                   <font>
-                                                      <Font size="16.0" />
-                                                   </font>
-                                                </Label>
-                                                <Label layoutX="80.0" layoutY="14.0" text="GP Three">
+                                                <Label layoutX="616.0" layoutY="23.0" text="Access Codes">
                                                    <font>
                                                       <Font name="Open Sans Regular" size="24.0" />
                                                    </font>
                                                 </Label>
-                                                <Label layoutX="67.0" layoutY="91.0" text="• Access to Fitness">
+                                                <ImageView fx:id="QR_imageview" fitHeight="149.0" fitWidth="168.0" layoutX="806.0" layoutY="59.0" pickOnBounds="true" preserveRatio="true" />
+                                                <Label layoutX="74.0" layoutY="134.0" text="Pack Name">
                                                    <font>
-                                                      <Font size="16.0" />
+                                                      <Font name="Open Sans Regular" size="24.0" />
                                                    </font>
                                                 </Label>
-                                                <Label layoutX="67.0" layoutY="166.0" text="• 24/7 Access">
+                                                <Label fx:id="packname_label" layoutX="88.0" layoutY="169.0" text="GP 1">
                                                    <font>
-                                                      <Font size="16.0" />
+                                                      <Font name="Open Sans Regular" size="20.0" />
                                                    </font>
                                                 </Label>
-                                                <Label layoutX="67.0" layoutY="191.0" text="• 24/7 Support">
-                                                   <font>
-                                                      <Font size="16.0" />
-                                                   </font>
-                                                </Label>
-                                                <Label layoutX="67.0" layoutY="116.0" text="• Access to Pool">
-                                                   <font>
-                                                      <Font size="16.0" />
-                                                   </font>
-                                                </Label>
-                                                <Label layoutX="67.0" layoutY="141.0" text="• Access to SPA">
-                                                   <font>
-                                                      <Font size="16.0" />
-                                                   </font>
-                                                </Label>
-                                                <Button layoutX="84.0" layoutY="225.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="95.0" style="-color-button-bg-hover: -color-success-5; -color-button-fg-hover: white; -color-button-border: -color-accent-fg;" styleClass="rounded" text="Buy Now">
-                                                   <cursor>
-                                                      <Cursor fx:constant="HAND" />
-                                                   </cursor>
-                                                </Button>
+                                                <Line endX="157.0" endY="212.0" layoutX="250.0" layoutY="15.0" startX="54.0" startY="-15.0" stroke="#da3d3d" strokeWidth="2.0" />
+                                                <ImageView fx:id="barcode_imageview" fitHeight="73.0" fitWidth="280.0" layoutX="429.0" layoutY="97.0" pickOnBounds="true" preserveRatio="true" />
                                              </children>
                                           </Pane>
-                                          <Label layoutX="444.0" layoutY="346.0" text="Most Common Package">
-                                             <font>
-                                                <Font size="14.0" />
-                                             </font>
-                                          </Label>
+                                          <Button layoutX="943.0" layoutY="658.0" mnemonicParsing="false" onAction="#cancel_sub_act" style="-fx-background-color: -color-warning-1;" text="Cancel Subscription">
+                                             <cursor>
+                                                <Cursor fx:constant="HAND" />
+                                             </cursor>
+                                          </Button>
+                                          <Label layoutX="61.0" layoutY="572.0" prefHeight="69.0" prefWidth="1035.0" text="As a subscriber you accept the terms and conditions of the service. You are also accepting the fact that the service is not refundable. The service is not refundable under any circumstances. The service is not refundable even if you don't use it. The service is not refundable even if you don't like it." wrapText="true" />
                                        </children>
                                     </Pane>
                                  </children>

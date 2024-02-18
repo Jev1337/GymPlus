@@ -4,7 +4,15 @@ import animatefx.animation.*;
 import atlantafx.base.controls.Notification;
 import atlantafx.base.theme.Styles;
 import atlantafx.base.util.Animations;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.oned.EAN13Writer;
+import com.google.zxing.oned.EAN8Writer;
+import com.google.zxing.oned.MultiFormatOneDReader;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+import entities.gestionuser.Abonnement;
 import entities.gestionuser.Client;
 import javafx.animation.*;
 import javafx.collections.FXCollections;
@@ -32,10 +40,16 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
+import net.glxn.qrgen.core.image.ImageType;
+import net.glxn.qrgen.javase.QRCode;
+import services.gestionuser.AbonnementService;
 import services.gestionuser.ClientService;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.nio.file.Files;
+import java.sql.Date;
 import java.time.LocalDate;
 
 import java.io.IOException;
@@ -43,6 +57,7 @@ import java.io.IOException;
 public class UserDashboardController {
 
     private ClientService clientService = new ClientService();
+    private AbonnementService abonnementService = new AbonnementService();
     private FadeIn[] fadeInAnimation = new FadeIn[8];
 
     private FadeOutRight fadeOutRightAnimation = new FadeOutRight();
@@ -53,6 +68,24 @@ public class UserDashboardController {
 
     @FXML
     private AnchorPane mainPane;
+
+    @FXML
+    private Pane subscribed_pane;
+
+    @FXML
+    private Pane unsubscribed_pane;
+
+    @FXML
+    private Label daysremain_label;
+
+    @FXML
+    private Label packname_label;
+
+    @FXML
+    private ImageView QR_imageview;
+
+    @FXML
+    private ImageView barcode_imageview;
 
     @FXML
     void settings_btn_clicked(MouseEvent event) {
@@ -415,6 +448,99 @@ public class UserDashboardController {
     void stat_combobox_act(ActionEvent event) {
 
     }
+
+    @FXML
+    void cancel_sub_act(ActionEvent event) {
+        try {
+            abonnementService.delete(abonnementService.getCurrentSubscription(GlobalVar.getUser().getId()).getId());
+            fadeOutRightAnimation.setNode(subscribed_pane);
+            fadeOutRightAnimation.setOnFinished(e -> {
+                subscribed_pane.setVisible(false);
+                unsubscribed_pane.setOpacity(0);
+                unsubscribed_pane.setVisible(true);
+                fadeInRightAnimation.setNode(unsubscribed_pane);
+                fadeInRightAnimation.play();
+            });
+            fadeOutRightAnimation.play();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
+    public void buy1_btn_act(ActionEvent actionEvent) {
+        try {
+            abonnementService.add(new Abonnement(GlobalVar.getUser().getId(), Date.valueOf(LocalDate.now().plusMonths(3)).toString(), "GP 1"));
+            Date date = Date.valueOf(abonnementService.getCurrentSubscription(GlobalVar.getUser().getId()).getDuree_abon());
+            long diff = date.getTime() - System.currentTimeMillis();
+            long days = diff / (24 * 60 * 60 * 1000);
+            daysremain_label.setText(days + " days");
+            packname_label.setText(abonnementService.getCurrentSubscription(GlobalVar.getUser().getId()).getType());
+            ByteArrayOutputStream out = QRCode.from(String.valueOf(GlobalVar.getUser().getId())).to(ImageType.PNG).withSize(168, 149).stream();
+            ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
+            QR_imageview.setImage(new Image(in));
+            MultiFormatWriter ean8Writer = new MultiFormatWriter();
+            ByteArrayOutputStream out2 = new ByteArrayOutputStream();
+            MatrixToImageWriter.writeToStream(ean8Writer.encode(String.valueOf(GlobalVar.getUser().getId()), BarcodeFormat.CODE_128, 280,73), "png", out2);
+            ByteArrayInputStream in2 = new ByteArrayInputStream(out2.toByteArray());
+            barcode_imageview.setImage(new Image(in2));
+            fadeOutRightAnimation.setNode(unsubscribed_pane);
+            fadeOutRightAnimation.setOnFinished(e -> {
+                unsubscribed_pane.setVisible(false);
+                subscribed_pane.setOpacity(0);
+                subscribed_pane.setVisible(true);
+                fadeInRightAnimation.setNode(subscribed_pane);
+                fadeInRightAnimation.play();
+            });
+            fadeOutRightAnimation.play();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void buy2_btn_act(ActionEvent actionEvent) {
+        try {
+            abonnementService.add(new Abonnement(GlobalVar.getUser().getId(), Date.valueOf(LocalDate.now().plusMonths(6)).toString(), "GP 2"));
+            Date date = Date.valueOf(abonnementService.getCurrentSubscription(GlobalVar.getUser().getId()).getDuree_abon());
+            long diff = date.getTime() - System.currentTimeMillis();
+            long days = diff / (24 * 60 * 60 * 1000);
+            daysremain_label.setText(days + " days");
+            packname_label.setText(abonnementService.getCurrentSubscription(GlobalVar.getUser().getId()).getType());
+            fadeOutRightAnimation.setNode(unsubscribed_pane);
+            fadeOutRightAnimation.setOnFinished(e -> {
+                unsubscribed_pane.setVisible(false);
+                subscribed_pane.setOpacity(0);
+                subscribed_pane.setVisible(true);
+                fadeInRightAnimation.setNode(subscribed_pane);
+                fadeInRightAnimation.play();
+            });
+            fadeOutRightAnimation.play();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void buy3_btn_act(ActionEvent actionEvent) {
+        try {
+            abonnementService.add(new Abonnement(GlobalVar.getUser().getId(), Date.valueOf(LocalDate.now().plusMonths(12)).toString(), "GP 3"));
+            Date date = Date.valueOf(abonnementService.getCurrentSubscription(GlobalVar.getUser().getId()).getDuree_abon());
+            long diff = date.getTime() - System.currentTimeMillis();
+            long days = diff / (24 * 60 * 60 * 1000);
+            daysremain_label.setText(days + " days");
+            packname_label.setText(abonnementService.getCurrentSubscription(GlobalVar.getUser().getId()).getType());
+            fadeOutRightAnimation.setNode(unsubscribed_pane);
+            fadeOutRightAnimation.setOnFinished(e -> {
+                unsubscribed_pane.setVisible(false);
+                subscribed_pane.setOpacity(0);
+                subscribed_pane.setVisible(true);
+                fadeInRightAnimation.setNode(subscribed_pane);
+                fadeInRightAnimation.play();
+            });
+            fadeOutRightAnimation.play();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     private double xOffset = 0;
     private double yOffset = 0;
     public void initialize() {
@@ -430,10 +556,39 @@ public class UserDashboardController {
         initAnimations();
         initDecoratedStage();
         welcomeNotification();
+        initSubsciption();
         try {
             Pane pane= FXMLLoader.load(getClass().getResource("/gestionBlog/Blog.fxml"));
             blogId.getChildren().setAll(pane);
         } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void initSubsciption(){
+        try {
+            if (abonnementService.isUserSubscribed(GlobalVar.getUser().getId())) {
+                Date date = Date.valueOf(abonnementService.getCurrentSubscription(GlobalVar.getUser().getId()).getDuree_abon());
+                long diff = date.getTime() - System.currentTimeMillis();
+                long days = diff / (24 * 60 * 60 * 1000);
+                daysremain_label.setText(days + " days");
+                packname_label.setText(abonnementService.getCurrentSubscription(GlobalVar.getUser().getId()).getType());
+                ByteArrayOutputStream out = QRCode.from(String.valueOf(GlobalVar.getUser().getId())).to(ImageType.PNG).withSize(168, 149).stream();
+                ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
+                QR_imageview.setImage(new Image(in));
+
+                MultiFormatWriter ean8Writer = new MultiFormatWriter();
+                ByteArrayOutputStream out2 = new ByteArrayOutputStream();
+                MatrixToImageWriter.writeToStream(ean8Writer.encode(String.valueOf(GlobalVar.getUser().getId()), BarcodeFormat.CODE_128, 280,73), "png", out2);
+                ByteArrayInputStream in2 = new ByteArrayInputStream(out2.toByteArray());
+                barcode_imageview.setImage(new Image(in2));
+                subscribed_pane.setVisible(true);
+                unsubscribed_pane.setVisible(false);
+            } else {
+                subscribed_pane.setVisible(false);
+                unsubscribed_pane.setVisible(true);
+            }
+        }catch (Exception e){
             e.printStackTrace();
         }
     }
@@ -650,4 +805,5 @@ public class UserDashboardController {
         series2.setName("Ipsum");
         stat_barchart.getData().add(series2);
     }
+
 }

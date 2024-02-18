@@ -5,8 +5,9 @@
 }
 
 .topBorder{
-    -fx-border-width: 1 0 0 0;
-    -fx-border-color: #606266;
+    -fx-border-width: 1 0 1 0;
+    -fx-background-color: #F0F2F1;
+    -fx-background-radius: 15;
 }
 
 .roundButton{
@@ -34,5 +35,5 @@
 
 .textField{
     -fx-background-color: #F0F2F5;
-    -fx-background-radius: 50;
+    -fx-background-radius: 5;
 }

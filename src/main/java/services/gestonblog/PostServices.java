@@ -36,15 +36,10 @@ public class PostServices implements IService {
     @Override
     public void update(Object o) throws SQLException {
         Post p = (Post) o;
-        String sql = "update post set id_post = ?, user_id = ?, mode = ? , content = ?, date = ?, photo = ?, likes = ?";
+        String sql = "update post set content = ? where id_post = ?";
         PreparedStatement ps = connection.prepareStatement(sql);
-        ps.setInt(1, p.getId_post());
-        ps.setInt(2, p.getUser_id());
-        ps.setString(3, p.getMode());
-        ps.setString(4, p.getContent());
-        ps.setDate(5, p.getDate());
-        ps.setString(6, p.getPhoto());
-        ps.setInt(7, p.getLikes());
+        ps.setString(1, p.getContent());
+        ps.setInt(2, p.getId_post());
         ps.executeUpdate();
     }
 

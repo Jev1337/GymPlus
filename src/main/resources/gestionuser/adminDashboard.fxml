@@ -29,7 +29,7 @@
 <?import javafx.scene.paint.Stop?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="720.0" prefWidth="1200.0" stylesheets="@../assets/css/font.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionuser.AdminDashboardController">
+<AnchorPane fx:id="mainPane" prefHeight="720.0" prefWidth="1200.0" stylesheets="@../assets/css/font.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionuser.AdminDashboardController">
    <children>
       <BorderPane prefHeight="720.0" prefWidth="1200.0">
          <center>

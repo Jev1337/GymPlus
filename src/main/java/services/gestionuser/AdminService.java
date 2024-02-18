@@ -83,7 +83,7 @@ public class AdminService implements IService<Admin> {
 
     public Admin getUserById(int id) throws SQLException {
         Admin admin = new Admin();
-        String query = "SELECT * FROM user WHERE id = ?";
+        String query = "SELECT * FROM user WHERE id = ? AND role = 'admin'";
         PreparedStatement pst = connection.prepareStatement(query);
         pst.setInt(1, id);
         ResultSet rs = pst.executeQuery();
@@ -105,7 +105,7 @@ public class AdminService implements IService<Admin> {
 
     public Admin getUserByUsername(String username) throws SQLException {
         Admin admin = new Admin();
-        String query = "SELECT * FROM user WHERE username = ?";
+        String query = "SELECT * FROM user WHERE username = ? AND role = 'admin'";
         PreparedStatement pst = connection.prepareStatement(query);
         pst.setString(1, username);
         ResultSet rs = pst.executeQuery();
@@ -127,7 +127,7 @@ public class AdminService implements IService<Admin> {
 
     public Admin getUserByEmail(String email) throws SQLException {
         Admin admin = new Admin();
-        String query = "SELECT * FROM user WHERE email = ?";
+        String query = "SELECT * FROM user WHERE email = ? AND role = 'admin'";
         PreparedStatement pst = connection.prepareStatement(query);
         pst.setString(1, email);
         ResultSet rs = pst.executeQuery();

@@ -3,6 +3,7 @@ package controllers.gestionevents;
 import animatefx.animation.FadeInRight;
 import animatefx.animation.FadeOutRight;
 import entities.gestionevents.Event_details;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -14,7 +15,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import services.gestionevents.Event_detailsService;
+import services.gestionevents.Event_participantsService;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -48,6 +51,9 @@ public class eventbController {
 
     @FXML
     private TableColumn<Event_details, String> event_typecol;
+    @FXML private TableColumn<ObservableList<String>, String> username_id;
+    @FXML private TableColumn<ObservableList<String>, String> firstname_id;
+    @FXML private TableColumn<ObservableList<String>, String> lastname_id;
 
     @FXML
     private TextField eventdate_id;
@@ -71,6 +77,8 @@ public class eventbController {
     private TextField editeventdate_id;
     @FXML
     private TextField editeventduration_id;
+    @FXML
+    TableView<ObservableList<String>> ListParticipants_id;
 
     @FXML
     void add_event(ActionEvent event) {
@@ -176,14 +184,77 @@ public class eventbController {
             throw new RuntimeException(e);
         }
     }
+
+
+    void fillParticipants() {
+        Event_details selectedEvent = tableevents_id.getSelectionModel().getSelectedItem();
+        Event_participantsService event_Participants = new Event_participantsService();
+        if (selectedEvent != null) {
+            try {
+                List<String> participants = event_Participants.getParticipants(selectedEvent.getId());
+                if (participants.isEmpty()) {
+                    ListParticipants_id.setVisible(false);
+                } else {
+                    ObservableList<ObservableList<String>> data = FXCollections.observableArrayList();
+                    for (int i = 0; i < participants.size(); i += 3) {
+                        ObservableList<String> row = FXCollections.observableArrayList();
+                        row.add(participants.get(i));
+                        row.add(participants.get(i + 1));
+                        row.add(participants.get(i + 2));
+                        data.add(row);
+                    }
+
+                    username_id.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().get(0)));
+                    firstname_id.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().get(1)));
+                    lastname_id.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().get(2)));
+
+                    ListParticipants_id.setItems(data);
+                    ListParticipants_id.setVisible(true);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            ListParticipants_id.setVisible(false);
+            System.out.println("No event selected");
+        }
+    }
+    @FXML
+    void kick_user(ActionEvent event) {
+           Event_details selectedEvent = tableevents_id.getSelectionModel().getSelectedItem();
+            if (selectedEvent != null) {
+                Event_participantsService event_Participants = new Event_participantsService();
+                ObservableList<String> selectedParticipant = ListParticipants_id.getSelectionModel().getSelectedItem();
+                if (selectedParticipant != null) {
+                    try {
+                        event_Participants.delete(selectedEvent.getId(), selectedParticipant.get(0));
+                        fillParticipants();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    System.out.println("No participant selected");
+                }
+            } else {
+                System.out.println("No event selected");
+            }
+
+    }
+
     @FXML
     void initialize() {
         try {
             afficher();
+            ListParticipants_id.setVisible(false);
+
+            tableevents_id.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+                if (newSelection != null) {
+                    fillParticipants();
+                }
+            });
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-
-}
+    }
 }

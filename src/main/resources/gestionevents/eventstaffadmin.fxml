@@ -10,17 +10,17 @@
 
 <AnchorPane prefHeight="808.0" prefWidth="1156.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionevents.eventbController">
    <children>
-      <Pane fx:id="affichage_events_adstaff" layoutX="20.0" layoutY="32.0" prefHeight="1110.0" prefWidth="1110.0">
+      <Pane fx:id="affichage_events_adstaff" layoutX="20.0" layoutY="32.0" prefHeight="841.0" prefWidth="1110.0">
          <children>
-            <TextField fx:id="eventname_id" layoutX="175.0" layoutY="162.0" />
-            <TextField fx:id="eventtype_id" layoutX="175.0" layoutY="215.0" />
-            <Button fx:id="ajouter_id" layoutX="212.0" layoutY="376.0" mnemonicParsing="false" onAction="#add_event" text="Add" />
-            <Label layoutX="175.0" layoutY="145.0" text="Event Name" />
-            <Label layoutX="175.0" layoutY="198.0" text="Type" />
-            <Label layoutX="175.0" layoutY="252.0" text="Date" />
-            <TextField fx:id="eventduree_id" layoutX="175.0" layoutY="334.0" />
-            <Label layoutX="177.0" layoutY="314.0" text="Duration" />
-            <TableView fx:id="tableevents_id" layoutX="380.0" layoutY="140.0" prefHeight="303.0" prefWidth="672.0">
+            <TextField fx:id="eventname_id" layoutX="132.0" layoutY="110.0" />
+            <TextField fx:id="eventtype_id" layoutX="132.0" layoutY="163.0" />
+            <Button fx:id="ajouter_id" layoutX="169.0" layoutY="324.0" mnemonicParsing="false" onAction="#add_event" text="Add" />
+            <Label layoutX="132.0" layoutY="93.0" text="Event Name" />
+            <Label layoutX="132.0" layoutY="146.0" text="Type" />
+            <Label layoutX="132.0" layoutY="200.0" text="Date" />
+            <TextField fx:id="eventduree_id" layoutX="132.0" layoutY="282.0" />
+            <Label layoutX="134.0" layoutY="262.0" text="Duration" />
+            <TableView fx:id="tableevents_id" layoutX="337.0" layoutY="88.0" prefHeight="303.0" prefWidth="672.0">
               <columns>
                 <TableColumn fx:id="event_idcol" prefWidth="110.93331909179688" text="Event_id" />
                 <TableColumn fx:id="event_namecol" prefWidth="133.06668090820312" text="Event_Name" />
@@ -29,17 +29,17 @@
                   <TableColumn fx:id="event_durationcol" prefWidth="141.33343505859375" text="Event_Duration" />
               </columns>
             </TableView>
-            <Button fx:id="edit_id" layoutX="883.0" layoutY="468.0" mnemonicParsing="false" onAction="#edit_event" prefHeight="25.0" prefWidth="50.0" text="Edit" />
-            <Button fx:id="delete_id" layoutX="953.0" layoutY="468.0" mnemonicParsing="false" onAction="#delete_event" text="Delete" />
-            <TextField fx:id="eventdate_id" layoutX="175.0" layoutY="272.0" />
-            <TableView fx:id="ListParticipants_id" layoutX="343.0" layoutY="625.0" prefHeight="320.0" prefWidth="432.0">
+            <Button fx:id="edit_id" layoutX="840.0" layoutY="416.0" mnemonicParsing="false" onAction="#edit_event" prefHeight="25.0" prefWidth="50.0" text="Edit" />
+            <Button fx:id="delete_id" layoutX="910.0" layoutY="416.0" mnemonicParsing="false" onAction="#delete_event" text="Delete" />
+            <TextField fx:id="eventdate_id" layoutX="132.0" layoutY="220.0" />
+            <TableView fx:id="ListParticipants_id" layoutX="369.0" layoutY="412.0" prefHeight="320.0" prefWidth="432.0">
               <columns>
                 <TableColumn fx:id="username_id" minWidth="0.0" prefWidth="138.66665649414062" text="UserName" />
                   <TableColumn fx:id="firstname_id" minWidth="0.0" prefWidth="139.33334350585938" text="First Name" />
                 <TableColumn fx:id="lastname_id" prefWidth="151.66668701171875" text="Last Name" />
               </columns>
             </TableView>
-            <Button fx:id="kick_id" layoutX="844.0" layoutY="766.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="78.0" text="Kick" />
+            <Button fx:id="kick_id" layoutX="222.0" layoutY="536.0" mnemonicParsing="false" onAction="#kick_user" prefHeight="36.0" prefWidth="78.0" text="Kick" />
          </children>
       </Pane>
       <Pane fx:id="editevent_id" layoutX="18.0" layoutY="19.0" prefHeight="761.0" prefWidth="1121.0" visible="false">

@@ -3,6 +3,9 @@ package controllers.gestionuser;
 import animatefx.animation.FadeIn;
 import animatefx.animation.FadeInRight;
 import animatefx.animation.FadeOutRight;
+import atlantafx.base.controls.Notification;
+import atlantafx.base.theme.Styles;
+import atlantafx.base.util.Animations;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import entities.gestionuser.Admin;
 import entities.gestionuser.Client;
@@ -18,6 +21,8 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.chart.BarChart;
@@ -29,7 +34,10 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.shape.Circle;
@@ -193,6 +201,9 @@ public class AdminDashboardController {
 
     @FXML
     private Button logout_btn;
+
+    @FXML
+    private AnchorPane mainPane;
 
     @FXML
     private Button manageacc_btn;
@@ -810,6 +821,7 @@ public class AdminDashboardController {
         setFitToWidthAll();
         initAnimations();
         initDecoratedStage();
+        welcomeNotification();
         try {
             Pane pane_event= FXMLLoader.load(getClass().getResource("/gestionequipement/equipement.fxml"));
             EquipmentIdAdminStaff.getChildren().setAll(pane_event);
@@ -817,6 +829,28 @@ public class AdminDashboardController {
             e.printStackTrace();
         }
         initUserList(-1, "");
+    }
+
+    private void welcomeNotification(){
+        final var msg = new Notification("Successfully Logged In as " + GlobalVar.getUser().getUsername() + "!");
+        msg.getStyleClass().addAll(
+                Styles.ACCENT, Styles.ELEVATED_1
+        );
+        msg.setPrefHeight(Region.USE_PREF_SIZE);
+        msg.setMaxHeight(Region.USE_PREF_SIZE);
+        msg.setLayoutX(795);
+        msg.setLayoutY(80);
+
+        msg.setOnClose(e -> {
+            var out = Animations.slideOutRight(msg, Duration.millis(250));
+            out.setOnFinished(f -> mainPane.getChildren().remove(msg));
+            out.playFromStart();
+        });
+        var in = Animations.slideInDown(msg, Duration.millis(250));
+        if (!mainPane.getChildren().contains(msg)) {
+            mainPane.getChildren().add(msg);
+        }
+        in.playFromStart();
     }
 
     private void initDecoratedStage(){

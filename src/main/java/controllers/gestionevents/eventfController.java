@@ -1,29 +1,38 @@
 package controllers.gestionevents;
 
+import atlantafx.base.controls.Notification;
+import atlantafx.base.theme.Styles;
+import atlantafx.base.util.Animations;
 import controllers.gestionuser.GlobalVar;
 import entities.gestionevents.Event_details;
 import entities.gestionevents.Event_participants;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import services.gestionevents.Event_detailsService;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
-import java.util.Date;
-import java.time.ZoneId;
+import services.gestionevents.Event_detailsService;
+import services.gestionevents.Event_participantsService;
+import utils.MyDatabase;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
-import java.util.Calendar;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import utils.MyDatabase;
-import services.gestionevents.Event_participantsService;
 
 public class eventfController {
 
@@ -33,7 +42,8 @@ public class eventfController {
     @FXML
     private TableColumn<Event_details, String> durationc;
 
-
+    @FXML
+    private TextField search_id;
     @FXML
     private Button join_id;
 
@@ -52,9 +62,12 @@ public class eventfController {
 
     private Timeline timeline;
     @FXML
+    private AnchorPane mainPane;
+    @FXML
     void initialize() {
         try {
             afficher();
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -110,17 +123,9 @@ public class eventfController {
                 else {
                     return;
                 }
-
-
             }
-
-
-
-
             System.out.println("Join event: " + name + ", " + type + ", " + date + ", " + duration);
             try {
-                // Assuming you have a Connection object named "conn"
-
                 PreparedStatement stmt = connection.prepareStatement("SELECT id FROM event_details WHERE name = ? AND type = ? AND event_date = ? AND duree = ?");
                 stmt.setString(1, selectedEvent.getName());
                 stmt.setString(2, selectedEvent.getType());
@@ -138,23 +143,43 @@ public class eventfController {
                 ex.printStackTrace();
             }
 
-
         } else {
             System.out.println("No event selected");
         }
-        //ajouter le participant a cette evenement
+
         Event_participants ev = new Event_participants(id,GlobalVar.getUser().getId() );
         try {
             Event_participantsService eventParticipantsService = new Event_participantsService();
             eventParticipantsService.add(ev);
-
+            Join_notf();
         } catch (SQLException e) {
             e.printStackTrace();
-
 
         }
 
 
+    }
+    private void Join_notf(){
+        final var msg = new Notification("Successfully Joined The Event");
+
+        msg.getStyleClass().addAll(
+                Styles.ACCENT, Styles.ELEVATED_1
+        );
+        msg.setPrefHeight(Region.USE_PREF_SIZE);
+        msg.setMaxHeight(Region.USE_PREF_SIZE);
+        msg.setLayoutX(745);
+        msg.setLayoutY(80);
+
+        msg.setOnClose(e -> {
+            var out = Animations.slideOutRight(msg, Duration.millis(250));
+            out.setOnFinished(f -> mainPane.getChildren().remove(msg));
+            out.playFromStart();
+        });
+        var in = Animations.slideInRight(msg, Duration.millis(250));
+        if (!mainPane.getChildren().contains(msg)) {
+            mainPane.getChildren().add(msg);
+        }
+        in.playFromStart();
     }
     public Date getNextEventDate(int userId) {
         LocalDateTime nextEventDate = null;
@@ -200,9 +225,14 @@ public class eventfController {
         }
     }
 
-
-
+    @FXML
+    public void search() {
+        String query = search_id.getText();
+        List<Event_details> searchResults = eventDetailsService.search(query);
+        event_detailsTableView.getItems().setAll(searchResults);
+    }
 }
+
 
 
 

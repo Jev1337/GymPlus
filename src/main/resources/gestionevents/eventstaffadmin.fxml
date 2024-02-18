@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -35,13 +34,12 @@
             <TextField fx:id="eventdate_id" layoutX="132.0" layoutY="220.0" />
             <TableView fx:id="ListParticipants_id" layoutX="369.0" layoutY="412.0" prefHeight="320.0" prefWidth="432.0">
               <columns>
-                <TableColumn fx:id="username_id" minWidth="0.0" prefWidth="138.66665649414062" text="UserName" />
-                  <TableColumn fx:id="firstname_id" minWidth="0.0" prefWidth="139.33334350585938" text="First Name" />
+                <TableColumn fx:id="username_id" minWidth="0.0" prefWidth="138.0" text="UserName" />
+                  <TableColumn fx:id="firstname_id" minWidth="0.0" prefWidth="141.0" text="First Name" />
                 <TableColumn fx:id="lastname_id" prefWidth="151.66668701171875" text="Last Name" />
               </columns>
             </TableView>
             <Button fx:id="kick_id" layoutX="222.0" layoutY="536.0" mnemonicParsing="false" onAction="#kick_user" prefHeight="36.0" prefWidth="78.0" text="Kick" />
-            <DatePicker layoutX="45.0" layoutY="422.0" />
          </children>
       </Pane>
       <Pane fx:id="editevent_id" layoutX="18.0" layoutY="19.0" prefHeight="761.0" prefWidth="1121.0" visible="false">

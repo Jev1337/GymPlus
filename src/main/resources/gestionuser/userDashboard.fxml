@@ -23,6 +23,7 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.paint.LinearGradient?>
 <?import javafx.scene.paint.Stop?>
+<?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane fx:id="mainPane" prefHeight="720.0" prefWidth="1200.0" stylesheets="@../assets/css/font.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionuser.UserDashboardController">
@@ -31,7 +32,7 @@
          <center>
             <AnchorPane prefHeight="622.0" prefWidth="1149.0" BorderPane.alignment="CENTER">
                <children>
-                  <Pane layoutX="49.0" layoutY="-1.0" prefHeight="51.0" prefWidth="1159.0" style="-fx-background-color: white;">
+                  <Pane layoutX="49.0" layoutY="-1.0" prefHeight="51.0" prefWidth="1159.0" style="-fx-background-color: -color;">
                      <children>
                         <Label fx:id="globalusername" layoutX="1041.0" layoutY="11.0" text="Username Label">
                            <font>
@@ -494,13 +495,166 @@
                         </ScrollPane>
                         <ScrollPane fx:id="UserSubscriptionPane" prefHeight="646.0" prefWidth="1155.0" visible="false">
                            <content>
-                              <Pane prefHeight="808.0" prefWidth="1156.0">
+                              <Pane prefHeight="729.0" prefWidth="1156.0">
                                  <children>
-                                    <Label layoutX="39.0" layoutY="14.0" text="Client / Store">
-                                       <font>
-                                          <Font name="Open Sans Regular" size="16.0" />
-                                       </font>
-                                    </Label>
+                                    <Pane fx:id="newsub_pane" layoutX="61.0" layoutY="28.0" prefHeight="224.0" prefWidth="1035.0" style="-fx-background-color: white;">
+                                       <children>
+                                          <ImageView fitHeight="225.0" fitWidth="1055.0" layoutX="11.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../assets/images/bandeau-offres.jpg" />
+                                             </image>
+                                          </ImageView>
+                                          <Label layoutX="101.0" layoutY="78.0" text="Our Offers">
+                                             <font>
+                                                <Font name="Open Sans Regular" size="24.0" />
+                                             </font>
+                                          </Label>
+                                          <Label layoutX="101.0" layoutY="113.0" text="Client / Subscriptions">
+                                             <font>
+                                                <Font name="Open Sans Regular" size="16.0" />
+                                             </font>
+                                          </Label>
+                                       </children>
+                                    </Pane>
+                                    <Pane fx:id="newsub_pane1" layoutX="61.0" layoutY="290.0" prefHeight="394.0" prefWidth="1035.0" style="-fx-background-color: white; -fx-border-color: -color-accent-fg;">
+                                       <children>
+                                          <Label layoutX="480.0" layoutY="14.0" text="Pricing">
+                                             <font>
+                                                <Font name="Open Sans Regular" size="24.0" />
+                                             </font>
+                                          </Label>
+                                          <Pane layoutX="74.0" layoutY="71.0" prefHeight="273.0" prefWidth="262.0" style="-fx-background-color: #e9ecef;">
+                                             <children>
+                                                <Line endX="161.0" layoutX="101.0" startX="-100.0" stroke="#325bff" style="-fx-fill: blue;" />
+                                                <Button layoutX="83.0" layoutY="223.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="95.0" style="-color-button-bg-hover: -color-success-5; -color-button-fg-hover: white; -color-button-border: -color-accent-fg;" styleClass="rounded" text="Buy Now">
+                                                   <cursor>
+                                                      <Cursor fx:constant="HAND" />
+                                                   </cursor>
+                                                </Button>
+                                                <Label layoutX="59.0" layoutY="49.0" text="390 TND / 3 Months">
+                                                   <font>
+                                                      <Font size="16.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label layoutX="89.0" layoutY="14.0" text="GP One">
+                                                   <font>
+                                                      <Font name="Open Sans Regular" size="24.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label layoutX="60.0" layoutY="101.0">
+                                                   <font>
+                                                      <Font size="16.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label layoutX="66.0" layoutY="97.0" text="• Access to Fitness">
+                                                   <font>
+                                                      <Font size="16.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label layoutX="66.0" layoutY="122.0" text="• 24/7 Access">
+                                                   <font>
+                                                      <Font size="16.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label layoutX="66.0" layoutY="147.0" text="• 24/7 Support">
+                                                   <font>
+                                                      <Font size="16.0" />
+                                                   </font>
+                                                </Label>
+                                             </children>
+                                          </Pane>
+                                          <Pane layoutX="387.0" layoutY="71.0" prefHeight="273.0" prefWidth="262.0" style="-fx-background-color: #e9ecef;">
+                                             <children>
+                                                <Line endX="161.0" layoutX="101.0" startX="-100.0" stroke="#ebdb00" style="-fx-fill: blue;" />
+                                                <Label layoutX="58.0" layoutY="49.0" text="690 TND / 6 Months">
+                                                   <font>
+                                                      <Font size="16.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label layoutX="88.0" layoutY="14.0" text="GP Two">
+                                                   <font>
+                                                      <Font name="Open Sans Regular" size="24.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label layoutX="67.0" layoutY="94.0" text="• Access to Fitness">
+                                                   <font>
+                                                      <Font size="16.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label layoutX="67.0" layoutY="144.0" text="• 24/7 Access">
+                                                   <font>
+                                                      <Font size="16.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label layoutX="67.0" layoutY="169.0" text="• 24/7 Support">
+                                                   <font>
+                                                      <Font size="16.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label layoutX="67.0" layoutY="119.0" text="• Access to Pool">
+                                                   <font>
+                                                      <Font size="16.0" />
+                                                   </font>
+                                                </Label>
+                                                <Button layoutX="84.0" layoutY="223.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="95.0" style="-color-button-bg-hover: -color-success-5; -color-button-fg-hover: white; -color-button-border: -color-accent-fg;" styleClass="rounded" text="Buy Now">
+                                                   <cursor>
+                                                      <Cursor fx:constant="HAND" />
+                                                   </cursor>
+                                                </Button>
+                                             </children>
+                                          </Pane>
+                                          <Pane layoutX="705.0" layoutY="71.0" prefHeight="275.0" prefWidth="262.0" style="-fx-background-color: #e9ecef;">
+                                             <children>
+                                                <Line endX="161.0" layoutX="101.0" startX="-100.0" stroke="#325bff" style="-fx-fill: blue;" />
+                                                <Label layoutX="67.0" layoutY="49.0" text="1130 TND / 1 Year">
+                                                   <font>
+                                                      <Font size="16.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label layoutX="80.0" layoutY="14.0" text="GP Three">
+                                                   <font>
+                                                      <Font name="Open Sans Regular" size="24.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label layoutX="67.0" layoutY="91.0" text="• Access to Fitness">
+                                                   <font>
+                                                      <Font size="16.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label layoutX="67.0" layoutY="166.0" text="• 24/7 Access">
+                                                   <font>
+                                                      <Font size="16.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label layoutX="67.0" layoutY="191.0" text="• 24/7 Support">
+                                                   <font>
+                                                      <Font size="16.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label layoutX="67.0" layoutY="116.0" text="• Access to Pool">
+                                                   <font>
+                                                      <Font size="16.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label layoutX="67.0" layoutY="141.0" text="• Access to SPA">
+                                                   <font>
+                                                      <Font size="16.0" />
+                                                   </font>
+                                                </Label>
+                                                <Button layoutX="84.0" layoutY="225.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="95.0" style="-color-button-bg-hover: -color-success-5; -color-button-fg-hover: white; -color-button-border: -color-accent-fg;" styleClass="rounded" text="Buy Now">
+                                                   <cursor>
+                                                      <Cursor fx:constant="HAND" />
+                                                   </cursor>
+                                                </Button>
+                                             </children>
+                                          </Pane>
+                                          <Label layoutX="444.0" layoutY="346.0" text="Most Common Package">
+                                             <font>
+                                                <Font size="14.0" />
+                                             </font>
+                                          </Label>
+                                       </children>
+                                    </Pane>
                                  </children>
                               </Pane>
                            </content>

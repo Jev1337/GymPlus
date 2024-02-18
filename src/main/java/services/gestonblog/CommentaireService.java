@@ -30,6 +30,11 @@ public class CommentaireService implements IService {
         Statement st = connection.createStatement();
         st.executeUpdate(sql);
     }
+    public void deleteComntsByPostId(int id) throws SQLException {
+        String sql = "DELETE FROM commentaire WHERE id_post = "+id+";";
+        Statement st = connection.createStatement();
+        st.executeUpdate(sql);
+    }
 
     @Override
     public void update(Object o) throws SQLException {
@@ -45,12 +50,12 @@ public class CommentaireService implements IService {
         ps.executeUpdate();
     }
 
-    @Override
-    public List<Commentaire> getAll() throws SQLException {
-        String sql = "select * from commentaire";
-        Statement st = connection.createStatement();
-        ResultSet rs = st.executeQuery(sql);
-        List<Commentaire> posts = new ArrayList<>();
+    public  List<Commentaire> getAllCommentsByPostId(int id) throws SQLException {
+        String sql = "select * from commentaire where id_post = " +id+";";
+        Statement ps = connection.createStatement();
+        //ps.setInt(1, id);
+        ResultSet rs = ps.executeQuery(sql);
+        List<Commentaire> comments = new ArrayList<>();
         while (rs.next()){
             Commentaire p = new Commentaire();
             p.setId_comment(rs.getInt("id_comment"));
@@ -59,9 +64,27 @@ public class CommentaireService implements IService {
             p.setContent(rs.getString("content"));
             p.setDate(rs.getDate("date"));
             p.setLikes(rs.getInt("likes"));
-            posts.add(p);
+            comments.add(p);
         }
-        return posts;
+        return comments;
+    }
+    @Override
+    public List<Commentaire> getAll() throws SQLException {
+        String sql = "select * from commentaire ";
+        Statement st = connection.createStatement();
+        ResultSet rs = st.executeQuery(sql);
+        List<Commentaire> comments = new ArrayList<>();
+        while (rs.next()){
+            Commentaire p = new Commentaire();
+            p.setId_comment(rs.getInt("id_comment"));
+            p.setUser_id(rs.getInt("user_id"));
+            p.setId_post(rs.getInt("id_post"));
+            p.setContent(rs.getString("content"));
+            p.setDate(rs.getDate("date"));
+            p.setLikes(rs.getInt("likes"));
+            comments.add(p);
+        }
+        return comments;
     }
 
 }

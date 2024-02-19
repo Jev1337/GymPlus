@@ -231,19 +231,21 @@ public class EquipementController {
         void initialize() {
             getAllEquipements();
             getAllMaint();
-            String query = "select id from equipment_details";
-            try{
-                List<Equipements_details> listEquip = EquipementService.getAll();
-                for (Equipements_details equip : listEquip) {
-                    add_ide.getItems().add(equip.getId());
-                }
-            }catch (SQLException e){
-                e.printStackTrace();
-            }
+            updateCb();
 
         }
 
-
+    private void updateCb() {
+        add_ide.getItems().clear();
+        try{
+            List<Equipements_details> listEquip = EquipementService.getAll();
+            for (Equipements_details equip : listEquip) {
+                add_ide.getItems().add(equip.getId());
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
     @FXML
     void addMaint(ActionEvent event) {
         try {
@@ -319,18 +321,18 @@ public class EquipementController {
 
     @FXML
     void gotomaint_btn_act(ActionEvent event) {
-    FadeOutRight f = new FadeOutRight();
-    FadeInRight f1 = new FadeInRight();
-    f.setNode(EquipPane);
-    f.setOnFinished((e) -> {
-       f1.setNode(maintPane);
-        maintPane.setVisible(true);
-        maintPane.setOpacity(0);
-        EquipPane.setVisible(false);
-        f1.play();
-    });
-    f.play();
-
+        updateCb();
+        FadeOutRight f = new FadeOutRight();
+        FadeInRight f1 = new FadeInRight();
+        f.setNode(EquipPane);
+        f.setOnFinished((e) -> {
+           f1.setNode(maintPane);
+            maintPane.setVisible(true);
+            maintPane.setOpacity(0);
+            EquipPane.setVisible(false);
+            f1.play();
+        });
+        f.play();
     }
 
     @FXML

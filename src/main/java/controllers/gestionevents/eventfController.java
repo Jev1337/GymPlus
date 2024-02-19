@@ -16,6 +16,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
@@ -25,6 +26,7 @@ import services.gestionevents.Event_detailsService;
 import services.gestionevents.Event_participantsService;
 import utils.MyDatabase;
 
+import java.awt.image.BufferedImage;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -50,14 +52,14 @@ public class eventfController {
     private Button join_id;
 
     @FXML
-    private TableColumn<Event_details,String> namec;
+    private TableColumn<Event_details, String> namec;
 
     @FXML
     private TableColumn<Event_details, String> typec;
     @FXML
-    private TableColumn<Event_details,Integer> spotsc;
+    private TableColumn<Event_details, Integer> spotsc;
 
-    private final Event_detailsService eventDetailsService=new Event_detailsService();
+    private final Event_detailsService eventDetailsService = new Event_detailsService();
     @FXML
     private TableView<Event_details> event_detailsTableView;
 
@@ -73,6 +75,16 @@ public class eventfController {
     private Pane event_points;
     @FXML
     private Pane event_pane;
+    @FXML
+    private Button go_to_reward;
+    @FXML
+    private Button events;
+    @FXML
+    private Button whey_btn;
+    @FXML
+    private Button belt_btn;
+    @FXML
+    private Button bag_btn;
     @FXML
     void initialize() {
         try {
@@ -97,7 +109,8 @@ public class eventfController {
         durationc.setCellValueFactory(new PropertyValueFactory<>("duree"));
         spotsc.setCellValueFactory(new PropertyValueFactory<>("nb_places"));
     }
-    public boolean hasUserJoinedEvent(int event_id,int user_id) throws SQLException {
+
+    public boolean hasUserJoinedEvent(int event_id, int user_id) throws SQLException {
         Connection connection = MyDatabase.getInstance().getConnection();
         PreparedStatement stmt = connection.prepareStatement("select * from event_participants where event_details_id = ? and user_id = ?");
         stmt.setInt(1, event_id);
@@ -106,12 +119,14 @@ public class eventfController {
         return rs.next();
 
     }
+
     public void decrementSpots(int eventId) throws SQLException {
         Connection connection = MyDatabase.getInstance().getConnection();
         PreparedStatement stmt = connection.prepareStatement("UPDATE event_details  SET nb_places = nb_places - 1 WHERE id = ?");
         stmt.setInt(1, eventId);
         stmt.executeUpdate();
     }
+
     public void incrementSpots(int eventId) throws SQLException {
         Connection connection = MyDatabase.getInstance().getConnection();
         PreparedStatement stmt = connection.prepareStatement("UPDATE event_details  SET nb_places = nb_places + 1 WHERE id = ?");
@@ -129,8 +144,7 @@ public class eventfController {
         System.out.println("Next event date: " + nextEventDate);
         Connection connection = MyDatabase.getInstance().getConnection();
         if (selectedEvent != null) {
-            if(selectedEvent.getNb_places()==0)
-            {
+            if (selectedEvent.getNb_places() == 0) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error");
                 alert.setHeaderText("No spots available");
@@ -158,8 +172,7 @@ public class eventfController {
                     incrementSpots(selectedEvent.getId());
                     afficher();
                     return;
-                }
-                else {
+                } else {
                     return;
                 }
             }
@@ -187,7 +200,7 @@ public class eventfController {
             System.out.println("No event selected");
         }
 
-        Event_participants ev = new Event_participants(id,GlobalVar.getUser().getId() );
+        Event_participants ev = new Event_participants(id, GlobalVar.getUser().getId());
         try {
             Event_participantsService eventParticipantsService = new Event_participantsService();
             eventParticipantsService.add(ev);
@@ -203,7 +216,8 @@ public class eventfController {
 
 
     }
-    private void Join_notf(){
+
+    private void Join_notf() {
         final var msg = new Notification("Successfully Joined The Event");
 
         msg.getStyleClass().addAll(
@@ -225,6 +239,7 @@ public class eventfController {
         }
         in.playFromStart();
     }
+
     public Date getNextEventDate(int userId) {
         LocalDateTime nextEventDate = null;
         Connection connection = MyDatabase.getInstance().getConnection();
@@ -276,9 +291,11 @@ public class eventfController {
         event_details.clear();
         event_details.addAll(searchResults);
     }
-    @FXML
-    void reward_hub(ActionEvent event) {
-    //show event_points pane
+
+
+
+    public void go_to_rewards(ActionEvent actionEvent) {
+        //show event_points pane
         FadeOutRight f = new FadeOutRight(event_pane);
         f.setOnFinished((e) -> {
             event_pane.setVisible(false);
@@ -288,9 +305,140 @@ public class eventfController {
             f2.play();
         });
         f.play();
+    }
 
+    @FXML
+    public void back_to_events(ActionEvent actionEvent) {
+        // Check if event_pane is already visible
+        if (!event_pane.isVisible()) {
+            // If not, fade out event_points
+            FadeOutRight f = new FadeOutRight(event_points);
+            f.setOnFinished((e) -> {
+                // When the fade out is finished, hide event_points
+                event_points.setVisible(false);
+
+                // Make event_pane visible but transparent
+                event_pane.setVisible(true);
+                event_pane.setOpacity(0);
+
+                // Fade in event_pane
+                FadeInRight f2 = new FadeInRight(event_pane);
+                f2.play();
+            });
+            f.play();
+        }
+    }
+    @FXML
+    public void claim_whey(ActionEvent actionEvent) {
+        if (GlobalVar.getUser().getEvent_points() >= 2500) {
+            Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
+            confirmationAlert.setTitle("Confirmation");
+            confirmationAlert.setHeaderText("Are you sure you want to claim GymPlus Whey Protein?");
+            //show remaining points
+            confirmationAlert.setContentText("Remaining Points: " + GlobalVar.getUser().getEvent_points());
+
+            Optional<ButtonType> result = confirmationAlert.showAndWait();
+            if (result.get() == ButtonType.OK){
+                GlobalVar.getUser().setEvent_points(GlobalVar.getUser().getEvent_points() - 2500);
+                update_user_pts(GlobalVar.getUser().getId(), GlobalVar.getUser().getEvent_points());
+                points_label.setText("Points: " + GlobalVar.getUser().getEvent_points());
+
+                // Generate QR code
+
+
+                // Display QR code in an alert
+                Alert qrCodeAlert = new Alert(Alert.AlertType.INFORMATION);
+                qrCodeAlert.setTitle("Congratulations");
+                qrCodeAlert.setHeaderText("You have successfully claimed GymPlus Whey Protein");
+
+                qrCodeAlert.showAndWait();
+            }
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Not enough points");
+            alert.setContentText("You need at least 2500 points to claim this reward");
+            alert.showAndWait();
+        }
+    }
+
+    void update_user_pts(int id, int points) {
+        Connection connection = MyDatabase.getInstance().getConnection();
+        try {
+            PreparedStatement stmt = connection.prepareStatement("UPDATE user SET event_points = ? WHERE id = ?");
+            stmt.setInt(1, points);
+            stmt.setInt(2, id);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    @FXML
+    public void claim_belt(ActionEvent actionEvent) {
+        if (GlobalVar.getUser().getEvent_points() >= 1500) {
+            Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
+            confirmationAlert.setTitle("Confirmation");
+            confirmationAlert.setHeaderText("Are you sure you want to claim GymPlus Weightlifting Belt?");
+            confirmationAlert.setContentText("Remaining Points: " + GlobalVar.getUser().getEvent_points());
+            Optional<ButtonType> result = confirmationAlert.showAndWait();
+            if (result.get() == ButtonType.OK){
+                GlobalVar.getUser().setEvent_points(GlobalVar.getUser().getEvent_points() - 1500);
+                update_user_pts(GlobalVar.getUser().getId(), GlobalVar.getUser().getEvent_points());
+                points_label.setText("Points: " + GlobalVar.getUser().getEvent_points());
+
+                // Generate QR code
+
+
+                // Display QR code in an alert
+                Alert qrCodeAlert = new Alert(Alert.AlertType.INFORMATION);
+                qrCodeAlert.setTitle("Congratulations");
+                qrCodeAlert.setHeaderText("You have successfully claimed GymPlus Weightlifting Belt");
+
+                qrCodeAlert.showAndWait();
+            }
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Not enough points");
+            alert.setContentText("You need at least 1500 points to claim this reward");
+            alert.showAndWait();
+        }
+    }
+
+    @FXML
+    public void claim_bag(ActionEvent actionEvent) {
+        if (GlobalVar.getUser().getEvent_points() >= 2000) {
+            Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
+            confirmationAlert.setTitle("Confirmation");
+            confirmationAlert.setHeaderText("Are you sure you want to claim GymPlus Gym Bag?");
+            confirmationAlert.setContentText("Remaining Points: " + GlobalVar.getUser().getEvent_points());
+            Optional<ButtonType> result = confirmationAlert.showAndWait();
+            if (result.get() == ButtonType.OK){
+                GlobalVar.getUser().setEvent_points(GlobalVar.getUser().getEvent_points() - 2000);
+                update_user_pts(GlobalVar.getUser().getId(), GlobalVar.getUser().getEvent_points());
+                points_label.setText("Points: " + GlobalVar.getUser().getEvent_points());
+
+                // Generate QR code
+
+
+                // Display QR code in an alert
+                Alert qrCodeAlert = new Alert(Alert.AlertType.INFORMATION);
+                qrCodeAlert.setTitle("Congratulations");
+                qrCodeAlert.setHeaderText("You have successfully claimed GymPlus Gym Bag");
+
+                qrCodeAlert.showAndWait();
+            }
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Not enough points");
+            alert.setContentText("You need at least 2000 points to claim this reward");
+            alert.showAndWait();
+        }
     }
 }
+
+
 
 
 

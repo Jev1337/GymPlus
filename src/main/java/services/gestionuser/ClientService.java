@@ -164,5 +164,26 @@ public class ClientService implements IService<Client> {
         }
 
         return 0;
+    public List<Client> getNonSubscribedUserList() throws SQLException {
+        List<Client> clients = new ArrayList<>();
+        String query = "SELECT * FROM user WHERE role = 'client' AND id NOT IN (SELECT user_id FROM abonnement WHERE dateFinAb > NOW())";
+        Statement st = connection.createStatement();
+        ResultSet rs = st.executeQuery(query);
+        while (rs.next()) {
+            Client client = new Client();
+            client.setId(rs.getInt("id"));
+            client.setUsername(rs.getString("username"));
+            client.setFirstname(rs.getString("firstname"));
+            client.setLastname(rs.getString("lastname"));
+            client.setDate_naiss(rs.getString("date_naiss"));
+            client.setPassword(rs.getString("password"));
+            client.setEmail(rs.getString("email"));
+            client.setNum_tel(rs.getString("num_tel"));
+            client.setAdresse(rs.getString("adresse"));
+            client.setPhoto(rs.getString("photo"));
+            client.setRole(rs.getString("role"));
+            clients.add(client);
+        }
+        return clients;
     }
 }

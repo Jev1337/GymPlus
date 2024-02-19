@@ -16,12 +16,25 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import services.gestionequipements.EquipementService;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
 import javafx.scene.layout.Pane;
 import services.gestionequipements.MaintenancesService;
 
 public class EquipementController {
 
+
+    @FXML
+    private Button editMaint_btn;
+
+    @FXML
+    private DatePicker add_date1;
+
+    @FXML
+    private TextField add_status1;
+
+    @FXML
+    private Pane ModifyMaintPane;
 
     @FXML
     private Pane EquipPane;
@@ -218,19 +231,21 @@ public class EquipementController {
         void initialize() {
             getAllEquipements();
             getAllMaint();
-            String query = "select id from equipment_details";
-            try{
-                List<Equipements_details> listEquip = EquipementService.getAll();
-                for (Equipements_details equip : listEquip) {
-                    add_ide.getItems().add(equip.getId());
-                }
-            }catch (SQLException e){
-                e.printStackTrace();
-            }
+            updateCb();
 
         }
 
-
+    private void updateCb() {
+        add_ide.getItems().clear();
+        try{
+            List<Equipements_details> listEquip = EquipementService.getAll();
+            for (Equipements_details equip : listEquip) {
+                add_ide.getItems().add(equip.getId());
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
     @FXML
     void addMaint(ActionEvent event) {
         try {
@@ -270,19 +285,21 @@ public class EquipementController {
 
     @FXML
     void modifyMaint(ActionEvent event) {
-        try {
-            String mydate = String.valueOf(add_date.getValue());
-            java.sql.Date sqlAddDate = java.sql.Date.valueOf(mydate);
-            MaintenancesService.update(new Maintenances( Integer.parseInt(add_idm.getText()),add_ide.getValue(), mydate, add_status.getText()));
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Information");
-            alert.setContentText("Maintenance updated successfully");
-            alert.showAndWait();
-        } catch (SQLException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setContentText(e.getMessage());
-            alert.showAndWait();
+        Maintenances maintenances = tableviewMaint.getSelectionModel().getSelectedItem();
+        if (maintenances != null) {
+            add_date1.setValue(LocalDate.parse(maintenances.getDate_maintenance()));
+            add_status1.setText(maintenances.getStatus());
+            FadeOutRight f = new FadeOutRight();
+            FadeInRight f1 = new FadeInRight();
+            f.setNode(maintPane);
+            f.setOnFinished((e) -> {
+                f1.setNode(ModifyMaintPane);
+                ModifyMaintPane.setVisible(true);
+                ModifyMaintPane.setOpacity(0);
+                maintPane.setVisible(false);
+                f1.play();
+            });
+            f.play();
         }
     }
     void getAllMaint() {
@@ -304,18 +321,18 @@ public class EquipementController {
 
     @FXML
     void gotomaint_btn_act(ActionEvent event) {
-    FadeOutRight f = new FadeOutRight();
-    FadeInRight f1 = new FadeInRight();
-    f.setNode(EquipPane);
-    f.setOnFinished((e) -> {
-       f1.setNode(maintPane);
-        maintPane.setVisible(true);
-        maintPane.setOpacity(0);
-        EquipPane.setVisible(false);
-        f1.play();
-    });
-    f.play();
-
+        updateCb();
+        FadeOutRight f = new FadeOutRight();
+        FadeInRight f1 = new FadeInRight();
+        f.setNode(EquipPane);
+        f.setOnFinished((e) -> {
+           f1.setNode(maintPane);
+            maintPane.setVisible(true);
+            maintPane.setOpacity(0);
+            EquipPane.setVisible(false);
+            f1.play();
+        });
+        f.play();
     }
 
     @FXML
@@ -376,6 +393,49 @@ public class EquipementController {
         });
         f.play();
         getAllEquipements();
+    }
+
+    @FXML
+    void editMaint_btn_act(ActionEvent event) {
+        try {
+            Maintenances selectedEvent = tableviewMaint.getSelectionModel().getSelectedItem();
+            if (selectedEvent != null) {
+                MaintenancesService maintenancesService = new MaintenancesService();
+                Maintenances maintenances = new Maintenances();
+                maintenances.setIdm(selectedEvent.getIdm());
+                maintenances.setIde(selectedEvent.getIde());
+                maintenances.setDate_maintenance(add_date1.getValue().toString());
+                maintenances.setStatus(add_status1.getText());
+                maintenancesService.update(maintenances);
+                getAllMaint();
+                FadeOutRight f =new FadeOutRight(ModifyMaintPane);
+                f.setOnFinished((e)->{
+                    ModifyMaintPane.setVisible(false);
+                    FadeInRight f2 = new FadeInRight(maintPane);
+                    maintPane.setOpacity(0);
+                    maintPane.setVisible(true);
+                    f2.play();
+                });
+                f.play();}
+            else {
+                System.out.println("No maintenance selected");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        FadeOutLeft f = new FadeOutLeft();
+        FadeInLeft f1 = new FadeInLeft();
+        f.setNode(ModifyMaintPane);
+        f.setOnFinished((e) -> {
+            f1.setNode(maintPane);
+            maintPane.setVisible(true);
+            maintPane.setOpacity(0);
+            ModifyMaintPane.setVisible(false);
+            f1.play();
+        });
+        f.play();
+        getAllMaint();
     }
 }
 

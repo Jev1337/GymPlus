@@ -36,7 +36,7 @@ SET
 CREATE TABLE `abonnement` (
   `id` int(11) NOT NULL,
   `user_id` int(11) DEFAULT NULL,
-  `dureeFinAb` DATE DEFAULT NULL,
+  `dateFinAb` DATE DEFAULT NULL,
   `type` varchar(255) DEFAULT NULL
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
@@ -216,12 +216,12 @@ VALUES
 --
 CREATE TABLE `user` (
   `id` int(11) NOT NULL,
-  `username` varchar(255) DEFAULT NULL,
+  `username` varchar(255) DEFAULT NULL UNIQUE,
   `firstname` varchar(255) DEFAULT NULL,
   `lastname` varchar(255) DEFAULT NULL,
   `date_naiss` date DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL,
-  `email` varchar(255) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL UNIQUE,
   `role` varchar(255) DEFAULT NULL,
   `num_tel` varchar(255) DEFAULT NULL,
   `adresse` text DEFAULT NULL,
@@ -361,6 +361,12 @@ ALTER TABLE
   `facture`
 MODIFY
   `idFacture` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `abonnement`
+--
+ALTER TABLE `abonnement`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT pour la table `produit`

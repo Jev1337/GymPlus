@@ -81,7 +81,7 @@
                            <content>
                               <Pane prefHeight="757.0" prefWidth="1153.0">
                                  <children>
-                                    <Label layoutX="33.0" layoutY="14.0" text="Admin / Home">
+                                    <Label layoutX="33.0" layoutY="14.0" style="-fx-text-fill: linear-gradient(to right, #00aaff, #00688b);" text="Admin / Home">
                                        <font>
                                           <Font name="Open Sans Regular" size="16.0" />
                                        </font>
@@ -274,7 +274,7 @@
                            <content>
                               <Pane prefHeight="808.0" prefWidth="1147.0">
                                  <children>
-                                    <Label fx:id="profilelabel" layoutX="39.0" layoutY="14.0" text="Admin / Profile">
+                                    <Label fx:id="profilelabel" layoutX="39.0" layoutY="14.0" style="-fx-text-fill: linear-gradient(to right, #00aaff, #00688b);" text="Admin / Profile">
                                        <font>
                                           <Font name="Open Sans Regular" size="16.0" />
                                        </font>
@@ -514,7 +514,7 @@
                            <content>
                               <Pane fx:id="subpane" prefHeight="637.0" prefWidth="1156.0">
                                  <children>
-                                    <Label layoutX="39.0" layoutY="14.0" text="Admin / Subscriptions">
+                                    <Label layoutX="39.0" layoutY="14.0" style="-fx-text-fill: linear-gradient(to right, #00aaff, #00688b);" text="Admin / Subscriptions">
                                        <font>
                                           <Font name="Open Sans Regular" size="16.0" />
                                        </font>
@@ -580,7 +580,7 @@
                            <content>
                               <Pane prefHeight="808.0" prefWidth="1156.0">
                                  <children>
-                                    <Label layoutX="39.0" layoutY="14.0" text="Admin / Store">
+                                    <Label layoutX="39.0" layoutY="14.0" style="-fx-text-fill: linear-gradient(to right, #00aaff, #00688b);" text="Admin / Store">
                                        <font>
                                           <Font name="Open Sans Regular" size="16.0" />
                                        </font>
@@ -593,7 +593,7 @@
                            <content>
                               <Pane prefHeight="1056.0" prefWidth="1147.0">
                                  <children>
-                                    <Label layoutX="39.0" layoutY="14.0" text="Admin / User Management">
+                                    <Label layoutX="39.0" layoutY="14.0" style="-fx-text-fill: linear-gradient(to right, #00aaff, #00688b);" text="Admin / User Management">
                                        <font>
                                           <Font name="Open Sans Regular" size="16.0" />
                                        </font>
@@ -680,7 +680,7 @@
                            <content>
                               <Pane prefHeight="808.0" prefWidth="1156.0">
                                  <children>
-                                    <Label layoutX="39.0" layoutY="14.0" text="Admin / Blogs">
+                                    <Label layoutX="39.0" layoutY="14.0" style="-fx-text-fill: linear-gradient(to right, #00aaff, #00688b);" text="Admin / Blogs">
                                        <font>
                                           <Font name="Open Sans Regular" size="16.0" />
                                        </font>
@@ -693,7 +693,7 @@
                            <content>
                               <Pane fx:id="affichage_events_adstaff" prefHeight="808.0" prefWidth="1156.0">
                                  <children>
-                                    <Label layoutX="39.0" layoutY="14.0" text="Admin / Events">
+                                    <Label layoutX="39.0" layoutY="14.0" style="-fx-text-fill: linear-gradient(to right, #00aaff, #00688b);" text="Admin / Events">
                                        <font>
                                           <Font name="Open Sans Regular" size="16.0" />
                                        </font>
@@ -706,7 +706,7 @@
                            <content>
                               <Pane prefHeight="808.0" prefWidth="1156.0">
                                  <children>
-                                    <Label layoutX="39.0" layoutY="14.0" text="Admin / Settings">
+                                    <Label layoutX="39.0" layoutY="14.0" style="-fx-text-fill: linear-gradient(to right, #00aaff, #00688b);" text="Admin / Settings">
                                        <font>
                                           <Font name="Open Sans Regular" size="16.0" />
                                        </font>
@@ -719,7 +719,7 @@
                            <content>
                               <Pane fx:id="EquipmentIdAdminStaff" prefHeight="808.0" prefWidth="1156.0">
                                  <children>
-                                    <Label layoutX="39.0" layoutY="14.0" text="Admin / Equipments">
+                                    <Label layoutX="39.0" layoutY="14.0" style="-fx-text-fill: linear-gradient(to right, #00aaff, #00688b);" text="Admin / Equipments">
                                        <font>
                                           <Font name="Open Sans Regular" size="16.0" />
                                        </font>

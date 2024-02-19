@@ -97,7 +97,7 @@
             </children></Pane>
         <Pane fx:id="event_pane" layoutX="70.0" layoutY="56.0" prefHeight="689.0" prefWidth="1027.0" style="-fx-background-radius: 10;">
             <children>
-                <Label fx:id="countdownLabel" layoutX="687.0" layoutY="319.0" prefHeight="52.0" prefWidth="326.0" />
+                <Label fx:id="countdownLabel" layoutX="689.0" layoutY="345.0" prefHeight="52.0" prefWidth="326.0" />
                 <Button fx:id="join_id" layoutX="267.0" layoutY="578.0" mnemonicParsing="false" onAction="#join_event" prefHeight="50.0" prefWidth="187.0" text="Join">
                     <font>
                         <Font size="30.0" />
@@ -127,7 +127,7 @@
             <Button fx:id="rewards" layoutX="805.0" layoutY="496.0" mnemonicParsing="false" onAction="#go_to_rewards" text="Rewards -&gt;" />
             </children>
         </Pane>
-          <Label fx:id="points_label" layoutX="506.0" layoutY="6.0" prefHeight="61.0" prefWidth="187.0" style="-fx-background-color: turquoise; -fx-background-radius: 50;" textFill="#f2f2f2">
+          <Label fx:id="points_label" layoutX="506.0" layoutY="6.0" prefHeight="61.0" prefWidth="187.0" style="-fx-background-color: turquoise; -fx-background-radius: 50; -fx-text-alignment: center;" textFill="#f2f2f2">
          <font>
             <Font size="27.0" />
          </font>

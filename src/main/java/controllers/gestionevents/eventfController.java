@@ -47,6 +47,12 @@ import java.util.Optional;
 
 public class eventfController {
     private final ObservableList<Event_details> event_details = FXCollections.observableArrayList();
+    private final Event_detailsService eventDetailsService = new Event_detailsService();
+    private PreparedStatement hasUserJoinedEventStatement;
+    private PreparedStatement decrementSpotsStatement;
+    private PreparedStatement incrementSpotsStatement;
+    private PreparedStatement getNextEventDateStatement;
+    private PreparedStatement update_user_ptsStatement;
     @FXML
     private TableColumn<Event_details, String> datec;
 
@@ -66,7 +72,6 @@ public class eventfController {
     @FXML
     private TableColumn<Event_details, Integer> spotsc;
 
-    private final Event_detailsService eventDetailsService = new Event_detailsService();
     @FXML
     private TableView<Event_details> event_detailsTableView;
 
@@ -92,6 +97,23 @@ public class eventfController {
     private Button belt_btn;
     @FXML
     private Button bag_btn;
+    public eventfController() {
+        try {
+            Connection connection = MyDatabase.getInstance().getConnection();
+            hasUserJoinedEventStatement = connection.prepareStatement("select * from event_participants where event_details_id = ? and user_id = ?");
+            decrementSpotsStatement = connection.prepareStatement("UPDATE event_details  SET nb_places = nb_places - 1 WHERE id = ?");
+            incrementSpotsStatement = connection.prepareStatement("UPDATE event_details  SET nb_places = nb_places + 1 WHERE id = ?");
+            getNextEventDateStatement = connection.prepareStatement(
+                    "SELECT event_date FROM event_details " +
+                            "JOIN event_participants ON event_details.id = event_participants.event_details_id " +
+                            "WHERE event_participants.user_id = ? AND event_date > NOW() " +
+                            "ORDER BY event_date ASC LIMIT 1"
+            );
+            update_user_ptsStatement = connection.prepareStatement("UPDATE user SET event_points = ? WHERE id = ?");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
     @FXML
     void initialize() {
         try {
@@ -118,28 +140,22 @@ public class eventfController {
     }
 
     public boolean hasUserJoinedEvent(int event_id, int user_id) throws SQLException {
-        Connection connection = MyDatabase.getInstance().getConnection();
-        PreparedStatement stmt = connection.prepareStatement("select * from event_participants where event_details_id = ? and user_id = ?");
-        stmt.setInt(1, event_id);
-        stmt.setInt(2, GlobalVar.getUser().getId());
-        ResultSet rs = stmt.executeQuery();
+        hasUserJoinedEventStatement.setInt(1, event_id);
+        hasUserJoinedEventStatement.setInt(2, user_id);
+        ResultSet rs = hasUserJoinedEventStatement.executeQuery();
         return rs.next();
-
     }
 
     public void decrementSpots(int eventId) throws SQLException {
-        Connection connection = MyDatabase.getInstance().getConnection();
-        PreparedStatement stmt = connection.prepareStatement("UPDATE event_details  SET nb_places = nb_places - 1 WHERE id = ?");
-        stmt.setInt(1, eventId);
-        stmt.executeUpdate();
+        decrementSpotsStatement.setInt(1, eventId);
+        decrementSpotsStatement.executeUpdate();
     }
 
     public void incrementSpots(int eventId) throws SQLException {
-        Connection connection = MyDatabase.getInstance().getConnection();
-        PreparedStatement stmt = connection.prepareStatement("UPDATE event_details  SET nb_places = nb_places + 1 WHERE id = ?");
-        stmt.setInt(1, eventId);
-        stmt.executeUpdate();
+        incrementSpotsStatement.setInt(1, eventId);
+        incrementSpotsStatement.executeUpdate();
     }
+
 
 
     @FXML
@@ -177,6 +193,9 @@ public class eventfController {
                     Event_participantsService eventParticipantsService = new Event_participantsService();
                     eventParticipantsService.delete(ev.getEvent_id());
                     incrementSpots(selectedEvent.getId());
+                    GlobalVar.getUser().setEvent_points(GlobalVar.getUser().getEvent_points() - 100);
+                    update_user_pts(GlobalVar.getUser().getId(), GlobalVar.getUser().getEvent_points());
+                    points_label.setText("Points: " + GlobalVar.getUser().getEvent_points());
                     afficher();
                     return;
                 } else {
@@ -191,6 +210,9 @@ public class eventfController {
                 stmt.setString(3, selectedEvent.getEvent_date());
                 stmt.setString(4, selectedEvent.getDuree());
                 stmt.setInt(5, selectedEvent.getNb_places());
+                GlobalVar.getUser().setEvent_points(GlobalVar.getUser().getEvent_points() + 100);
+                update_user_pts(GlobalVar.getUser().getId(), GlobalVar.getUser().getEvent_points());
+                points_label.setText("Points: " + GlobalVar.getUser().getEvent_points());
 
                 ResultSet rs = stmt.executeQuery();
                 if (rs.next()) {
@@ -223,6 +245,25 @@ public class eventfController {
 
 
     }
+    boolean check_event_date_and_time_passed(int event_id) {
+        Connection connection = MyDatabase.getInstance().getConnection();
+        try {
+            PreparedStatement stmt = connection.prepareStatement("SELECT event_date FROM event_details WHERE id = ?");
+            stmt.setInt(1, event_id);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                Date eventDate = rs.getTimestamp("event_date");
+                Date now = new Date();
+                return eventDate.before(now);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+
+
+
+        }
+        return false;
+    }
 
     private void Join_notf() {
         final var msg = new Notification("Successfully Joined The Event");
@@ -249,17 +290,9 @@ public class eventfController {
 
     public Date getNextEventDate(int userId) {
         LocalDateTime nextEventDate = null;
-        Connection connection = MyDatabase.getInstance().getConnection();
         try {
-            PreparedStatement stmt = connection.prepareStatement(
-                    "SELECT event_date FROM event_details " +
-                            "JOIN event_participants ON event_details.id = event_participants.event_details_id " +
-                            "WHERE event_participants.user_id = ? AND event_date > NOW() " +
-                            "ORDER BY event_date ASC LIMIT 1"
-            );
-            stmt.setInt(1, userId);
-
-            ResultSet rs = stmt.executeQuery();
+            getNextEventDateStatement.setInt(1, userId);
+            ResultSet rs = getNextEventDateStatement.executeQuery();
             if (rs.next()) {
                 nextEventDate = rs.getTimestamp("event_date").toLocalDateTime();
             }
@@ -302,7 +335,7 @@ public class eventfController {
 
 
     public void go_to_rewards(ActionEvent actionEvent) {
-        //show event_points pane
+
         FadeOutRight f = new FadeOutRight(event_pane);
         f.setOnFinished((e) -> {
             event_pane.setVisible(false);
@@ -316,19 +349,19 @@ public class eventfController {
 
     @FXML
     public void back_to_events(ActionEvent actionEvent) {
-        // Check if event_pane is already visible
+
         if (!event_pane.isVisible()) {
-            // If not, fade out event_points
+
             FadeOutRight f = new FadeOutRight(event_points);
             f.setOnFinished((e) -> {
-                // When the fade out is finished, hide event_points
+
                 event_points.setVisible(false);
 
-                // Make event_pane visible but transparent
+
                 event_pane.setVisible(true);
                 event_pane.setOpacity(0);
 
-                // Fade in event_pane
+
                 FadeInRight f2 = new FadeInRight(event_pane);
                 f2.play();
             });
@@ -336,12 +369,10 @@ public class eventfController {
         }
     }
     void update_user_pts(int id, int points) {
-        Connection connection = MyDatabase.getInstance().getConnection();
         try {
-            PreparedStatement stmt = connection.prepareStatement("UPDATE user SET event_points = ? WHERE id = ?");
-            stmt.setInt(1, points);
-            stmt.setInt(2, id);
-            stmt.executeUpdate();
+            update_user_ptsStatement.setInt(1, points);
+            update_user_ptsStatement.setInt(2, id);
+            update_user_ptsStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -359,7 +390,7 @@ public class eventfController {
                 update_user_pts(GlobalVar.getUser().getId(), GlobalVar.getUser().getEvent_points());
                 points_label.setText("Points: " + GlobalVar.getUser().getEvent_points());
 
-                // Generate QR code
+
                 String details = "User ID: " + GlobalVar.getUser().getId() +
                         "\nFirst Name: " + GlobalVar.getUser().getFirstname() +
                         "\nLast Name: " + GlobalVar.getUser().getLastname() +
@@ -370,7 +401,7 @@ public class eventfController {
                                 .to(ImageType.PNG)
                                 .stream();
 
-                // Convert to JavaFX image
+
                 ByteArrayInputStream bin = new ByteArrayInputStream(bout.toByteArray());
                 javafx.scene.image.Image qrImage = null;
                 try {
@@ -379,7 +410,7 @@ public class eventfController {
                     e.printStackTrace();
                 }
 
-                // Display QR code in an alert
+
                 Alert qrCodeAlert = new Alert(Alert.AlertType.INFORMATION);
                 qrCodeAlert.setTitle("Congratulations");
                 qrCodeAlert.setHeaderText("You have successfully claimed GymPlus Whey Protein");
@@ -428,7 +459,7 @@ public class eventfController {
                 update_user_pts(GlobalVar.getUser().getId(), GlobalVar.getUser().getEvent_points());
                 points_label.setText("Points: " + GlobalVar.getUser().getEvent_points());
 
-                // Generate QR code
+
                 String details = "User ID: " + GlobalVar.getUser().getId() +
                         "\nFirst Name: " + GlobalVar.getUser().getFirstname() +
                         "\nLast Name: " + GlobalVar.getUser().getLastname() +
@@ -439,7 +470,7 @@ public class eventfController {
                                 .to(ImageType.PNG)
                                 .stream();
 
-                // Convert to JavaFX image
+
                 ByteArrayInputStream bin = new ByteArrayInputStream(bout.toByteArray());
                 javafx.scene.image.Image qrImage = null;
                 try {
@@ -497,7 +528,7 @@ public class eventfController {
                 update_user_pts(GlobalVar.getUser().getId(), GlobalVar.getUser().getEvent_points());
                 points_label.setText("Points: " + GlobalVar.getUser().getEvent_points());
 
-                // Generate QR code
+
                 String details = "User ID: " + GlobalVar.getUser().getId() +
                         "\nFirst Name: " + GlobalVar.getUser().getFirstname() +
                         "\nLast Name: " + GlobalVar.getUser().getLastname() +
@@ -508,7 +539,6 @@ public class eventfController {
                                 .to(ImageType.PNG)
                                 .stream();
 
-                // Convert to JavaFX image
                 ByteArrayInputStream bin = new ByteArrayInputStream(bout.toByteArray());
                 javafx.scene.image.Image qrImage = null;
                 try {
@@ -517,7 +547,7 @@ public class eventfController {
                     e.printStackTrace();
                 }
 
-                // Display QR code in an alert
+
                 Alert qrCodeAlert = new Alert(Alert.AlertType.INFORMATION);
                 qrCodeAlert.setTitle("Congratulations");
                 qrCodeAlert.setHeaderText("You have successfully claimed GymPlus Gym Bag");

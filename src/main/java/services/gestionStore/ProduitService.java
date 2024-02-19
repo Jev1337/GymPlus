@@ -7,7 +7,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProduitService implements IService {
+public class ProduitService implements IService<produit> {
 
     private final Connection connection;
 
@@ -16,8 +16,7 @@ public class ProduitService implements IService {
     }
 
     @Override
-    public void add(Object o) throws SQLException {
-        produit p = (produit) o;
+    public void add(produit p) throws SQLException {
         String sql = "insert into produit (name,prix,stock,description,categorie,photo,seuil,promo) " +
                 "values('" + p.getName() + "','" + p.getPrix() + "','" + p.getStock() + "','" + p.getDescription() + "','" + p.getCategorie() + "','" + p.getPhoto() + "','" + p.getSeuil() + "','" + p.getPromo() + "')";
         Statement st = connection.createStatement();
@@ -25,9 +24,8 @@ public class ProduitService implements IService {
     }
 
     @Override
-    public void update(Object o) throws SQLException {
-        produit p = (produit) o;
-        String sql = "update produit set name = ?, prix = ?, stock = ?, description = ?, categorie = ?, photo = ? , seuil = ?, promo = ?";
+    public void update(produit p) throws SQLException {
+        String sql = "UPDATE produit SET name = ?, prix = ?, stock = ?, description = ?, categorie = ?, photo = ? , seuil = ?, promo = ? WHERE idProduit = ?";
         PreparedStatement ps = connection.prepareStatement(sql);
         ps.setString(1, p.getName());
         ps.setFloat(2, p.getPrix());
@@ -37,8 +35,12 @@ public class ProduitService implements IService {
         ps.setString(6, p.getPhoto());
         ps.setInt(7, p.getSeuil());
         ps.setFloat(8, p.getPromo());
+        ps.setInt(9, p.getIdProduit());
         ps.executeUpdate();
+
     }
+
+
 
     @Override
     public void delete(int id) throws SQLException {
@@ -70,6 +72,48 @@ public class ProduitService implements IService {
             produit.add(p);
         }
         return produit;
+    }
+
+    public produit getOne(int id) throws SQLException {
+        String sql = "SELECT * FROM produit WHERE idProduit = ?";
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ps.setInt(1, id);
+        ResultSet rs = ps.executeQuery();
+
+        produit p = null; // Initialize the product as null
+
+        if (rs.next()) { // Check if the result set has any rows
+            p = new produit();
+            p.setIdProduit(rs.getInt("idProduit"));
+            p.setName(rs.getString("name"));
+            p.setPrix(rs.getFloat("prix"));
+            p.setStock(rs.getInt("stock"));
+            p.setDescription(rs.getString("description"));
+            p.setCategorie(rs.getString("categorie"));
+            p.setPhoto(rs.getString("photo"));
+            p.setSeuil(rs.getInt("seuil"));
+            p.setPromo(rs.getFloat("promo"));
+        }
+
+        rs.close();
+        ps.close();
+
+        return p;
+    }
+
+    public void MAJ_Stock(int nb_article , int id) throws SQLException {
+        //produit p = new produit();
+        produit p = getOne(id);
+        int n = p.getStock()-nb_article;
+        p.setStock(n);
+
+        //p.setIdProduit(id);
+        update(p);
+    }
+
+    public produit getProduitById(int idProduit) throws SQLException
+    {
+        return getOne(idProduit);
     }
 }
 

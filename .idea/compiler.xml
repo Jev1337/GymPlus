@@ -10,5 +10,8 @@
         <module name="pidev3a9" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="gymplus" target="17" />
+    </bytecodeTargetLevel>
   </component>
 </project>

@@ -15,7 +15,7 @@ public class ClientService implements IService<Client> {
     }
     @Override
     public void add(Client client) throws SQLException {
-        String query = "INSERT INTO user (id, username, firstname, lastname, date_naiss, password, email, num_tel, adresse, photo, role) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+        String query = "INSERT INTO user (id, username, firstname, lastname, date_naiss, password, email, num_tel, adresse, photo, role, faceid, faceid_ts) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
         PreparedStatement pst = connection.prepareStatement(query);
         pst.setInt(1, client.getId());
         pst.setString(2, client.getUsername());
@@ -28,6 +28,8 @@ public class ClientService implements IService<Client> {
         pst.setString(9, client.getAdresse());
         pst.setString(10, client.getPhoto());
         pst.setString(11, client.getRole());
+        pst.setString(12, client.getFaceid());
+        pst.setString(13, client.getFaceid_ts());
         pst.executeUpdate();
     }
 
@@ -41,7 +43,7 @@ public class ClientService implements IService<Client> {
 
     @Override
     public void update(Client client) throws SQLException {
-        String query = "UPDATE user SET username = ?, firstname = ?, lastname = ?, date_naiss = ?, email = ?, num_tel = ?, adresse = ?, photo = ? WHERE id = ?";
+        String query = "UPDATE user SET username = ?, firstname = ?, lastname = ?, date_naiss = ?, email = ?, num_tel = ?, adresse = ?, photo = ?, faceid = ? , faceid_ts = ? WHERE id = ?";
         PreparedStatement pst = connection.prepareStatement(query);
         pst.setString(1, client.getUsername());
         pst.setString(2, client.getFirstname());
@@ -51,7 +53,10 @@ public class ClientService implements IService<Client> {
         pst.setString(6, client.getNum_tel());
         pst.setString(7, client.getAdresse());
         pst.setString(8, client.getPhoto());
-        pst.setInt(9, client.getId());
+        pst.setString(9, client.getFaceid());
+        pst.setString(10, client.getFaceid_ts());
+        pst.setInt(11, client.getId());
+
         pst.executeUpdate();
     }
 
@@ -74,6 +79,8 @@ public class ClientService implements IService<Client> {
             client.setAdresse(rs.getString("adresse"));
             client.setPhoto(rs.getString("photo"));
             client.setRole(rs.getString("role"));
+            client.setFaceid(rs.getString("faceid"));
+            client.setFaceid_ts(rs.getString("faceid_ts"));
             clients.add(client);
         }
         return clients;
@@ -97,6 +104,9 @@ public class ClientService implements IService<Client> {
             client.setAdresse(rs.getString("adresse"));
             client.setPhoto(rs.getString("photo"));
             client.setRole(rs.getString("role"));
+            client.setFaceid(rs.getString("faceid"));
+            client.setFaceid_ts(rs.getString("faceid_ts"));
+
             return client;
         }
         return null;
@@ -120,6 +130,8 @@ public class ClientService implements IService<Client> {
             client.setAdresse(rs.getString("adresse"));
             client.setPhoto(rs.getString("photo"));
             client.setRole(rs.getString("role"));
+            client.setFaceid(rs.getString("faceid"));
+            client.setFaceid_ts(rs.getString("faceid_ts"));
             return client;
         }
         return null;
@@ -143,6 +155,8 @@ public class ClientService implements IService<Client> {
             client.setAdresse(rs.getString("adresse"));
             client.setPhoto(rs.getString("photo"));
             client.setRole(rs.getString("role"));
+            client.setFaceid(rs.getString("faceid"));
+            client.setFaceid_ts(rs.getString("faceid_ts"));
             return client;
         }
         return null;
@@ -166,6 +180,8 @@ public class ClientService implements IService<Client> {
             client.setAdresse(rs.getString("adresse"));
             client.setPhoto(rs.getString("photo"));
             client.setRole(rs.getString("role"));
+            client.setFaceid(rs.getString("faceid"));
+            client.setFaceid_ts(rs.getString("faceid_ts"));
             clients.add(client);
         }
         return clients;

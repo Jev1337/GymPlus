@@ -6,6 +6,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.StageStyle;
+import nu.pattern.OpenCV;
+import org.opencv.core.Core;
 
 public class UserAuthMainFX extends Application {
     public static void main(String[] args) {
@@ -14,6 +16,7 @@ public class UserAuthMainFX extends Application {
 
     @Override
     public void start(javafx.stage.Stage primaryStage) throws Exception {
+        System.load(System.getProperty("user.dir")+"\\opencv\\x64\\" + Core.NATIVE_LIBRARY_NAME + ".dll");
         Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/gestionuser/authInterface.fxml")); //change me
         Parent root = loader.load();

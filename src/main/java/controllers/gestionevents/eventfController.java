@@ -1,5 +1,7 @@
 package controllers.gestionevents;
 
+import animatefx.animation.FadeInRight;
+import animatefx.animation.FadeOutRight;
 import atlantafx.base.controls.Notification;
 import atlantafx.base.theme.Styles;
 import atlantafx.base.util.Animations;
@@ -66,9 +68,17 @@ public class eventfController {
     @FXML
     private AnchorPane mainPane;
     @FXML
+    private Label points_label;
+    @FXML
+    private Pane event_points;
+    @FXML
+    private Pane event_pane;
+    @FXML
     void initialize() {
         try {
+            System.out.println("Points: " + GlobalVar.getUser().getEvent_points());
             afficher();
+            points_label.setText("Points: " + GlobalVar.getUser().getEvent_points());
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -265,6 +275,20 @@ public class eventfController {
         List<Event_details> searchResults = eventDetailsService.search(query);
         event_details.clear();
         event_details.addAll(searchResults);
+    }
+    @FXML
+    void reward_hub(ActionEvent event) {
+    //show event_points pane
+        FadeOutRight f = new FadeOutRight(event_pane);
+        f.setOnFinished((e) -> {
+            event_pane.setVisible(false);
+            FadeInRight f2 = new FadeInRight(event_points);
+            event_points.setOpacity(0);
+            event_points.setVisible(true);
+            f2.play();
+        });
+        f.play();
+
     }
 }
 

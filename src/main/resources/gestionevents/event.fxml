@@ -17,7 +17,75 @@
         <URL value="@event.css" />
     </stylesheets>
     <children>
-      <Pane layoutX="70.0" layoutY="56.0" prefHeight="689.0" prefWidth="1027.0">
+      <Pane fx:id="event_points" layoutX="59.0" layoutY="44.0" prefHeight="730.0" prefWidth="1051.0" visible="false">
+         <children>
+            <Label layoutX="335.0" layoutY="34.0" prefHeight="96.0" prefWidth="382.0" text="Reward  Hub" textAlignment="CENTER">
+               <font>
+                  <Font size="66.0" />
+               </font>
+            </Label>
+            <Pane layoutX="107.0" layoutY="150.0" prefHeight="497.0" prefWidth="242.0" style="-fx-background-color: gray;">
+               <children>
+                  <ImageView fitHeight="281.0" fitWidth="267.0" layoutX="3.0" layoutY="194.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../assets/images/whey.png" />
+                     </image>
+                  </ImageView>
+                  <Label layoutX="9.0" layoutY="42.0" text="Gold Standard Whey">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="70.0" layoutY="91.0" prefHeight="30.0" prefWidth="107.0" text="1500 Points">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Label>
+                  <Button layoutX="93.0" layoutY="148.0" mnemonicParsing="false" text="Claim" />
+               </children>
+            </Pane>
+            <Pane layoutX="418.0" layoutY="147.0" prefHeight="497.0" prefWidth="242.0" style="-fx-background-color: gray;">
+               <children>
+                  <ImageView fitHeight="281.0" fitWidth="267.0" layoutX="3.0" layoutY="194.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../assets/images/whey.png" />
+                     </image>
+                  </ImageView>
+                  <Label layoutX="48.0" layoutY="48.0" text="GymPlus Shirt">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="70.0" layoutY="91.0" prefHeight="30.0" prefWidth="107.0" text="1500 Points">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Label>
+                  <Button layoutX="93.0" layoutY="148.0" mnemonicParsing="false" text="Claim" />
+               </children>
+            </Pane>
+            <Pane layoutX="737.0" layoutY="155.0" prefHeight="497.0" prefWidth="242.0" style="-fx-background-color: gray;">
+               <children>
+                  <ImageView fitHeight="281.0" fitWidth="267.0" layoutX="3.0" layoutY="194.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../assets/images/whey.png" />
+                     </image>
+                  </ImageView>
+                  <Label layoutX="9.0" layoutY="42.0" text="Gold Standard Whey">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="70.0" layoutY="91.0" prefHeight="30.0" prefWidth="107.0" text="1500 Points">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Label>
+                  <Button layoutX="93.0" layoutY="148.0" mnemonicParsing="false" text="Claim" />
+               </children>
+            </Pane>
+         </children></Pane>
+      <Pane fx:id="event_pane" layoutX="70.0" layoutY="56.0" prefHeight="689.0" prefWidth="1027.0">
          <children>
               <Label fx:id="countdownLabel" layoutX="644.0" layoutY="313.0" prefHeight="63.0" prefWidth="369.0" />
               <Button fx:id="join_id" layoutX="274.0" layoutY="567.0" mnemonicParsing="false" onAction="#join_event" prefHeight="50.0" prefWidth="187.0" text="Join">
@@ -46,6 +114,11 @@
               </Label>
             <Label layoutX="107.0" layoutY="129.0" text="Search" />
             <TextField fx:id="search_id" layoutX="107.0" layoutY="149.0" onKeyTyped="#search" promptText="Search For Events" />
+         </children>
+      </Pane>
+      <Pane fx:id="pane_reward" layoutX="80.0" layoutY="32.0" onMouseClicked="#reward_hub" prefHeight="46.0" prefWidth="182.0" style="-fx-background-color: blue;">
+         <children>
+            <Label fx:id="points_label" layoutX="19.0" layoutY="15.0" prefHeight="20.0" prefWidth="74.0" style="-fx-background-color: red;" textFill="#f2f2f2" />
          </children>
       </Pane>
     </children>

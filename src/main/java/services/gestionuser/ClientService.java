@@ -10,12 +10,14 @@ import java.util.List;
 public class ClientService implements IService<Client> {
 
     public Connection connection;
+
     public ClientService() {
         connection = MyDatabase.getInstance().getConnection();
     }
+
     @Override
     public void add(Client client) throws SQLException {
-        String query = "INSERT INTO user (id, username, firstname, lastname, date_naiss, password, email, num_tel, adresse, photo, role) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+        String query = "INSERT INTO user (id, username, firstname, lastname, date_naiss, password, email, num_tel, adresse, photo, role,event_points) VALUES (?,?,?,?,?,?,?,?,?,?,?,0)";
         PreparedStatement pst = connection.prepareStatement(query);
         pst.setInt(1, client.getId());
         pst.setString(2, client.getUsername());
@@ -146,5 +148,21 @@ public class ClientService implements IService<Client> {
             return client;
         }
         return null;
+    }
+
+    public int getEventPoints(int id) {
+        try {
+            String query = "SELECT event_points FROM user WHERE id = ?";
+            PreparedStatement pst = connection.prepareStatement(query);
+            pst.setInt(1, id);
+            ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("event_points");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return 0;
     }
 }

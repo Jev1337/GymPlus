@@ -89,6 +89,7 @@ public class UserDashboardController {
     @FXML
     private ImageView barcode_imageview;
 
+
     @FXML
     void settings_btn_clicked(MouseEvent event) {
         switchToPane(UserSettingsPane);

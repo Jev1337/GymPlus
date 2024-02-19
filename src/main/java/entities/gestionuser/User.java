@@ -26,6 +26,7 @@ public class User {
     private String adresse;
     private String photo;
     private String role;
+    private int event_points;
 
     public User() {
     }
@@ -42,6 +43,7 @@ public class User {
         this.adresse = adresse;
         this.photo = photo;
         this.role = role;
+        this.event_points = 0;
     }
 
     public int getId() {
@@ -132,7 +134,12 @@ public class User {
     public void setRole(String role) {
         this.role = role;
     }
-
+    public void setEvent_points(int event_points) {
+        this.event_points = event_points;
+    }
+    public int getEvent_points() {
+        return event_points;
+    }
     @Override
     public String toString() {
         return "User{" +
@@ -146,6 +153,7 @@ public class User {
                 ", adresse='" + adresse + '\'' +
                 ", photo='" + photo + '\'' +
                 ", role='" + role + '\'' +
+                ", event_points='" + event_points + '\'' +
                 '}';
     }
 }

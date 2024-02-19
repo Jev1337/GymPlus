@@ -8,7 +8,7 @@ import services.gestionevents.Event_participantsService;
 
 public class test_events {
     public static void main(String[] args) {
-    Event_details event=new Event_details("event1", "type1", "2021-12-12", "2hours");
+    Event_details event=new Event_details("event1", "type1", "2021-12-12", "2hours",10);
         Event_detailsService eventService= new Event_detailsService();
         System.out.println("ajout event1");
         try {

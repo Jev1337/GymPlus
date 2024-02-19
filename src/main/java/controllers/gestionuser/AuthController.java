@@ -265,12 +265,15 @@ public class AuthController {
                 return;
             }
             if (client != null && Password.check(pwd_pf.getText(), client.getPassword()).withBcrypt()){
+                client.setEvent_points(clientService.getEventPoints(client.getId()));
                 GlobalVar.setUser(client);
+
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/gestionuser/userDashboard.fxml"));
                 Parent root = loader.load();
                 signin_btn.getScene().getWindow().setWidth(1200);
                 signin_btn.getScene().getWindow().setHeight(720);
                 signin_btn.getScene().setRoot(root);
+
                 return;
             }
             if (admin != null && Password.check(pwd_pf.getText(), admin.getPassword()).withBcrypt()){

@@ -14,19 +14,20 @@
          <children>
             <TextField fx:id="eventname_id" layoutX="132.0" layoutY="110.0" />
             <TextField fx:id="eventtype_id" layoutX="132.0" layoutY="163.0" />
-            <Button fx:id="ajouter_id" layoutX="169.0" layoutY="324.0" mnemonicParsing="false" onAction="#add_event" text="Add" />
+            <Button fx:id="ajouter_id" layoutX="163.0" layoutY="380.0" mnemonicParsing="false" onAction="#add_event" text="Add" />
             <Label layoutX="132.0" layoutY="93.0" text="Event Name" />
             <Label layoutX="132.0" layoutY="146.0" text="Type" />
             <Label layoutX="132.0" layoutY="200.0" text="Date" />
             <TextField fx:id="eventduree_id" layoutX="132.0" layoutY="282.0" />
             <Label layoutX="134.0" layoutY="262.0" text="Duration" />
-            <TableView fx:id="tableevents_id" layoutX="337.0" layoutY="88.0" prefHeight="303.0" prefWidth="672.0">
+            <TableView fx:id="tableevents_id" layoutX="337.0" layoutY="88.0" prefHeight="303.0" prefWidth="773.0">
               <columns>
                 <TableColumn fx:id="event_idcol" prefWidth="110.93331909179688" text="Event_id" />
                 <TableColumn fx:id="event_namecol" prefWidth="133.06668090820312" text="Event_Name" />
                   <TableColumn fx:id="event_typecol" prefWidth="135.7332763671875" text="Event_Type" />
                   <TableColumn fx:id="event_datecol" prefWidth="152.2667236328125" text="Event_Date" />
                   <TableColumn fx:id="event_durationcol" prefWidth="141.33343505859375" text="Event_Duration" />
+                  <TableColumn fx:id="event_spotscol" prefWidth="97.0" text="Spots" />
               </columns>
             </TableView>
             <Button fx:id="edit_id" layoutX="840.0" layoutY="416.0" mnemonicParsing="false" onAction="#edit_event" prefHeight="25.0" prefWidth="50.0" text="Edit" />
@@ -40,6 +41,14 @@
               </columns>
             </TableView>
             <Button fx:id="kick_id" layoutX="222.0" layoutY="536.0" mnemonicParsing="false" onAction="#kick_user" prefHeight="36.0" prefWidth="78.0" text="Kick" />
+            <TextField fx:id="eventspots_id" layoutX="132.0" layoutY="338.0" />
+            <Label layoutX="133.0" layoutY="318.0" text="Spots" />
+            <TableView fx:id="list_points" layoutX="831.0" layoutY="474.0" prefHeight="320.0" prefWidth="243.0">
+               <columns>
+                  <TableColumn fx:id="username_id1" minWidth="0.0" prefWidth="125.59991455078125" text="UserName" />
+                  <TableColumn fx:id="points_id1" minWidth="0.0" prefWidth="154.4000244140625" text="Points" />
+               </columns>
+            </TableView>
          </children>
       </Pane>
       <Pane fx:id="editevent_id" layoutX="18.0" layoutY="19.0" prefHeight="761.0" prefWidth="1121.0" visible="false">

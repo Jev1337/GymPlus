@@ -8,12 +8,12 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.stage.Stage;
 import services.gestionStore.FactureService;
 import services.gestionStore.ProduitService;
 
@@ -26,12 +26,13 @@ public class UpdateFactureController implements Initializable {
 
     @FXML
     private Button ModifierFX;
-
     @FXML
     private ComboBox<String> comboPaiement;
-
     @FXML
     private TextField idClient;
+    @FXML
+    private Label idfacture;
+
 
     private final FactureService factureService = new FactureService();
     @FXML
@@ -39,17 +40,19 @@ public class UpdateFactureController implements Initializable {
 
         try {
 
-            facture f = new facture(comboPaiement.getValue() , Integer.parseInt(idClient.getText()));
-            f.setIdFacture(12);
+            int idFacture = Integer.parseInt(idfacture.getText());
+            String methodePaiement = comboPaiement.getValue();
+            int idC = Integer.parseInt(idClient.getText());
+
+            facture f = new facture(idFacture, methodePaiement, idC);
+
             factureService.update(f);
 
-            //factureService.update(new facture( comboPaiement.getValue() , Integer.parseInt(idClient.getText())));
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Information");
             alert.setContentText("Facture ajoutée avec succès");
             alert.showAndWait();
 
-            //Naviger vers le produit MAJ
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/resourcesGestionStore/GetAllFacture.fxml"));
                 Parent root = loader.load();
@@ -64,6 +67,7 @@ public class UpdateFactureController implements Initializable {
             alert.setContentText(e.getMessage());
             alert.showAndWait();
         }
+
     }
 
     @FXML
@@ -95,6 +99,17 @@ public class UpdateFactureController implements Initializable {
         }
     }
 
-
-
+    public void setFacture(facture selectedFacture)
+    {
+        if (selectedFacture != null)
+        {
+            idfacture.setText(Integer.toString(selectedFacture.getIdFacture()));
+            comboPaiement.setValue(selectedFacture.getMethodeDePaiement());
+            idClient.setText(Integer.toString(selectedFacture.getId()));
+        } else {
+            // Si la facture est null aff des champs vide
+            idClient.setText("");
+            comboPaiement.setValue("carte");
+        }
+    }
 }

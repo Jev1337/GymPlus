@@ -13,6 +13,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import services.gestionStore.FactureService;
+import services.gestionStore.PanierService;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,6 +31,14 @@ public class AddFactureController implements Initializable {
 
     @FXML
     private TextField idClient;
+
+    private final PanierService panierService;
+
+    public AddFactureController(PanierService panierService)
+    {
+        this.panierService = panierService;
+    }
+
 
     public void Select(ActionEvent actionEvent) {
 
@@ -55,12 +64,21 @@ public class AddFactureController implements Initializable {
             alert.setTitle("Information");
             alert.setContentText("Facture ajoutée avec succès");
             alert.showAndWait();
+
+            refreshFields();
+
         } catch (SQLException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
             alert.setContentText(e.getMessage());
             alert.showAndWait();
         }
+    }
+
+    void refreshFields()
+    {
+        idClient.setText("");
+        comboPaiement.setValue("carte");
     }
 
     @FXML

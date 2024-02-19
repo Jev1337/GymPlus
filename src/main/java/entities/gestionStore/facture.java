@@ -1,5 +1,7 @@
 package entities.gestionStore;
 
+import entities.gestionuser.User;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -11,7 +13,17 @@ public class facture {
     private float prixtatalPaye;
     private String methodeDePaiement;
     private int id;
+    private User leClient ;
     public List<detailfacture> ListeDetails = new ArrayList<>();
+
+
+    public User getLeClient() {
+        return leClient;
+    }
+
+    public void setLeClient(User leClient) {
+        this.leClient = leClient;
+    }
 
     public int getIdFacture() {
         return idFacture;
@@ -64,6 +76,12 @@ public class facture {
         this.id = id;
     }
 
+    public facture(int idFacture , String methodeDePaiement , int id)
+    {
+        this.idFacture = idFacture;
+        this.methodeDePaiement = methodeDePaiement;
+        this.id = id;
+    }
     public facture(Date dateVente, float prixtotalPaye, String methodeDePaiement, int id) {
         this.dateVente = dateVente;
         this.prixtatalPaye = prixtotalPaye;
@@ -91,6 +109,17 @@ public class facture {
                 ", methodeDePaiement='" + methodeDePaiement + '\'' +
                 ", id=" + id +
                 '}';
+    }
+
+
+    public float calculerPrixTotalFacture()
+    {
+        float prixTotal = 0.0f;
+        for (detailfacture df : ListeDetails)
+        {
+            prixTotal += df.getPrixtotalArticle();
+        }
+        return prixTotal;
     }
 
 

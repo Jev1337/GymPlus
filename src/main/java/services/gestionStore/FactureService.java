@@ -16,28 +16,29 @@ import java.util.Iterator;
 
 
 
-public class FactureService implements IService {
+public class FactureService implements IService
+{
 
     private final Connection connection;
     public FactureService() {
         connection = MyDatabase.getInstance().getConnection();
     }
 
-    public void add(Object o) throws SQLException {
+    public void add(Object o) throws SQLException
+    {
         facture p = (facture) o;
-        // Vérifier si l'utilisateur avec l'ID spécifié existe avant d'insérer la facture
+        // Vérifier si l'utilisateur avec l'ID  existe avant d'insérer la facture
         String checkUserExistsQuery = "SELECT id FROM user WHERE id = ?";
         PreparedStatement checkUserExistsStatement = connection.prepareStatement(checkUserExistsQuery);
         checkUserExistsStatement.setInt(1, p.getId());
         ResultSet resultSet = checkUserExistsStatement.executeQuery();
 
         if (!resultSet.next()) {
-            // L'utilisateur avec l'ID spécifié n'existe pas, vous pouvez gérer cette situation en levant une exception ou en affichant un message d'erreur
             throw new SQLException("L'utilisateur avec l'ID spécifié n'existe pas.");
         }
 
         // Calculer le prix total Facture
-        float Total = calculerPrixTotalFacture();
+        float Total = p.calculerPrixTotalFacture();
 
         // Insérer la facture une fois que l'utilisateur existe
         String sql = "INSERT INTO facture (prixTatalPaye, methodeDePaiement, id) " +
@@ -47,13 +48,32 @@ public class FactureService implements IService {
         preparedStatement.setString(2, p.getMethodeDePaiement());
         preparedStatement.setInt(3, p.getId());
 
+        preparedStatement.executeUpdate();
+
+        String sqlMaxId = "Select Max(idFacture) as max FROM facture ";
+        try (PreparedStatement getMax = connection.prepareStatement(sqlMaxId))
+        {
+            ResultSet resultSetmax = getMax.executeQuery();
+            if (resultSetmax.next())
+            { // Check if there are any results
+                int x = resultSetmax.getInt("max") ;
+                //p.setIdFacture(x);
+                System.out.println("max de la colonne idFacture" + x );
+                p.setIdFacture(x);
+            }
+        }
+
         DetailFactureService dfs = new DetailFactureService();
+        int indice = 1;
         for (detailfacture df : p.ListeDetails)
         {
+            df.setIdFacture(p.getIdFacture());
+            df.setIdDetailFacture(indice);
+            indice++;
             dfs.add(df);
         }
 
-        preparedStatement.executeUpdate();
+        //preparedStatement.executeUpdate();
 
         // Fermer les ressources
         preparedStatement.close();
@@ -61,9 +81,24 @@ public class FactureService implements IService {
         checkUserExistsStatement.close();
     }
 
-    public void update(Object o) throws SQLException {
+    public void update(Object o) throws SQLException
+    {
         facture p = (facture) o;
-        // Vérifier si l'utilisateur avec l'ID spécifié existe
+
+        // Vérifier si la facture avec l'ID spécifié existe
+        String checkFactureExistsQuery = "SELECT idFacture FROM facture WHERE idFacture = ?";
+        try (PreparedStatement checkFactureExistsStatement = connection.prepareStatement(checkFactureExistsQuery))
+        {
+            checkFactureExistsStatement.setInt(1, p.getIdFacture());
+            ResultSet resultSet = checkFactureExistsStatement.executeQuery();
+
+            if (!resultSet.next())
+            {
+                throw new SQLException("La facture avec l'ID spécifié n'existe pas.");
+            }
+        }
+
+        // Vérifier si l'utilisateur avec l'ID  existe avant d'insérer la facture
         String checkUserExistsQuery = "SELECT id FROM user WHERE id = ?";
         PreparedStatement checkUserExistsStatement = connection.prepareStatement(checkUserExistsQuery);
         checkUserExistsStatement.setInt(1, p.getId());
@@ -73,33 +108,30 @@ public class FactureService implements IService {
             throw new SQLException("L'utilisateur avec l'ID spécifié n'existe pas.");
         }
 
-        // Calculer le prix total Facture
-        float prixTatalPaye = calculerPrixTotalFacture();
+        // Calculer le prix total de la facture
+        float prixTotalPaye = p.calculerPrixTotalFacture();
 
-        String sql = "UPDATE facture SET prixTatalPaye = ?, methodeDePaiement = ? WHERE idFacture = ?";
-        PreparedStatement preparedStatement = connection.prepareStatement(sql);
-        preparedStatement.setFloat(1, prixTatalPaye);
-        preparedStatement.setString(2, p.getMethodeDePaiement());
-        preparedStatement.setInt(3, p.getIdFacture());
+        // Mettre à jour la facture
+        String sql = "UPDATE facture SET prixTatalPaye = ?, methodeDePaiement = ? , id = ? WHERE idFacture = ?";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setFloat(1, prixTotalPaye);
+            preparedStatement.setString(2, p.getMethodeDePaiement());
+            preparedStatement.setInt(3, p.getId());
+            preparedStatement.setInt(4, p.getIdFacture());
+            preparedStatement.executeUpdate();
+        }
 
-
+        // Mettre à jour les détails de la facture
         DetailFactureService dfs = new DetailFactureService();
         for (detailfacture df : p.ListeDetails)
         {
             dfs.update(df);
         }
-
-
-        preparedStatement.executeUpdate();
-
-        // Fermer les ressources
-        preparedStatement.close();
-        resultSet.close();
-        checkUserExistsStatement.close();
     }
 
     @Override
-    public void delete(int id) throws SQLException {
+    public void delete(int id) throws SQLException
+    {
         String sql = "DELETE FROM facture WHERE idFacture = ?";
         PreparedStatement ps = connection.prepareStatement(sql);
         ps.setInt(1, id);
@@ -165,20 +197,6 @@ public class FactureService implements IService {
             factures.add(p);
         }
         return factures;
-    }
-
-    public float calculerPrixTotalFacture() throws SQLException
-    {
-        List<facture> factures = ajouterDetails_Facture();
-        float prixTotal = 0;
-        for (facture f : factures)
-        {
-            for (detailfacture detail : f.ListeDetails)
-            {
-                prixTotal += detail.getPrixtotalArticle();
-            }
-        }
-        return prixTotal;
     }
 
 

@@ -90,12 +90,27 @@ public class AddProduitController implements Initializable {
             alert.setTitle("Information");
             alert.setContentText("Personne ajoutée avec succès");
             alert.showAndWait();
+
+            refreshFields();
+
         } catch (SQLException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
             alert.setContentText(e.getMessage());
             alert.showAndWait();
         }
+    }
+
+    void refreshFields()
+    {
+        NameFX.setText("");
+        PrixFX.setText("");
+        StockFX.setText("");
+        DescriptionFX.setText("");
+        Categorie_Combo.setValue("Food");
+        PhotoPath.setText("");
+        SeuilFX.setText("");
+        PromoFX.setText("");
     }
 
     @FXML

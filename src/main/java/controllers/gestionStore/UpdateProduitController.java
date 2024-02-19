@@ -74,7 +74,7 @@ public class UpdateProduitController implements Initializable {
         try {
             produit p3 = new produit(NameFX.getText(),Float.parseFloat(PrixFX.getText()), Integer.parseInt(StockFX.getText()), DescriptionFX.getText(), Categorie_Combo.getValue(), PhotoPath.getText(), Integer.parseInt(SeuilFX.getText()) , Float.parseFloat(PromoFX.getText()));
             p3.setIdProduit(15);
-            produitService.update(p3 );
+            produitService.update(p3);
 
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Information");
@@ -108,7 +108,7 @@ public class UpdateProduitController implements Initializable {
         //filePhoto
         filePhoto.setInitialDirectory(new File("D:\\projet_PI\\GymPlus\\imageProduit"));
 
-        //get 1 facture
+        //get 1 produit
         try {
             produit p = ProdService.getOne(15);
             String categorie = p.getCategorie();

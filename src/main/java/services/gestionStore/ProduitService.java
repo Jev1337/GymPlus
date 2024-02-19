@@ -111,6 +111,9 @@ public class ProduitService implements IService<produit> {
         update(p);
     }
 
-
+    public produit getProduitById(int idProduit) throws SQLException
+    {
+        return getOne(idProduit);
+    }
 }
 

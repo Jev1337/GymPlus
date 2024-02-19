@@ -1,28 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
-
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionStore.PanierController">
    <children>
-      <ScrollPane layoutX="2.0" layoutY="3.0" prefHeight="392.0" prefWidth="462.0">
+      <ScrollPane layoutX="2.0" layoutY="35.0" prefHeight="360.0" prefWidth="462.0">
          <content>
-            <VBox fx:id="PanierVboxFx" prefHeight="397.0" prefWidth="470.0" />
+            <GridPane fx:id="GridPanier" alignment="CENTER" hgap="10" prefHeight="0.0" prefWidth="0.0" vgap="10">
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="400.0" vgrow="ALWAYS" />
+              </rowConstraints>
+               <padding>
+                  <Insets bottom="10.0" right="10.0" top="10.0" />
+               </padding>
+            </GridPane>
          </content>
       </ScrollPane>
       <Button layoutX="485.0" layoutY="361.0" mnemonicParsing="false" onAction="#ValiderPanier" prefHeight="25.0" prefWidth="102.0" text="Valider Panier" />
       <Button layoutX="485.0" layoutY="326.0" mnemonicParsing="false" onAction="#ContinuerAchat" text="Continuer Achat" />
-      <Label fx:id="TotalPanierFX" layoutX="485.0" layoutY="282.0" prefHeight="17.0" prefWidth="102.0" text="Total Panier" />
-      <Label layoutX="485.0" layoutY="259.0" prefHeight="17.0" prefWidth="102.0" text="Total Panier :" />
-      <Label alignment="CENTER" layoutX="482.0" layoutY="14.0" prefHeight="25.0" prefWidth="96.0" text="Panier :">
+      <Label fx:id="TotalPanierFX" layoutX="485.0" layoutY="242.0" prefHeight="17.0" prefWidth="102.0" text="Total Panier" />
+      <Label layoutX="485.0" layoutY="207.0" prefHeight="17.0" prefWidth="102.0" text="Total Panier :" />
+      <Label alignment="CENTER" layoutX="483.0" layoutY="35.0" prefHeight="25.0" prefWidth="96.0" text="Panier :">
          <font>
             <Font size="24.0" />
          </font>
       </Label>
+      <Label layoutX="485.0" layoutY="113.0" text="Nombre Articles :" />
+      <Label fx:id="nbArticleFX" layoutX="485.0" layoutY="146.0" prefHeight="17.0" prefWidth="62.0" text="nb" />
+      <Label layoutX="14.0" layoutY="14.0" text="nom Client" />
+      <Label fx:id="nomClientFX" layoutX="86.0" layoutY="14.0" text="nom C" />
+      <Label layoutX="469.0" layoutY="267.0" text="Methode de Paiement :" />
+      <ComboBox fx:id="comboPaiement" layoutX="472.0" layoutY="284.0" onAction="#Select" prefHeight="25.0" prefWidth="116.0" />
    </children>
 </AnchorPane>

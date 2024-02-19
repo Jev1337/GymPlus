@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="mainPane" prefHeight="808.0" prefWidth="1156.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionevents.eventfController">
+    <stylesheets>
+        <URL value="@event.css" />
+    </stylesheets>
+    <children>
+      <Pane layoutX="70.0" layoutY="56.0" prefHeight="689.0" prefWidth="1027.0">
+         <children>
+              <Label fx:id="countdownLabel" layoutX="644.0" layoutY="313.0" prefHeight="63.0" prefWidth="369.0" />
+              <Button fx:id="join_id" layoutX="274.0" layoutY="567.0" mnemonicParsing="false" onAction="#join_event" prefHeight="50.0" prefWidth="187.0" text="Join">
+               <font>
+                  <Font size="30.0" />
+               </font>
+            </Button>
+            <ImageView fitHeight="540.0" fitWidth="1027.0" layoutX="-1.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../assets/images/Activits.jpg" />
+               </image>
+            </ImageView>
+              <TableView fx:id="event_detailsTableView" layoutX="107.0" layoutY="200.0" prefHeight="353.0" prefWidth="520.0">
+                  <columns>
+                      <TableColumn fx:id="namec" prefWidth="124.0" text="Event Name" />
+                      <TableColumn fx:id="typec" minWidth="0.0" prefWidth="113.0" text="Type" />
+                      <TableColumn fx:id="datec" minWidth="0.0" prefWidth="139.0" text="Date" />
+                      <TableColumn fx:id="durationc" prefWidth="143.0" text="Duration" />
+                  </columns>
+              </TableView>
+              <Label layoutX="291.0" layoutY="46.0" text="EVENTS">
+                  <font>
+                      <Font size="44.0" />
+                  </font>
+              </Label>
+            <Label layoutX="107.0" layoutY="129.0" text="Search" />
+            <TextField fx:id="search_id" layoutX="107.0" layoutY="149.0" onKeyTyped="#search" promptText="Search For Events" />
+         </children>
+      </Pane>
+    </children>
+</AnchorPane>

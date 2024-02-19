@@ -12,6 +12,8 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
@@ -25,7 +27,7 @@
 <?import javafx.scene.paint.Stop?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="720.0" prefWidth="1200.0" stylesheets="@../assets/css/font.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionuser.StaffDashboardController">
+<AnchorPane fx:id="mainPane" prefHeight="720.0" prefWidth="1200.0" stylesheets="@../assets/css/font.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionuser.StaffDashboardController">
    <children>
       <BorderPane prefHeight="720.0" prefWidth="1200.0">
          <center>
@@ -77,7 +79,7 @@
                            <content>
                               <Pane prefHeight="758.0" prefWidth="1145.0">
                                  <children>
-                                    <Label layoutX="33.0" layoutY="14.0" text="Staff / Home">
+                                    <Label layoutX="33.0" layoutY="14.0" style="-fx-text-fill: linear-gradient(to right, #00aaff, #00688b);" text="Staff / Home">
                                        <font>
                                           <Font name="Open Sans Regular" size="16.0" />
                                        </font>
@@ -270,7 +272,7 @@
                            <content>
                               <Pane prefHeight="808.0" prefWidth="1145.0">
                                  <children>
-                                    <Label layoutX="39.0" layoutY="14.0" text="Staff / Profile">
+                                    <Label layoutX="39.0" layoutY="14.0" style="-fx-text-fill: linear-gradient(to right, #00aaff, #00688b);" text="Staff / Profile">
                                        <font>
                                           <Font name="Open Sans Regular" size="16.0" />
                                        </font>
@@ -494,13 +496,66 @@
                         </ScrollPane>
                         <ScrollPane fx:id="StaffSubscriptionPane" prefHeight="646.0" prefWidth="1155.0" visible="false">
                            <content>
-                              <Pane prefHeight="808.0" prefWidth="1156.0">
+                              <Pane fx:id="subpane" prefHeight="808.0" prefWidth="1156.0">
                                  <children>
-                                    <Label layoutX="39.0" layoutY="14.0" text="Staff / Subscriptions">
+                                    <Label layoutX="39.0" layoutY="14.0" style="-fx-text-fill: linear-gradient(to right, #00aaff, #00688b);" text="Staff / Subscriptions">
                                        <font>
                                           <Font name="Open Sans Regular" size="16.0" />
                                        </font>
                                     </Label>
+                                    <Pane layoutX="45.0" layoutY="156.0" prefHeight="430.0" prefWidth="483.0" style="-fx-background-color: white; -fx-border-radius: 30px; -fx-background-radius: 30px;">
+                                       <children>
+                                          <TableView fx:id="userlistsub_tableview" layoutX="18.0" layoutY="97.0" prefHeight="262.0" prefWidth="447.0" style="-fx-background-color: #e8ecfc;">
+                                             <columns>
+                                                <TableColumn fx:id="cincoladdsub" prefWidth="133.0" text="CIN" />
+                                                <TableColumn fx:id="emailcoladdsub" minWidth="2.0" prefWidth="148.0" text="Email" />
+                                                <TableColumn fx:id="usernamecoladdsub" prefWidth="163.0" text="Username" />
+                                             </columns>
+                                          </TableView>
+                                          <Button fx:id="addsub_btn" layoutX="329.0" layoutY="380.0" mnemonicParsing="false" onAction="#addsub_btn_act" style="-color-button-bg: -color-success-4; -color-button-fg: white;" text="Add Subscription">
+                                             <cursor>
+                                                <Cursor fx:constant="HAND" />
+                                             </cursor>
+                                          </Button>
+                                          <Label layoutX="16.0" layoutY="25.0" text="Add Subscription">
+                                             <font>
+                                                <Font name="Open Sans Regular" size="16.0" />
+                                             </font>
+                                          </Label>
+                                          <TextField fx:id="searchbarusersub_tf" layoutX="318.0" layoutY="47.0" onKeyTyped="#searchbarusersub_tf_textchanged" prefHeight="36.0" prefWidth="147.0" promptText="Search" />
+                                          <ComboBox fx:id="subtypeadd_cb" layoutX="19.0" layoutY="380.0" prefHeight="36.0" prefWidth="297.0" promptText="Subscription Type" />
+                                       </children>
+                                    </Pane>
+                                    <Pane layoutX="552.0" layoutY="156.0" prefHeight="432.0" prefWidth="579.0" style="-fx-background-color: white; -fx-border-radius: 30px; -fx-background-radius: 30px;">
+                                       <children>
+                                          <TableView fx:id="subscriptionslist_tableview" layoutX="21.0" layoutY="97.0" prefHeight="264.0" prefWidth="538.0" style="-fx-background-color: #e8ecfc;">
+                                             <columns>
+                                                <TableColumn fx:id="subid_col" prefWidth="42.0" text="ID" />
+                                                <TableColumn fx:id="cinsubcol" minWidth="2.0" prefWidth="176.0" text="CIN" />
+                                                <TableColumn fx:id="enddatesubcol" prefWidth="179.0" text="End Date" />
+                                                <TableColumn fx:id="subtypecol" prefWidth="137.0" text="Subscription Type" />
+                                             </columns>
+                                          </TableView>
+                                          <Button fx:id="savesub_btn" layoutX="302.0" layoutY="382.0" mnemonicParsing="false" onAction="#savesub_btn_act" style="-color-button-bg: -color-warning-2;" text="Set New Subscription">
+                                             <cursor>
+                                                <Cursor fx:constant="HAND" />
+                                             </cursor>
+                                          </Button>
+                                          <Label layoutX="16.0" layoutY="25.0" text="Subscription List">
+                                             <font>
+                                                <Font name="Open Sans Regular" size="16.0" />
+                                             </font>
+                                          </Label>
+                                          <TextField fx:id="searchbarsub_tf" layoutX="412.0" layoutY="47.0" onKeyTyped="#searchbarsub_tf_textchanged" prefHeight="36.0" prefWidth="147.0" promptText="Search..." />
+                                          <ComboBox fx:id="subtype_cb" layoutX="201.0" layoutY="47.0" onAction="#subtype_cb_act" prefHeight="36.0" prefWidth="202.0" promptText="All" />
+                                          <ComboBox fx:id="subtypeedit_cb" layoutX="22.0" layoutY="382.0" prefHeight="36.0" prefWidth="261.0" promptText="Subscription Type" />
+                                          <Button fx:id="deletesub_btn" layoutX="480.0" layoutY="382.0" mnemonicParsing="false" onAction="#deletesub_btn_act" prefHeight="36.0" prefWidth="77.0" style="-color-button-bg: -color-danger-3;" text="Delete">
+                                             <cursor>
+                                                <Cursor fx:constant="HAND" />
+                                             </cursor>
+                                          </Button>
+                                       </children>
+                                    </Pane>
                                  </children>
                               </Pane>
                            </content>
@@ -509,7 +564,7 @@
                            <content>
                               <Pane prefHeight="808.0" prefWidth="1156.0">
                                  <children>
-                                    <Label layoutX="39.0" layoutY="14.0" text="Staff / Store">
+                                    <Label layoutX="39.0" layoutY="14.0" style="-fx-text-fill: linear-gradient(to right, #00aaff, #00688b);" text="Staff / Store">
                                        <font>
                                           <Font name="Open Sans Regular" size="16.0" />
                                        </font>
@@ -520,9 +575,9 @@
                         </ScrollPane>
                         <ScrollPane fx:id="StaffEventPane" prefHeight="646.0" prefWidth="1155.0" visible="false">
                            <content>
-                              <Pane prefHeight="808.0" prefWidth="1156.0">
+                              <Pane fx:id="affichage_events_adstaff" prefHeight="808.0" prefWidth="1156.0">
                                  <children>
-                                    <Label layoutX="39.0" layoutY="14.0" text="Staff / Events">
+                                    <Label layoutX="39.0" layoutY="14.0" style="-fx-text-fill: linear-gradient(to right, #00aaff, #00688b);" text="Staff / Events">
                                        <font>
                                           <Font name="Open Sans Regular" size="16.0" />
                                        </font>
@@ -535,7 +590,7 @@
                            <content>
                               <Pane prefHeight="808.0" prefWidth="1156.0">
                                  <children>
-                                    <Label layoutX="39.0" layoutY="14.0" text="Staff / Settings">
+                                    <Label layoutX="39.0" layoutY="14.0" style="-fx-text-fill: linear-gradient(to right, #00aaff, #00688b);" text="Staff / Settings">
                                        <font>
                                           <Font name="Open Sans Regular" size="16.0" />
                                        </font>
@@ -548,7 +603,7 @@
                            <content>
                               <Pane fx:id="EquipmentIdAdminStaff" prefHeight="808.0" prefWidth="1156.0">
                                  <children>
-                                    <Label layoutX="39.0" layoutY="14.0" text="Staff / Equipments">
+                                    <Label layoutX="39.0" layoutY="14.0" style="-fx-text-fill: linear-gradient(to right, #00aaff, #00688b);" text="Staff / Equipments">
                                        <font>
                                           <Font name="Open Sans Regular" size="16.0" />
                                        </font>

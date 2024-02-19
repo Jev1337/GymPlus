@@ -3,11 +3,12 @@ package controllers.gestionuser;
 import animatefx.animation.FadeIn;
 import animatefx.animation.FadeInRight;
 import animatefx.animation.FadeOutRight;
+import atlantafx.base.controls.Message;
+import atlantafx.base.controls.Notification;
+import atlantafx.base.theme.Styles;
+import atlantafx.base.util.Animations;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
-import entities.gestionuser.Admin;
-import entities.gestionuser.Client;
-import entities.gestionuser.Staff;
-import entities.gestionuser.User;
+import entities.gestionuser.*;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -18,6 +19,8 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.chart.BarChart;
@@ -29,7 +32,10 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.shape.Circle;
@@ -39,6 +45,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import org.w3c.dom.Text;
+import services.gestionuser.AbonnementService;
 import services.gestionuser.AdminService;
 import services.gestionuser.ClientService;
 import services.gestionuser.StaffService;
@@ -46,14 +53,17 @@ import services.gestionuser.StaffService;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 
 public class AdminDashboardController {
 
     private final AdminService adminService = new AdminService();
+    final Notification msg = new Notification();
     private final StaffService staffService = new StaffService();
     private final ClientService clientService = new ClientService();
+    private final AbonnementService abonnementService = new AbonnementService();
     private FadeIn[] fadeInAnimation = new FadeIn[9];
     private FadeOutRight fadeOutRightAnimation = new FadeOutRight();
     private FadeInRight fadeInRightAnimation = new FadeInRight();
@@ -195,6 +205,9 @@ public class AdminDashboardController {
     private Button logout_btn;
 
     @FXML
+    private AnchorPane mainPane;
+
+    @FXML
     private Button manageacc_btn;
 
     @FXML
@@ -279,7 +292,55 @@ public class AdminDashboardController {
     private LineChart<String, Number> stat_linechart;
 
     @FXML
+    private Pane affichage_events_adstaff= new Pane();
+
+    @FXML
     private Pane EquipmentIdAdminStaff;
+
+    @FXML
+    private TableView<User> userlistsub_tableview;
+
+    @FXML
+    private TableView<Abonnement> subscriptionslist_tableview;
+
+    @FXML
+    private TableColumn<?,?> subid_col;
+
+    @FXML
+    private TableColumn<?,?> cinsubcol;
+
+    @FXML
+    private TableColumn<?,?> enddatesubcol;
+
+    @FXML
+    private TableColumn<?,?> subtypecol;
+
+    @FXML
+    private TableColumn<?,?> cincoladdsub;
+
+    @FXML
+    private TableColumn<?,?> emailcoladdsub;
+
+    @FXML
+    private TableColumn<?,?> usernamecoladdsub;
+
+    @FXML
+    private TextField searchbarsub_tf;
+
+    @FXML
+    private TextField searchbarusersub_tf;
+
+    @FXML
+    private ComboBox<String> subtype_cb;
+
+    @FXML
+    private ComboBox<String> subtypeedit_cb;
+
+    @FXML
+    private ComboBox<String> subtypeadd_cb;
+
+    @FXML
+    private Pane subpane;
 
     @FXML
     void bars_btn_clicked(MouseEvent event) {
@@ -794,6 +855,149 @@ public class AdminDashboardController {
         }
     }
 
+
+    public void searchbarsub_tf_textchanged(KeyEvent keyEvent) {
+        initSubList(subtype_cb.getValue(), searchbarsub_tf.getText());
+    }
+
+    public void subtype_cb_act(ActionEvent actionEvent) {
+        initSubList(subtype_cb.getValue(), searchbarsub_tf.getText());
+    }
+
+    public void deletesub_btn_act(ActionEvent actionEvent) {
+        if (subscriptionslist_tableview.getSelectionModel().getSelectedItem() == null){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.initStyle(StageStyle.UNDECORATED);
+            alert.setTitle("Error");
+            alert.setHeaderText("No subscription selected");
+            alert.setContentText("Please select a subscription to delete");
+            alert.showAndWait();
+            return;
+        }
+        Abonnement abonnement = subscriptionslist_tableview.getSelectionModel().getSelectedItem();
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.initStyle(StageStyle.UNDECORATED);
+        alert.setTitle("Confirmation");
+        alert.setHeaderText("Are you sure you want to delete this subscription?");
+        alert.setContentText("This action is irreversible");
+        alert.showAndWait();
+        if (alert.getResult() == ButtonType.OK) {
+            try {
+                abonnementService.delete(abonnement.getId());
+                initSubList(subtype_cb.getValue(), searchbarsub_tf.getText());
+                initNonSubbedUserList(searchbarusersub_tf.getText());
+                notify("Successfully deleted the subscription!");
+            }catch (Exception e){
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.initStyle(StageStyle.UNDECORATED);
+                alert.setTitle("Error");
+                alert.setHeaderText("An error has occured");
+                alert.setContentText("An error has occured while trying to delete the subscription");
+                alert.showAndWait();
+                e.printStackTrace();
+                return;
+            }
+        }
+    }
+
+    public void savesub_btn_act(ActionEvent actionEvent) {
+        if (subscriptionslist_tableview.getSelectionModel().getSelectedItem() == null){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.initStyle(StageStyle.UNDECORATED);
+            alert.setTitle("Error");
+            alert.setHeaderText("No user selected");
+            alert.setContentText("Please select a user to subscribe");
+            alert.showAndWait();
+            return;
+        }
+        if (subtypeedit_cb.getValue() == null){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.initStyle(StageStyle.UNDECORATED);
+            alert.setTitle("Error");
+            alert.setHeaderText("No subscription type selected");
+            alert.setContentText("Please select a subscription type");
+            alert.showAndWait();
+            return;
+        }
+        Abonnement abonnement = subscriptionslist_tableview.getSelectionModel().getSelectedItem();
+        Date date = null;
+        if (subtypeedit_cb.getValue().equals("GP1"))
+            date = Date.valueOf(LocalDate.now().plusMonths(3));
+        else if (subtypeedit_cb.getValue().equals("GP2"))
+            date = Date.valueOf(LocalDate.now().plusMonths(6));
+        else if (subtypeedit_cb.getValue().equals("GP3"))
+            date = Date.valueOf(LocalDate.now().plusMonths(12));
+        assert date != null;
+        abonnement.setDuree_abon(date.toString());
+        abonnement.setType(subtypeedit_cb.getValue());
+        try {
+            abonnementService.update(abonnement);
+            initSubList(subtype_cb.getValue(), searchbarsub_tf.getText());
+            initNonSubbedUserList(searchbarusersub_tf.getText());
+            notify("Successfully updated the subscription!");
+        }catch (Exception e){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.initStyle(StageStyle.UNDECORATED);
+            alert.setTitle("Error");
+            alert.setHeaderText("An error has occured");
+            alert.setContentText("An error has occured while trying to subscribe the user");
+            alert.showAndWait();
+            e.printStackTrace();
+            return;
+        }
+    }
+
+    public void searchbarusersub_tf_textchanged(KeyEvent keyEvent) {
+        initNonSubbedUserList(searchbarusersub_tf.getText());
+    }
+
+    public void addsub_btn_act(ActionEvent actionEvent) {
+        if (userlistsub_tableview.getSelectionModel().getSelectedItem() == null){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.initStyle(StageStyle.UNDECORATED);
+            alert.setTitle("Error");
+            alert.setHeaderText("No user selected");
+            alert.setContentText("Please select a user to subscribe");
+            alert.showAndWait();
+            return;
+        }
+        if (subtypeadd_cb.getValue() == null){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.initStyle(StageStyle.UNDECORATED);
+            alert.setTitle("Error");
+            alert.setHeaderText("No subscription type selected");
+            alert.setContentText("Please select a subscription type");
+            alert.showAndWait();
+            return;
+        }
+        Abonnement abonnement = new Abonnement();
+        abonnement.setUser_id(userlistsub_tableview.getSelectionModel().getSelectedItem().getId());
+        Date date = null;
+        if (subtypeadd_cb.getValue().equals("GP1"))
+            date = Date.valueOf(LocalDate.now().plusMonths(3));
+        else if (subtypeadd_cb.getValue().equals("GP2"))
+            date = Date.valueOf(LocalDate.now().plusMonths(6));
+        else if (subtypeadd_cb.getValue().equals("GP3"))
+            date = Date.valueOf(LocalDate.now().plusMonths(12));
+        assert date != null;
+        abonnement.setDuree_abon(date.toString());
+        abonnement.setType(subtypeadd_cb.getValue());
+        try {
+            abonnementService.add(abonnement);
+            initSubList(subtype_cb.getValue(), searchbarsub_tf.getText());
+            initNonSubbedUserList(searchbarusersub_tf.getText());
+            notify("Successfully subscribed user!");
+        }catch (Exception e){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.initStyle(StageStyle.UNDECORATED);
+            alert.setTitle("Error");
+            alert.setHeaderText("An error has occured");
+            alert.setContentText("An error has occured while trying to subscribe the user");
+            alert.showAndWait();
+            e.printStackTrace();
+            return;
+        }
+    }
     private double xOffset = 0;
     private double yOffset = 0;
     public void initialize() {
@@ -805,18 +1009,90 @@ public class AdminDashboardController {
         stat_combobox.getItems().addAll(FXCollections.observableArrayList("Abonnements", "Clients", "Staff"));
         type_cb.getItems().addAll(FXCollections.observableArrayList("All", "Admin", "Staff", "Client"));
         acctypemanage_cb.getItems().addAll(FXCollections.observableArrayList("Admin", "Staff", "Client"));
+        subtype_cb.getItems().addAll(FXCollections.observableArrayList( "All","GP 1", "GP 2", "GP 3"));
+        subtypeadd_cb.getItems().addAll(FXCollections.observableArrayList("GP 1", "GP 2", "GP 3"));
+        subtypeedit_cb.getItems().addAll(FXCollections.observableArrayList("GP 1", "GP 2", "GP 3"));
         initProfile();
         initCharts();
         setFitToWidthAll();
         initAnimations();
         initDecoratedStage();
+        notify("Successfully Logged In as " + GlobalVar.getUser().getUsername() + "!");
+        initUserList(-1, "");
+        initSubList("All", "");
+        initNonSubbedUserList("");
+
+        var warning = new Message("Warning!", "Be careful with the actions you take, they are irreversible! Proceed with caution.");
+        warning.getStyleClass().addAll(
+                Styles.WARNING
+        );
+        warning.setLayoutX(50);
+        warning.setLayoutY(50);
+        warning.setPrefWidth(1075);
+        if (!subpane.getChildren().contains(warning)) {
+            subpane.getChildren().add(warning);
+        }
+
         try {
+            Pane pane= FXMLLoader.load(getClass().getResource("/gestionevents/eventstaffadmin.fxml"));
+            affichage_events_adstaff.getChildren().setAll(pane);
             Pane pane_event= FXMLLoader.load(getClass().getResource("/gestionequipement/equipement.fxml"));
             EquipmentIdAdminStaff.getChildren().setAll(pane_event);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        initUserList(-1, "");
+
+    }
+
+    private void initSubList(String type, String search){
+        List<Abonnement> list = null;
+        try {
+            if (type == null || type.equals("All"))
+                list = abonnementService.getAll();
+            else
+                list = abonnementService.getAbonnementByType(type);
+            ObservableList<Abonnement> observableList = FXCollections.observableArrayList(list);
+            if(search != null && !search.isEmpty()) {
+                for (int i = 0; i < observableList.size(); i++) {
+                    if (!(String.valueOf(observableList.get(i).getUser_id()).equals(search))) {
+                        observableList.remove(i);
+                        i--;
+                    }
+                }
+            }
+            subscriptionslist_tableview.setItems(observableList);
+            subid_col.setCellValueFactory(new PropertyValueFactory<>("id"));
+            cinsubcol.setCellValueFactory(new PropertyValueFactory<>("user_id"));
+            enddatesubcol.setCellValueFactory(new PropertyValueFactory<>("duree_abon"));
+            subtypecol.setCellValueFactory(new PropertyValueFactory<>("type"));
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+
+    }
+
+    private void notify(String message){
+        msg.setMessage(message);
+        msg.getStyleClass().addAll(
+                Styles.SUCCESS, Styles.ELEVATED_1
+        );
+        msg.setPrefHeight(Region.USE_PREF_SIZE);
+        msg.setMaxHeight(Region.USE_PREF_SIZE);
+        msg.setLayoutX(795);
+        msg.setLayoutY(80);
+
+        msg.setOnClose(e -> {
+            var out = Animations.slideOutRight(msg, Duration.millis(250));
+            out.setOnFinished(f -> mainPane.getChildren().remove(msg));
+            out.playFromStart();
+        });
+        var in = Animations.slideInRight(msg, Duration.millis(250));
+        if (!mainPane.getChildren().contains(msg)) {
+            mainPane.getChildren().add(msg);
+        }
+        in.playFromStart();
     }
 
     private void initDecoratedStage(){
@@ -1065,7 +1341,6 @@ public class AdminDashboardController {
     }
 
     private void initUserList(int type, String condition){
-
         List<User> users = null;
         if (type == 0){
             try {
@@ -1099,10 +1374,31 @@ public class AdminDashboardController {
             }
 
         }
-        if (users == null)
-            return;
+        ObservableList<User> obs = FXCollections.observableArrayList(users);
+        if (condition != null && !condition.isEmpty()) {
+            for (int i = 0; i < obs.size(); i++) {
+                if (!obs.get(i).getUsername().contains(condition)) {
+                    obs.remove(i);
+                    i--;
+                }
+            }
+        }
+        userlist_tableview.setItems(obs);
+        cincol.setCellValueFactory(new PropertyValueFactory<>("id"));
+        usernamecol.setCellValueFactory(new PropertyValueFactory<>("username"));
+        firstnamecol.setCellValueFactory(new PropertyValueFactory<>("firstname"));
+        lastnamecol.setCellValueFactory(new PropertyValueFactory<>("lastname"));
+        dobcol.setCellValueFactory(new PropertyValueFactory<>("date_naiss"));
+        emailcol.setCellValueFactory(new PropertyValueFactory<>("email"));
+        addresscol.setCellValueFactory(new PropertyValueFactory<>("adresse"));
+        acctypecol.setCellValueFactory(new PropertyValueFactory<>("role"));
+        phonenumbercol.setCellValueFactory(new PropertyValueFactory<>("num_tel"));
+    }
+
+    private void initNonSubbedUserList(String condition) {
+        try {
+            List<User> users = (List<User>)(List<?>)clientService.getNonSubscribedUserList();
             ObservableList<User> obs = FXCollections.observableArrayList(users);
-            userlist_tableview.getItems().clear();
             if (condition != null && !condition.isEmpty()) {
                 for (int i = 0; i < obs.size(); i++) {
                     if (!obs.get(i).getUsername().contains(condition)) {
@@ -1111,16 +1407,13 @@ public class AdminDashboardController {
                     }
                 }
             }
-            userlist_tableview.setItems(obs);
-            cincol.setCellValueFactory(new PropertyValueFactory<>("id"));
-            usernamecol.setCellValueFactory(new PropertyValueFactory<>("username"));
-            firstnamecol.setCellValueFactory(new PropertyValueFactory<>("firstname"));
-            lastnamecol.setCellValueFactory(new PropertyValueFactory<>("lastname"));
-            dobcol.setCellValueFactory(new PropertyValueFactory<>("date_naiss"));
-            emailcol.setCellValueFactory(new PropertyValueFactory<>("email"));
-            addresscol.setCellValueFactory(new PropertyValueFactory<>("adresse"));
-            acctypecol.setCellValueFactory(new PropertyValueFactory<>("role"));
-            phonenumbercol.setCellValueFactory(new PropertyValueFactory<>("num_tel"));
-
+            userlistsub_tableview.setItems(obs);
+            cincoladdsub.setCellValueFactory(new PropertyValueFactory<>("id"));
+            emailcoladdsub.setCellValueFactory(new PropertyValueFactory<>("email"));
+            usernamecoladdsub.setCellValueFactory(new PropertyValueFactory<>("username"));
+    }catch(Exception e){
+        e.printStackTrace();
     }
+}
+
 }

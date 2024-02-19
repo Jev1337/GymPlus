@@ -17,8 +17,7 @@ public class Abonnement {
     public Abonnement() {
     }
 
-    public Abonnement(int id, int user_id, String duree_abon, String type) {
-        this.id = id;
+    public Abonnement(int user_id, String duree_abon, String type) {
         this.user_id = user_id;
         this.duree_abon = duree_abon;
         this.type = type;

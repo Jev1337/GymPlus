@@ -518,7 +518,7 @@ public class AdminDashboardController {
             return;
         try {
             if (profilepic_pf.getText().isEmpty()) {
-                Admin admin= new Admin(GlobalVar.getUser().getId(), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), dateofbirth_tf.getValue().toString(), GlobalVar.getUser().getPassword(), email_tf.getText(), phone_tf.getText(), address_ta.getText(), GlobalVar.getUser().getPhoto());
+                Admin admin= new Admin(GlobalVar.getUser().getId(), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), dateofbirth_tf.getValue().toString(), GlobalVar.getUser().getPassword(), email_tf.getText(), phone_tf.getText(), address_ta.getText(), GlobalVar.getUser().getPhoto(), GlobalVar.getUser().getFaceid(), GlobalVar.getUser().getFaceid_ts());
                 adminService.update(admin);
                 GlobalVar.setUser(admin);
                 initProfile();
@@ -538,7 +538,7 @@ public class AdminDashboardController {
                 File oldFile = new File("src/assets/profileuploads/" +GlobalVar.getUser().getPhoto());
                 oldFile.delete();
                 Files.copy(file.toPath(), new File("src/assets/profileuploads/USERIMG"+ GlobalVar.getUser().getId() + file.getName().substring(file.getName().lastIndexOf("."))).toPath());
-                Admin admin = new Admin(GlobalVar.getUser().getId(), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), dateofbirth_tf.getValue().toString(), GlobalVar.getUser().getPassword(), email_tf.getText(), phone_tf.getText(), address_ta.getText(), "USERIMG"+ GlobalVar.getUser().getId() + file.getName().substring(file.getName().lastIndexOf(".")));
+                Admin admin = new Admin(GlobalVar.getUser().getId(), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), dateofbirth_tf.getValue().toString(), GlobalVar.getUser().getPassword(), email_tf.getText(), phone_tf.getText(), address_ta.getText(), "USERIMG"+ GlobalVar.getUser().getId() + file.getName().substring(file.getName().lastIndexOf(".")), GlobalVar.getUser().getFaceid(), GlobalVar.getUser().getFaceid_ts());
                 adminService.update(admin);
                 GlobalVar.setUser(admin);
                 initProfile();
@@ -630,11 +630,11 @@ public class AdminDashboardController {
                 return;
             }
             if (acctypemanage_cb.getValue().equals("Admin")) {
-                adminService.add(new Admin(Integer.parseInt(cinmanage_tf.getText()), usernamemanage_tf.getText(), firstnamemanage_tf.getText(), lastnamemanage_tf.getText(), dobmanage_dp.getValue().toString(), pwdmanage_pf.getText(), emailmanage_tf.getText(), phonemanage_tf.getText(), addressmanage_ta.getText(), "USERIMG"+ cinmanage_tf.getText() + file.getName().substring(file.getName().lastIndexOf("."))));
+                adminService.add(new Admin(Integer.parseInt(cinmanage_tf.getText()), usernamemanage_tf.getText(), firstnamemanage_tf.getText(), lastnamemanage_tf.getText(), dobmanage_dp.getValue().toString(), pwdmanage_pf.getText(), emailmanage_tf.getText(), phonemanage_tf.getText(), addressmanage_ta.getText(), "USERIMG"+ cinmanage_tf.getText() + file.getName().substring(file.getName().lastIndexOf(".")),"",""));
             }else if (acctypemanage_cb.getValue().equals("Staff")) {
-                staffService.add(new Staff(Integer.parseInt(cinmanage_tf.getText()), usernamemanage_tf.getText(), firstnamemanage_tf.getText(), lastnamemanage_tf.getText(), dobmanage_dp.getValue().toString(), pwdmanage_pf.getText(), emailmanage_tf.getText(), phonemanage_tf.getText(), addressmanage_ta.getText(), "USERIMG"+ cinmanage_tf.getText() +  file.getName().substring(file.getName().lastIndexOf("."))));
+                staffService.add(new Staff(Integer.parseInt(cinmanage_tf.getText()), usernamemanage_tf.getText(), firstnamemanage_tf.getText(), lastnamemanage_tf.getText(), dobmanage_dp.getValue().toString(), pwdmanage_pf.getText(), emailmanage_tf.getText(), phonemanage_tf.getText(), addressmanage_ta.getText(), "USERIMG"+ cinmanage_tf.getText() +  file.getName().substring(file.getName().lastIndexOf(".")),"",""));
             }else if (acctypemanage_cb.getValue().equals("Client")) {
-                clientService.add(new Client(Integer.parseInt(cinmanage_tf.getText()), usernamemanage_tf.getText(), firstnamemanage_tf.getText(), lastnamemanage_tf.getText(), dobmanage_dp.getValue().toString(), pwdmanage_pf.getText(), emailmanage_tf.getText(), phonemanage_tf.getText(), addressmanage_ta.getText(), "USERIMG"+ cinmanage_tf.getText() +  file.getName().substring(file.getName().lastIndexOf("."))));
+                clientService.add(new Client(Integer.parseInt(cinmanage_tf.getText()), usernamemanage_tf.getText(), firstnamemanage_tf.getText(), lastnamemanage_tf.getText(), dobmanage_dp.getValue().toString(), pwdmanage_pf.getText(), emailmanage_tf.getText(), phonemanage_tf.getText(), addressmanage_ta.getText(), "USERIMG"+ cinmanage_tf.getText() +  file.getName().substring(file.getName().lastIndexOf(".")),"",""));
             }
             Files.copy(file.toPath(), new File("src/assets/profileuploads/USERIMG"+ cinmanage_tf.getText() + file.getName().substring(file.getName().lastIndexOf("."))).toPath());
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -719,11 +719,11 @@ public class AdminDashboardController {
             User user = userlist_tableview.getSelectionModel().getSelectedItem();
             if (profilepic_pf.getText().isEmpty()) {
                 if (user.getRole().equals("client")){
-                    clientService.update(new Client(user.getId(), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), dateofbirth_tf.getValue().toString(), user.getPassword(), email_tf.getText(), phone_tf.getText(), address_ta.getText(), user.getPhoto()));
+                    clientService.update(new Client(user.getId(), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), dateofbirth_tf.getValue().toString(), user.getPassword(), email_tf.getText(), phone_tf.getText(), address_ta.getText(), user.getPhoto(),user.getFaceid(), user.getFaceid_ts()));
                 }else if (user.getRole().equals("staff")) {
-                    staffService.update(new Staff(user.getId(), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), dateofbirth_tf.getValue().toString(), user.getPassword(), email_tf.getText(), phone_tf.getText(), address_ta.getText(), user.getPhoto()));
+                    staffService.update(new Staff(user.getId(), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), dateofbirth_tf.getValue().toString(), user.getPassword(), email_tf.getText(), phone_tf.getText(), address_ta.getText(), user.getPhoto(), user.getFaceid(), user.getFaceid_ts()));
                 }else if (user.getRole().equals("admin")) {
-                    adminService.update(new Admin(user.getId(), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), dateofbirth_tf.getValue().toString(), user.getPassword(), email_tf.getText(), phone_tf.getText(), address_ta.getText(), user.getPhoto()));
+                    adminService.update(new Admin(user.getId(), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), dateofbirth_tf.getValue().toString(), user.getPassword(), email_tf.getText(), phone_tf.getText(), address_ta.getText(), user.getPhoto(), user.getFaceid(), user.getFaceid_ts()));
                 }
                 user.setUsername(username_tf.getText());
                 user.setFirstname(firstname_tf.getText());
@@ -750,11 +750,11 @@ public class AdminDashboardController {
                 oldFile.delete();
                 Files.copy(file.toPath(), new File("src/assets/profileuploads/USERIMG"+ user.getId() + file.getName().substring(file.getName().lastIndexOf("."))).toPath());
                 if (acctypecol.getCellData(userlist_tableview.getSelectionModel().getSelectedIndex()) == null){
-                    clientService.update(new Client(user.getId(), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), dateofbirth_tf.getValue().toString(), user.getPassword(), email_tf.getText(), phone_tf.getText(), address_ta.getText(), user.getPhoto()));
+                    clientService.update(new Client(user.getId(), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), dateofbirth_tf.getValue().toString(), user.getPassword(), email_tf.getText(), phone_tf.getText(), address_ta.getText(), user.getPhoto(),user.getFaceid(), user.getFaceid_ts()));
                 }else if (acctypecol.getCellData(userlist_tableview.getSelectionModel().getSelectedIndex()).equals("staff")) {
-                    staffService.update(new Staff(user.getId(), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), dateofbirth_tf.getValue().toString(), user.getPassword(), email_tf.getText(), phone_tf.getText(), address_ta.getText(), user.getPhoto()));
+                    staffService.update(new Staff(user.getId(), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), dateofbirth_tf.getValue().toString(), user.getPassword(), email_tf.getText(), phone_tf.getText(), address_ta.getText(), user.getPhoto(), user.getFaceid(), user.getFaceid_ts()));
                 }else if (acctypecol.getCellData(userlist_tableview.getSelectionModel().getSelectedIndex()).equals("admin")) {
-                    adminService.update(new Admin(user.getId(), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), dateofbirth_tf.getValue().toString(), user.getPassword(), email_tf.getText(), phone_tf.getText(), address_ta.getText(), user.getPhoto()));
+                    adminService.update(new Admin(user.getId(), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), dateofbirth_tf.getValue().toString(), user.getPassword(), email_tf.getText(), phone_tf.getText(), address_ta.getText(), user.getPhoto(), user.getFaceid(), user.getFaceid_ts()));
                 }
                 user.setUsername(username_tf.getText());
                 user.setFirstname(firstname_tf.getText());
@@ -921,11 +921,11 @@ public class AdminDashboardController {
         }
         Abonnement abonnement = subscriptionslist_tableview.getSelectionModel().getSelectedItem();
         Date date = null;
-        if (subtypeedit_cb.getValue().equals("GP1"))
+        if (subtypeedit_cb.getValue().equals("GP 1"))
             date = Date.valueOf(LocalDate.now().plusMonths(3));
-        else if (subtypeedit_cb.getValue().equals("GP2"))
+        else if (subtypeedit_cb.getValue().equals("GP 2"))
             date = Date.valueOf(LocalDate.now().plusMonths(6));
-        else if (subtypeedit_cb.getValue().equals("GP3"))
+        else if (subtypeedit_cb.getValue().equals("GP 3"))
             date = Date.valueOf(LocalDate.now().plusMonths(12));
         assert date != null;
         abonnement.setDuree_abon(date.toString());
@@ -973,11 +973,11 @@ public class AdminDashboardController {
         Abonnement abonnement = new Abonnement();
         abonnement.setUser_id(userlistsub_tableview.getSelectionModel().getSelectedItem().getId());
         Date date = null;
-        if (subtypeadd_cb.getValue().equals("GP1"))
+        if (subtypeadd_cb.getValue().equals("GP 1"))
             date = Date.valueOf(LocalDate.now().plusMonths(3));
-        else if (subtypeadd_cb.getValue().equals("GP2"))
+        else if (subtypeadd_cb.getValue().equals("GP 2"))
             date = Date.valueOf(LocalDate.now().plusMonths(6));
-        else if (subtypeadd_cb.getValue().equals("GP3"))
+        else if (subtypeadd_cb.getValue().equals("GP 3"))
             date = Date.valueOf(LocalDate.now().plusMonths(12));
         assert date != null;
         abonnement.setDuree_abon(date.toString());

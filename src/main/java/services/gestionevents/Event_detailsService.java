@@ -100,5 +100,6 @@ public class Event_detailsService implements IService<Event_details> {
         }
         return eventDetailsList;
     }
+
 }
 

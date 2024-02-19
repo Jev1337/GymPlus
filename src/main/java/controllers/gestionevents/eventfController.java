@@ -12,21 +12,28 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
+import javafx.stage.FileChooser;
 import javafx.util.Duration;
+import net.glxn.qrgen.core.image.ImageType;
+import net.glxn.qrgen.javase.QRCode;
 import services.gestionevents.Event_detailsService;
 import services.gestionevents.Event_participantsService;
 import utils.MyDatabase;
 
-import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -328,15 +335,24 @@ public class eventfController {
             f.play();
         }
     }
+    void update_user_pts(int id, int points) {
+        Connection connection = MyDatabase.getInstance().getConnection();
+        try {
+            PreparedStatement stmt = connection.prepareStatement("UPDATE user SET event_points = ? WHERE id = ?");
+            stmt.setInt(1, points);
+            stmt.setInt(2, id);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
     @FXML
     public void claim_whey(ActionEvent actionEvent) {
         if (GlobalVar.getUser().getEvent_points() >= 2500) {
             Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
             confirmationAlert.setTitle("Confirmation");
             confirmationAlert.setHeaderText("Are you sure you want to claim GymPlus Whey Protein?");
-            //show remaining points
             confirmationAlert.setContentText("Remaining Points: " + GlobalVar.getUser().getEvent_points());
-
             Optional<ButtonType> result = confirmationAlert.showAndWait();
             if (result.get() == ButtonType.OK){
                 GlobalVar.getUser().setEvent_points(GlobalVar.getUser().getEvent_points() - 2500);
@@ -344,12 +360,49 @@ public class eventfController {
                 points_label.setText("Points: " + GlobalVar.getUser().getEvent_points());
 
                 // Generate QR code
+                String details = "User ID: " + GlobalVar.getUser().getId() +
+                        "\nFirst Name: " + GlobalVar.getUser().getFirstname() +
+                        "\nLast Name: " + GlobalVar.getUser().getLastname() +
+                        "\nReward: GymPlus Whey Protein";
+                ByteArrayOutputStream bout =
+                        QRCode.from(details)
+                                .withSize(200, 200)
+                                .to(ImageType.PNG)
+                                .stream();
 
+                // Convert to JavaFX image
+                ByteArrayInputStream bin = new ByteArrayInputStream(bout.toByteArray());
+                javafx.scene.image.Image qrImage = null;
+                try {
+                    qrImage = SwingFXUtils.toFXImage(ImageIO.read(bin), null);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
                 // Display QR code in an alert
                 Alert qrCodeAlert = new Alert(Alert.AlertType.INFORMATION);
                 qrCodeAlert.setTitle("Congratulations");
                 qrCodeAlert.setHeaderText("You have successfully claimed GymPlus Whey Protein");
+
+                ImageView qrImageView = new ImageView(qrImage);
+                qrCodeAlert.setGraphic(qrImageView);
+                ButtonType saveButtonType = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
+                qrCodeAlert.getButtonTypes().setAll(saveButtonType, ButtonType.CANCEL);
+                Optional<ButtonType> qrResult = qrCodeAlert.showAndWait();
+                if (qrResult.get() == saveButtonType){
+                    FileChooser fileChooser = new FileChooser();
+                    fileChooser.setTitle("Save Image");
+                    FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("PNG files (*.png)", "*.png");
+                    fileChooser.getExtensionFilters().add(extFilter);
+                    File file = fileChooser.showSaveDialog(null);
+                    if (file != null) {
+                        try {
+                            ImageIO.write(SwingFXUtils.fromFXImage(qrImage, null), "png", file);
+                        } catch (IOException ex) {
+                            System.out.println(ex.getMessage());
+                        }
+                    }
+                }
 
                 qrCodeAlert.showAndWait();
             }
@@ -362,17 +415,6 @@ public class eventfController {
         }
     }
 
-    void update_user_pts(int id, int points) {
-        Connection connection = MyDatabase.getInstance().getConnection();
-        try {
-            PreparedStatement stmt = connection.prepareStatement("UPDATE user SET event_points = ? WHERE id = ?");
-            stmt.setInt(1, points);
-            stmt.setInt(2, id);
-            stmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
     @FXML
     public void claim_belt(ActionEvent actionEvent) {
         if (GlobalVar.getUser().getEvent_points() >= 1500) {
@@ -387,12 +429,49 @@ public class eventfController {
                 points_label.setText("Points: " + GlobalVar.getUser().getEvent_points());
 
                 // Generate QR code
+                String details = "User ID: " + GlobalVar.getUser().getId() +
+                        "\nFirst Name: " + GlobalVar.getUser().getFirstname() +
+                        "\nLast Name: " + GlobalVar.getUser().getLastname() +
+                        "\nReward: GymPlus Weightlifting Belt";
+                ByteArrayOutputStream bout =
+                        QRCode.from(details)
+                                .withSize(200, 200)
+                                .to(ImageType.PNG)
+                                .stream();
 
+                // Convert to JavaFX image
+                ByteArrayInputStream bin = new ByteArrayInputStream(bout.toByteArray());
+                javafx.scene.image.Image qrImage = null;
+                try {
+                    qrImage = SwingFXUtils.toFXImage(ImageIO.read(bin), null);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
                 // Display QR code in an alert
                 Alert qrCodeAlert = new Alert(Alert.AlertType.INFORMATION);
                 qrCodeAlert.setTitle("Congratulations");
                 qrCodeAlert.setHeaderText("You have successfully claimed GymPlus Weightlifting Belt");
+
+                ImageView qrImageView = new ImageView(qrImage);
+                qrCodeAlert.setGraphic(qrImageView);
+                ButtonType saveButtonType = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
+                qrCodeAlert.getButtonTypes().setAll(saveButtonType, ButtonType.CANCEL);
+                Optional<ButtonType> qrResult = qrCodeAlert.showAndWait();
+                if (qrResult.get() == saveButtonType){
+                    FileChooser fileChooser = new FileChooser();
+                    fileChooser.setTitle("Save Image");
+                    FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("PNG files (*.png)", "*.png");
+                    fileChooser.getExtensionFilters().add(extFilter);
+                    File file = fileChooser.showSaveDialog(null);
+                    if (file != null) {
+                        try {
+                            ImageIO.write(SwingFXUtils.fromFXImage(qrImage, null), "png", file);
+                        } catch (IOException ex) {
+                            System.out.println(ex.getMessage());
+                        }
+                    }
+                }
 
                 qrCodeAlert.showAndWait();
             }
@@ -419,12 +498,49 @@ public class eventfController {
                 points_label.setText("Points: " + GlobalVar.getUser().getEvent_points());
 
                 // Generate QR code
+                String details = "User ID: " + GlobalVar.getUser().getId() +
+                        "\nFirst Name: " + GlobalVar.getUser().getFirstname() +
+                        "\nLast Name: " + GlobalVar.getUser().getLastname() +
+                        "\nReward: GymPlus Gym Bag";
+                ByteArrayOutputStream bout =
+                        QRCode.from(details)
+                                .withSize(200, 200)
+                                .to(ImageType.PNG)
+                                .stream();
 
+                // Convert to JavaFX image
+                ByteArrayInputStream bin = new ByteArrayInputStream(bout.toByteArray());
+                javafx.scene.image.Image qrImage = null;
+                try {
+                    qrImage = SwingFXUtils.toFXImage(ImageIO.read(bin), null);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
                 // Display QR code in an alert
                 Alert qrCodeAlert = new Alert(Alert.AlertType.INFORMATION);
                 qrCodeAlert.setTitle("Congratulations");
                 qrCodeAlert.setHeaderText("You have successfully claimed GymPlus Gym Bag");
+
+                ImageView qrImageView = new ImageView(qrImage);
+                qrCodeAlert.setGraphic(qrImageView);
+                ButtonType saveButtonType = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
+                qrCodeAlert.getButtonTypes().setAll(saveButtonType, ButtonType.CANCEL);
+                Optional<ButtonType> qrResult = qrCodeAlert.showAndWait();
+                if (qrResult.get() == saveButtonType){
+                    FileChooser fileChooser = new FileChooser();
+                    fileChooser.setTitle("Save Image");
+                    FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("PNG files (*.png)", "*.png");
+                    fileChooser.getExtensionFilters().add(extFilter);
+                    File file = fileChooser.showSaveDialog(null);
+                    if (file != null) {
+                        try {
+                            ImageIO.write(SwingFXUtils.fromFXImage(qrImage, null), "png", file);
+                        } catch (IOException ex) {
+                            System.out.println(ex.getMessage());
+                        }
+                    }
+                }
 
                 qrCodeAlert.showAndWait();
             }
@@ -436,6 +552,7 @@ public class eventfController {
             alert.showAndWait();
         }
     }
+
 }
 
 

@@ -72,13 +72,13 @@
                         </ImageView>
                      </children>
                   </Pane>
-                  <Pane layoutX="51.0" layoutY="50.0" prefHeight="650.0" prefWidth="1155.0" style="-fx-background-color: #e9ecef;;">
+                  <Pane layoutX="51.0" layoutY="50.0" prefHeight="650.0" prefWidth="1155.0" style="-fx-background-color: #e9ecef;">
                      <children>
                         <ScrollPane fx:id="UserHomePane" prefHeight="646.0" prefWidth="1155.0" style="-fx-border-color: transparent;">
                            <content>
                               <Pane prefHeight="757.0" prefWidth="1153.0">
                                  <children>
-                                    <Label layoutX="33.0" layoutY="14.0" text="Client / Home">
+                                    <Label layoutX="33.0" layoutY="14.0" style="-fx-text-fill: linear-gradient(to right, #00aaff, #00688b);" text="Client / Home">
                                        <font>
                                           <Font name="Open Sans Regular" size="16.0" />
                                        </font>
@@ -271,7 +271,7 @@
                            <content>
                               <Pane prefHeight="808.0" prefWidth="1147.0">
                                  <children>
-                                    <Label layoutX="39.0" layoutY="14.0" text="Client / Profile">
+                                    <Label layoutX="39.0" layoutY="14.0" style="-fx-text-fill: linear-gradient(to right, #00aaff, #00688b);" text="Client / Profile">
                                        <font>
                                           <Font name="Open Sans Regular" size="16.0" />
                                        </font>
@@ -501,7 +501,7 @@
                                        <children>
                                           <Pane fx:id="newsub_pane" layoutX="61.0" layoutY="30.0" prefHeight="224.0" prefWidth="1035.0" style="-fx-background-color: white;">
                                              <children>
-                                                <ImageView fitHeight="225.0" fitWidth="1055.0" layoutX="11.0" pickOnBounds="true" preserveRatio="true">
+                                                <ImageView fitHeight="224.0" fitWidth="1024.0" layoutX="16.0" pickOnBounds="true" preserveRatio="true">
                                                    <image>
                                                       <Image url="@../assets/images/bandeau-offres.jpg" />
                                                    </image>
@@ -728,7 +728,7 @@
                            <content>
                               <Pane prefHeight="808.0" prefWidth="1156.0">
                                  <children>
-                                    <Label layoutX="39.0" layoutY="14.0" text="Client / Store">
+                                    <Label layoutX="39.0" layoutY="14.0" style="-fx-text-fill: linear-gradient(to right, #00aaff, #00688b);" text="Client / Store">
                                        <font>
                                           <Font name="Open Sans Regular" size="16.0" />
                                        </font>
@@ -741,7 +741,7 @@
                            <content>
                               <Pane fx:id="ObjectifPan" prefHeight="894.0" prefWidth="1156.0">
                                  <children>
-                                    <Label layoutX="39.0" layoutY="14.0" text="Client / Objectives">
+                                    <Label layoutX="39.0" layoutY="14.0" style="-fx-text-fill: linear-gradient(to right, #00aaff, #00688b);" text="Client / Objectives">
                                        <font>
                                           <Font name="Open Sans Regular" size="16.0" />
                                        </font>
@@ -754,7 +754,7 @@
                            <content>
                               <Pane fx:id="blogId" prefHeight="808.0" prefWidth="1156.0">
                                  <children>
-                                    <Label layoutX="39.0" layoutY="14.0" text="Client / Blogs">
+                                    <Label layoutX="39.0" layoutY="14.0" style="-fx-text-fill: linear-gradient(to right, #00aaff, #00688b);" text="Client / Blogs">
                                        <font>
                                           <Font name="Open Sans Regular" size="16.0" />
                                        </font>
@@ -767,7 +767,7 @@
                            <content>
                               <Pane fx:id="usereventpane_id" prefHeight="808.0" prefWidth="1156.0">
                                  <children>
-                                    <Label layoutX="39.0" layoutY="14.0" text="Client / Events">
+                                    <Label layoutX="39.0" layoutY="14.0" style="-fx-text-fill: linear-gradient(to right, #00aaff, #00688b);" text="Client / Events">
                                        <font>
                                           <Font name="Open Sans Regular" size="16.0" />
                                        </font>
@@ -780,7 +780,7 @@
                            <content>
                               <Pane prefHeight="808.0" prefWidth="1156.0">
                                  <children>
-                                    <Label layoutX="39.0" layoutY="14.0" text="Client / Settings">
+                                    <Label layoutX="39.0" layoutY="14.0" style="-fx-text-fill: linear-gradient(to right, #00aaff, #00688b);" text="Client / Settings">
                                        <font>
                                           <Font name="Open Sans Regular" size="16.0" />
                                        </font>

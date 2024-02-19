@@ -7,6 +7,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
@@ -66,7 +67,8 @@ public class eventbController {
 
     @FXML
     private TextField eventtype_id;
-
+    @FXML
+    private TextField eventspots_id;
     @FXML
     private TableView<Event_details> tableevents_id;
     @FXML
@@ -79,7 +81,8 @@ public class eventbController {
     private TextField editeventduration_id;
     @FXML
     TableView<ObservableList<String>> ListParticipants_id;
-
+    @FXML
+    TableColumn<Event_details,Integer> event_spotscol;
     @FXML
     void add_event(ActionEvent event) {
         try {
@@ -89,6 +92,7 @@ public class eventbController {
             eventDetails.setType(eventtype_id.getText());
             eventDetails.setEvent_date(eventdate_id.getText());
             eventDetails.setDuree(eventduree_id.getText());
+            eventDetails.setNb_places(Integer.parseInt(eventspots_id.getText()));
             eventDetailsService.add(eventDetails);
             afficher();
         } catch (Exception e) {
@@ -149,6 +153,8 @@ public class eventbController {
             event_typecol.setCellValueFactory(new PropertyValueFactory<>("type"));
             event_datecol.setCellValueFactory(new PropertyValueFactory<>("event_date"));
             event_durationcol.setCellValueFactory(new PropertyValueFactory<>("duree"));
+            event_spotscol.setCellValueFactory(new PropertyValueFactory<>("nb_places"));
+
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -168,6 +174,7 @@ public class eventbController {
                 eventDetails.setType(editeventtype_id.getText());
                 eventDetails.setEvent_date(editeventdate_id.getText());
                 eventDetails.setDuree(editeventduration_id.getText());
+                eventDetails.setNb_places(selectedEvent.getNb_places());
                 eventDetailsService.update(eventDetails);
                 afficher();
                 FadeOutRight f = new FadeOutRight(editevent_id);

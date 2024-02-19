@@ -33,12 +33,13 @@ public class Event_detailsService implements IService<Event_details> {
             alert.showAndWait();
             return;
         }
-        String query = "INSERT INTO event_details (name, type, event_date, duree) VALUES (?,?,?,?)";
+        String query = "INSERT INTO event_details (name, type, event_date, duree,nb_places) VALUES (?,?,?,?,?)";
         PreparedStatement ps = connection.prepareStatement(query);
         ps.setString(1, eventDetails.getName());
         ps.setString(2, eventDetails.getType());
         ps.setString(3, eventDetails.getEvent_date());
         ps.setString(4, eventDetails.getDuree());
+        ps.setInt(5, eventDetails.getNb_places());
 
         ps.executeUpdate();
     }
@@ -70,7 +71,7 @@ public class Event_detailsService implements IService<Event_details> {
         Statement st = connection.createStatement();
         ResultSet rs = st.executeQuery(query);
         while (rs.next()) {
-            Event_details eventDetails = new Event_details(rs.getString("name"), rs.getString("type"), rs.getString("event_date"), rs.getString("duree"));
+            Event_details eventDetails = new Event_details(rs.getString("name"), rs.getString("type"), rs.getString("event_date"), rs.getString("duree"),rs.getInt("nb_places"));
             eventDetails.setId(rs.getInt("id"));
             eventDetailsList.add(eventDetails);
 
@@ -90,7 +91,7 @@ public class Event_detailsService implements IService<Event_details> {
             ps.setString(4, "%" + s + "%");
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                Event_details eventDetails = new Event_details(rs.getString("name"), rs.getString("type"), rs.getString("event_date"), rs.getString("duree"));
+                Event_details eventDetails = new Event_details(rs.getString("name"), rs.getString("type"), rs.getString("event_date"), rs.getString("duree"),rs.getInt("nb_places"));
                 eventDetails.setId(rs.getInt("id"));
                 eventDetailsList.add(eventDetails);
             }

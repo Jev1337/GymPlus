@@ -30,12 +30,13 @@
                   <Image url="@../assets/images/Activits.jpg" />
                </image>
             </ImageView>
-              <TableView fx:id="event_detailsTableView" layoutX="107.0" layoutY="200.0" prefHeight="353.0" prefWidth="520.0">
+              <TableView fx:id="event_detailsTableView" layoutX="38.0" layoutY="200.0" prefHeight="353.0" prefWidth="644.0">
                   <columns>
                       <TableColumn fx:id="namec" prefWidth="124.0" text="Event Name" />
                       <TableColumn fx:id="typec" minWidth="0.0" prefWidth="113.0" text="Type" />
                       <TableColumn fx:id="datec" minWidth="0.0" prefWidth="139.0" text="Date" />
                       <TableColumn fx:id="durationc" prefWidth="143.0" text="Duration" />
+                  <TableColumn fx:id="spotsc" prefWidth="123.20001220703125" text="Spots Available" />
                   </columns>
               </TableView>
               <Label layoutX="291.0" layoutY="46.0" text="EVENTS">

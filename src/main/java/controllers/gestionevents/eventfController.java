@@ -35,7 +35,7 @@ import java.util.Optional;
 
 
 public class eventfController {
-
+    private final ObservableList<Event_details> event_details = FXCollections.observableArrayList();
     @FXML
     private TableColumn<Event_details, String> datec;
 
@@ -52,6 +52,8 @@ public class eventfController {
 
     @FXML
     private TableColumn<Event_details, String> typec;
+    @FXML
+    private TableColumn<Event_details,Integer> spotsc;
 
     private final Event_detailsService eventDetailsService=new Event_detailsService();
     @FXML
@@ -73,16 +75,17 @@ public class eventfController {
         }
         startCountdown();
     }
+
     void afficher() throws SQLException {
-        ObservableList<Event_details> event_details = FXCollections.observableArrayList();
         List<Event_details> events = eventDetailsService.getAll();
+        event_details.clear();
         event_details.addAll(events);
         event_detailsTableView.setItems(event_details);
         namec.setCellValueFactory(new PropertyValueFactory<>("name"));
         typec.setCellValueFactory(new PropertyValueFactory<>("type"));
         datec.setCellValueFactory(new PropertyValueFactory<>("event_date"));
         durationc.setCellValueFactory(new PropertyValueFactory<>("duree"));
-
+        spotsc.setCellValueFactory(new PropertyValueFactory<>("nb_places"));
     }
     public boolean hasUserJoinedEvent(int event_id,int user_id) throws SQLException {
         Connection connection = MyDatabase.getInstance().getConnection();
@@ -93,14 +96,38 @@ public class eventfController {
         return rs.next();
 
     }
+    public void decrementSpots(int eventId) throws SQLException {
+        Connection connection = MyDatabase.getInstance().getConnection();
+        PreparedStatement stmt = connection.prepareStatement("UPDATE event_details  SET nb_places = nb_places - 1 WHERE id = ?");
+        stmt.setInt(1, eventId);
+        stmt.executeUpdate();
+    }
+    public void incrementSpots(int eventId) throws SQLException {
+        Connection connection = MyDatabase.getInstance().getConnection();
+        PreparedStatement stmt = connection.prepareStatement("UPDATE event_details  SET nb_places = nb_places + 1 WHERE id = ?");
+        stmt.setInt(1, eventId);
+        stmt.executeUpdate();
+    }
+
+
     @FXML
     public void join_event(ActionEvent actionEvent) throws SQLException {
         Event_details selectedEvent = event_detailsTableView.getSelectionModel().getSelectedItem();
+
         int id = 0;
         Date nextEventDate = getNextEventDate(0);
         System.out.println("Next event date: " + nextEventDate);
         Connection connection = MyDatabase.getInstance().getConnection();
         if (selectedEvent != null) {
+            if(selectedEvent.getNb_places()==0)
+            {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText("No spots available");
+                alert.setContentText("Sorry, there are no spots available for this event");
+                alert.showAndWait();
+                return;
+            }
             String name = selectedEvent.getName();
             String type = selectedEvent.getType();
             String date = selectedEvent.getEvent_date();
@@ -118,6 +145,8 @@ public class eventfController {
                     Event_participants ev = new Event_participants(selectedEvent.getId(), 0);
                     Event_participantsService eventParticipantsService = new Event_participantsService();
                     eventParticipantsService.delete(ev.getEvent_id());
+                    incrementSpots(selectedEvent.getId());
+                    afficher();
                     return;
                 }
                 else {
@@ -126,11 +155,12 @@ public class eventfController {
             }
             System.out.println("Join event: " + name + ", " + type + ", " + date + ", " + duration);
             try {
-                PreparedStatement stmt = connection.prepareStatement("SELECT id FROM event_details WHERE name = ? AND type = ? AND event_date = ? AND duree = ?");
+                PreparedStatement stmt = connection.prepareStatement("SELECT id FROM event_details WHERE name = ? AND type = ? AND event_date = ? AND duree = ? AND nb_places = ?");
                 stmt.setString(1, selectedEvent.getName());
                 stmt.setString(2, selectedEvent.getType());
                 stmt.setString(3, selectedEvent.getEvent_date());
                 stmt.setString(4, selectedEvent.getDuree());
+                stmt.setInt(5, selectedEvent.getNb_places());
 
                 ResultSet rs = stmt.executeQuery();
                 if (rs.next()) {
@@ -151,6 +181,10 @@ public class eventfController {
         try {
             Event_participantsService eventParticipantsService = new Event_participantsService();
             eventParticipantsService.add(ev);
+            decrementSpots(id);
+
+            afficher();
+
             Join_notf();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -229,7 +263,8 @@ public class eventfController {
     public void search() {
         String query = search_id.getText();
         List<Event_details> searchResults = eventDetailsService.search(query);
-        event_detailsTableView.getItems().setAll(searchResults);
+        event_details.clear();
+        event_details.addAll(searchResults);
     }
 }
 

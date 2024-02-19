@@ -82,7 +82,7 @@ public class ObjectifService implements IService<Objectif> {
     @Override
     public void update(Objectif obj) throws SQLException {
         try {
-            int userId = 2;
+            System.out.printf("here");
             java.sql.PreparedStatement ps = connection.prepareStatement("UPDATE `objectif` \n "
 
                     +"SET  \n "
@@ -102,7 +102,6 @@ public class ObjectifService implements IService<Objectif> {
             ps.setString(6, obj.getTypeObj());
             ps.setInt(7, obj.getCoachId());
             ps.setInt(8, obj.getId_objectif());
-
             ps.executeUpdate();
             ps.close();
 

@@ -216,16 +216,18 @@ VALUES
 --
 CREATE TABLE `user` (
   `id` int(11) NOT NULL,
-  `username` varchar(255) DEFAULT NULL UNIQUE,
+  `username` varchar(255) DEFAULT NULL,
   `firstname` varchar(255) DEFAULT NULL,
   `lastname` varchar(255) DEFAULT NULL,
   `date_naiss` date DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL,
-  `email` varchar(255) DEFAULT NULL UNIQUE,
+  `email` varchar(255) DEFAULT NULL,
   `role` varchar(255) DEFAULT NULL,
   `num_tel` varchar(255) DEFAULT NULL,
   `adresse` text DEFAULT NULL,
-  `photo` text DEFAULT NULL
+  `photo` text DEFAULT NULL,
+  `faceid` varchar(255) DEFAULT NULL,
+  `faceid_ts` date NOT NULL DEFAULT current_timestamp()
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
 --

@@ -363,6 +363,12 @@ MODIFY
   `idFacture` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `abonnement`
+--
+ALTER TABLE `abonnement`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT pour la table `produit`
 --
 ALTER TABLE

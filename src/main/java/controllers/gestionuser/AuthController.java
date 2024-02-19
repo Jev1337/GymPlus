@@ -503,7 +503,7 @@ public class AuthController {
 
 
             if (clientService.getUserByEmail(email_tf.getText()) != null){
-                if (clientService.getUserByEmail(email_tf.getText()).getFaceid() == null || clientService.getUserByEmail(email_tf.getText()).getFaceid() == "" || clientService.getUserByEmail(email_tf.getText()).getFaceid_ts() == null || clientService.getUserByEmail(email_tf.getText()).getFaceid_ts() == "") {
+                if (clientService.getUserByEmail(email_tf.getText()).getFaceid() == null || clientService.getUserByEmail(email_tf.getText()).getFaceid().isEmpty() || clientService.getUserByEmail(email_tf.getText()).getFaceid_ts() == null || clientService.getUserByEmail(email_tf.getText()).getFaceid_ts().isEmpty()) {
                     Alert alert = new Alert(Alert.AlertType.WARNING);
                     alert.initStyle(StageStyle.UNDECORATED);
                     alert.setTitle("Warning");
@@ -529,7 +529,7 @@ public class AuthController {
 
             }
             if (staffService.getUserByEmail(email_tf.getText()) != null){
-                if (staffService.getUserByEmail(email_tf.getText()).getFaceid() == null || staffService.getUserByEmail(email_tf.getText()).getFaceid() == "" || staffService.getUserByEmail(email_tf.getText()).getFaceid_ts() == null || staffService.getUserByEmail(email_tf.getText()).getFaceid_ts() == "") {
+                if (staffService.getUserByEmail(email_tf.getText()).getFaceid() == null || staffService.getUserByEmail(email_tf.getText()).getFaceid().isEmpty() || staffService.getUserByEmail(email_tf.getText()).getFaceid_ts() == null || staffService.getUserByEmail(email_tf.getText()).getFaceid_ts().isEmpty()) {
                     Alert alert = new Alert(Alert.AlertType.WARNING);
                     alert.initStyle(StageStyle.UNDECORATED);
                     alert.setTitle("Warning");
@@ -554,7 +554,7 @@ public class AuthController {
                 GlobalVar.setUser(staffService.getUserByEmail(email_tf.getText()));
             }
             if (adminService.getUserByEmail(email_tf.getText()) != null){
-                if(adminService.getUserByEmail(email_tf.getText()).getFaceid() == null || adminService.getUserByEmail(email_tf.getText()).getFaceid() == "" || adminService.getUserByEmail(email_tf.getText()).getFaceid_ts() == null || adminService.getUserByEmail(email_tf.getText()).getFaceid_ts() == "") {
+                if(adminService.getUserByEmail(email_tf.getText()).getFaceid() == null || adminService.getUserByEmail(email_tf.getText()).getFaceid().isEmpty() || adminService.getUserByEmail(email_tf.getText()).getFaceid_ts() == null || adminService.getUserByEmail(email_tf.getText()).getFaceid_ts().isEmpty()) {
                     Alert alert = new Alert(Alert.AlertType.WARNING);
                     alert.initStyle(StageStyle.UNDECORATED);
                     alert.setTitle("Warning");

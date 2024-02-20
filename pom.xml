@@ -86,6 +86,12 @@
             <artifactId>json</artifactId>
             <version>20240205</version>
         </dependency>
+        <dependency>
+            <groupId>com.calendarfx</groupId>
+            <artifactId>view</artifactId>
+            <version>11.12.6</version>
+        </dependency>
+
 
     </dependencies>
     <build>

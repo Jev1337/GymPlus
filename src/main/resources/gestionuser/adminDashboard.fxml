@@ -397,6 +397,19 @@
                                              <cursor>
                                                 <Cursor fx:constant="HAND" />
                                              </cursor></Button>
+                                          <ImageView fx:id="faceid_change" fitHeight="33.0" fitWidth="31.0" layoutX="529.0" layoutY="12.0" onMouseClicked="#faceid_change_clicked" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../assets/images/Face_ID_logo.svg.png" />
+                                             </image>
+                                             <cursor>
+                                                <Cursor fx:constant="HAND" />
+                                             </cursor>
+                                          </ImageView>
+                                          <Label layoutX="530.0" layoutY="43.0" text="Update">
+                                             <font>
+                                                <Font size="9.0" />
+                                             </font>
+                                          </Label>
                                        </children>
                                     </Pane>
                                     <Pane layoutX="92.0" layoutY="420.0" prefHeight="190.0" prefWidth="363.0" style="-fx-background-color: white; -fx-border-radius: 30px; -fx-background-radius: 30px;">

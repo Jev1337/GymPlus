@@ -1,12 +1,15 @@
 package controllers.gestionuser;
 
 import animatefx.animation.*;
+import com.calendarfx.model.CalendarSource;
+import com.calendarfx.view.CalendarView;
 import com.password4j.Password;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import entities.gestionuser.Admin;
 import entities.gestionuser.Client;
 import entities.gestionuser.Staff;
 import javafx.application.Platform;
+import com.calendarfx.model.Calendar;
 import javafx.beans.binding.Bindings;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
@@ -49,6 +52,7 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 
 public class AuthController {
@@ -909,6 +913,7 @@ public class AuthController {
         faceid_btn.setDisable(false);
         google_btn.setDisable(false);
     }
+
     public void initialize() {
         fadeInLeftAnimation.setNode(signin_pane);
         fadeInLeftAnimation.play();

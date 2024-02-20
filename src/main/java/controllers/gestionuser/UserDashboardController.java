@@ -7,10 +7,6 @@ import atlantafx.base.util.Animations;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
-import com.google.zxing.common.BitMatrix;
-import com.google.zxing.oned.EAN13Writer;
-import com.google.zxing.oned.EAN8Writer;
-import com.google.zxing.oned.MultiFormatOneDReader;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import de.micromata.paypal.PayPalConfig;
 import de.micromata.paypal.PayPalConnector;
@@ -21,7 +17,9 @@ import de.micromata.paypal.data.Transaction;
 import entities.gestionuser.Abonnement;
 import entities.gestionuser.Client;
 import javafx.animation.*;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.concurrent.Task;
 import javafx.concurrent.Worker;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -29,7 +27,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
@@ -57,20 +54,22 @@ import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import net.glxn.qrgen.core.image.ImageType;
 import net.glxn.qrgen.javase.QRCode;
+import okhttp3.*;
+import org.json.JSONObject;
+import org.opencv.core.*;
+import org.opencv.imgcodecs.Imgcodecs;
+import org.opencv.objdetect.CascadeClassifier;
+import org.opencv.objdetect.Objdetect;
+import org.opencv.videoio.VideoCapture;
 import services.gestionuser.AbonnementService;
 import services.gestionuser.ClientService;
-import services.gestionuser.StaffService;
 
-import java.awt.*;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.net.URI;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.nio.file.Files;
 import java.sql.Date;
 import java.time.LocalDate;
-
-import java.io.IOException;
 
 public class UserDashboardController {
 
@@ -305,6 +304,7 @@ public class UserDashboardController {
     private Pane ObjectifPan;
 
 
+
     @FXML
     private ImageView user_imageview;
 
@@ -313,6 +313,175 @@ public class UserDashboardController {
 
     @FXML
     private ImageView userprofile_imageview;
+
+    @FXML
+    private ImageView faceid_change;
+    @FXML
+    void faceid_change_clicked(){
+        setFaceID();
+    }
+    String faceId = "";
+    public void setFaceID(){
+        faceid_change.setDisable(true);
+        Dialog<String> alert = new Dialog<>();
+        alert.initStyle(StageStyle.UNDECORATED);
+        alert.setTitle("FaceID Verification");
+        alert.setHeaderText("FaceID Verification");
+        ButtonType okButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+        alert.getDialogPane().getButtonTypes().add(okButton);
+        Label label = new Label("Waiting for camera to initialize...");
+        label.setLayoutX(0);
+        label.setLayoutY(39);
+        label.setPrefWidth(461);
+        label.alignmentProperty().setValue(javafx.geometry.Pos.CENTER);
+        ProgressBar progressBar = new ProgressBar();
+        progressBar.setProgress(ProgressBar.INDETERMINATE_PROGRESS);
+        progressBar.setLayoutX(27);
+        progressBar.setLayoutY(75);
+        progressBar.setPrefWidth(407);
+        progressBar.setPrefHeight(20);
+        alert.getDialogPane().setContent(new Pane(label, progressBar));
+        alert.show();
+
+
+        Task<Void> cameraTask = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                int i = 0;
+                VideoCapture capture = new VideoCapture(0);
+                Mat frame = new Mat();
+                if (capture.isOpened()) {
+                    while (!isCancelled()) {
+                        if (capture.read(frame)) {
+                            if (!frame.empty()) {
+                                if (i == 5)
+                                    break;
+                                i++;
+                                System.out.println("Camera Initialized!");
+                                Platform.runLater(()-> label.setText("Camera Initialized!"));
+                                Thread.sleep(1000);
+                                System.out.println("Capturing Frame...");
+                                Platform.runLater(()-> label.setText("Capturing Frame..."));
+                                Thread.sleep(1000);
+                                MatOfRect facesDetected = new MatOfRect();
+                                CascadeClassifier cascadeClassifier = new CascadeClassifier();
+                                int minFaceSize = Math.round(frame.rows() * 0.1f);
+                                cascadeClassifier.load(getClass().getResource("/assets/haarcascade_frontalface_alt.xml").toURI().getPath().toString().substring(1));
+                                cascadeClassifier.detectMultiScale(frame,
+                                        facesDetected,
+                                        1.1,
+                                        3,
+                                        Objdetect.CASCADE_SCALE_IMAGE,
+                                        new Size(minFaceSize, minFaceSize),
+                                        new Size()
+                                );
+                                Rect[] facesArray = facesDetected.toArray();
+                                if (facesArray.length > 0) {
+                                    System.out.println("Face Found!");
+                                    Platform.runLater(() -> label.setText("Face Found! Verifying..."));
+                                    Platform.runLater(() -> progressBar.setProgress(1));
+
+                                    MatOfByte matOfByte = new MatOfByte();
+                                    Imgcodecs.imencode(".jpg", frame, matOfByte);
+                                    byte[] byteArray = matOfByte.toArray();
+                                    InputStream in = new ByteArrayInputStream(byteArray);
+                                    BufferedImage img = null;
+                                    try {
+                                        img = ImageIO.read(in);
+                                    }catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                                    try {
+                                        ImageIO.write(img, "png", bos);
+                                    }catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+
+                                    byte[] imgBytes = bos.toByteArray();
+
+                                    OkHttpClient client = new OkHttpClient().newBuilder()
+                                            .build();
+                                    MediaType mediaType = MediaType.parse("image/png");
+                                    RequestBody body = new MultipartBody.Builder().setType(MultipartBody.FORM)
+                                            .addFormDataPart("image_file","image.png",
+                                                    RequestBody.create(imgBytes, mediaType))
+                                            .addFormDataPart("api_key","oVAqEDbCYmaILayXJdKAsuYbFcJ0LBP6")
+                                            .addFormDataPart("api_secret","e76obC1xsr-zSMynWZoQCt62vWDgtZ6O")
+                                            .addFormDataPart("return_attributes","emotion")
+                                            .build();
+                                    Request request = new Request.Builder()
+                                            .url("https://api-us.faceplusplus.com/facepp/v3/detect")
+                                            .method("POST", body)
+                                            .build();
+                                    try{
+                                        Response response = client.newCall(request).execute();
+                                        Platform.runLater(() -> {
+                                            try {
+                                                JSONObject jsonObject = new JSONObject(response.body().string());
+                                                faceId = jsonObject.getJSONArray("faces").getJSONObject(0).getString("face_token");
+                                                updateFaceId(faceId);
+                                            }catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+
+                                        });
+                                    }catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                    break;
+                                }
+                                else {
+                                    System.out.println("Face not found ");
+                                    Platform.runLater(() -> label.setText("Face not found! Trying Again..."));
+                                    Thread.sleep(2000);
+                                }
+                            }
+                        }
+                    }
+                }
+                capture.release();
+
+                if(faceId == null || faceId.equals("")){
+                    Platform.runLater(() -> {
+                        Alert alert = new Alert(Alert.AlertType.WARNING);
+                        alert.initStyle(StageStyle.UNDECORATED);
+                        alert.setTitle("Warning");
+                        alert.setHeaderText("Warning");
+                        if (!isCancelled())
+                            alert.setContentText("No face detected! Please try again.");
+                        else
+                            alert.setContentText("Faceid Cancelled!");
+                        alert.show();
+                    });
+                }
+                Platform.runLater(() -> faceid_change.setDisable(false));
+                Platform.runLater(alert::close);
+                return null;
+            }
+
+        };
+
+        Thread cameraThread = new Thread(cameraTask);
+        alert.setOnCloseRequest(e -> {
+            cameraTask.cancel(false);
+        });
+        cameraThread.start();
+
+
+    }
+
+    private void updateFaceId(String faceId) {
+        try {
+            Client client = new Client(GlobalVar.getUser().getId(), GlobalVar.getUser().getUsername(), GlobalVar.getUser().getFirstname(), GlobalVar.getUser().getLastname(), GlobalVar.getUser().getDate_naiss(), GlobalVar.getUser().getPassword(), GlobalVar.getUser().getEmail(), GlobalVar.getUser().getNum_tel(), GlobalVar.getUser().getAdresse(), GlobalVar.getUser().getPhoto(), faceId, new Date(System.currentTimeMillis()).toString());
+            clientService.update(client);
+            GlobalVar.setUser(client);
+            initProfile();
+            notify("FaceID has been updated successfully!");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     @FXML
     void browse_btn_act(ActionEvent event) {
@@ -552,9 +721,9 @@ public class UserDashboardController {
                 WebView webView = new WebView();
                 webView.getEngine().load(redirectUrl);
                 alert.getDialogPane().setContent(webView);
-                Worker worker = webView.getEngine().getLoadWorker();
+                Worker<Void> worker = webView.getEngine().getLoadWorker();
                 worker.stateProperty().addListener(e->{
-                    if (worker.getState() == Worker.State.SUCCEEDED) {
+                if (worker.getState() == Worker.State.SUCCEEDED) {
                         if (webView.getEngine().getLocation().contains("success")) {
                             alert.close();
                         }else if (webView.getEngine().getLocation().contains("cancel")) {

@@ -11,8 +11,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.w3c.dom.events.Event;
 
 import java.io.IOException;
 import java.net.URL;
@@ -132,11 +134,16 @@ public class ObjectifController  implements Initializable {
 
     private void refreshNodesChatBot() throws IOException {
         pnl_scorllChatBot.getChildren().clear();
-        Node[] nodes = new Node[1];
+        // Node[] nodes = new Node[1];
+        //FXMLLoader loader = FXMLLoader.load(getClass().getResource("/gestionSuivi/chatBot.fxml"));
 
- //bech n3ayet elm fucntion mel controller mtaa el chatBot COntrolerr  w naaml prompt feha
-                nodes[0] = FXMLLoader.load(getClass().getResource("/gestionSuivi/chatBot.fxml"));
-                pnl_scorllChatBot.getChildren().add(nodes[0]);
+
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/gestionSuivi/chatBot.fxml"));
+            Node node = loader.load();
+            pnl_scorllChatBot.getChildren().add(node);
+            ChatControler chatControler = loader.getController() ;
+           // chatControler.chatGPT();
 
         }
 

@@ -106,6 +106,12 @@
             <version>11.12.6</version>
         </dependency>
 
+        <dependency>
+            <groupId>de.micromata.paypal</groupId>
+            <artifactId>paypal-core</artifactId>
+            <version>0.2</version>
+        </dependency>
+
 
     </dependencies>
     <build>

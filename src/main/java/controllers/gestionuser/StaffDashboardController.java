@@ -62,7 +62,7 @@ public class StaffDashboardController {
     private final ClientService clientService = new ClientService();
     private final AbonnementService abonnementService = new AbonnementService();
 
-    private FadeIn[] fadeInAnimation = new FadeIn[7];
+    private FadeIn[] fadeInAnimation = new FadeIn[8];
     private FadeOutRight fadeOutRightAnimation = new FadeOutRight();
     private FadeInRight fadeInRightAnimation = new FadeInRight();
 
@@ -70,6 +70,9 @@ public class StaffDashboardController {
 
     @FXML
     private Button subscription_btn;
+
+    @FXML
+    private Button objective_btn;
 
     @FXML
     private ImageView user_imageview;
@@ -225,6 +228,10 @@ public class StaffDashboardController {
 
     @FXML
     private Pane subpane;
+
+    @FXML
+    private ScrollPane StaffObjectivePane;
+
     @FXML
     void user_imageview_clicked(MouseEvent event) {
         switchToPane(StaffInfoPane);
@@ -459,7 +466,14 @@ public class StaffDashboardController {
     void subscription_btn_clicked(MouseEvent event) {
         switchToPane(StaffSubscriptionPane);
     }
-
+    @FXML
+    public void objective_btn_act(ActionEvent actionEvent) {
+        switchToPane(StaffObjectivePane);
+    }
+    @FXML
+    public void objective_btn_clicked(MouseEvent mouseEvent) {
+        switchToPane(StaffObjectivePane);
+    }
     private void initDecoratedStage(){
         dragpane.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override
@@ -488,6 +502,7 @@ public class StaffDashboardController {
         StaffEquipmentManagementPane.setFitToWidth(true);
         StaffStorePane.setFitToWidth(true);
         StaffSettingsPane.setFitToWidth(true);
+        StaffObjectivePane.setFitToWidth(true);
     }
     private ScrollPane getCurrentPane(){
         if (StaffHomePane.isVisible())
@@ -504,6 +519,8 @@ public class StaffDashboardController {
             return StaffStorePane;
         if (StaffSettingsPane.isVisible())
             return StaffSettingsPane;
+        if (StaffObjectivePane.isVisible())
+            return StaffObjectivePane;
         return null;
     }
 
@@ -557,6 +574,7 @@ public class StaffDashboardController {
         fadeInAnimation[4] = new FadeIn(subscription_btn);
         fadeInAnimation[5] = new FadeIn(event_btn);
         fadeInAnimation[6] = new FadeIn(equipment_btn);
+        fadeInAnimation[7] = new FadeIn(objective_btn);
     }
     private void visibleAll(){
         home_btn.setVisible(true);
@@ -566,6 +584,7 @@ public class StaffDashboardController {
         subscription_btn.setVisible(true);
         event_btn.setVisible(true);
         equipment_btn.setVisible(true);
+        objective_btn.setVisible(true);
     }
 
     private void invisibleAll(){
@@ -576,6 +595,7 @@ public class StaffDashboardController {
         subscription_btn.setVisible(false);
         event_btn.setVisible(false);
         equipment_btn.setVisible(false);
+        objective_btn.setVisible(false);
     }
     private void nullOpacityAll(){
         home_btn.setOpacity(0);
@@ -585,6 +605,7 @@ public class StaffDashboardController {
         subscription_btn.setOpacity(0);
         event_btn.setOpacity(0);
         equipment_btn.setOpacity(0);
+        objective_btn.setOpacity(0);
     }
     public void searchbarsub_tf_textchanged(KeyEvent keyEvent) {
         initSubList(subtype_cb.getValue(), searchbarsub_tf.getText());
@@ -900,4 +921,6 @@ public class StaffDashboardController {
         }
         return true;
     }
+
+
 }

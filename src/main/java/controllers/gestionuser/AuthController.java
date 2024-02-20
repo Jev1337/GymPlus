@@ -628,27 +628,26 @@ public class AuthController {
     }
 
     public void setFaceID(){
-        Stage stage = new Stage();
+        Dialog<String> alert = new Dialog<>();
+        alert.initStyle(StageStyle.UNDECORATED);
+        alert.setTitle("FaceID Verification");
+        alert.setHeaderText("FaceID Verification");
+        ButtonType okButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+        alert.getDialogPane().getButtonTypes().add(okButton);
         Label label = new Label("Waiting for camera to initialize...");
         label.setLayoutX(0);
         label.setLayoutY(39);
         label.setPrefWidth(461);
         label.alignmentProperty().setValue(javafx.geometry.Pos.CENTER);
-        Pane root = new Pane();
-        root.setPrefHeight(119);
-        root.setPrefWidth(461);
-        root.getChildren().add(label);
         ProgressBar progressBar = new ProgressBar();
         progressBar.setProgress(ProgressBar.INDETERMINATE_PROGRESS);
         progressBar.setLayoutX(27);
         progressBar.setLayoutY(75);
         progressBar.setPrefWidth(407);
         progressBar.setPrefHeight(20);
-        root.getChildren().add(progressBar);
-        stage.initStyle(StageStyle.UNDECORATED);
-        stage.setScene(new javafx.scene.Scene(root));
-        stage.setAlwaysOnTop(true);
-        stage.show();
+        alert.getDialogPane().setContent(new Pane(label, progressBar));
+        alert.show();
+
 
         Task<Void> cameraTask = new Task<Void>() {
             @Override
@@ -664,8 +663,10 @@ public class AuthController {
                                     break;
                                 }
                                 i++;
+                                System.out.println("Camera Initialized!");
                                 Platform.runLater(()-> label.setText("Camera Initialized!"));
                                 Thread.sleep(1000);
+                                System.out.println("Capturing Frame...");
                                 Platform.runLater(()-> label.setText("Capturing Frame..."));
                                 Thread.sleep(1000);
                                 MatOfRect facesDetected = new MatOfRect();
@@ -682,6 +683,7 @@ public class AuthController {
                                 );
                                 Rect[] facesArray = facesDetected.toArray();
                                 if (facesArray.length > 0) {
+                                    System.out.println("Face Found!");
                                     Platform.runLater(() -> label.setText("Face Found! Verifying..."));
                                     Platform.runLater(() -> progressBar.setProgress(1));
 
@@ -742,6 +744,7 @@ public class AuthController {
                                     break;
                                 }
                                 else {
+                                    System.out.println("Face not found ");
                                     Platform.runLater(() -> label.setText("Face not found! Trying Again..."));
                                     Thread.sleep(2000);
                                 }
@@ -750,25 +753,35 @@ public class AuthController {
                     }
                 }
                 capture.release();
+
                 if(faceId == null || faceId.equals("")){
                     Platform.runLater(() -> {
                         Alert alert = new Alert(Alert.AlertType.WARNING);
                         alert.initStyle(StageStyle.UNDECORATED);
                         alert.setTitle("Warning");
                         alert.setHeaderText("Warning");
-                        alert.setContentText("No face detected! Please try again.");
+                        if (!isCancelled())
+                            alert.setContentText("No face detected! Please try again.");
+                        else
+                            alert.setContentText("Faceid cancelled!");
                         alert.show();
                         GlobalVar.setUser(null);
                         enableAllSI(false);
                         enableAllSU(false);
                     });
                 }
-                Platform.runLater(stage::close);
+                Platform.runLater(alert::close);
                 return null;
             }
+
         };
+
         Thread cameraThread = new Thread(cameraTask);
+        alert.setOnCloseRequest(e -> {
+            cameraTask.cancel(false);
+        });
         cameraThread.start();
+
     }
 
     private void disableAllSI(){

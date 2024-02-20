@@ -383,7 +383,7 @@ public class eventfController {
             Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
             confirmationAlert.setTitle("Confirmation");
             confirmationAlert.setHeaderText("Are you sure you want to claim GymPlus Whey Protein?");
-            confirmationAlert.setContentText("Remaining Points: " + GlobalVar.getUser().getEvent_points());
+            confirmationAlert.setContentText("Remaining Points: " + (GlobalVar.getUser().getEvent_points()-2500));
             Optional<ButtonType> result = confirmationAlert.showAndWait();
             if (result.get() == ButtonType.OK){
                 GlobalVar.getUser().setEvent_points(GlobalVar.getUser().getEvent_points() - 2500);
@@ -452,7 +452,7 @@ public class eventfController {
             Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
             confirmationAlert.setTitle("Confirmation");
             confirmationAlert.setHeaderText("Are you sure you want to claim GymPlus Weightlifting Belt?");
-            confirmationAlert.setContentText("Remaining Points: " + GlobalVar.getUser().getEvent_points());
+            confirmationAlert.setContentText("Remaining Points: " + (GlobalVar.getUser().getEvent_points()-1500));
             Optional<ButtonType> result = confirmationAlert.showAndWait();
             if (result.get() == ButtonType.OK){
                 GlobalVar.getUser().setEvent_points(GlobalVar.getUser().getEvent_points() - 1500);
@@ -521,7 +521,8 @@ public class eventfController {
             Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
             confirmationAlert.setTitle("Confirmation");
             confirmationAlert.setHeaderText("Are you sure you want to claim GymPlus Gym Bag?");
-            confirmationAlert.setContentText("Remaining Points: " + GlobalVar.getUser().getEvent_points());
+            confirmationAlert.setContentText("Remaining Points: " + (GlobalVar.getUser().getEvent_points()-2000));
+
             Optional<ButtonType> result = confirmationAlert.showAndWait();
             if (result.get() == ButtonType.OK){
                 GlobalVar.getUser().setEvent_points(GlobalVar.getUser().getEvent_points() - 2000);

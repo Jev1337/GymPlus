@@ -99,23 +99,16 @@ public class ObjectifController  implements Initializable {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/gestionSuivi/Item.fxml"));
                 Node node = loader.load();
                 ObjectifListController itemController = loader.getController();
-                Button button = (Button) node.lookup("#blueButton");
-
                 itemController.setObjectif(objecitf);
-
                 itemController.buton();
                 itemController.buttonPanel();
                 itemController.scrollButton(objecitf);
                 pnl_scroll2.getChildren().add(node);
-
                 FXMLLoader loader3 = new FXMLLoader(getClass().getResource("/gestionSuivi/AddingObjectif.fxml"));
                 Node node3 = loader3.load();
-
-
                 AddObjectifController addoj = loader3.getController();
                 itemController.setObjectifController(this);
                 addoj.setObjectifController(this);
-
 
                 Button itemButton = (Button) node.lookup("#itemButton");
                 if (itemButton != null) {
@@ -137,24 +130,16 @@ public class ObjectifController  implements Initializable {
 
 
 
-    private void refreshNodesChatBot()
-    {
+    private void refreshNodesChatBot() throws IOException {
         pnl_scorllChatBot.getChildren().clear();
-
         Node[] nodes = new Node[1];
 
-        for(int i = 0; i<1; i++)
-        {
-            try {
-                nodes[i] = (Node) FXMLLoader.load(getClass().getResource("/gestionSuivi/chatBot.fxml"));
-                pnl_scorllChatBot.getChildren().add(nodes[i]);
-
-            } catch (IOException ex) {
-                Logger.getLogger(ObjectifController.class.getName()).log(Level.SEVERE, null, ex);
-            }
+ //bech n3ayet elm fucntion mel controller mtaa el chatBot COntrolerr  w naaml prompt feha
+                nodes[0] = FXMLLoader.load(getClass().getResource("/gestionSuivi/chatBot.fxml"));
+                pnl_scorllChatBot.getChildren().add(nodes[0]);
 
         }
-    }
+
 
 
     @FXML
@@ -194,10 +179,14 @@ public class ObjectifController  implements Initializable {
             throw new RuntimeException(e);
         }
 
-        refreshNodesChatBot();
-
-
+        try {
+            refreshNodesChatBot();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
+
+
+    }
 
 
 }

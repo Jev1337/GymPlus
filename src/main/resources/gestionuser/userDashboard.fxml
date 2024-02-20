@@ -739,7 +739,7 @@
                         </ScrollPane>
                         <ScrollPane fx:id="UserObjectivePane" prefHeight="646.0" prefWidth="1155.0" visible="false">
                            <content>
-                              <Pane fx:id="ObjectifPan" prefHeight="894.0" prefWidth="1156.0">
+                              <Pane fx:id="ObjectifPan" prefHeight="1820.0" prefWidth="1156.0">
                                  <children>
                                     <Label layoutX="39.0" layoutY="14.0" style="-fx-text-fill: linear-gradient(to right, #00aaff, #00688b);" text="Client / Objectives">
                                        <font>

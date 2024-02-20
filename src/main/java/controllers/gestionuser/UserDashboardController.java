@@ -562,6 +562,8 @@ public class UserDashboardController {
             e.printStackTrace();
         }
     }
+
+
     private double xOffset = 0;
     private double yOffset = 0;
     public void initialize() {
@@ -590,6 +592,14 @@ public class UserDashboardController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        try {
+            Pane pane_Objectif= FXMLLoader.load(getClass().getResource("/gestionSuivi/objectif1.fxml"));
+            ObjectifPan.getChildren().setAll(pane_Objectif);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
     }
 
     private void initSubsciption(){

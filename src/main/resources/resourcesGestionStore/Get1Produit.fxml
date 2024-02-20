@@ -6,11 +6,11 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionStore.Get1ProduitController">
+<AnchorPane prefHeight="808.0" prefWidth="1156.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionStore.Get1ProduitController">
    <children>
       <ImageView fx:id="ImgProduit" fitHeight="150.0" fitWidth="200.0" layoutX="25.0" layoutY="59.0" pickOnBounds="true" preserveRatio="true" />
-      <Button fx:id="AddPanierFX" layoutX="502.0" layoutY="74.0" mnemonicParsing="false" onAction="#AddPanier" text="Add Panier" />
-      <Button fx:id="QuittezFX" layoutX="502.0" layoutY="109.0" mnemonicParsing="false" onAction="#Quittez" prefHeight="25.0" prefWidth="75.0" text="Quitter" />
+      <Button fx:id="AddPanierFX" layoutX="25.0" layoutY="404.0" mnemonicParsing="false" onAction="#AddPanier" text="Add Panier" />
+      <Button fx:id="QuittezFX" layoutX="430.0" layoutY="404.0" mnemonicParsing="false" onAction="#Quittez" prefHeight="25.0" prefWidth="75.0" text="Quitter" />
       <Label fx:id="NameFX" layoutX="349.0" layoutY="65.0" prefHeight="17.0" prefWidth="149.0" text="nameProduct" />
       <Label fx:id="priceFX" layoutX="349.0" layoutY="122.0" prefHeight="17.0" prefWidth="118.0" text="Price" />
       <Label fx:id="descriptionFx" layoutX="25.0" layoutY="241.0" prefHeight="130.0" prefWidth="386.0" text="Description" />
@@ -21,5 +21,7 @@
       <Label layoutX="267.0" layoutY="165.0" text="Quantite" />
       <Label layoutX="267.0" layoutY="201.0" prefHeight="17.0" prefWidth="82.0" text="Total Article :" />
       <Label fx:id="TotalArticleFX" layoutX="380.0" layoutY="201.0" text="Total" />
+      <Button fx:id="DeleteProductFX" layoutX="291.0" layoutY="404.0" mnemonicParsing="false" onAction="#DeleteProduct" prefHeight="25.0" prefWidth="75.0" text="Delete" />
+      <Button fx:id="UpdateProductFX" layoutX="156.0" layoutY="404.0" mnemonicParsing="false" onAction="#UpdateProductFX" prefHeight="25.0" prefWidth="75.0" text="Update " />
    </children>
 </AnchorPane>

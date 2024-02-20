@@ -1,5 +1,8 @@
 package services.gestionStore;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.logging.Logger;
 import entities.gestionStore.detailfacture;
 import entities.gestionStore.facture;
@@ -12,6 +15,7 @@ import java.util.List;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import utils.MyDatabase;
 
 
 public class PanierService
@@ -31,8 +35,11 @@ public class PanierService
         MonPanier = monPanier;
     }
     public ProduitService prodService = new ProduitService();
+    public PanierService( ){}
 
-    public PanierService(){}
+
+
+
 
     public void AjouterProduit(int idp , int Quantite , float Remise ) throws SQLException
 
@@ -108,12 +115,31 @@ public class PanierService
         }
     }
 
+    /*
     public void RetirerProduit(int indice)
     {
         MonPanier.ListeDetails.remove(indice);
         MonPanier.calculerPrixTotalFacture();
         //chargerContenuPanier();
     }
+
+     */
+
+
+    public void RetirerProduit(int index)
+    {
+        if (!MonPanier.ListeDetails.isEmpty() && index >= 0 && index < MonPanier.ListeDetails.size())
+        {
+            MonPanier.ListeDetails.remove(index);
+        } else {
+            System.err.println("Index out of bounds or empty list.");
+            // Gérer l'erreur ou afficher un message d'avertissement approprié ici
+        }
+
+    }
+
+
+
 
     private static final Logger logger = Logger.getLogger(PanierService.class.getName());
     public List<detailfacture> getContenuPanier()
@@ -159,4 +185,24 @@ public class PanierService
             alert.showAndWait();
         }
     }
+
+/*
+    public facture getDerniereFacture() throws SQLException
+    {
+        facture p = new facture();
+        String sqlMaxId = "Select Max(idFacture) as max FROM facture ";
+        try (PreparedStatement getMax = connection.prepareStatement(sqlMaxId))
+        {
+            ResultSet resultSetmax = getMax.executeQuery();
+            if (resultSetmax.next())
+            {
+                int x = resultSetmax.getInt("max") ;
+                p.setIdFacture(x);
+                System.out.println("max de la colonne idFacture" + x );
+            }
+        }
+        return p;
+    }
+
+ */
 }

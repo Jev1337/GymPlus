@@ -75,6 +75,8 @@ public class UserDashboardController {
 
     @FXML
     private Pane subscribed_pane;
+    @FXML
+    private Pane storeId;
 
     @FXML
     private Pane unsubscribed_pane;
@@ -587,6 +589,12 @@ public class UserDashboardController {
         try {
             Pane pane_event= FXMLLoader.load(getClass().getResource("/gestionevents/event.fxml"));
             usereventpane_id.getChildren().setAll(pane_event);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            Pane pane= FXMLLoader.load(getClass().getResource("/resourcesGestionStore/GetAllProduitClient.fxml"));
+            storeId.getChildren().setAll(pane);
         } catch (IOException e) {
             e.printStackTrace();
         }

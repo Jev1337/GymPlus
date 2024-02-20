@@ -1,6 +1,8 @@
 package controllers.gestionStore;
 
+import controllers.gestionuser.GlobalVar;
 import entities.gestionStore.detailfacture;
+import entities.gestionStore.facture;
 import entities.gestionStore.produit;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -43,6 +45,9 @@ public class PanierController implements Initializable
     @FXML
     private ComboBox<String> comboPaiement;
 
+    PanierService panierService = new PanierService();
+
+
 
 
     //private final PanierService panierService;
@@ -77,6 +82,20 @@ public class PanierController implements Initializable
         }
     }
 
+    private void afficherFacture(facture f)
+    {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/resourcesGestionStore/GetOneFacture.fxml"));
+            Parent root = loader.load();
+            GetOneFactureController controller = loader.getController();
+            controller.setFacture(f);
+            TotalPanierFX.getScene().setRoot(root);
+        } catch (IOException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
     @FXML
     void ValiderPanier(ActionEvent event)
     {
@@ -84,12 +103,13 @@ public class PanierController implements Initializable
         MonPanier.Valider();
 
         MonPanier = new PanierService();
-        var idClient = javax.swing.JOptionPane.showInputDialog("What is your ID Client?");
-        MonPanier.getMonPanier().setId(Integer.parseInt(idClient));
+        //GlobalVar.getUser().getId();
+        //var idClient = javax.swing.JOptionPane.showInputDialog("What is your ID Client?");
+        MonPanier.getMonPanier().setId(GlobalVar.getUser().getId());
 
         try
         {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/resourcesGestionStore/GetOneFacture.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/resourcesGestionStore/GetAllFacture.fxml"));
             Parent root = loader.load();
             TotalPanierFX.getScene().setRoot(root);
         }
@@ -111,6 +131,8 @@ public class PanierController implements Initializable
         ObservableList<String> list_methodeP = FXCollections.observableArrayList("carte" , "cheque" , "espece" , "en ligne" );
         comboPaiement.setItems(list_methodeP);
     }
+
+
 
     public void chargerContenuPanier()
     {
@@ -151,7 +173,19 @@ public class PanierController implements Initializable
                 Label labelNom = new Label("Nom: " + nom);
                 Label labelPrix = new Label("Prix: " + prix);
                 Label labelPrixTotalArtile = new Label("Prix Total: " + prixtotalArticle);
-                Button Supprimer = new Button("Supprimer");
+                Button Supprimer = new Button("Supprimer"); //RetirerProduit()
+
+                // Ajout de l'événement de clic au bouton "Supprimer"
+                int finalI = i;
+
+                Supprimer.setOnAction(event -> {
+
+                    System.out.println("Indice à supprimer : " + finalI);
+                    System.out.println("Taille de la liste avant suppression : " + MonPanier.getMonPanier().ListeDetails.size());
+                    panierService.RetirerProduit(finalI);
+                    System.out.println("Taille de la liste après suppression : " + MonPanier.getMonPanier().ListeDetails.size());
+
+                });
 
 
                 // Créer un VBox pour empiler verticalement les labels

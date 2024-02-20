@@ -1,5 +1,6 @@
 package controllers.gestionStore;
 
+import controllers.gestionuser.GlobalVar;
 import entities.gestionStore.produit;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -32,6 +33,14 @@ public class GetAllProduitClientController implements Initializable {
     @FXML
     private Button ConsulterPnaierFX;
     @FXML
+    private Button GetAllFactureBtn;
+    @FXML
+    private Label AddProdFX;
+    @FXML
+    private Label GetAllFactureLB;
+    @FXML
+    private Button ajouterProduitBtn;
+    @FXML
     private ComboBox<String> boxCategorieFX;
     @FXML
     private ComboBox<String> boxMontantFX;
@@ -51,7 +60,7 @@ public class GetAllProduitClientController implements Initializable {
     void ConsulterPanier(ActionEvent event)
     {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/resourcesGestionStore/Panier.fxml"));  //Panier
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/resourcesGestionStore/Panier.fxml"));
             Parent root = loader.load();
             searchFX.getScene().setRoot(root);
         } catch (IOException e) {
@@ -59,6 +68,30 @@ public class GetAllProduitClientController implements Initializable {
         }
     }
 
+    @FXML
+    void GetAllFactureFX()
+    {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/resourcesGestionStore/GetAllFacture.fxml"));
+            Parent root = loader.load();
+            searchFX.getScene().setRoot(root);
+        } catch (IOException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+    @FXML
+    void ajouterProduitFX()
+    {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/resourcesGestionStore/AddProduit.fxml"));
+            Parent root = loader.load();
+            searchFX.getScene().setRoot(root);
+        } catch (IOException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
     @FXML
     void boxCategorie(ActionEvent event)
     {
@@ -77,9 +110,25 @@ public class GetAllProduitClientController implements Initializable {
         if (MonPanier == null)
         {
             MonPanier = new PanierService();
-            var idClient = javax.swing.JOptionPane.showInputDialog("What is your ID Client?");
-            MonPanier.getMonPanier().setId(Integer.parseInt(idClient));
+            MonPanier.getMonPanier().setId(GlobalVar.getUser().getId());
 
+            //var idClient = javax.swing.JOptionPane.showInputDialog("What is your ID Client?");
+            //MonPanier.getMonPanier().setId(Integer.parseInt(idClient));
+
+        }
+        if (!GlobalVar.getUser().getRole().equals("admin"))
+        {
+            ajouterProduitBtn.setVisible(false);
+            ajouterProduitBtn.setManaged(false);
+
+            GetAllFactureBtn.setVisible(false);
+            GetAllFactureBtn.setManaged(false);
+
+            GetAllFactureLB.setVisible(false);
+            GetAllFactureLB.setManaged(false);
+
+            AddProdFX.setVisible(false);
+            AddProdFX.setManaged(false);
         }
 
         //comboBox categorie
@@ -96,7 +145,7 @@ public class GetAllProduitClientController implements Initializable {
             ObservableList<produit> produits = FXCollections.observableArrayList(prodService.getAll());
 
             // Nombre de produits par ligne
-            int produitsParLigne = 3;
+            int produitsParLigne = 4;
 
             // Ajout des données dans la GridPane
             int row = 0;

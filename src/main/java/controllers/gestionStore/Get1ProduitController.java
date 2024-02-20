@@ -1,5 +1,6 @@
 package controllers.gestionStore;
 
+import controllers.gestionuser.GlobalVar;
 import entities.gestionStore.facture;
 import entities.gestionStore.produit;
 import javafx.collections.FXCollections;
@@ -9,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
@@ -42,8 +44,11 @@ public class Get1ProduitController implements Initializable {
     private Label TotalArticleFX;
     @FXML
     private Spinner<Integer> spinerQte;
-
-    //private final  PanierService panierService;
+    @FXML
+    private Button DeleteProductFX;
+    @FXML
+    private Button UpdateProductFX;
+    private int productId;
     private final ProduitService prodService;
     private SpinnerValueFactory<Integer> spin;
 
@@ -109,7 +114,8 @@ public class Get1ProduitController implements Initializable {
     }
 
     // Méthode pour afficher une alerte
-    private void showAlert(Alert.AlertType alertType, String title, String message) {
+    private void showAlert(Alert.AlertType alertType, String title, String message)
+    {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
         alert.setContentText(message);
@@ -148,10 +154,19 @@ public class Get1ProduitController implements Initializable {
         }
     }
 
-    private int productId;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle)
     {
+        if (!GlobalVar.getUser().getRole().equals("admin"))
+        {
+            DeleteProductFX.setVisible(false);
+            DeleteProductFX.setManaged(false);
+
+            UpdateProductFX.setVisible(false);
+            UpdateProductFX.setManaged(false);
+
+        }
+
         /*
         try {
             produit p = prodService.getOne(20);
@@ -182,7 +197,8 @@ public class Get1ProduitController implements Initializable {
 
     private void loadProductDetails()
     {
-        try {
+        try
+        {
             System.out.println("load get 1 Produit" + productId);
             p = prodService.getOne(productId);
             if (p != null)
@@ -195,8 +211,6 @@ public class Get1ProduitController implements Initializable {
                 TotalArticleFX.setText(String.valueOf(p.getPrix()));
                 setQte();
             }
-
-
         } catch (SQLException e) {
             // Gérer les exceptions
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -226,6 +240,57 @@ public class Get1ProduitController implements Initializable {
     }
 
 
+    @FXML
+    void DeleteProduct(ActionEvent event)
+    {
+            try {
+
+                prodService.delete(productId);
+                System.out.println();
+
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Confirmation");
+                alert.setHeaderText(null);
+                alert.setContentText("Le produit a été supprimée avec succès.");
+                alert.showAndWait();
+
+                try
+                {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/resourcesGestionStore/GetAllProduitClient.fxml"));
+                    Parent root = loader.load();
+                    NameFX.getScene().setRoot(root);
+                } catch (IOException e)
+                {
+                    throw new RuntimeException(e);
+                }
+
+            } catch (SQLException e)
+            {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Erreur");
+                alert.setHeaderText("Erreur lors de la suppression du produit");
+                alert.setContentText("Une erreur s'est produite lors de la suppression du produit.");
+                alert.showAndWait();
+            }
+    }
+    @FXML
+    void UpdateProductFX(ActionEvent event)
+    {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/resourcesGestionStore/UpdateProduit.fxml"));
+            Parent root = loader.load();
+
+            UpdateProduitController updateProduitController = loader.getController();
+            updateProduitController.setIdProduit(productId);
+
+
+            Scene scene = NameFX.getScene();
+            scene.setRoot(root);
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     private void loadFXML(String s , int productId)
     {

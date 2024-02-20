@@ -341,6 +341,8 @@ public class AdminDashboardController {
 
     @FXML
     private Pane subpane;
+    @FXML
+    private Pane storeId;
 
     @FXML
     void bars_btn_clicked(MouseEvent event) {
@@ -1038,6 +1040,12 @@ public class AdminDashboardController {
             affichage_events_adstaff.getChildren().setAll(pane);
             Pane pane_event= FXMLLoader.load(getClass().getResource("/gestionequipement/equipement.fxml"));
             EquipmentIdAdminStaff.getChildren().setAll(pane_event);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            Pane pane= FXMLLoader.load(getClass().getResource("/resourcesGestionStore/GetAllProduitClient.fxml"));
+            storeId.getChildren().setAll(pane);
         } catch (IOException e) {
             e.printStackTrace();
         }

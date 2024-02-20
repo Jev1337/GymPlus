@@ -7,37 +7,42 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionStore.PanierController">
+<AnchorPane prefHeight="808.0" prefWidth="1156.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionStore.PanierController">
    <children>
-      <ScrollPane layoutX="2.0" layoutY="35.0" prefHeight="360.0" prefWidth="462.0">
+      <ScrollPane layoutX="23.0" layoutY="146.0" prefHeight="360.0" prefWidth="462.0">
          <content>
-            <GridPane fx:id="GridPanier" alignment="CENTER" hgap="10" prefHeight="0.0" prefWidth="0.0" vgap="10">
-              <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="400.0" vgrow="ALWAYS" />
-              </rowConstraints>
+            <GridPane fx:id="GridPanier" alignment="CENTER" hgap="10" vgap="10">
                <padding>
-                  <Insets bottom="10.0" right="10.0" top="10.0" />
+                  <Insets bottom="10.0" right="10.0" />
                </padding>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
             </GridPane>
          </content>
       </ScrollPane>
-      <Button layoutX="485.0" layoutY="361.0" mnemonicParsing="false" onAction="#ValiderPanier" prefHeight="25.0" prefWidth="102.0" text="Valider Panier" />
-      <Button layoutX="485.0" layoutY="326.0" mnemonicParsing="false" onAction="#ContinuerAchat" text="Continuer Achat" />
-      <Label fx:id="TotalPanierFX" layoutX="485.0" layoutY="242.0" prefHeight="17.0" prefWidth="102.0" text="Total Panier" />
-      <Label layoutX="485.0" layoutY="207.0" prefHeight="17.0" prefWidth="102.0" text="Total Panier :" />
-      <Label alignment="CENTER" layoutX="483.0" layoutY="35.0" prefHeight="25.0" prefWidth="96.0" text="Panier :">
+      <Button layoutX="536.0" layoutY="342.0" mnemonicParsing="false" onAction="#ValiderPanier" prefHeight="25.0" prefWidth="102.0" text="Valider Panier" />
+      <Button layoutX="536.0" layoutY="293.0" mnemonicParsing="false" onAction="#ContinuerAchat" text="Continuer Achat" />
+      <Label fx:id="TotalPanierFX" layoutX="177.0" layoutY="529.0" prefHeight="17.0" prefWidth="102.0" text="Total Panier">
+         <font>
+            <Font size="18.0" />
+         </font></Label>
+      <Label layoutX="44.0" layoutY="529.0" prefHeight="27.0" prefWidth="116.0" text="Total Panier :">
+         <font>
+            <Font size="18.0" />
+         </font></Label>
+      <Label alignment="CENTER" layoutX="206.0" layoutY="34.0" prefHeight="25.0" prefWidth="96.0" text="Panier :">
          <font>
             <Font size="24.0" />
          </font>
       </Label>
-      <Label layoutX="485.0" layoutY="113.0" text="Nombre Articles :" />
-      <Label fx:id="nbArticleFX" layoutX="485.0" layoutY="146.0" prefHeight="17.0" prefWidth="62.0" text="nb" />
-      <Label layoutX="14.0" layoutY="14.0" text="nom Client" />
-      <Label fx:id="nomClientFX" layoutX="86.0" layoutY="14.0" text="nom C" />
-      <Label layoutX="469.0" layoutY="267.0" text="Methode de Paiement :" />
-      <ComboBox fx:id="comboPaiement" layoutX="472.0" layoutY="284.0" onAction="#Select" prefHeight="25.0" prefWidth="116.0" />
+      <Label layoutX="10.0" layoutY="116.0" text="Nombre Articles :" />
+      <Label fx:id="nbArticleFX" layoutX="121.0" layoutY="116.0" prefHeight="17.0" prefWidth="62.0" text="nb" />
+      <Label layoutX="14.0" layoutY="84.0" text="ID Client" />
+      <Label fx:id="nomClientFX" layoutX="128.0" layoutY="84.0" text="nom C" />
+      <Label layoutX="536.0" layoutY="208.0" text="Methode de Paiement :" />
+      <ComboBox fx:id="comboPaiement" layoutX="529.0" layoutY="233.0" onAction="#Select" prefHeight="25.0" prefWidth="116.0" />
    </children>
 </AnchorPane>

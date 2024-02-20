@@ -17,6 +17,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import services.gestionStore.DetailFactureService;
 import services.gestionStore.FactureService;
+import services.gestionStore.PanierService;
 
 import java.io.IOException;
 import java.net.URL;
@@ -48,17 +49,20 @@ public class GetOneFactureController implements Initializable {
     @FXML
     private TableColumn<detailfacture, Integer> nameProdCol;
     private final DetailFactureService dfS = new DetailFactureService();
+    private final PanierService panierService = new PanierService();
 
 
     @FXML
     void Quitter(ActionEvent event)
     {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/resourcesGestionStore/GetAllFacture.fxml"));
+        try
+        {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/resourcesGestionStore/GetAllProduitClient.fxml"));
             Parent root = loader.load();
             idFactureFX.getScene().setRoot(root);
 
-        } catch (IOException e) {
+        } catch (IOException e)
+        {
             throw new RuntimeException(e);
         }
     }
@@ -68,6 +72,7 @@ public class GetOneFactureController implements Initializable {
     {
 
     }
+
     public void setFacture(facture selectedFacture)
     {
         if (selectedFacture != null)
@@ -95,15 +100,12 @@ public class GetOneFactureController implements Initializable {
 
             } catch (SQLException e)
             {
-                // Gérer les exceptions
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Erreur");
                 alert.setHeaderText("Erreur lors du chargement des factures");
                 alert.setContentText("Une erreur s'est produite lors du chargement des factures depuis la base de données.");
                 alert.showAndWait();
             }
-
-
         } else
         {
             // Si la facture est null aff des champs vide
@@ -117,4 +119,6 @@ public class GetOneFactureController implements Initializable {
     {
 
     }
+
 }
+

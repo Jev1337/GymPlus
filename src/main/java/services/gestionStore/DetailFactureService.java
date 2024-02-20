@@ -128,11 +128,22 @@ public class DetailFactureService implements IService {
 
 
     @Override
-    public void delete(int id) throws SQLException {
-
+    public void delete(int id) throws SQLException
+    {
         String sql = "DELETE FROM detailfacture WHERE idDetailFacture = ?";
         PreparedStatement ps = connection.prepareStatement(sql);
         ps.setInt(1, id);
+        ps.executeUpdate();
+    }
+
+
+
+    public void delete(int idDetailFacture, int idFacture) throws SQLException
+    {
+        String sql = "DELETE FROM detailfacture WHERE idDetailFacture = ? AND idFacture = ?";
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ps.setInt(1, idDetailFacture);
+        ps.setInt(2, idFacture);
         ps.executeUpdate();
     }
 

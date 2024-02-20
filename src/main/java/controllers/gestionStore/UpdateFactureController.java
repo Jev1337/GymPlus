@@ -1,5 +1,6 @@
 package controllers.gestionStore;
 
+import controllers.gestionuser.GlobalVar;
 import entities.gestionStore.facture;
 import entities.gestionStore.produit;
 import javafx.collections.FXCollections;
@@ -105,7 +106,8 @@ public class UpdateFactureController implements Initializable {
         {
             idfacture.setText(Integer.toString(selectedFacture.getIdFacture()));
             comboPaiement.setValue(selectedFacture.getMethodeDePaiement());
-            idClient.setText(Integer.toString(selectedFacture.getId()));
+            //idClient.setText(Integer.toString(selectedFacture.getId()));
+            idClient.setText(String.valueOf(GlobalVar.getUser().getId()));
         } else {
             // Si la facture est null aff des champs vide
             idClient.setText("");

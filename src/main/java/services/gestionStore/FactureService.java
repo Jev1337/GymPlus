@@ -99,6 +99,8 @@ public class FactureService implements IService
         }
 
         // Vérifier si l'utilisateur avec l'ID  existe avant d'insérer la facture
+
+
         String checkUserExistsQuery = "SELECT id FROM user WHERE id = ?";
         PreparedStatement checkUserExistsStatement = connection.prepareStatement(checkUserExistsQuery);
         checkUserExistsStatement.setInt(1, p.getId());
@@ -107,6 +109,8 @@ public class FactureService implements IService
         if (!resultSet.next()) {
             throw new SQLException("L'utilisateur avec l'ID spécifié n'existe pas.");
         }
+
+
 
         // Calculer le prix total de la facture
         float prixTotalPaye = p.calculerPrixTotalFacture();
@@ -132,10 +136,55 @@ public class FactureService implements IService
     @Override
     public void delete(int id) throws SQLException
     {
+        // Suppr detail facture
+        //DetailFactureService dfs = new DetailFactureService();
+        //dfs.delete(id);
+
+        /*
+        DetailFactureService dfService = new DetailFactureService();
+        //List<detailfacture> dfS = dfService.getDetailFacture(id);
+        //for (detailfacture df : dfS)
+        facture p = new facture();
+        for (detailfacture df : p.ListeDetails)
+        {
+            dfService.delete(id, df.getIdDetailFacture());
+        }
+
+         */
+
+        // Suppr detail facture
+        /*
+        DetailFactureService dfs = new DetailFactureService();
+        facture p = getOne(id); // Obtenez la facture en fonction de son ID
+        for (detailfacture df : p.ListeDetails) {
+            dfs.delete(df.getIdDetailFacture(), df.getIdFacture());
+        }
+
+        //supp facture
         String sql = "DELETE FROM facture WHERE idFacture = ?";
         PreparedStatement ps = connection.prepareStatement(sql);
         ps.setInt(1, id);
         ps.executeUpdate();
+
+         */
+
+        // Supprimer les détails de la facture liés à la facture spécifiée
+        String sqlDeleteDetail = "DELETE FROM detailfacture WHERE idFacture = ?";
+        try (PreparedStatement psDeleteDetail = connection.prepareStatement(sqlDeleteDetail)) {
+            psDeleteDetail.setInt(1, id);
+            psDeleteDetail.executeUpdate();
+        } catch (SQLException e) {
+            throw new SQLException("Erreur lors de la suppression des détails de la facture.", e);
+        }
+
+        // Supprimer la facture
+        String sqlDeleteFacture = "DELETE FROM facture WHERE idFacture = ?";
+        try (PreparedStatement psDeleteFacture = connection.prepareStatement(sqlDeleteFacture)) {
+            psDeleteFacture.setInt(1, id);
+            psDeleteFacture.executeUpdate();
+        } catch (SQLException e) {
+            throw new SQLException("Erreur lors de la suppression de la facture.", e);
+        }
     }
 
     @Override

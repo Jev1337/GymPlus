@@ -54,6 +54,8 @@ public class UpdateProduitController implements Initializable {
 
     @FXML
     private TextField StockFX;
+    private int productId;
+    private final ProduitService produitService = new ProduitService();
 
     FileChooser filePhoto = new FileChooser();
     public void choisirPhoto(MouseEvent mouseEvent)
@@ -68,17 +70,60 @@ public class UpdateProduitController implements Initializable {
         String s = Categorie_Combo.getSelectionModel().getSelectedItem().toString();
     }
 
-    private final ProduitService produitService = new ProduitService();
+    public void setIdProduit(int productId)
+    {
+        this.productId = productId;
+        ChargerProductDetails();
+    }
+
+    private void ChargerProductDetails()
+    {
+        try {
+            produit p = produitService.getOne(productId);
+            String categorie = p.getCategorie();
+            Categorie_Combo.setValue(categorie);
+            NameFX.setText(p.getName());
+            PrixFX.setText(String.valueOf(p.getPrix()));
+            StockFX.setText(String.valueOf(p.getStock()));
+            SeuilFX.setText(String.valueOf(p.getSeuil()));
+            DescriptionFX.setText(p.getDescription());
+            PhotoPath.setText(p.getPhoto());
+            PromoFX.setText(String.valueOf(p.getPromo()));
+        } catch (SQLException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erreur");
+            alert.setHeaderText("Erreur lors du chargement des détails du produit");
+            alert.setContentText("Une erreur s'est produite lors du chargement des détails du produit.");
+            alert.showAndWait();
+        }
+    }
+
+
     public void Modifier(ActionEvent actionEvent)
     {
         try {
-            produit p3 = new produit(NameFX.getText(),Float.parseFloat(PrixFX.getText()), Integer.parseInt(StockFX.getText()), DescriptionFX.getText(), Categorie_Combo.getValue(), PhotoPath.getText(), Integer.parseInt(SeuilFX.getText()) , Float.parseFloat(PromoFX.getText()));
-            p3.setIdProduit(15);
-            produitService.update(p3);
+            String name = NameFX.getText();
+            float prix = Float.parseFloat(PrixFX.getText());
+            int stock = Integer.parseInt(StockFX.getText());
+            String description = DescriptionFX.getText();
+            String categorie = Categorie_Combo.getValue();
+            String photo = PhotoPath.getText();
+            int seuil = Integer.parseInt(SeuilFX.getText());
+            float promo = Float.parseFloat(PromoFX.getText());
+
+            produit updatedProduct = new produit(name, prix, stock, description, categorie, photo, seuil, promo);
+
+            updatedProduct.setIdProduit(productId);
+            produitService.update(updatedProduct);
+
+
+            //produit p3 = new produit(NameFX.getText(),Float.parseFloat(PrixFX.getText()), Integer.parseInt(StockFX.getText()), DescriptionFX.getText(), Categorie_Combo.getValue(), PhotoPath.getText(), Integer.parseInt(SeuilFX.getText()) , Float.parseFloat(PromoFX.getText()));
+            //p3.setIdProduit(15);
+            //produitService.update(p3);
 
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Information");
-            alert.setContentText("Produit ajoutée avec succès");
+            alert.setContentText("Produit modifie avec succes");
             alert.showAndWait();
 
             //Naviger vers le produit MAJ
@@ -108,8 +153,10 @@ public class UpdateProduitController implements Initializable {
         //filePhoto
         filePhoto.setInitialDirectory(new File("D:\\projet_PI\\GymPlus\\imageProduit"));
 
-        //get 1 produit
-        try {
+        /*
+        //get 1 produit test
+        try
+        {
             produit p = ProdService.getOne(15);
             String categorie = p.getCategorie();
             Categorie_Combo.setValue(categorie);
@@ -130,6 +177,8 @@ public class UpdateProduitController implements Initializable {
             alert.setContentText("Une erreur s'est produite lors du chargement des factures depuis la base de données.");
             alert.showAndWait();
         }
+
+         */
     }
 
 

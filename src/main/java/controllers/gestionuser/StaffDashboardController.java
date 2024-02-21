@@ -16,8 +16,10 @@ import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -44,12 +46,20 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
+import okhttp3.*;
+import org.json.JSONObject;
+import org.opencv.core.*;
+import org.opencv.imgcodecs.Imgcodecs;
+import org.opencv.objdetect.CascadeClassifier;
+import org.opencv.objdetect.Objdetect;
+import org.opencv.videoio.VideoCapture;
 import services.gestionuser.AbonnementService;
 import services.gestionuser.ClientService;
 import services.gestionuser.StaffService;
 
-import java.io.File;
-import java.io.IOException;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.nio.file.Files;
 import java.sql.Date;
 import java.time.LocalDate;
@@ -62,7 +72,7 @@ public class StaffDashboardController {
     private final ClientService clientService = new ClientService();
     private final AbonnementService abonnementService = new AbonnementService();
 
-    private FadeIn[] fadeInAnimation = new FadeIn[7];
+    private FadeIn[] fadeInAnimation = new FadeIn[8];
     private FadeOutRight fadeOutRightAnimation = new FadeOutRight();
     private FadeInRight fadeInRightAnimation = new FadeInRight();
 
@@ -70,6 +80,9 @@ public class StaffDashboardController {
 
     @FXML
     private Button subscription_btn;
+
+    @FXML
+    private Button objective_btn;
 
     @FXML
     private ImageView user_imageview;
@@ -225,6 +238,180 @@ public class StaffDashboardController {
 
     @FXML
     private Pane subpane;
+
+    @FXML
+    private ScrollPane StaffObjectivePane;
+
+    @FXML
+    private ImageView faceid_change;
+    @FXML
+    void faceid_change_clicked(){
+        setFaceID();
+    }
+    String faceId = "";
+    public void setFaceID(){
+        faceid_change.setDisable(true);
+        Dialog<String> alert = new Dialog<>();
+        alert.initStyle(StageStyle.UNDECORATED);
+        alert.setTitle("FaceID Verification");
+        alert.setHeaderText("FaceID Verification");
+        ButtonType okButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+        alert.getDialogPane().getButtonTypes().add(okButton);
+        Label label = new Label("Waiting for camera to initialize...");
+        label.setLayoutX(0);
+        label.setLayoutY(39);
+        label.setPrefWidth(461);
+        label.alignmentProperty().setValue(javafx.geometry.Pos.CENTER);
+        ProgressBar progressBar = new ProgressBar();
+        progressBar.setProgress(ProgressBar.INDETERMINATE_PROGRESS);
+        progressBar.setLayoutX(27);
+        progressBar.setLayoutY(75);
+        progressBar.setPrefWidth(407);
+        progressBar.setPrefHeight(20);
+        alert.getDialogPane().setContent(new Pane(label, progressBar));
+        alert.show();
+
+
+        Task<Void> cameraTask = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                int i = 0;
+                VideoCapture capture = new VideoCapture(0);
+                Mat frame = new Mat();
+                if (capture.isOpened()) {
+                    while (!isCancelled()) {
+                        if (capture.read(frame)) {
+                            if (!frame.empty()) {
+                                if (i == 5)
+                                    break;
+                                i++;
+                                System.out.println("Camera Initialized!");
+                                Platform.runLater(()-> label.setText("Camera Initialized!"));
+                                Thread.sleep(1000);
+                                System.out.println("Capturing Frame...");
+                                Platform.runLater(()-> label.setText("Capturing Frame..."));
+                                Thread.sleep(1000);
+                                MatOfRect facesDetected = new MatOfRect();
+                                CascadeClassifier cascadeClassifier = new CascadeClassifier();
+                                int minFaceSize = Math.round(frame.rows() * 0.1f);
+                                cascadeClassifier.load(getClass().getResource("/assets/haarcascade_frontalface_alt.xml").toURI().getPath().toString().substring(1));
+                                cascadeClassifier.detectMultiScale(frame,
+                                        facesDetected,
+                                        1.1,
+                                        3,
+                                        Objdetect.CASCADE_SCALE_IMAGE,
+                                        new Size(minFaceSize, minFaceSize),
+                                        new Size()
+                                );
+                                Rect[] facesArray = facesDetected.toArray();
+                                if (facesArray.length > 0) {
+                                    System.out.println("Face Found!");
+                                    Platform.runLater(() -> label.setText("Face Found! Verifying..."));
+                                    Platform.runLater(() -> progressBar.setProgress(1));
+
+                                    MatOfByte matOfByte = new MatOfByte();
+                                    Imgcodecs.imencode(".jpg", frame, matOfByte);
+                                    byte[] byteArray = matOfByte.toArray();
+                                    InputStream in = new ByteArrayInputStream(byteArray);
+                                    BufferedImage img = null;
+                                    try {
+                                        img = ImageIO.read(in);
+                                    }catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                                    try {
+                                        ImageIO.write(img, "png", bos);
+                                    }catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+
+                                    byte[] imgBytes = bos.toByteArray();
+
+                                    OkHttpClient client = new OkHttpClient().newBuilder()
+                                            .build();
+                                    MediaType mediaType = MediaType.parse("image/png");
+                                    RequestBody body = new MultipartBody.Builder().setType(MultipartBody.FORM)
+                                            .addFormDataPart("image_file","image.png",
+                                                    RequestBody.create(imgBytes, mediaType))
+                                            .addFormDataPart("api_key","oVAqEDbCYmaILayXJdKAsuYbFcJ0LBP6")
+                                            .addFormDataPart("api_secret","e76obC1xsr-zSMynWZoQCt62vWDgtZ6O")
+                                            .addFormDataPart("return_attributes","emotion")
+                                            .build();
+                                    Request request = new Request.Builder()
+                                            .url("https://api-us.faceplusplus.com/facepp/v3/detect")
+                                            .method("POST", body)
+                                            .build();
+                                    try{
+                                        Response response = client.newCall(request).execute();
+                                        Platform.runLater(() -> {
+                                            try {
+                                                JSONObject jsonObject = new JSONObject(response.body().string());
+                                                faceId = jsonObject.getJSONArray("faces").getJSONObject(0).getString("face_token");
+                                                updateFaceId(faceId);
+                                            }catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+
+                                        });
+                                    }catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                    break;
+                                }
+                                else {
+                                    System.out.println("Face not found ");
+                                    Platform.runLater(() -> label.setText("Face not found! Trying Again..."));
+                                    Thread.sleep(2000);
+                                }
+                            }
+                        }
+                    }
+                }
+                capture.release();
+
+                if(faceId == null || faceId.equals("")){
+                    Platform.runLater(() -> {
+                        Alert alert = new Alert(Alert.AlertType.WARNING);
+                        alert.initStyle(StageStyle.UNDECORATED);
+                        alert.setTitle("Warning");
+                        alert.setHeaderText("Warning");
+                        if (!isCancelled())
+                            alert.setContentText("No face detected! Please try again.");
+                        else
+                            alert.setContentText("Faceid Cancelled!");
+                        alert.show();
+                    });
+                }
+                Platform.runLater(() -> faceid_change.setDisable(false));
+                Platform.runLater(alert::close);
+                return null;
+            }
+
+        };
+
+        Thread cameraThread = new Thread(cameraTask);
+        alert.setOnCloseRequest(e -> {
+            cameraTask.cancel(false);
+        });
+        cameraThread.start();
+
+
+    }
+
+    private void updateFaceId(String faceId) {
+        try {
+            Client client = new Client(GlobalVar.getUser().getId(), GlobalVar.getUser().getUsername(), GlobalVar.getUser().getFirstname(), GlobalVar.getUser().getLastname(), GlobalVar.getUser().getDate_naiss(), GlobalVar.getUser().getPassword(), GlobalVar.getUser().getEmail(), GlobalVar.getUser().getNum_tel(), GlobalVar.getUser().getAdresse(), GlobalVar.getUser().getPhoto(), faceId, new Date(System.currentTimeMillis()).toString());
+            clientService.update(client);
+            GlobalVar.setUser(client);
+            initProfile();
+            notify("FaceID has been updated successfully!");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
     @FXML
     void user_imageview_clicked(MouseEvent event) {
         switchToPane(StaffInfoPane);
@@ -459,7 +646,14 @@ public class StaffDashboardController {
     void subscription_btn_clicked(MouseEvent event) {
         switchToPane(StaffSubscriptionPane);
     }
-
+    @FXML
+    public void objective_btn_act(ActionEvent actionEvent) {
+        switchToPane(StaffObjectivePane);
+    }
+    @FXML
+    public void objective_btn_clicked(MouseEvent mouseEvent) {
+        switchToPane(StaffObjectivePane);
+    }
     private void initDecoratedStage(){
         dragpane.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override
@@ -488,6 +682,7 @@ public class StaffDashboardController {
         StaffEquipmentManagementPane.setFitToWidth(true);
         StaffStorePane.setFitToWidth(true);
         StaffSettingsPane.setFitToWidth(true);
+        StaffObjectivePane.setFitToWidth(true);
     }
     private ScrollPane getCurrentPane(){
         if (StaffHomePane.isVisible())
@@ -504,6 +699,8 @@ public class StaffDashboardController {
             return StaffStorePane;
         if (StaffSettingsPane.isVisible())
             return StaffSettingsPane;
+        if (StaffObjectivePane.isVisible())
+            return StaffObjectivePane;
         return null;
     }
 
@@ -557,6 +754,7 @@ public class StaffDashboardController {
         fadeInAnimation[4] = new FadeIn(subscription_btn);
         fadeInAnimation[5] = new FadeIn(event_btn);
         fadeInAnimation[6] = new FadeIn(equipment_btn);
+        fadeInAnimation[7] = new FadeIn(objective_btn);
     }
     private void visibleAll(){
         home_btn.setVisible(true);
@@ -566,6 +764,7 @@ public class StaffDashboardController {
         subscription_btn.setVisible(true);
         event_btn.setVisible(true);
         equipment_btn.setVisible(true);
+        objective_btn.setVisible(true);
     }
 
     private void invisibleAll(){
@@ -576,6 +775,7 @@ public class StaffDashboardController {
         subscription_btn.setVisible(false);
         event_btn.setVisible(false);
         equipment_btn.setVisible(false);
+        objective_btn.setVisible(false);
     }
     private void nullOpacityAll(){
         home_btn.setOpacity(0);
@@ -585,6 +785,7 @@ public class StaffDashboardController {
         subscription_btn.setOpacity(0);
         event_btn.setOpacity(0);
         equipment_btn.setOpacity(0);
+        objective_btn.setOpacity(0);
     }
     public void searchbarsub_tf_textchanged(KeyEvent keyEvent) {
         initSubList(subtype_cb.getValue(), searchbarsub_tf.getText());
@@ -900,4 +1101,6 @@ public class StaffDashboardController {
         }
         return true;
     }
+
+
 }

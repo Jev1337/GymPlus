@@ -111,6 +111,17 @@
             <artifactId>jackson-databind</artifactId>
             <version>2.15.2</version>
         </dependency>
+            <groupId>com.calendarfx</groupId>
+            <artifactId>view</artifactId>
+            <version>11.12.6</version>
+        </dependency>
+
+        <dependency>
+            <groupId>de.micromata.paypal</groupId>
+            <artifactId>paypal-core</artifactId>
+            <version>0.2</version>
+        </dependency>
+
 
     </dependencies>
     <build>

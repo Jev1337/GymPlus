@@ -39,14 +39,10 @@ public class CommentaireService implements IService {
     @Override
     public void update(Object o) throws SQLException {
         Commentaire c = (Commentaire) o;
-        String sql = "update commentaire set id_comment = ?, user_id = ?, id_post = ?, content = ?, date = ?, likes = ?";
+        String sql = "update commentaire set content = ? where id_comment = ?";
         PreparedStatement ps = connection.prepareStatement(sql);
-        ps.setInt(1, c.getId_comment());
-        ps.setInt(2, c.getUser_id());
-        ps.setInt(3, c.getId_post());
-        ps.setString(4, c.getContent());
-        ps.setDate(4, c.getDate());
-        ps.setInt(5, c.getLikes());
+        ps.setString(1, c.getContent());
+        ps.setInt(2, c.getId_comment());
         ps.executeUpdate();
     }
 

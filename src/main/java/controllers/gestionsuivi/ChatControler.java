@@ -37,7 +37,7 @@ public class ChatControler  {
     @FXML
     void chatGPT(ActionEvent event) {
          String message = textFieldPrompt.getText();
-                               System.out.println("aaaaaaaaaaaaa");
+                               System.out.println("generating .....");
         String url = "https://api.openai.com/v1/chat/completions";
         String apiKey = "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";
         String model = "gpt-3.5-turbo";

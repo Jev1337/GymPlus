@@ -5,6 +5,7 @@ import animatefx.animation.FadeInRight;
 import animatefx.animation.FadeOutRight;
 import atlantafx.base.controls.Message;
 import atlantafx.base.controls.Notification;
+import atlantafx.base.controls.RingProgressIndicator;
 import atlantafx.base.theme.Styles;
 import atlantafx.base.util.Animations;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
@@ -50,8 +51,10 @@ import okhttp3.*;
 import org.json.JSONObject;
 import org.opencv.core.*;
 import org.opencv.imgcodecs.Imgcodecs;
+import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.CascadeClassifier;
 import org.opencv.objdetect.Objdetect;
+import org.opencv.objdetect.QRCodeDetector;
 import org.opencv.videoio.VideoCapture;
 import org.w3c.dom.Text;
 import services.gestionuser.AbonnementService;
@@ -64,6 +67,7 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.file.Files;
 import java.sql.Date;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.List;
@@ -355,7 +359,140 @@ public class AdminDashboardController {
 
     @FXML
     private ImageView faceid_change;
+    @FXML
+    private FontAwesomeIconView verified_icon;
 
+    @FXML
+    private FontAwesomeIconView nonverified_icon;
+
+    @FXML
+    private Label namesub_label;
+
+    @FXML
+    private Label subexpire;
+
+    @FXML
+    private Label subtype;
+
+    @FXML
+    private Label id_label;
+
+    @FXML
+    private Label dobsub_label;
+
+    @FXML
+    private ImageView scanneduser_imageview;
+
+    @FXML
+    private ImageView camerafeed_imageview;
+
+    @FXML
+    private ToggleButton opencam_btn;
+
+    @FXML
+    private Pane qr_pane;
+
+    @FXML
+    private Pane hidepane;
+
+    private VideoCapture capture;
+    private Mat frame;
+
+
+    @FXML
+    private void opencam_btn_act(ActionEvent event){
+        Task<Void> cameraTask = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+
+                capture = new VideoCapture(0);
+                frame = new Mat();
+                if (capture.isOpened()) {
+                    hidepane.setVisible(false);
+                    Mat gray = new Mat();
+                    Mat points = new Mat();
+                    while (opencam_btn.isSelected() && !isCancelled() && getCurrentPane() == AdminSubscriptionPane){
+                        if (capture.read(frame)) {
+                            if (!frame.empty()) {
+                                Imgproc.cvtColor(frame, gray, Imgproc.COLOR_BGR2GRAY);
+                                Imgproc.GaussianBlur(gray, gray, new Size(5, 5), 0);
+                                QRCodeDetector qrCodeDetector = new QRCodeDetector();
+                                String data = qrCodeDetector.detectAndDecode(gray, points);
+                                if (!points.empty() && !data.isEmpty()) {
+                                    //check if data is an int
+                                    if (data.matches("^\\d+$")) {
+                                        Client c = clientService.getUserById(Integer.parseInt(data));
+                                        if (c != null)
+                                            Platform.runLater(() -> {
+                                                namesub_label.setText(c.getLastname() + " " + c.getFirstname());
+                                                id_label.setText(String.valueOf(c.getId()));
+                                                dobsub_label.setText(c.getDate_naiss());
+                                                scanneduser_imageview.setImage(new Image(new File("src/assets/profileuploads/" + c.getPhoto()).toURI().toString()));
+                                                Circle clip = new Circle(scanneduser_imageview.getFitWidth()/2, scanneduser_imageview.getFitHeight()/2, scanneduser_imageview.getFitWidth()/2);
+                                                scanneduser_imageview.setClip(clip);
+                                                scanneduser_imageview.setPreserveRatio(false);
+                                                try {
+                                                    if (abonnementService.isUserSubscribed(c.getId())) {
+                                                        Abonnement abonnement = abonnementService.getCurrentSubscription(c.getId());
+                                                        subexpire.setText(abonnement.getDuree_abon());
+                                                        subtype.setText(abonnement.getType());
+                                                        verified_icon.setVisible(true);
+                                                        nonverified_icon.setVisible(false);
+                                                    }else {
+                                                        subexpire.setText("Not Subscribed");
+                                                        subtype.setText("Not Subscribed");
+                                                        nonverified_icon.setVisible(true);
+                                                        verified_icon.setVisible(false);
+                                                    }
+                                                } catch (SQLException e) {
+                                                    throw new RuntimeException(e);
+                                                }
+                                            });
+
+                                    }
+                                    for (int i = 0; i < points.cols(); i++) {
+                                        Point pt1 = new Point(points.get(0, i));
+                                        Point pt2 = new Point(points.get(0, (i + 1) % 4));
+                                        Imgproc.line(frame, pt1, pt2, new Scalar(255, 0, 0), 3);
+                                    }
+                                }
+                                MatOfByte bytes = new MatOfByte();
+                                Imgcodecs.imencode(".png", frame, bytes);
+                                InputStream inputStream = new ByteArrayInputStream(bytes.toArray());
+                                camerafeed_imageview.setImage(new Image(inputStream));
+                            }
+                        }
+                    }
+                }
+                capture.release();
+                Platform.runLater(() -> {
+                    camerafeed_imageview.setImage(new Image(getClass().getResource("/assets/images/offlinemedia.png").toString()));
+                    if (getCurrentPane() != AdminSubscriptionPane){
+                        opencam_btn.setSelected(false);
+                        opencam_btn.setText("Open Camera");
+                        opencam_btn.setStyle("-color-button-bg: -color-success-4;");
+                    }
+                });
+                return null;
+            }
+        };
+
+        if (opencam_btn.isSelected()){
+            opencam_btn.setText("Close Camera");
+            opencam_btn.setStyle("-color-button-bg: -color-danger-4;");
+            hidepane.setVisible(true);
+            Thread cameraThread = new Thread(cameraTask);
+            cameraThread.setDaemon(true);
+            cameraThread.start();
+        }else {
+            opencam_btn.setText("Open Camera");
+            opencam_btn.setStyle("-color-button-bg: -color-success-4;");
+
+        }
+
+
+
+    }
     @FXML
     void bars_btn_clicked(MouseEvent event) {
         bars_btn.setDisable(true);
@@ -1222,6 +1359,13 @@ public class AdminDashboardController {
         initSubList("All", "");
         initNonSubbedUserList("");
 
+        RingProgressIndicator progressIndicator = new RingProgressIndicator();
+        progressIndicator.setProgress(ProgressIndicator.INDETERMINATE_PROGRESS);
+        progressIndicator.setLayoutX(hidepane.getPrefWidth()/2 - progressIndicator.getPrefWidth()/2 - 12);
+        progressIndicator.setLayoutY(hidepane.getPrefHeight()/2 - progressIndicator.getPrefHeight()/2 - 12);
+        progressIndicator.setPrefWidth(24);
+        progressIndicator.setPrefHeight(24);
+        hidepane.getChildren().add(progressIndicator);
         var warning = new Message("Warning!", "Be careful with the actions you take, they are irreversible! Proceed with caution.");
         warning.getStyleClass().addAll(
                 Styles.WARNING
@@ -1248,9 +1392,9 @@ public class AdminDashboardController {
         List<Abonnement> list = null;
         try {
             if (type == null || type.equals("All"))
-                list = abonnementService.getAll();
+                list = abonnementService.getAllCurrent();
             else
-                list = abonnementService.getAbonnementByType(type);
+                list = abonnementService.getAbonnementByTypeCurrent(type);
             ObservableList<Abonnement> observableList = FXCollections.observableArrayList(list);
             if(search != null && !search.isEmpty()) {
                 for (int i = 0; i < observableList.size(); i++) {

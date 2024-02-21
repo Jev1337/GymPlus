@@ -16,6 +16,7 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -24,7 +25,9 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.RadialGradient?>
 <?import javafx.scene.paint.Stop?>
+<?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane fx:id="mainPane" prefHeight="720.0" prefWidth="1200.0" stylesheets="@../assets/css/font.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionuser.StaffDashboardController">
@@ -75,7 +78,7 @@
                   </Pane>
                   <Pane layoutX="51.0" layoutY="50.0" prefHeight="650.0" prefWidth="1155.0" style="-fx-background-color: #e9ecef;;">
                      <children>
-                        <ScrollPane fx:id="StaffHomePane" prefHeight="646.0" prefWidth="1155.0" style="-fx-border-color: transparent;" visible="false">
+                        <ScrollPane fx:id="StaffHomePane" prefHeight="646.0" prefWidth="1155.0" style="-fx-border-color: transparent;">
                            <content>
                               <Pane prefHeight="758.0" prefWidth="1145.0">
                                  <children>
@@ -268,7 +271,7 @@
                               </Pane>
                            </content>
                         </ScrollPane>
-                        <ScrollPane fx:id="StaffInfoPane" prefHeight="647.0" prefWidth="1155.0">
+                        <ScrollPane fx:id="StaffInfoPane" prefHeight="647.0" prefWidth="1155.0" visible="false">
                            <content>
                               <Pane prefHeight="808.0" prefWidth="1145.0">
                                  <children>
@@ -509,7 +512,7 @@
                         </ScrollPane>
                         <ScrollPane fx:id="StaffSubscriptionPane" prefHeight="646.0" prefWidth="1155.0" visible="false">
                            <content>
-                              <Pane fx:id="subpane" prefHeight="808.0" prefWidth="1156.0">
+                              <Pane fx:id="subpane" prefHeight="1138.0" prefWidth="1156.0">
                                  <children>
                                     <Label layoutX="39.0" layoutY="14.0" style="-fx-text-fill: linear-gradient(to right, #00aaff, #00688b);" text="Staff / Subscriptions">
                                        <font>
@@ -567,6 +570,98 @@
                                                 <Cursor fx:constant="HAND" />
                                              </cursor>
                                           </Button>
+                                       </children>
+                                    </Pane>
+                                    <Pane fx:id="qr_pane" layoutX="44.0" layoutY="615.0" prefHeight="503.0" prefWidth="1082.0" style="-fx-background-color: white; -fx-border-radius: 30px; -fx-background-radius: 30px;">
+                                       <children>
+                                          <ImageView fx:id="camerafeed_imageview" fitHeight="341.0" fitWidth="613.0" layoutX="33.0" layoutY="82.0" pickOnBounds="true">
+                                             <image>
+                                                <Image url="@../assets/images/offlinemedia.png" />
+                                             </image>
+                                          </ImageView>
+                                          <Line endX="8.0" endY="407.0" layoutX="668.0" layoutY="14.0" startX="8.0" startY="70.0" />
+                                          <Label layoutX="33.0" layoutY="24.0" text="QR Scan">
+                                             <font>
+                                                <Font size="22.0" />
+                                             </font>
+                                          </Label>
+                                          <Label layoutX="698.0" layoutY="82.0" text="User Info">
+                                             <font>
+                                                <Font size="22.0" />
+                                             </font>
+                                          </Label>
+                                          <ImageView fx:id="scanneduser_imageview" fitHeight="64.0" fitWidth="65.0" layoutX="730.0" layoutY="130.0" pickOnBounds="true">
+                                             <image>
+                                                <Image url="@../assets/images/user.png" />
+                                             </image></ImageView>
+                                          <Label layoutX="813.0" layoutY="162.0" text="Client">
+                                             <font>
+                                                <Font size="11.0" />
+                                             </font></Label>
+                                          <Label fx:id="namesub_label" layoutX="813.0" layoutY="140.0" text="Full Name" />
+                                          <Label fx:id="id_label" layoutX="967.0" layoutY="140.0" text="12345678" />
+                                          <Label fx:id="dobsub_label" layoutX="961.0" layoutY="160.0" prefHeight="20.0" prefWidth="76.0" text="01/01/1970" textAlignment="CENTER" wrapText="true" />
+                                          <FontAwesomeIconView fx:id="verified_icon" glyphName="CHECK" layoutX="858.0" layoutY="394.0" size="50" text="">
+                                             <fill>
+                                                <RadialGradient centerX="0.5" centerY="0.5" radius="0.5">
+                                                   <stops>
+                                                      <Stop>
+                                                         <color>
+                                                            <Color green="0.6666666865348816" blue="1.0" />
+                                                         </color>
+                                                      </Stop>
+                                                      <Stop offset="0.006711409395973154">
+                                                         <color>
+                                                            <Color green="0.6666666865348816" blue="1.0" />
+                                                         </color>
+                                                      </Stop>
+                                                      <Stop offset="1.0">
+                                                         <color>
+                                                            <Color green="0.40784314274787903" blue="0.545098066329956" />
+                                                         </color>
+                                                      </Stop>
+                                                   </stops>
+                                                </RadialGradient>
+                                             </fill>
+                                          </FontAwesomeIconView>
+                                          <ToggleButton fx:id="opencam_btn" layoutX="33.0" layoutY="440.0" mnemonicParsing="false" onAction="#opencam_btn_act" style="-color-button-bg: -color-success-4; -color-button-fg: white;" text="Open Camera">
+                                             <cursor>
+                                                <Cursor fx:constant="HAND" />
+                                             </cursor>
+                                          </ToggleButton>
+                                          <Pane fx:id="hidepane" layoutX="30.0" layoutY="438.0" prefHeight="40.0" prefWidth="120.0" style="-fx-background-color: white;" visible="false" />
+                                          <Label layoutX="698.0" layoutY="207.0" text="User Subscription Info">
+                                             <font>
+                                                <Font size="22.0" />
+                                             </font>
+                                          </Label>
+                                          <Label layoutX="722.0" layoutY="252.0" text="Subscription Type:" />
+                                          <Label layoutX="722.0" layoutY="272.0" text="Expiration Date:" />
+                                          <Label fx:id="subtype" layoutX="846.0" layoutY="252.0" text="Not Subscribed" />
+                                          <Label fx:id="subexpire" layoutX="833.0" layoutY="272.0" text="Not Subscribed" />
+                                          <FontAwesomeIconView fx:id="nonverified_icon" glyphName="TIMES" layoutX="863.0" layoutY="392.0" size="50" visible="false">
+                                             <fill>
+                                                <RadialGradient centerX="0.5" centerY="0.5" radius="0.5">
+                                                   <stops>
+                                                      <Stop>
+                                                         <color>
+                                                            <Color green="0.6666666865348816" blue="1.0" />
+                                                         </color>
+                                                      </Stop>
+                                                      <Stop offset="0.006711409395973154">
+                                                         <color>
+                                                            <Color red="1.0" />
+                                                         </color>
+                                                      </Stop>
+                                                      <Stop offset="1.0">
+                                                         <color>
+                                                            <Color red="0.5400000214576721" />
+                                                         </color>
+                                                      </Stop>
+                                                   </stops>
+                                                </RadialGradient>
+                                             </fill>
+                                          </FontAwesomeIconView>
                                        </children>
                                     </Pane>
                                  </children>

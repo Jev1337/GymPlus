@@ -999,11 +999,11 @@ public class StaffDashboardController {
         }
         Abonnement abonnement = subscriptionslist_tableview.getSelectionModel().getSelectedItem();
         Date date = null;
-        if (subtypeedit_cb.getValue().equals("GP1"))
+        if (subtypeedit_cb.getValue().equals("GP 1"))
             date = Date.valueOf(LocalDate.now().plusMonths(3));
-        else if (subtypeedit_cb.getValue().equals("GP2"))
+        else if (subtypeedit_cb.getValue().equals("GP 2"))
             date = Date.valueOf(LocalDate.now().plusMonths(6));
-        else if (subtypeedit_cb.getValue().equals("GP3"))
+        else if (subtypeedit_cb.getValue().equals("GP 3"))
             date = Date.valueOf(LocalDate.now().plusMonths(12));
         assert date != null;
         abonnement.setDuree_abon(date.toString());
@@ -1051,11 +1051,11 @@ public class StaffDashboardController {
         Abonnement abonnement = new Abonnement();
         abonnement.setUser_id(userlistsub_tableview.getSelectionModel().getSelectedItem().getId());
         Date date = null;
-        if (subtypeadd_cb.getValue().equals("GP1"))
+        if (subtypeadd_cb.getValue().equals("GP 1"))
             date = Date.valueOf(LocalDate.now().plusMonths(3));
-        else if (subtypeadd_cb.getValue().equals("GP2"))
+        else if (subtypeadd_cb.getValue().equals("GP 2"))
             date = Date.valueOf(LocalDate.now().plusMonths(6));
-        else if (subtypeadd_cb.getValue().equals("GP3"))
+        else if (subtypeadd_cb.getValue().equals("GP 3"))
             date = Date.valueOf(LocalDate.now().plusMonths(12));
         assert date != null;
         abonnement.setDuree_abon(date.toString());
@@ -1086,8 +1086,8 @@ public class StaffDashboardController {
         fadeInRightAnimation.play();
         stat_combobox.getItems().addAll(FXCollections.observableArrayList("Abonnements", "Clients", "Staff"));
         subtype_cb.getItems().addAll(FXCollections.observableArrayList( "All","GP 1", "GP 2", "GP 3"));
-        subtypeadd_cb.getItems().addAll(FXCollections.observableArrayList("GP1", "GP2", "GP3"));
-        subtypeedit_cb.getItems().addAll(FXCollections.observableArrayList("GP1", "GP2", "GP3"));
+        subtypeadd_cb.getItems().addAll(FXCollections.observableArrayList("GP 1", "GP 2", "GP 3"));
+        subtypeedit_cb.getItems().addAll(FXCollections.observableArrayList("GP 1", "GP 2", "GP 3"));
 
         initProfile();
         initCharts();

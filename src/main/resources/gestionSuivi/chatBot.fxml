@@ -39,7 +39,7 @@
             </ImageView>
             <ScrollPane layoutX="-3.0" layoutY="-4.0" stylesheets="@../assets/images/style.css">
                <content>
-                  <VBox fx:id="PromptingVbox" prefHeight="384.0" prefWidth="346.0" styleClass="border-table" stylesheets="@../assets/images/style.css">
+                  <VBox fx:id="PromptingVbox" prefHeight="363.0" prefWidth="327.0" styleClass="border-table" stylesheets="@../assets/images/style.css">
                      <children>
                         <ImageView fitHeight="51.0" fitWidth="56.0" layoutX="30.0" layoutY="29.0" pickOnBounds="true" preserveRatio="true" translateX="150.0" translateY="120.0" x="30.0">
                            <image>
@@ -95,6 +95,9 @@
                   <String fx:value="transparent" />
                   <String fx:value="border-table" />
                </styleClass>
+               <padding>
+                  <Insets left="8.0" top="9.0" />
+               </padding>
             </ScrollPane>
          </children>
       </Pane>
@@ -133,7 +136,7 @@
             </LinearGradient>
          </textFill>
       </Label>
-      <ImageView fitHeight="53.0" fitWidth="54.0" layoutX="6.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="53.0" fitWidth="54.0" layoutX="6.0" layoutY="11.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../assets/images/ChatGPT.png" />
          </image>
@@ -176,7 +179,7 @@
       </Label>
       <ImageView fitHeight="20.0" fitWidth="21.0" layoutX="392.0" layoutY="17.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../assets/images/Privacy%20Policy.png" />
+            <Image url="@../assets/images/Privacy Policy.png" />
          </image>
       </ImageView>
    </children>

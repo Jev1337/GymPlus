@@ -16,7 +16,7 @@
       <Button fx:id="WebButon" layoutX="80.0" layoutY="41.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="59.0" />
       <ImageView fitHeight="25.0" fitWidth="44.0" layoutX="103.0" layoutY="42.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../assets/images/Submit%20for%20Approval.png" />
+            <Image url="@../assets/images/Submit for Approval.png" />
          </image>
       </ImageView>
       <Pane layoutX="24.0" layoutY="74.0" prefHeight="440.0" prefWidth="1041.0">

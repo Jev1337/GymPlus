@@ -24,7 +24,8 @@ import java.util.logging.Logger;
 
 public class ObjectifController  implements Initializable {
 
-
+    @FXML
+    private VBox caloriesPrompted;
     @FXML
     private VBox WarningVbox;
 
@@ -87,6 +88,18 @@ public class ObjectifController  implements Initializable {
 
 
 
+
+    public void refreshNodeCaloriesFx() throws IOException {
+        caloriesPrompted.getChildren().clear();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/gestionSuivi/CaloriesGenerator.fxml"));
+        Node node = loader.load();
+        caloriesPrompted.getChildren().add(node);
+
+
+
+        CaloriesGeneratorController caloriesGeneratorController = loader.getController();
+
+    }
 
 
     public void refreshNodesListeItems() throws IOException {
@@ -177,6 +190,11 @@ public class ObjectifController  implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        try {
+            refreshNodeCaloriesFx();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         refreshNodesWeb();
             refreshNodes();
 

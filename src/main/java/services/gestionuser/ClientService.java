@@ -178,7 +178,8 @@ public class ClientService implements IService<Client> {
         }
 
         return 0;}
-    public List<Client> getNonSubscribedUserList() throws SQLException {
+
+        public List<Client> getNonSubscribedUserList() throws SQLException {
         List<Client> clients = new ArrayList<>();
         String query = "SELECT * FROM user WHERE role = 'client' AND id NOT IN (SELECT user_id FROM abonnement WHERE dateFinAb > NOW())";
         Statement st = connection.createStatement();

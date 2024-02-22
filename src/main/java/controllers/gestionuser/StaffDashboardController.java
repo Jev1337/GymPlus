@@ -629,12 +629,7 @@ public class StaffDashboardController {
                 GlobalVar.setUser(staff);
                 initProfile();
             }
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.initStyle(StageStyle.UNDECORATED);
-            alert.setTitle("Success");
-            alert.setHeaderText("Profile picture updated");
-            alert.setContentText("Your profile picture has been updated successfully");
-            alert.showAndWait();
+            notify("Account has been updated successfully!");
         }catch (Exception e){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.initStyle(StageStyle.UNDECORATED);

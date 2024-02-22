@@ -1689,7 +1689,7 @@ public class AdminDashboardController {
         series2.getData().add(new XYChart.Data<>("GP 2", gp2));
         series2.getData().add(new XYChart.Data<>("GP 3", gp3));
 
-        series2.setName("Monthly Ending Memberships in " + Calendar.getInstance().get(Calendar.YEAR));
+        series2.setName("GP Subscriptions");
         stat_barchart.getData().add(series2);
     }
     private boolean validateEmail(String email){

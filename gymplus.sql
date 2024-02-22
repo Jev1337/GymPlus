@@ -108,6 +108,7 @@ CREATE TABLE `event_details` (
   `type` varchar(255) DEFAULT NULL,
   `event_date` datetime DEFAULT NULL,
   `duree` varchar(255) DEFAULT NULL,
+  `nb_total` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
@@ -234,7 +235,9 @@ ALTER TABLE
 ADD
   PRIMARY KEY (`id`),
 ADD
-  KEY `user_id` (`user_id`);
+  KEY `user_id` (`user_id`),
+ADD
+  KEY `type` (`type`);
 
 --
 -- Indexes for table `abonnement_details`
@@ -388,7 +391,9 @@ MODIFY
 ALTER TABLE
   `abonnement`
 ADD
-  CONSTRAINT `abonnement_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  CONSTRAINT `abonnement_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+ADD
+  CONSTRAINT `abonnement_ibfk_2` FOREIGN KEY (`type`) REFERENCES `abonnement_details` (`name`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Contraintes pour la table `commentaire`

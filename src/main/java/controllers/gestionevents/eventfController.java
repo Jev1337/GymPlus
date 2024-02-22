@@ -18,9 +18,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.Region;
+import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
 import net.glxn.qrgen.core.image.ImageType;
@@ -97,6 +95,20 @@ public class eventfController {
     private Button belt_btn;
     @FXML
     private Button bag_btn;
+    @FXML
+    private Button my_events;
+    @FXML
+    private Button all_events;
+    @FXML
+    private Pane whey_pane;
+    @FXML
+    private Pane belt_pane;
+    @FXML
+    private Pane bag_pane;
+    @FXML
+    private VBox vtable_event;
+
+
     public eventfController() {
         try {
             Connection connection = MyDatabase.getInstance().getConnection();
@@ -114,6 +126,7 @@ public class eventfController {
             e.printStackTrace();
         }
     }
+
     @FXML
     void initialize() {
         try {
@@ -137,6 +150,32 @@ public class eventfController {
         datec.setCellValueFactory(new PropertyValueFactory<>("event_date"));
         durationc.setCellValueFactory(new PropertyValueFactory<>("duree"));
         spotsc.setCellValueFactory(new PropertyValueFactory<>("nb_places"));
+        spotsc.setCellFactory(column -> {
+            return new TableCell<Event_details, Integer>() {
+                private ProgressBar bar = new ProgressBar();
+                {
+                    bar.setPrefWidth(100);
+
+                }
+
+                @Override
+                protected void updateItem(Integer item, boolean empty) {
+                    super.updateItem(item, empty);
+
+                    if (empty || item == null) {
+                        setGraphic(null);
+                    } else {
+
+                        int totalSpots = getTableView().getItems().get(getIndex()).getNb_total();
+                        bar.setProgress((double) (totalSpots - item) / totalSpots);
+                        setGraphic(bar);
+                    }
+                }
+            };
+        });
+
+
+
     }
 
     public boolean hasUserJoinedEvent(int event_id, int user_id) throws SQLException {
@@ -155,7 +194,6 @@ public class eventfController {
         incrementSpotsStatement.setInt(1, eventId);
         incrementSpotsStatement.executeUpdate();
     }
-
 
 
     @FXML
@@ -245,6 +283,7 @@ public class eventfController {
 
 
     }
+
     boolean check_event_date_and_time_passed(int event_id) {
         Connection connection = MyDatabase.getInstance().getConnection();
         try {
@@ -258,7 +297,6 @@ public class eventfController {
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
-
 
 
         }
@@ -332,8 +370,7 @@ public class eventfController {
         event_details.addAll(searchResults);
     }
 
-
-
+    @FXML
     public void go_to_rewards(ActionEvent actionEvent) {
 
         FadeOutRight f = new FadeOutRight(event_pane);
@@ -345,6 +382,8 @@ public class eventfController {
             f2.play();
         });
         f.play();
+
+
     }
 
     @FXML
@@ -368,6 +407,7 @@ public class eventfController {
             f.play();
         }
     }
+
     void update_user_pts(int id, int points) {
         try {
             update_user_ptsStatement.setInt(1, points);
@@ -377,15 +417,16 @@ public class eventfController {
             e.printStackTrace();
         }
     }
+
     @FXML
     public void claim_whey(ActionEvent actionEvent) {
         if (GlobalVar.getUser().getEvent_points() >= 2500) {
             Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
             confirmationAlert.setTitle("Confirmation");
             confirmationAlert.setHeaderText("Are you sure you want to claim GymPlus Whey Protein?");
-            confirmationAlert.setContentText("Remaining Points: " + (GlobalVar.getUser().getEvent_points()-2500));
+            confirmationAlert.setContentText("Remaining Points: " + (GlobalVar.getUser().getEvent_points() - 2500));
             Optional<ButtonType> result = confirmationAlert.showAndWait();
-            if (result.get() == ButtonType.OK){
+            if (result.get() == ButtonType.OK) {
                 GlobalVar.getUser().setEvent_points(GlobalVar.getUser().getEvent_points() - 2500);
                 update_user_pts(GlobalVar.getUser().getId(), GlobalVar.getUser().getEvent_points());
                 points_label.setText("Points: " + GlobalVar.getUser().getEvent_points());
@@ -420,7 +461,7 @@ public class eventfController {
                 ButtonType saveButtonType = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
                 qrCodeAlert.getButtonTypes().setAll(saveButtonType, ButtonType.CANCEL);
                 Optional<ButtonType> qrResult = qrCodeAlert.showAndWait();
-                if (qrResult.get() == saveButtonType){
+                if (qrResult.get() == saveButtonType) {
                     FileChooser fileChooser = new FileChooser();
                     fileChooser.setTitle("Save Image");
                     FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("PNG files (*.png)", "*.png");
@@ -452,9 +493,9 @@ public class eventfController {
             Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
             confirmationAlert.setTitle("Confirmation");
             confirmationAlert.setHeaderText("Are you sure you want to claim GymPlus Weightlifting Belt?");
-            confirmationAlert.setContentText("Remaining Points: " + (GlobalVar.getUser().getEvent_points()-1500));
+            confirmationAlert.setContentText("Remaining Points: " + (GlobalVar.getUser().getEvent_points() - 1500));
             Optional<ButtonType> result = confirmationAlert.showAndWait();
-            if (result.get() == ButtonType.OK){
+            if (result.get() == ButtonType.OK) {
                 GlobalVar.getUser().setEvent_points(GlobalVar.getUser().getEvent_points() - 1500);
                 update_user_pts(GlobalVar.getUser().getId(), GlobalVar.getUser().getEvent_points());
                 points_label.setText("Points: " + GlobalVar.getUser().getEvent_points());
@@ -489,7 +530,7 @@ public class eventfController {
                 ButtonType saveButtonType = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
                 qrCodeAlert.getButtonTypes().setAll(saveButtonType, ButtonType.CANCEL);
                 Optional<ButtonType> qrResult = qrCodeAlert.showAndWait();
-                if (qrResult.get() == saveButtonType){
+                if (qrResult.get() == saveButtonType) {
                     FileChooser fileChooser = new FileChooser();
                     fileChooser.setTitle("Save Image");
                     FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("PNG files (*.png)", "*.png");
@@ -521,10 +562,10 @@ public class eventfController {
             Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
             confirmationAlert.setTitle("Confirmation");
             confirmationAlert.setHeaderText("Are you sure you want to claim GymPlus Gym Bag?");
-            confirmationAlert.setContentText("Remaining Points: " + (GlobalVar.getUser().getEvent_points()-2000));
+            confirmationAlert.setContentText("Remaining Points: " + (GlobalVar.getUser().getEvent_points() - 2000));
 
             Optional<ButtonType> result = confirmationAlert.showAndWait();
-            if (result.get() == ButtonType.OK){
+            if (result.get() == ButtonType.OK) {
                 GlobalVar.getUser().setEvent_points(GlobalVar.getUser().getEvent_points() - 2000);
                 update_user_pts(GlobalVar.getUser().getId(), GlobalVar.getUser().getEvent_points());
                 points_label.setText("Points: " + GlobalVar.getUser().getEvent_points());
@@ -558,7 +599,7 @@ public class eventfController {
                 ButtonType saveButtonType = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
                 qrCodeAlert.getButtonTypes().setAll(saveButtonType, ButtonType.CANCEL);
                 Optional<ButtonType> qrResult = qrCodeAlert.showAndWait();
-                if (qrResult.get() == saveButtonType){
+                if (qrResult.get() == saveButtonType) {
                     FileChooser fileChooser = new FileChooser();
                     fileChooser.setTitle("Save Image");
                     FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("PNG files (*.png)", "*.png");
@@ -584,6 +625,29 @@ public class eventfController {
         }
     }
 
+    @FXML
+    public void my_events_btn(ActionEvent actionEvent) {
+        //update the table and onyl show the events the user participated in
+        List<Event_details> events = eventDetailsService.getEventsByUserId(GlobalVar.getUser().getId());
+        event_details.clear();
+        event_details.addAll(events);
+        event_detailsTableView.setItems(event_details);
+        namec.setCellValueFactory(new PropertyValueFactory<>("name"));
+        typec.setCellValueFactory(new PropertyValueFactory<>("type"));
+        datec.setCellValueFactory(new PropertyValueFactory<>("event_date"));
+        durationc.setCellValueFactory(new PropertyValueFactory<>("duree"));
+        spotsc.setCellValueFactory(new PropertyValueFactory<>("nb_places"));
+
+
+    }
+    @FXML
+    public void all_events_btn(ActionEvent actionEvent) {
+        try {
+            afficher();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
 
 

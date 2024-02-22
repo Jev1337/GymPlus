@@ -166,22 +166,30 @@ public class AuthController {
         if (pwdsu_pf.getText().isEmpty()) {
             pwstrength_progress.setProgress(0);
             pwstrength_label.setText("Password Strength: Poor");
+            return;
         }
-        else if (pwdsu_pf.getText().matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\\W)(?!.* ).{8,16}$")) {
-            pwstrength_label.setText("Password Strength: Strong");
-            pwstrength_progress.setProgress(1);
-            pwstrength_progress.setStyle("-fx-fill: green;");
+        if (pwdsu_pf.getText().length() > 20){
+            pwstrength_label.setText("Password Strength: Invalid Length");
+            pwstrength_progress.setProgress(0);
+            return;
         }
-        else if (pwdsu_pf.getText().matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?!.* ).{8,16}$")){
-            pwstrength_label.setText("Password Strength: Medium");
-            pwstrength_progress.setProgress(0.6);
-            pwstrength_progress.setStyle("-fx-fill: orange;");
-        }
-        else if (pwdsu_pf.getText().matches("^[a-zA-Z0-9]*$")){
+        if (pwdsu_pf.getText().matches("^[a-zA-Z0-9]*$")){
             pwstrength_label.setText("Password Strength: Weak");
             pwstrength_progress.setProgress(0.3);
-            pwstrength_progress.setStyle("-fx-fill: red;");
+            pwstrength_progress.setStyle("-color-progress-bar-fill: red;");
         }
+        if (pwdsu_pf.getText().matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?!.* ).{8,20}$")){
+            pwstrength_label.setText("Password Strength: Medium");
+            pwstrength_progress.setProgress(0.6);
+            pwstrength_progress.setStyle("-color-progress-bar-fill: orange;");
+        }
+
+        if (pwdsu_pf.getText().matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\\W)(?!.* ).{8,20}$")) {
+            pwstrength_label.setText("Password Strength: Strong");
+            pwstrength_progress.setProgress(1);
+            pwstrength_progress.setStyle("-color-progress-bar-fill: green;");
+        }
+
 
 
     }

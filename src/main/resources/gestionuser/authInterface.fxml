@@ -43,11 +43,14 @@
                   <Font size="10.0" />
                </font>
             </Label>
-            <Line endX="-100.0" endY="-8.0" layoutX="208.0" layoutY="247.0" startX="-100.0" startY="-3.0" />
+            <Line endX="-100.0" endY="-8.0" layoutX="209.0" layoutY="247.0" startX="-100.0" startY="-3.0" />
             <Line endX="-118.35400390625" endY="-8.0" layoutX="287.0" layoutY="247.0" startX="-118.35400390625" startY="-3.0" />
             <FontAwesomeIconView glyphName="LOCK" layoutX="231.0" layoutY="226.0" />
             <FontAwesomeIconView glyphName="ENVELOPE" layoutX="229.0" layoutY="113.0" text="" />
             <FontAwesomeIconView glyphName="USER_CIRCLE" layoutX="229.0" layoutY="167.0" />
+            <Line endX="-118.35400390625" endY="-8.0" layoutX="368.0" layoutY="247.0" startX="-118.35400390625" startY="-3.0" />
+            <Line endX="-118.35400390625" endY="-8.0" layoutX="169.0" layoutY="247.0" startX="-118.35400390625" startY="-3.0" />
+            <FontAwesomeIconView glyphName="LOCK" layoutX="231.0" layoutY="296.0" />
          </children>
       </Pane>
       <Pane fx:id="signin_pane" prefHeight="400.0" prefWidth="300.0">
@@ -86,7 +89,7 @@
             </FontAwesomeIconView>
             <Line endX="19.64599609375" layoutX="191.0" layoutY="334.0" startX="-100.0" stroke="#00aaff" />
             <FontAwesomeIconView glyphName="ENVELOPE" layoutX="226.0" layoutY="165.0" text="" />
-            <FontAwesomeIconView glyphName="LOCK" layoutX="227.0" layoutY="216.0" />
+            <FontAwesomeIconView glyphName="LOCK" layoutX="229.0" layoutY="217.0" />
          </children>
       </Pane>
       <Pane fx:id="signin_switch_pane" prefHeight="400.0" prefWidth="300.0" style="-fx-background-color: linear-gradient(to right, #00aaff, #00688b);;" visible="false">

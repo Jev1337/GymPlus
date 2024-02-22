@@ -81,7 +81,7 @@
                   </Pane>
                   <Pane layoutX="51.0" layoutY="50.0" prefHeight="650.0" prefWidth="1155.0" style="-fx-background-color: #e9ecef;;">
                      <children>
-                        <ScrollPane fx:id="AdminHomePane" prefHeight="646.0" prefWidth="1155.0" style="-fx-border-color: transparent;" visible="false">
+                        <ScrollPane fx:id="AdminHomePane" prefHeight="646.0" prefWidth="1155.0" style="-fx-border-color: transparent;">
                            <content>
                               <Pane prefHeight="757.0" prefWidth="1153.0">
                                  <children>
@@ -557,6 +557,7 @@
                                           </Label>
                                           <TextField fx:id="searchbarusersub_tf" layoutX="318.0" layoutY="47.0" onKeyTyped="#searchbarusersub_tf_textchanged" prefHeight="36.0" prefWidth="147.0" promptText="Search" />
                                           <ComboBox fx:id="subtypeadd_cb" layoutX="19.0" layoutY="380.0" prefHeight="36.0" prefWidth="297.0" promptText="Subscription Type" />
+                                          <CheckBox disable="true" layoutX="242.0" layoutY="54.0" mnemonicParsing="false" selected="true" text="Legacy" />
                                        </children>
                                     </Pane>
                                     <Pane layoutX="552.0" layoutY="156.0" prefHeight="432.0" prefWidth="579.0" style="-fx-background-color: white; -fx-border-radius: 30px; -fx-background-radius: 30px;">
@@ -587,6 +588,7 @@
                                                 <Cursor fx:constant="HAND" />
                                              </cursor>
                                           </Button>
+                                          <CheckBox disable="true" layoutX="125.0" layoutY="54.0" mnemonicParsing="false" selected="true" text="Legacy" />
                                        </children>
                                     </Pane>
                                     <Pane fx:id="qr_pane" layoutX="45.0" layoutY="621.0" prefHeight="503.0" prefWidth="1082.0" style="-fx-background-color: white; -fx-border-radius: 30px; -fx-background-radius: 30px;">
@@ -700,16 +702,16 @@
                               </Pane>
                            </content>
                         </ScrollPane>
-                        <ScrollPane fx:id="AdminUserManagementPane" prefHeight="646.0" prefWidth="1155.0" vvalue="1.0">
+                        <ScrollPane fx:id="AdminUserManagementPane" prefHeight="646.0" prefWidth="1155.0" visible="false">
                            <content>
-                              <Pane prefHeight="1365.0" prefWidth="1147.0">
+                              <Pane fx:id="usermgmt_pane" prefHeight="1130.0" prefWidth="1147.0">
                                  <children>
                                     <Label layoutX="39.0" layoutY="14.0" style="-fx-text-fill: linear-gradient(to right, #00aaff, #00688b);" text="Admin / User Management">
                                        <font>
                                           <Font name="Open Sans Regular" size="16.0" />
                                        </font>
                                     </Label>
-                                    <Pane layoutX="29.0" layoutY="105.0" prefHeight="448.0" prefWidth="1079.0" style="-fx-background-color: white; -fx-border-radius: 30px; -fx-background-radius: 30px;">
+                                    <Pane layoutX="35.0" layoutY="143.0" prefHeight="448.0" prefWidth="1079.0" style="-fx-background-color: white; -fx-border-radius: 30px; -fx-background-radius: 30px;">
                                        <children>
                                           <Label layoutX="22.0" layoutY="22.0" text="Add User to Database">
                                              <font>
@@ -755,9 +757,9 @@
                                           </Button>
                                        </children>
                                     </Pane>
-                                    <Pane layoutX="28.0" layoutY="578.0" prefHeight="448.0" prefWidth="1069.0" style="-fx-background-color: white; -fx-border-radius: 30px; -fx-background-radius: 30px;">
+                                    <Pane layoutX="34.0" layoutY="616.0" prefHeight="448.0" prefWidth="1069.0" style="-fx-background-color: white; -fx-border-radius: 30px; -fx-background-radius: 30px;">
                                        <children>
-                                          <TableView fx:id="userlist_tableview" layoutX="16.0" layoutY="111.0" prefHeight="274.0" prefWidth="1039.0" style="-fx-background-color: #e8ecfc;">
+                                          <TableView fx:id="userlist_tableview" layoutX="16.0" layoutY="111.0" prefHeight="274.0" prefWidth="1039.0" style="-fx-background-color: #e8ecfc;" visible="false">
                                             <columns>
                                               <TableColumn fx:id="cincol" prefWidth="133.0" text="CIN" />
                                               <TableColumn fx:id="emailcol" minWidth="2.0" prefWidth="148.0" text="Email" />
@@ -770,7 +772,7 @@
                                                 <TableColumn fx:id="acctypecol" prefWidth="123.0" text="Account Type" />
                                             </columns>
                                           </TableView>
-                                          <Button fx:id="manageacc_btn" layoutX="922.0" layoutY="398.0" mnemonicParsing="false" onAction="#manageacc_btn_act" text="Manage Account">
+                                          <Button fx:id="manageacc_btn" layoutX="922.0" layoutY="398.0" mnemonicParsing="false" onAction="#manageacc_btn_act" text="Manage Account" visible="false">
                                              <cursor>
                                                 <Cursor fx:constant="HAND" />
                                              </cursor></Button>
@@ -781,13 +783,18 @@
                                           </Label>
                                           <ComboBox fx:id="type_cb" layoutX="916.0" layoutY="59.0" onAction="#type_cb_act" prefHeight="36.0" prefWidth="139.0" promptText="All" />
                                           <TextField fx:id="searchbar_tf" layoutX="754.0" layoutY="59.0" onKeyTyped="#searchbar_tf_textchanged" prefHeight="36.0" prefWidth="147.0" promptText="Search..." />
+                                          <CheckBox fx:id="legacycheck" layoutX="674.0" layoutY="66.0" mnemonicParsing="false" onAction="#legacycheck_act" text="Legacy">
+                                             <cursor>
+                                                <Cursor fx:constant="HAND" />
+                                             </cursor>
+                                          </CheckBox>
+                                          <ScrollPane fx:id="userlist_scrollpane" layoutX="15.0" layoutY="111.0" prefHeight="321.0" prefWidth="1040.0">
+                                             <content>
+                                                <VBox fx:id="userlist_vbox" prefHeight="321.0" prefWidth="1040.0" />
+                                             </content>
+                                          </ScrollPane>
                                        </children>
                                     </Pane>
-                                    <ScrollPane layoutX="36.0" layoutY="1049.0" prefHeight="284.0" prefWidth="1066.0">
-                                       <content>
-                                          <VBox fx:id="userlist_vbox" prefHeight="282.0" prefWidth="1066.0" />
-                                       </content>
-                                    </ScrollPane>
                                  </children>
                               </Pane>
                            </content>

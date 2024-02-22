@@ -24,6 +24,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.chart.BarChart;
@@ -31,18 +32,18 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -74,6 +75,8 @@ import java.util.List;
 
 public class AdminDashboardController {
 
+    private User managedSelectedUser;
+
     private final AdminService adminService = new AdminService();
     final Notification msg = new Notification();
     private final StaffService staffService = new StaffService();
@@ -83,6 +86,14 @@ public class AdminDashboardController {
     private FadeOutRight fadeOutRightAnimation = new FadeOutRight();
     private FadeInRight fadeInRightAnimation = new FadeInRight();
 
+
+    @FXML
+    private ScrollPane userlist_scrollpane;
+    @FXML
+    private CheckBox legacycheck;
+
+    @FXML
+    private Pane usermgmt_pane;
 
     @FXML
     private ScrollPane AdminBlogPane;
@@ -395,8 +406,13 @@ public class AdminDashboardController {
     @FXML
     private Pane hidepane;
 
+    @FXML
+    private VBox userlist_vbox;
+
     private VideoCapture capture;
     private Mat frame;
+
+
 
 
     @FXML
@@ -713,26 +729,25 @@ public class AdminDashboardController {
     private void updateFaceId(String faceId) {
 
         try {
-            User user = userlist_tableview.getSelectionModel().getSelectedItem();
-            if(user == null) {
+            if(managedSelectedUser == null) {
                 GlobalVar.getUser().setFaceid(faceId);
                 GlobalVar.getUser().setFaceid_ts(new Date(System.currentTimeMillis()).toString());
                 initProfile();
             }
             else {
-                user.setFaceid(faceId);
-                user.setFaceid_ts(new Date(System.currentTimeMillis()).toString());
-                switch (user.getRole()) {
+                managedSelectedUser.setFaceid(faceId);
+                managedSelectedUser.setFaceid_ts(new Date(System.currentTimeMillis()).toString());
+                switch (managedSelectedUser.getRole()) {
                     case "client" -> {
-                        Client client = (Client) user;
+                        Client client = (Client) managedSelectedUser;
                         clientService.update(client);
                     }
                     case "staff" -> {
-                        Staff staff = (Staff) user;
+                        Staff staff = (Staff) managedSelectedUser;
                         staffService.update(staff);
                     }
                     case "admin" -> {
-                        Admin admin = (Admin) user;
+                        Admin admin = (Admin) managedSelectedUser;
                         adminService.update(admin);
                     }
                 }
@@ -1025,7 +1040,7 @@ public class AdminDashboardController {
     }
 
     public void deleteaccmanage_btn(ActionEvent actionEvent) {
-        deleteAcc(userlist_tableview.getSelectionModel().getSelectedItem());
+        deleteAcc(managedSelectedUser);
         switchToPane(AdminUserManagementPane);
     }
 
@@ -1053,23 +1068,22 @@ public class AdminDashboardController {
         if (!validateText(username_tf.getText()))
             return;
         try {
-            User user = userlist_tableview.getSelectionModel().getSelectedItem();
             if (profilepic_pf.getText().isEmpty()) {
-                if (user.getRole().equals("client")){
-                    clientService.update(new Client(user.getId(), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), dateofbirth_tf.getValue().toString(), user.getPassword(), email_tf.getText(), phone_tf.getText(), address_ta.getText(), user.getPhoto(),user.getFaceid(), user.getFaceid_ts()));
-                }else if (user.getRole().equals("staff")) {
-                    staffService.update(new Staff(user.getId(), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), dateofbirth_tf.getValue().toString(), user.getPassword(), email_tf.getText(), phone_tf.getText(), address_ta.getText(), user.getPhoto(), user.getFaceid(), user.getFaceid_ts()));
-                }else if (user.getRole().equals("admin")) {
-                    adminService.update(new Admin(user.getId(), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), dateofbirth_tf.getValue().toString(), user.getPassword(), email_tf.getText(), phone_tf.getText(), address_ta.getText(), user.getPhoto(), user.getFaceid(), user.getFaceid_ts()));
+                if (managedSelectedUser.getRole().equals("client")){
+                    clientService.update(new Client(managedSelectedUser.getId(), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), dateofbirth_tf.getValue().toString(), managedSelectedUser.getPassword(), email_tf.getText(), phone_tf.getText(), address_ta.getText(), managedSelectedUser.getPhoto(),managedSelectedUser.getFaceid(), managedSelectedUser.getFaceid_ts()));
+                }else if (managedSelectedUser.getRole().equals("staff")) {
+                    staffService.update(new Staff(managedSelectedUser.getId(), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), dateofbirth_tf.getValue().toString(), managedSelectedUser.getPassword(), email_tf.getText(), phone_tf.getText(), address_ta.getText(), managedSelectedUser.getPhoto(), managedSelectedUser.getFaceid(), managedSelectedUser.getFaceid_ts()));
+                }else if (managedSelectedUser.getRole().equals("admin")) {
+                    adminService.update(new Admin(managedSelectedUser.getId(), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), dateofbirth_tf.getValue().toString(), managedSelectedUser.getPassword(), email_tf.getText(), phone_tf.getText(), address_ta.getText(), managedSelectedUser.getPhoto(), managedSelectedUser.getFaceid(), managedSelectedUser.getFaceid_ts()));
                 }
-                user.setUsername(username_tf.getText());
-                user.setFirstname(firstname_tf.getText());
-                user.setLastname(lastname_tf.getText());
-                user.setDate_naiss(dateofbirth_tf.getValue().toString());
-                user.setEmail(email_tf.getText());
-                user.setNum_tel(phone_tf.getText());
-                user.setAdresse(address_ta.getText());
-                initProfileTemp(user);
+                managedSelectedUser.setUsername(username_tf.getText());
+                managedSelectedUser.setFirstname(firstname_tf.getText());
+                managedSelectedUser.setLastname(lastname_tf.getText());
+                managedSelectedUser.setDate_naiss(dateofbirth_tf.getValue().toString());
+                managedSelectedUser.setEmail(email_tf.getText());
+                managedSelectedUser.setNum_tel(phone_tf.getText());
+                managedSelectedUser.setAdresse(address_ta.getText());
+                initProfileTemp(managedSelectedUser);
 
             }else{
                 File file = new File(profilepic_pf.getText());
@@ -1083,25 +1097,25 @@ public class AdminDashboardController {
                     return;
                 }
                 userprofile_imageview.setImage(null);
-                File oldFile = new File("src/assets/profileuploads/" +user.getPhoto());
+                File oldFile = new File("src/assets/profileuploads/" +managedSelectedUser.getPhoto());
                 oldFile.delete();
-                Files.copy(file.toPath(), new File("src/assets/profileuploads/USERIMG"+ user.getId() + file.getName().substring(file.getName().lastIndexOf("."))).toPath());
-                if (acctypecol.getCellData(userlist_tableview.getSelectionModel().getSelectedIndex()) == null){
-                    clientService.update(new Client(user.getId(), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), dateofbirth_tf.getValue().toString(), user.getPassword(), email_tf.getText(), phone_tf.getText(), address_ta.getText(), user.getPhoto(),user.getFaceid(), user.getFaceid_ts()));
-                }else if (acctypecol.getCellData(userlist_tableview.getSelectionModel().getSelectedIndex()).equals("staff")) {
-                    staffService.update(new Staff(user.getId(), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), dateofbirth_tf.getValue().toString(), user.getPassword(), email_tf.getText(), phone_tf.getText(), address_ta.getText(), user.getPhoto(), user.getFaceid(), user.getFaceid_ts()));
-                }else if (acctypecol.getCellData(userlist_tableview.getSelectionModel().getSelectedIndex()).equals("admin")) {
-                    adminService.update(new Admin(user.getId(), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), dateofbirth_tf.getValue().toString(), user.getPassword(), email_tf.getText(), phone_tf.getText(), address_ta.getText(), user.getPhoto(), user.getFaceid(), user.getFaceid_ts()));
+                Files.copy(file.toPath(), new File("src/assets/profileuploads/USERIMG"+ managedSelectedUser.getId() + file.getName().substring(file.getName().lastIndexOf("."))).toPath());
+                if (managedSelectedUser.getRole().equals("client")){
+                    clientService.update(new Client(managedSelectedUser.getId(), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), dateofbirth_tf.getValue().toString(), managedSelectedUser.getPassword(), email_tf.getText(), phone_tf.getText(), address_ta.getText(), managedSelectedUser.getPhoto(),managedSelectedUser.getFaceid(), managedSelectedUser.getFaceid_ts()));
+                }else if (managedSelectedUser.getRole().equals("staff")) {
+                    staffService.update(new Staff(managedSelectedUser.getId(), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), dateofbirth_tf.getValue().toString(), managedSelectedUser.getPassword(), email_tf.getText(), phone_tf.getText(), address_ta.getText(), managedSelectedUser.getPhoto(), managedSelectedUser.getFaceid(), managedSelectedUser.getFaceid_ts()));
+                }else if (managedSelectedUser.getRole().equals("admin")) {
+                    adminService.update(new Admin(managedSelectedUser.getId(), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), dateofbirth_tf.getValue().toString(), managedSelectedUser.getPassword(), email_tf.getText(), phone_tf.getText(), address_ta.getText(), managedSelectedUser.getPhoto(), managedSelectedUser.getFaceid(), managedSelectedUser.getFaceid_ts()));
                 }
-                user.setUsername(username_tf.getText());
-                user.setFirstname(firstname_tf.getText());
-                user.setLastname(lastname_tf.getText());
-                user.setDate_naiss(dateofbirth_tf.getValue().toString());
-                user.setEmail(email_tf.getText());
-                user.setNum_tel(phone_tf.getText());
-                user.setAdresse(address_ta.getText());
-                user.setPhoto("USERIMG"+ user.getId() + file.getName().substring(file.getName().lastIndexOf(".")));
-                initProfileTemp(user);
+                managedSelectedUser.setUsername(username_tf.getText());
+                managedSelectedUser.setFirstname(firstname_tf.getText());
+                managedSelectedUser.setLastname(lastname_tf.getText());
+                managedSelectedUser.setDate_naiss(dateofbirth_tf.getValue().toString());
+                managedSelectedUser.setEmail(email_tf.getText());
+                managedSelectedUser.setNum_tel(phone_tf.getText());
+                managedSelectedUser.setAdresse(address_ta.getText());
+                managedSelectedUser.setPhoto("USERIMG"+ managedSelectedUser.getId() + file.getName().substring(file.getName().lastIndexOf(".")));
+                initProfileTemp(managedSelectedUser);
 
             }
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -1335,6 +1349,18 @@ public class AdminDashboardController {
             return;
         }
     }
+    @FXML
+    private void legacycheck_act(ActionEvent actionEvent) {
+        if (legacycheck.isSelected()) {
+            userlist_tableview.setVisible(true);
+            manageacc_btn.setVisible(true);
+            userlist_scrollpane.setVisible(false);
+        }else {
+            userlist_tableview.setVisible(false);
+            manageacc_btn.setVisible(false);
+            userlist_scrollpane.setVisible(true);
+        }
+    }
     private double xOffset = 0;
     private double yOffset = 0;
     public void initialize() {
@@ -1358,6 +1384,8 @@ public class AdminDashboardController {
         initUserList(-1, "");
         initSubList("All", "");
         initNonSubbedUserList("");
+        initWarning(subpane);
+        initWarning(usermgmt_pane);
 
         RingProgressIndicator progressIndicator = new RingProgressIndicator();
         progressIndicator.setProgress(ProgressIndicator.INDETERMINATE_PROGRESS);
@@ -1366,16 +1394,7 @@ public class AdminDashboardController {
         progressIndicator.setPrefWidth(24);
         progressIndicator.setPrefHeight(24);
         hidepane.getChildren().add(progressIndicator);
-        var warning = new Message("Warning!", "Be careful with the actions you take, they are irreversible! Proceed with caution.");
-        warning.getStyleClass().addAll(
-                Styles.WARNING
-        );
-        warning.setLayoutX(50);
-        warning.setLayoutY(50);
-        warning.setPrefWidth(1075);
-        if (!subpane.getChildren().contains(warning)) {
-            subpane.getChildren().add(warning);
-        }
+
 
         try {
             Pane pane= FXMLLoader.load(getClass().getResource("/gestionevents/eventstaffadmin.fxml"));
@@ -1386,6 +1405,17 @@ public class AdminDashboardController {
             e.printStackTrace();
         }
 
+    }
+
+    private void initWarning(Pane pane){
+        var warning = new Message("Warning!", "Be careful with the actions you take, they are irreversible! Proceed with caution.");
+        warning.getStyleClass().addAll(
+                Styles.WARNING
+        );
+        warning.setLayoutX(50);
+        warning.setLayoutY(50);
+        warning.setPrefWidth(1045);
+        pane.getChildren().add(warning);
     }
 
     private void initSubList(String type, String search){
@@ -1469,6 +1499,7 @@ public class AdminDashboardController {
         AdminStorePane.setFitToWidth(true);
         AdminSettingsPane.setFitToWidth(true);
         AdminUserManagementPane.setFitToWidth(true);
+        userlist_scrollpane.setFitToWidth(true);
     }
     private ScrollPane getCurrentPane(){
         if(AdminHomePane.isVisible())
@@ -1632,6 +1663,7 @@ public class AdminDashboardController {
     }
 
     private void initProfileTemp(User user){
+        managedSelectedUser = user;
         goback_btn.setVisible(true);
         deleteacc_btn.setVisible(false);
         saveacc_btn.setVisible(false);
@@ -1721,7 +1753,7 @@ public class AdminDashboardController {
         ObservableList<User> obs = FXCollections.observableArrayList(users);
         if (condition != null && !condition.isEmpty()) {
             for (int i = 0; i < obs.size(); i++) {
-                if (!obs.get(i).getUsername().contains(condition)) {
+                if (!String.valueOf(obs.get(i).getId()).contains(condition) && !obs.get(i).getUsername().contains(condition) && !obs.get(i).getFirstname().contains(condition) && !obs.get(i).getLastname().contains(condition) && !obs.get(i).getEmail().contains(condition) && !obs.get(i).getAdresse().contains(condition) && !obs.get(i).getNum_tel().contains(condition) && !obs.get(i).getRole().contains(condition) && !obs.get(i).getDate_naiss().contains(condition)){
                     obs.remove(i);
                     i--;
                 }
@@ -1737,6 +1769,108 @@ public class AdminDashboardController {
         addresscol.setCellValueFactory(new PropertyValueFactory<>("adresse"));
         acctypecol.setCellValueFactory(new PropertyValueFactory<>("role"));
         phonenumbercol.setCellValueFactory(new PropertyValueFactory<>("num_tel"));
+
+        //clear the vbox
+        userlist_vbox.getChildren().clear();
+        for (User user : users) {
+            // apply condition
+            if (condition != null && !condition.isEmpty()) {
+                if (!String.valueOf(user.getId()).contains(condition) && !user.getUsername().contains(condition) && !user.getFirstname().contains(condition) && !user.getLastname().contains(condition) && !user.getEmail().contains(condition) && !user.getAdresse().contains(condition) && !user.getNum_tel().contains(condition) && !user.getRole().contains(condition) && !user.getDate_naiss().contains(condition)) {
+                    continue;
+                }
+            }
+            if (type == 0 && !user.getRole().equals("admin"))
+                continue;
+            if (type == 1 && !user.getRole().equals("staff"))
+                continue;
+            if (type == 2 && !user.getRole().equals("client"))
+                continue;
+            HBox hBox = new HBox();
+            hBox.setSpacing(10);
+            hBox.setPadding(new Insets(10, 10, 10, 10));
+            hBox.setStyle("-fx-background-color: #f4f4f4; -fx-border-radius: 10px; -fx-background-radius: 10px;");
+            hBox.setAlignment(Pos.CENTER_LEFT);
+            hBox.setPrefHeight(100);
+            hBox.setCursor(Cursor.HAND);
+            hBox.setOnMouseEntered(e -> {
+                hBox.setStyle("-fx-background-color: #e4e4e4; -fx-border-radius: 10px; -fx-background-radius: 10px;");
+            });
+            hBox.setOnMouseExited(e -> {
+                hBox.setStyle("-fx-background-color: #f4f4f4; -fx-border-radius: 10px; -fx-background-radius: 10px;");
+            });
+            hBox.setOnMouseClicked(e -> {
+                if (user.getId() == GlobalVar.getUser().getId()){
+                    //This is your own account, would you like to go to your own profile instead?
+                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                    alert.initStyle(StageStyle.UNDECORATED);
+                    alert.setTitle("Confirmation");
+                    alert.setHeaderText("This is your own account");
+                    alert.setContentText("Would you like to go to your own profile instead?");
+                    alert.showAndWait();
+                    if (alert.getResult() == ButtonType.OK) {
+                        initProfile();
+                        switchToPane(AdminInfoPane);
+                    }
+                }else {
+                    initProfileTemp(user);
+                    switchToPane(AdminInfoPane);
+                }
+            });
+            ImageView imageView = new ImageView(new Image(new File("src/assets/profileuploads/" + user.getPhoto()).toURI().toString()));
+            imageView.setFitWidth(80);
+            imageView.setFitHeight(80);
+            imageView.setPreserveRatio(false);
+            imageView.setClip(new Circle(imageView.getFitWidth()/2, imageView.getFitHeight()/2, imageView.getFitWidth()/2));
+            hBox.getChildren().add(imageView);
+            //vbox
+            VBox vBox1 = new VBox();
+            vBox1.setSpacing(5);
+            vBox1.setPadding(new Insets(5, 5, 5, 5));
+            vBox1.setAlignment(Pos.CENTER_LEFT);
+            vBox1.setPrefWidth(375);
+            vBox1.setPrefHeight(100);
+            //we have to fill the vbox with the user's info
+            Label username = new Label(user.getUsername());
+            username.setFont(new Font("System", 20));
+            Label role = new Label(user.getRole());
+            role.setFont(new Font("System", 15));
+            Label email = new Label(user.getEmail());
+            email.setFont(new Font("System", 15));
+            vBox1.getChildren().addAll(username, role, email);
+            hBox.getChildren().add(vBox1);
+
+            VBox vBox2 = new VBox();
+            vBox2.setSpacing(5);
+            vBox2.setPadding(new Insets(5, 5, 5, 5));
+            vBox2.setAlignment(Pos.CENTER_LEFT);
+            vBox2.setPrefWidth(375);
+            vBox2.setPrefHeight(100);
+            //we have to fill the vbox with the user's info
+            Label id = new Label("CIN: " +String.valueOf(user.getId()));
+            id.setFont(new Font("System", 20));
+            Label name = new Label("Name: " + user.getFirstname() + " " + user.getLastname());
+            name.setFont(new Font("System", 15));
+            Label dob = new Label("Date of birth: " + user.getDate_naiss());
+            dob.setFont(new Font("System", 15));
+            vBox2.getChildren().addAll(id, name, dob);
+            hBox.getChildren().add(vBox2);
+
+            VBox vBox3 = new VBox();
+            vBox3.setSpacing(5);
+            vBox3.setPadding(new Insets(5, 5, 5, 5));
+            vBox3.setAlignment(Pos.CENTER_LEFT);
+            vBox3.setPrefWidth(375);
+            vBox3.setPrefHeight(100);
+            //we have to fill the vbox with the user's info
+            Label phone = new Label("Phone: " + user.getNum_tel());
+            phone.setFont(new Font("System", 15));
+            Label address = new Label("Address: " + user.getAdresse());
+            address.setFont(new Font("System", 15));
+            vBox3.getChildren().addAll(phone, address);
+            hBox.getChildren().add(vBox3);
+
+            userlist_vbox.getChildren().add(hBox);
+        }
     }
 
     private void initNonSubbedUserList(String condition) {

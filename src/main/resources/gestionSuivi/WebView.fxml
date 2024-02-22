@@ -9,14 +9,14 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.web.WebView?>
 
-<AnchorPane prefHeight="532.0" prefWidth="1092.0" stylesheets="@../images/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionsuivi.WebViewController">
+<AnchorPane prefHeight="532.0" prefWidth="1092.0" stylesheets="@../assets/images/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionsuivi.WebViewController">
    <children>
       <Button fx:id="RefreshButton" layoutX="28.0" layoutY="41.0" mnemonicParsing="false" onAction="#refreshPage" prefHeight="25.0" prefWidth="53.0" />
       <TextField fx:id="WebTextField" layoutX="141.0" layoutY="42.0" prefHeight="25.0" prefWidth="925.0" />
       <Button fx:id="WebButon" layoutX="80.0" layoutY="41.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="59.0" />
       <ImageView fitHeight="25.0" fitWidth="44.0" layoutX="103.0" layoutY="42.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../images/Submit%20for%20Approval.png" />
+            <Image url="@../assets/images/Submit for Approval.png" />
          </image>
       </ImageView>
       <Pane layoutX="24.0" layoutY="74.0" prefHeight="440.0" prefWidth="1041.0">
@@ -26,7 +26,7 @@
       </Pane>
       <ImageView fitHeight="19.0" fitWidth="19.0" layoutX="44.0" layoutY="44.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../images/Refresh.png" />
+            <Image url="@../assets/images/Refresh.png" />
          </image>
       </ImageView>
    </children>

@@ -18,15 +18,19 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.RadialGradient?>
 <?import javafx.scene.paint.Stop?>
+<?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane fx:id="mainPane" prefHeight="720.0" prefWidth="1200.0" stylesheets="@../assets/css/font.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionuser.AdminDashboardController">
@@ -397,6 +401,19 @@
                                              <cursor>
                                                 <Cursor fx:constant="HAND" />
                                              </cursor></Button>
+                                          <ImageView fx:id="faceid_change" fitHeight="33.0" fitWidth="31.0" layoutX="529.0" layoutY="12.0" onMouseClicked="#faceid_change_clicked" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../assets/images/Face_ID_logo.svg.png" />
+                                             </image>
+                                             <cursor>
+                                                <Cursor fx:constant="HAND" />
+                                             </cursor>
+                                          </ImageView>
+                                          <Label layoutX="530.0" layoutY="43.0" text="Update">
+                                             <font>
+                                                <Font size="9.0" />
+                                             </font>
+                                          </Label>
                                        </children>
                                     </Pane>
                                     <Pane layoutX="92.0" layoutY="420.0" prefHeight="190.0" prefWidth="363.0" style="-fx-background-color: white; -fx-border-radius: 30px; -fx-background-radius: 30px;">
@@ -512,7 +529,7 @@
                         </ScrollPane>
                         <ScrollPane fx:id="AdminSubscriptionPane" prefHeight="646.0" prefWidth="1155.0" visible="false">
                            <content>
-                              <Pane fx:id="subpane" prefHeight="637.0" prefWidth="1156.0">
+                              <Pane fx:id="subpane" prefHeight="1138.0" prefWidth="1156.0">
                                  <children>
                                     <Label layoutX="39.0" layoutY="14.0" style="-fx-text-fill: linear-gradient(to right, #00aaff, #00688b);" text="Admin / Subscriptions">
                                        <font>
@@ -540,6 +557,7 @@
                                           </Label>
                                           <TextField fx:id="searchbarusersub_tf" layoutX="318.0" layoutY="47.0" onKeyTyped="#searchbarusersub_tf_textchanged" prefHeight="36.0" prefWidth="147.0" promptText="Search" />
                                           <ComboBox fx:id="subtypeadd_cb" layoutX="19.0" layoutY="380.0" prefHeight="36.0" prefWidth="297.0" promptText="Subscription Type" />
+                                          <CheckBox disable="true" layoutX="242.0" layoutY="54.0" mnemonicParsing="false" selected="true" text="Legacy" />
                                        </children>
                                     </Pane>
                                     <Pane layoutX="552.0" layoutY="156.0" prefHeight="432.0" prefWidth="579.0" style="-fx-background-color: white; -fx-border-radius: 30px; -fx-background-radius: 30px;">
@@ -570,6 +588,101 @@
                                                 <Cursor fx:constant="HAND" />
                                              </cursor>
                                           </Button>
+                                          <CheckBox disable="true" layoutX="125.0" layoutY="54.0" mnemonicParsing="false" selected="true" text="Legacy" />
+                                       </children>
+                                    </Pane>
+                                    <Pane fx:id="qr_pane" layoutX="45.0" layoutY="621.0" prefHeight="503.0" prefWidth="1082.0" style="-fx-background-color: white; -fx-border-radius: 30px; -fx-background-radius: 30px;">
+                                       <children>
+                                          <ImageView fx:id="camerafeed_imageview" fitHeight="341.0" fitWidth="613.0" layoutX="33.0" layoutY="82.0" pickOnBounds="true">
+                                             <image>
+                                                <Image url="@../assets/images/offlinemedia.png" />
+                                             </image>
+                                          </ImageView>
+                                          <Line endX="8.0" endY="407.0" layoutX="668.0" layoutY="14.0" startX="8.0" startY="70.0" />
+                                          <Label layoutX="33.0" layoutY="24.0" text="QR Scan">
+                                             <font>
+                                                <Font size="22.0" />
+                                             </font>
+                                          </Label>
+                                          <Label layoutX="698.0" layoutY="82.0" text="User Info">
+                                             <font>
+                                                <Font size="22.0" />
+                                             </font>
+                                          </Label>
+                                          <ImageView fx:id="scanneduser_imageview" fitHeight="64.0" fitWidth="65.0" layoutX="730.0" layoutY="130.0" pickOnBounds="true">
+                                             <image>
+                                                <Image url="@../assets/images/user.png" />
+                                             </image>
+                                          </ImageView>
+                                          <Label layoutX="813.0" layoutY="162.0" text="Client">
+                                             <font>
+                                                <Font size="11.0" />
+                                             </font>
+                                          </Label>
+                                          <Label fx:id="namesub_label" layoutX="813.0" layoutY="140.0" text="Full Name" />
+                                          <Label fx:id="id_label" layoutX="967.0" layoutY="140.0" text="12345678" />
+                                          <Label fx:id="dobsub_label" layoutX="961.0" layoutY="160.0" prefHeight="20.0" prefWidth="76.0" text="01/01/1970" textAlignment="CENTER" wrapText="true" />
+                                          <FontAwesomeIconView fx:id="verified_icon" glyphName="CHECK" layoutX="858.0" layoutY="394.0" size="50" text="">
+                                             <fill>
+                                                <RadialGradient centerX="0.5" centerY="0.5" radius="0.5">
+                                                   <stops>
+                                                      <Stop>
+                                                         <color>
+                                                            <Color green="0.6666666865348816" blue="1.0" />
+                                                         </color>
+                                                      </Stop>
+                                                      <Stop offset="0.006711409395973154">
+                                                         <color>
+                                                            <Color green="0.6666666865348816" blue="1.0" />
+                                                         </color>
+                                                      </Stop>
+                                                      <Stop offset="1.0">
+                                                         <color>
+                                                            <Color green="0.40784314274787903" blue="0.545098066329956" />
+                                                         </color>
+                                                      </Stop>
+                                                   </stops>
+                                                </RadialGradient>
+                                             </fill>
+                                          </FontAwesomeIconView>
+                                          <ToggleButton fx:id="opencam_btn" layoutX="33.0" layoutY="440.0" mnemonicParsing="false" onAction="#opencam_btn_act" style="-color-button-bg: -color-success-4; -color-button-fg: white;" text="Open Camera">
+                                             <cursor>
+                                                <Cursor fx:constant="HAND" />
+                                             </cursor>
+                                          </ToggleButton>
+                                          <Pane fx:id="hidepane" layoutX="30.0" layoutY="438.0" prefHeight="40.0" prefWidth="120.0" style="-fx-background-color: white;" visible="false" />
+                                          <Label layoutX="698.0" layoutY="207.0" text="User Subscription Info">
+                                             <font>
+                                                <Font size="22.0" />
+                                             </font>
+                                          </Label>
+                                          <Label layoutX="722.0" layoutY="252.0" text="Subscription Type:" />
+                                          <Label layoutX="722.0" layoutY="272.0" text="Expiration Date:" />
+                                          <Label fx:id="subtype" layoutX="846.0" layoutY="252.0" text="Not Subscribed" />
+                                          <Label fx:id="subexpire" layoutX="833.0" layoutY="272.0" text="Not Subscribed" />
+                                          <FontAwesomeIconView fx:id="nonverified_icon" glyphName="TIMES" layoutX="863.0" layoutY="392.0" size="50" visible="false">
+                                             <fill>
+                                                <RadialGradient centerX="0.5" centerY="0.5" radius="0.5">
+                                                   <stops>
+                                                      <Stop>
+                                                         <color>
+                                                            <Color green="0.6666666865348816" blue="1.0" />
+                                                         </color>
+                                                      </Stop>
+                                                      <Stop offset="0.006711409395973154">
+                                                         <color>
+                                                            <Color red="1.0" />
+                                                         </color>
+                                                      </Stop>
+                                                      <Stop offset="1.0">
+                                                         <color>
+                                                            <Color red="0.5400000214576721" />
+                                                         </color>
+                                                      </Stop>
+                                                   </stops>
+                                                </RadialGradient>
+                                             </fill>
+                                          </FontAwesomeIconView>
                                        </children>
                                     </Pane>
                                  </children>
@@ -591,14 +704,14 @@
                         </ScrollPane>
                         <ScrollPane fx:id="AdminUserManagementPane" prefHeight="646.0" prefWidth="1155.0" visible="false">
                            <content>
-                              <Pane prefHeight="1056.0" prefWidth="1147.0">
+                              <Pane fx:id="usermgmt_pane" prefHeight="1130.0" prefWidth="1147.0">
                                  <children>
                                     <Label layoutX="39.0" layoutY="14.0" style="-fx-text-fill: linear-gradient(to right, #00aaff, #00688b);" text="Admin / User Management">
                                        <font>
                                           <Font name="Open Sans Regular" size="16.0" />
                                        </font>
                                     </Label>
-                                    <Pane layoutX="29.0" layoutY="105.0" prefHeight="448.0" prefWidth="1079.0" style="-fx-background-color: white; -fx-border-radius: 30px; -fx-background-radius: 30px;">
+                                    <Pane layoutX="35.0" layoutY="143.0" prefHeight="448.0" prefWidth="1079.0" style="-fx-background-color: white; -fx-border-radius: 30px; -fx-background-radius: 30px;">
                                        <children>
                                           <Label layoutX="22.0" layoutY="22.0" text="Add User to Database">
                                              <font>
@@ -619,7 +732,7 @@
                                           <Label layoutX="30.0" layoutY="295.0" text="Date of Birth" />
                                           <Label layoutX="278.0" layoutY="295.0" text="Type" />
                                           <ComboBox fx:id="acctypemanage_cb" layoutX="278.0" layoutY="318.0" prefHeight="36.0" prefWidth="215.0" />
-                                          <CheckBox fx:id="setupfrmanage_check" layoutX="29.0" layoutY="381.0" mnemonicParsing="false" text="Setup FR" />
+                                          <CheckBox fx:id="setupfrmanage_check" disable="true" layoutX="29.0" layoutY="381.0" mnemonicParsing="false" text="Setup FR (Temporarily Disabled)" />
                                           <Button fx:id="createacc_btn" layoutX="617.0" layoutY="381.0" mnemonicParsing="false" onAction="#createacc_btn_act" text="Create Account">
                                              <cursor>
                                                 <Cursor fx:constant="HAND" />
@@ -644,9 +757,9 @@
                                           </Button>
                                        </children>
                                     </Pane>
-                                    <Pane layoutX="28.0" layoutY="578.0" prefHeight="448.0" prefWidth="1069.0" style="-fx-background-color: white; -fx-border-radius: 30px; -fx-background-radius: 30px;">
+                                    <Pane layoutX="34.0" layoutY="616.0" prefHeight="448.0" prefWidth="1069.0" style="-fx-background-color: white; -fx-border-radius: 30px; -fx-background-radius: 30px;">
                                        <children>
-                                          <TableView fx:id="userlist_tableview" layoutX="16.0" layoutY="111.0" prefHeight="274.0" prefWidth="1039.0" style="-fx-background-color: #e8ecfc;">
+                                          <TableView fx:id="userlist_tableview" layoutX="16.0" layoutY="111.0" prefHeight="274.0" prefWidth="1039.0" style="-fx-background-color: #e8ecfc;" visible="false">
                                             <columns>
                                               <TableColumn fx:id="cincol" prefWidth="133.0" text="CIN" />
                                               <TableColumn fx:id="emailcol" minWidth="2.0" prefWidth="148.0" text="Email" />
@@ -659,7 +772,7 @@
                                                 <TableColumn fx:id="acctypecol" prefWidth="123.0" text="Account Type" />
                                             </columns>
                                           </TableView>
-                                          <Button fx:id="manageacc_btn" layoutX="922.0" layoutY="398.0" mnemonicParsing="false" onAction="#manageacc_btn_act" text="Manage Account">
+                                          <Button fx:id="manageacc_btn" layoutX="922.0" layoutY="398.0" mnemonicParsing="false" onAction="#manageacc_btn_act" text="Manage Account" visible="false">
                                              <cursor>
                                                 <Cursor fx:constant="HAND" />
                                              </cursor></Button>
@@ -670,6 +783,16 @@
                                           </Label>
                                           <ComboBox fx:id="type_cb" layoutX="916.0" layoutY="59.0" onAction="#type_cb_act" prefHeight="36.0" prefWidth="139.0" promptText="All" />
                                           <TextField fx:id="searchbar_tf" layoutX="754.0" layoutY="59.0" onKeyTyped="#searchbar_tf_textchanged" prefHeight="36.0" prefWidth="147.0" promptText="Search..." />
+                                          <CheckBox fx:id="legacycheck" layoutX="674.0" layoutY="66.0" mnemonicParsing="false" onAction="#legacycheck_act" text="Legacy">
+                                             <cursor>
+                                                <Cursor fx:constant="HAND" />
+                                             </cursor>
+                                          </CheckBox>
+                                          <ScrollPane fx:id="userlist_scrollpane" layoutX="15.0" layoutY="111.0" prefHeight="321.0" prefWidth="1040.0">
+                                             <content>
+                                                <VBox fx:id="userlist_vbox" prefHeight="321.0" prefWidth="1040.0" />
+                                             </content>
+                                          </ScrollPane>
                                        </children>
                                     </Pane>
                                  </children>

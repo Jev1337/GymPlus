@@ -29,3 +29,6 @@
 .transparent {
      -fx-background-color: transparent;
 }
+.label-style {
+     -fx-text-fill: #fcfcfc;
+}

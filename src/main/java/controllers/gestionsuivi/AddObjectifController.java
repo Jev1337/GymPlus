@@ -75,8 +75,29 @@ public class AddObjectifController implements Initializable {
     @FXML
     private VBox vboxTest;
 
+    int taille;
+
+    private String[] type = {"Par Defaut","Version ++"};
+
+
+    @FXML
+    private ToggleButton barToggle;
+
+
+    private  Objectif objectif2 ;
+
+
+
+    @FXML
+    private Label TtileLabel;
+
+
+    @FXML
+    private VBox VboxModify;
+
     private static Stage stage ;
     private Objectif obj;
+
 
     public static Stage getStage() {
         return stage;
@@ -87,7 +108,24 @@ public class AddObjectifController implements Initializable {
     }
 
 
-@FXML
+    public void modifNotif() throws IOException {
+
+        var success = new Message(
+                "Success", Faker.instance().expression("Gym Plus vous informe que la modification est faite avec succées"),
+                new FontAwesomeIconView(FontAwesomeIcon.CHECK)
+        );
+        HboxAddNotif.getChildren().clear();
+        success.getStyleClass().add(Styles.ACCENT);
+        HboxAddNotif.getChildren().add(success);
+
+        // Schedule a task to clear the warning after 4 seconds
+        Duration duration = Duration.seconds(3);
+        KeyFrame keyFrame = new KeyFrame(duration, event -> HboxAddNotif.getChildren().clear());
+        Timeline timeline = new Timeline(keyFrame);
+        timeline.play();
+    }
+
+    @FXML
 void updateObjectif(ActionEvent event) {
     //tawa bech nconverti el date
     float poidsObjectif = Float.parseFloat(tfPoidsObjectif.getText());
@@ -130,6 +168,7 @@ void updateObjectif(ActionEvent event) {
                 try {
                     System.out.printf("passed the try");
                     querry.update(obj2);
+                    modifNotif();
                     if (objectifController != null) {
                         objectifController.refreshNodesListeItems();
                     } else {
@@ -255,25 +294,7 @@ public void addingNotif() throws IOException {
         }
     }
 
-    int taille;
 
-    private String[] type = {"Par Defaut","Version ++"};
-
-
-    @FXML
-    private ToggleButton barToggle;
-
-
-    private  Objectif objectif2 ;
-
-
-
-    @FXML
-    private Label TtileLabel;
-
-
-    @FXML
-    private VBox VboxModify;
 
 
 
@@ -346,8 +367,7 @@ public void addingNotif() throws IOException {
      void sendingDataToForm(Objectif obj) {
 
          try {
-           //  vboxTest.setVisible(false);
-            // VboxModify.setVisible(true);
+             // VboxModify.setVisible(true);
 
              TtileLabel.setText("Modification Objectif");
 
@@ -376,9 +396,7 @@ public void addingNotif() throws IOException {
 
              loadingButton();
 
-          //   VboxModify.setVisible(false);
 
-           //  vboxTest.setVisible(true);
 
 
          }catch (Exception e){

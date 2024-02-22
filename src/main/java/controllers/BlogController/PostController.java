@@ -16,6 +16,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -24,7 +25,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
-import services.gestionuser.AdminService;
+import java.nio.file.Files;
 import services.gestionuser.ClientService;
 import services.gestonblog.CommentaireService;
 import services.gestonblog.PostServices;
@@ -32,6 +33,7 @@ import services.gestonblog.PostServices;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -47,22 +49,19 @@ public class PostController implements Initializable {
     private Label captionTxt;
 
     @FXML
-    private ImageView imgPost = new ImageView();
+    private ImageView imgPost;
 
     @FXML
     private ImageView imgProfile;
 
     @FXML
     private Label nbComnts;
-
     @FXML
     private Label nbLikes;
-
     @FXML
     private Label dateTxt;
     @FXML
     private TextField comntContent;
-
     @FXML
     private Label userNameTxt;
     @FXML
@@ -74,6 +73,8 @@ public class PostController implements Initializable {
     @FXML
     private VBox comntsList;
     @FXML
+    private HBox editPost;
+    @FXML
     private ScrollPane comntListContainer;
     private Post post = new Post();
     private String date = LocalDate.now().toString();
@@ -82,7 +83,6 @@ public class PostController implements Initializable {
     private final PostServices ps = new PostServices();
     private final CommentaireService cs = new CommentaireService();
     private final ClientService us = new ClientService();
-    private final BlogController blogController = new BlogController();
 
     //*************************************POST HANDLER*************************************
     @FXML
@@ -148,22 +148,28 @@ public class PostController implements Initializable {
     public void setPost(Post p) {
         post = p;
         captionTxt.setText(post.getContent());
-        userNameTxt.setText(GlobalVar.getUser().getUsername());
         nbLikes.setText(post.getLikes() + " Likes");
         nbComnts.setText(post.getLikes() + " Comments");
+        Image imgP = new Image(new File("src/assets/profileuploads/"+post.getPhoto()).toURI().toString());
+        imgPost.setImage(imgP);
         dateTxt.setText(post.getDate().toString());
+        if (post.getUser_id() != GlobalVar.getUser().getId()){
+            editPost.setVisible(false);
+            editPost.setManaged(false);
+        }
         try {
+            userNameTxt.setText(us.getUserById(post.getUser_id()).getUsername());
             String profilePic = us.getUserById(p.getUser_id()).getPhoto();
             Image img = new Image(new File("src/assets/profileuploads/" + profilePic).toURI().toString());
             imgProfile.setImage(img);
-            Circle clip1 = new Circle(imgProfile.getFitWidth()/2, imgProfile.getFitHeight()/2, imgProfile.getFitWidth()/2);
+            Circle clip1 = new Circle(imgProfile.getFitWidth() / 2, imgProfile.getFitHeight() / 2, imgProfile.getFitWidth() / 2);
             imgProfile.setClip(clip1);
             imgProfile.setPreserveRatio(false);
             if (Objects.equals(p.getPhoto(), "") && p.getPhoto().isEmpty()) {
                 imgPost.setVisible(false);
                 imgPost.setManaged(false);
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }

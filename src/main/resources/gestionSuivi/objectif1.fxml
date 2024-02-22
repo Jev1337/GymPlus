@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="1820.0" prefWidth="1156.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionsuivi.ObjectifController">
+<AnchorPane prefHeight="2580.0" prefWidth="1157.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionsuivi.ObjectifController">
    <children>
       <ImageView fitHeight="326.0" fitWidth="1187.0" layoutY="1476.0" opacity="0.98" pickOnBounds="true" preserveRatio="true">
          <image>
@@ -28,30 +28,40 @@
       </ImageView>
       <ImageView fitHeight="326.0" fitWidth="1193.0" layoutY="622.0" opacity="0.98" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../images/cover.jpg" />
+            <Image url="@../assets/images/cover.jpg" />
          </image>
       </ImageView>
       <ImageView fitHeight="326.0" fitWidth="1172.0" layoutY="1259.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../images/cover.jpg" />
+            <Image url="@../assets/images/cover.jpg" />
          </image>
       </ImageView>
       <ImageView fitHeight="326.0" fitWidth="1170.0" layoutY="933.0" opacity="0.98" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../images/cover.jpg" />
+            <Image url="@../assets/images/cover.jpg" />
          </image>
       </ImageView>
-      <ImageView fitHeight="326.0" fitWidth="1188.0" layoutY="1768.0" opacity="0.98" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="326.0" fitWidth="1188.0" layoutY="1714.0" opacity="0.98" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../images/cover.jpg" />
+            <Image url="@../assets/images/cover.jpg" />
          </image>
       </ImageView>
-      <Separator layoutX="485.0" layoutY="215.0" orientation="VERTICAL" prefHeight="1001.0" prefWidth="11.0" />
+      <ImageView fitHeight="326.0" fitWidth="1188.0" layoutY="2037.0" opacity="0.98" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../assets/images/cover.jpg" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="326.0" fitWidth="1188.0" layoutY="2284.0" opacity="0.98" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../assets/images/cover.jpg" />
+         </image>
+      </ImageView>
+      <Separator layoutX="475.0" layoutY="163.0" orientation="VERTICAL" prefHeight="1001.0" prefWidth="11.0" />
 
       <!-- ScrollPane 1 -->
-      <ScrollPane layoutX="29.0" layoutY="215.0" prefHeight="554.0" prefWidth="429.0" styleClass="border-table" stylesheets="@../images/style.css">
+      <ScrollPane layoutX="30.0" layoutY="141.0" prefHeight="554.0" prefWidth="429.0" styleClass="border-table" stylesheets="@../assets/images/style.css">
          <content>
-            <VBox fx:id="pnl_scroll1" prefHeight="545.0" prefWidth="429.0" stylesheets="@../images/style.css">
+            <VBox fx:id="pnl_scroll1" prefHeight="545.0" prefWidth="429.0" stylesheets="@../assets/images/style.css">
                <styleClass>
                   <String fx:value="border-table" />
                   <String fx:value="transparent" />
@@ -59,27 +69,37 @@
          </content>
       </ScrollPane>
 
-      <!-- ScrollPane 2 -->
-      <ScrollPane centerShape="false" layoutX="513.0" layoutY="116.0" prefHeight="1095.0" prefWidth="625.0" scaleShape="false" stylesheets="@../images/style.css">
+            <!-- ScrollPane 2 -->
+      <ScrollPane centerShape="false" layoutX="500.0" layoutY="112.0" prefHeight="1138.0" prefWidth="625.0" scaleShape="false" stylesheets="@../assets/images/style.css">
+         <styleClass>
+            <String fx:value="border-table" />
+            <String fx:value="degrade-diagonal2" />
+         </styleClass>
          <content>
-            <VBox fx:id="pnl_scroll2" alignment="CENTER" fillWidth="false" prefHeight="1092.0" prefWidth="615.0">
+            <VBox fx:id="pnl_scroll2" alignment="CENTER" fillWidth="false" prefHeight="1095.0" prefWidth="591.0" style="-fx-alignment: center; -fx-translate-y: 15; -fx-translate-x: 15;" stylesheets="@../assets/images/style.css">
                <opaqueInsets>
                   <Insets />
-               </opaqueInsets></VBox>
+               </opaqueInsets>
+            </VBox>
          </content>
       </ScrollPane>
 
       <!-- ScrollPane 3 -->
-      <ScrollPane layoutX="29.0" layoutY="792.0" prefHeight="447.0" prefWidth="431.0">
+      <ScrollPane layoutX="29.0" layoutY="734.0" prefHeight="512.0" prefWidth="431.0">
          <content>
-            <VBox fx:id="pnl_scorllChatBot" prefHeight="445.0" prefWidth="429.0" />
+            <VBox fx:id="pnl_scorllChatBot" prefHeight="511.0" prefWidth="429.0" />
          </content>
       </ScrollPane>
 
       <!-- ScrollPane 4 -->
-      <ScrollPane fx:id="scrollpanWeb" layoutX="30.0" layoutY="1259.0" prefHeight="537.0" prefWidth="1095.0" styleClass="border-table" stylesheets="@../images/style.css">
+      <ScrollPane fx:id="scrollpanWeb" layoutX="27.0" layoutY="1901.0" prefHeight="621.0" prefWidth="1095.0" styleClass="border-table" stylesheets="@../assets/images/style.css">
          <content>
-            <VBox fx:id="vboxWeb" prefHeight="532.0" prefWidth="1092.0" />
+            <VBox fx:id="vboxWeb" prefHeight="618.0" prefWidth="1092.0" />
+         </content>
+      </ScrollPane>
+      <ScrollPane layoutX="32.0" layoutY="1294.0" prefHeight="484.0" prefWidth="1086.0">
+         <content>
+            <VBox fx:id="caloriesPrompted" prefHeight="486.0" prefWidth="1076.0" />
          </content>
       </ScrollPane>
    </children>

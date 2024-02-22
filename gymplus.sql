@@ -40,6 +40,25 @@ CREATE TABLE `abonnement` (
   `type` varchar(255) DEFAULT NULL
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
+
+-- --------------------------------------------------------
+--
+-- Table structure for table `abonnement_details`
+--
+
+CREATE TABLE `abonnement_details` (
+  `name` varchar(255) NOT NULL,
+  `prix` double NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `abonnement_details`
+--
+
+INSERT INTO `abonnement_details` (`name`, `prix`) VALUES
+  ('GP 1', 24.99),
+  ('GP 2', 44.99),
+  ('GP 3', 69.99);
 -- --------------------------------------------------------
 --
 -- Structure de la table `commentaire`
@@ -89,6 +108,7 @@ CREATE TABLE `event_details` (
   `type` varchar(255) DEFAULT NULL,
   `event_date` datetime DEFAULT NULL,
   `duree` varchar(255) DEFAULT NULL,
+  `nb_total` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
@@ -182,33 +202,7 @@ CREATE TABLE `produit` (
   `promo` float DEFAULT NULL
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
---
--- Déchargement des données de la table `produit`
---
-INSERT INTO
-  `produit` (
-    `idProduit`,
-    `name`,
-    `prix`,
-    `stock`,
-    `description`,
-    `categorie`,
-    `photo`,
-    `seuil`,
-    `promo`
-  )
-VALUES
-  (
-    5,
-    'produit1',
-    2.5,
-    23,
-    'food1',
-    'food',
-    'azertyuiop',
-    2,
-    0.05
-  );
+
 
 -- --------------------------------------------------------
 --
@@ -241,7 +235,16 @@ ALTER TABLE
 ADD
   PRIMARY KEY (`id`),
 ADD
-  KEY `user_id` (`user_id`);
+  KEY `user_id` (`user_id`),
+ADD
+  KEY `type` (`type`);
+
+--
+-- Indexes for table `abonnement_details`
+--
+ALTER TABLE `abonnement_details`
+    ADD PRIMARY KEY (`name`);
+COMMIT;
 
 --
 -- Index pour la table `commentaire`
@@ -388,7 +391,9 @@ MODIFY
 ALTER TABLE
   `abonnement`
 ADD
-  CONSTRAINT `abonnement_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  CONSTRAINT `abonnement_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+ADD
+  CONSTRAINT `abonnement_ibfk_2` FOREIGN KEY (`type`) REFERENCES `abonnement_details` (`name`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Contraintes pour la table `commentaire`

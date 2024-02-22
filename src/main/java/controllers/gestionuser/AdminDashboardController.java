@@ -58,10 +58,7 @@ import org.opencv.objdetect.Objdetect;
 import org.opencv.objdetect.QRCodeDetector;
 import org.opencv.videoio.VideoCapture;
 import org.w3c.dom.Text;
-import services.gestionuser.AbonnementService;
-import services.gestionuser.AdminService;
-import services.gestionuser.ClientService;
-import services.gestionuser.StaffService;
+import services.gestionuser.*;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -71,6 +68,7 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.Calendar;
 import java.util.List;
 
 public class AdminDashboardController {
@@ -82,13 +80,24 @@ public class AdminDashboardController {
     private final StaffService staffService = new StaffService();
     private final ClientService clientService = new ClientService();
     private final AbonnementService abonnementService = new AbonnementService();
+    private final AbonnementDetailsService abonnementDetailsService = new AbonnementDetailsService();
     private FadeIn[] fadeInAnimation = new FadeIn[9];
     private FadeOutRight fadeOutRightAnimation = new FadeOutRight();
     private FadeInRight fadeInRightAnimation = new FadeInRight();
 
 
     @FXML
+    private Label gp1_label;
+
+    @FXML
+    private Label gp2_label;
+
+    @FXML
+    private Label gp3_label;
+
+    @FXML
     private ScrollPane userlist_scrollpane;
+
     @FXML
     private CheckBox legacycheck;
 
@@ -409,11 +418,66 @@ public class AdminDashboardController {
     @FXML
     private VBox userlist_vbox;
 
+    @FXML
+    private Label percentactivemem_label;
+
+    @FXML
+    private Label registeredusers_label;
+
+    @FXML
+    private Label activememclients_label;
+
+    @FXML
+    private ProgressBar percentactivemem_prog;
+
+    @FXML
+    private TextField gp1edit_tf;
+
+    @FXML
+    private TextField gp2edit_tf;
+
+    @FXML
+    private TextField gp3edit_tf;
+
+    @FXML
+    private void savegp_btn_act(ActionEvent event) {
+        if (gp1edit_tf.getText().isEmpty() || gp2edit_tf.getText().isEmpty() || gp3edit_tf.getText().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.initStyle(StageStyle.UNDECORATED);
+            alert.setTitle("Error");
+            alert.setHeaderText("Empty fields");
+            alert.setContentText("Please fill all the fields");
+            alert.showAndWait();
+            return;
+        }
+        if (!gp1edit_tf.getText().matches("^\\d+(\\.\\d+)?$") || !gp2edit_tf.getText().matches("^\\d+(\\.\\d+)?$") || !gp3edit_tf.getText().matches("^\\d+(\\.\\d+)?$")) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.initStyle(StageStyle.UNDECORATED);
+            alert.setTitle("Error");
+            alert.setHeaderText("Invalid input");
+            alert.setContentText("Please enter a valid number");
+            alert.showAndWait();
+            return;
+        }
+        try {
+            abonnementDetailsService.update(new AbonnementDetails("GP 1", Double.parseDouble(gp1edit_tf.getText())));
+            abonnementDetailsService.update(new AbonnementDetails("GP 2", Double.parseDouble(gp2edit_tf.getText())));
+            abonnementDetailsService.update(new AbonnementDetails("GP 3", Double.parseDouble(gp3edit_tf.getText())));
+            initGPPrices();
+        }catch (Exception e){
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.initStyle(StageStyle.UNDECORATED);
+            alert.setTitle("Error");
+            alert.setHeaderText("An error has occured");
+            alert.setContentText("An error has occured while trying to update global parameters");
+            alert.showAndWait();
+            return;
+        }
+    }
+
     private VideoCapture capture;
     private Mat frame;
-
-
-
 
     @FXML
     private void opencam_btn_act(ActionEvent event){
@@ -874,6 +938,7 @@ public class AdminDashboardController {
                 adminService.update(admin);
                 GlobalVar.setUser(admin);
                 initProfile();
+                initUserList();
             }else{
                 File file = new File(profilepic_pf.getText());
                 if (!file.exists()) {
@@ -894,13 +959,9 @@ public class AdminDashboardController {
                 adminService.update(admin);
                 GlobalVar.setUser(admin);
                 initProfile();
+                initUserList();
             }
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.initStyle(StageStyle.UNDECORATED);
-            alert.setTitle("Success");
-            alert.setHeaderText("Profile picture updated");
-            alert.setContentText("Your profile info has been updated successfully");
-            alert.showAndWait();
+            notify("Profile has been updated successfully!");
         }catch (Exception e){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.initStyle(StageStyle.UNDECORATED);
@@ -989,13 +1050,8 @@ public class AdminDashboardController {
                 clientService.add(new Client(Integer.parseInt(cinmanage_tf.getText()), usernamemanage_tf.getText(), firstnamemanage_tf.getText(), lastnamemanage_tf.getText(), dobmanage_dp.getValue().toString(), pwdmanage_pf.getText(), emailmanage_tf.getText(), phonemanage_tf.getText(), addressmanage_ta.getText(), "USERIMG"+ cinmanage_tf.getText() +  file.getName().substring(file.getName().lastIndexOf(".")),"",new SimpleDateFormat("yyyy-MM-dd").format(new Date(System.currentTimeMillis()))));
             }
             Files.copy(file.toPath(), new File("src/assets/profileuploads/USERIMG"+ cinmanage_tf.getText() + file.getName().substring(file.getName().lastIndexOf("."))).toPath());
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.initStyle(StageStyle.UNDECORATED);
-            alert.setTitle("Success");
-            alert.setHeaderText("Account created");
-            alert.setContentText("The account has been created successfully");
-            alert.showAndWait();
-            initUserList(-1, "");
+            notify("Account has been created successfully!");
+            initUserList();
         }catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.initStyle(StageStyle.UNDECORATED);
@@ -1084,6 +1140,7 @@ public class AdminDashboardController {
                 managedSelectedUser.setNum_tel(phone_tf.getText());
                 managedSelectedUser.setAdresse(address_ta.getText());
                 initProfileTemp(managedSelectedUser);
+                initUserList();
 
             }else{
                 File file = new File(profilepic_pf.getText());
@@ -1116,15 +1173,9 @@ public class AdminDashboardController {
                 managedSelectedUser.setAdresse(address_ta.getText());
                 managedSelectedUser.setPhoto("USERIMG"+ managedSelectedUser.getId() + file.getName().substring(file.getName().lastIndexOf(".")));
                 initProfileTemp(managedSelectedUser);
-
+                initUserList();
             }
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.initStyle(StageStyle.UNDECORATED);
-            alert.setTitle("Success");
-            alert.setHeaderText("Profile picture updated");
-            alert.setContentText("Profile info has been updated successfully");
-            alert.showAndWait();
-            switchToPane(AdminUserManagementPane);
+            notify("Profile has been updated successfully!");
         }catch (Exception e){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.initStyle(StageStyle.UNDECORATED);
@@ -1173,25 +1224,11 @@ public class AdminDashboardController {
 
 
     public void type_cb_act(ActionEvent actionEvent) {
-        if (type_cb.getValue().equals("All"))
-            initUserList(-1 , searchbar_tf.getText());
-        else if (type_cb.getValue().equals("Admin"))
-            initUserList(0, searchbar_tf.getText());
-        else if (type_cb.getValue().equals("Staff"))
-            initUserList(1, searchbar_tf.getText());
-        else if (type_cb.getValue().equals("Client"))
-            initUserList(2, searchbar_tf.getText());
+        initUserList();
     }
 
     public void searchbar_tf_textchanged(KeyEvent keyEvent) {
-        if (type_cb.getValue() == null || type_cb.getValue().equals("All"))
-            initUserList(-1 , searchbar_tf.getText());
-        else if (type_cb.getValue().equals("Admin"))
-            initUserList(0, searchbar_tf.getText());
-        else if (type_cb.getValue().equals("Staff"))
-            initUserList(1, searchbar_tf.getText());
-        else if (type_cb.getValue().equals("Client"))
-            initUserList(2, searchbar_tf.getText());
+        initUserList();
     }
 
     public void browsemanage_btn_act(ActionEvent actionEvent) {
@@ -1381,11 +1418,12 @@ public class AdminDashboardController {
         initAnimations();
         initDecoratedStage();
         notify("Successfully Logged In as " + GlobalVar.getUser().getUsername() + "!");
-        initUserList(-1, "");
+        initUserList();
         initSubList("All", "");
         initNonSubbedUserList("");
         initWarning(subpane);
         initWarning(usermgmt_pane);
+        initGPPrices();
 
         RingProgressIndicator progressIndicator = new RingProgressIndicator();
         progressIndicator.setProgress(ProgressIndicator.INDETERMINATE_PROGRESS);
@@ -1407,6 +1445,16 @@ public class AdminDashboardController {
 
     }
 
+
+    private void initGPPrices(){
+        try {
+            gp1_label.setText(String.valueOf(abonnementDetailsService.getPriceByType("GP 1")));
+            gp2_label.setText(String.valueOf(abonnementDetailsService.getPriceByType("GP 2")));
+            gp3_label.setText(String.valueOf(abonnementDetailsService.getPriceByType("GP 3")));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
     private void initWarning(Pane pane){
         var warning = new Message("Warning!", "Be careful with the actions you take, they are irreversible! Proceed with caution.");
         warning.getStyleClass().addAll(
@@ -1584,7 +1632,26 @@ public class AdminDashboardController {
     }
 
 
+
     private void initCharts(){
+        int count1 = 0;
+        try {
+            count1 = clientService.getAll().size();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        registeredusers_label.setText(String.valueOf(count1));
+
+        int count2 = 0;
+        try {
+            count2 = abonnementService.getAllCurrent().size();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        activememclients_label.setText(String.valueOf(count2));
+        percentactivemem_label.setText((count2 * 100) / count1 + "%");
+        percentactivemem_prog.setProgress((double) (count2 * 100) / count1 / 100);
+
         XYChart.Series<String,Number> series = new XYChart.Series<>();
         series.getData().add(new XYChart.Data<>("Jan", 100));
         series.getData().add(new XYChart.Data<>("Feb", 200));
@@ -1602,19 +1669,27 @@ public class AdminDashboardController {
         stat_linechart.getData().add(series);
 
         XYChart.Series<String,Number> series2 = new XYChart.Series<>();
-        series2.getData().add(new XYChart.Data<>("Jan", 100));
-        series2.getData().add(new XYChart.Data<>("Feb", 200));
-        series2.getData().add(new XYChart.Data<>("Mar", 50));
-        series2.getData().add(new XYChart.Data<>("Apr", 75));
-        series2.getData().add(new XYChart.Data<>("May", 110));
-        series2.getData().add(new XYChart.Data<>("Jun", 300));
-        series2.getData().add(new XYChart.Data<>("Jul", 111));
-        series2.getData().add(new XYChart.Data<>("Aug", 30));
-        series2.getData().add(new XYChart.Data<>("Sep", 75));
-        series2.getData().add(new XYChart.Data<>("Oct", 55));
-        series2.getData().add(new XYChart.Data<>("Nov", 225));
-        series2.getData().add(new XYChart.Data<>("Dec", 99));
-        series2.setName("Ipsum");
+        int gp1 = 0, gp2 = 0, gp3 = 0;
+        try {
+            List<Abonnement> list = abonnementService.getAllCurrent();
+            //clients with different subscription types
+
+            for (Abonnement abonnement : list) {
+                if (abonnement.getType().equals("GP 1"))
+                    gp1++;
+                else if (abonnement.getType().equals("GP 2"))
+                    gp2++;
+                else if (abonnement.getType().equals("GP 3"))
+                    gp3++;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        series2.getData().add(new XYChart.Data<>("GP 1", gp1));
+        series2.getData().add(new XYChart.Data<>("GP 2", gp2));
+        series2.getData().add(new XYChart.Data<>("GP 3", gp3));
+
+        series2.setName("GP Subscriptions");
         stat_barchart.getData().add(series2);
     }
     private boolean validateEmail(String email){
@@ -1709,38 +1784,16 @@ public class AdminDashboardController {
             alert.initStyle(StageStyle.UNDECORATED);
             alert.setTitle("Warning");
             alert.setHeaderText("Warning");
-            alert.setContentText("Invalid phone number format! Please try again.");
+            alert.setContentText("Invalid Number format! Please try again.");
             alert.showAndWait();
             return false;
         }
         return true;
     }
 
-    private void initUserList(int type, String condition){
+    private void initUserList(){
         List<User> users = null;
-        if (type == 0){
-            try {
-                users = (List<User>)(List<?>)adminService.getAll();
-            }catch (Exception e) {
-                e.printStackTrace();
-            }
-
-        }else if (type == 1){
-            try {
-                users = (List<User>)(List<?>)staffService.getAll();
-
-
-            }catch (Exception e) {
-                e.printStackTrace();
-            }
-        }else if (type == 2){
-            try {
-                users = (List<User>)(List<?>)clientService.getAll();
-            }catch (Exception e) {
-                e.printStackTrace();
-            }
-
-        }else if (type == -1){
+        if (type_cb.getValue() == null || type_cb.getValue().equals("All")){
             try {
                 users = (List<User>)(List<?>)adminService.getAll();
                 users.addAll((List<User>)(List<?>)staffService.getAll());
@@ -1748,8 +1801,29 @@ public class AdminDashboardController {
             }catch (Exception e) {
                 e.printStackTrace();
             }
-
         }
+
+        else if (type_cb.getValue().equals("Admin")) {
+            try {
+                users = (List<User>) (List<?>) adminService.getAll();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }else if (type_cb.getValue().equals("Staff")){
+            try {
+                users = (List<User>)(List<?>)staffService.getAll();
+            }catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        else if (type_cb.getValue().equals("Client")){
+            try {
+                users = (List<User>)(List<?>)clientService.getAll();
+            }catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        String condition = searchbar_tf.getText();
         ObservableList<User> obs = FXCollections.observableArrayList(users);
         if (condition != null && !condition.isEmpty()) {
             for (int i = 0; i < obs.size(); i++) {
@@ -1779,12 +1853,6 @@ public class AdminDashboardController {
                     continue;
                 }
             }
-            if (type == 0 && !user.getRole().equals("admin"))
-                continue;
-            if (type == 1 && !user.getRole().equals("staff"))
-                continue;
-            if (type == 2 && !user.getRole().equals("client"))
-                continue;
             HBox hBox = new HBox();
             hBox.setSpacing(10);
             hBox.setPadding(new Insets(10, 10, 10, 10));

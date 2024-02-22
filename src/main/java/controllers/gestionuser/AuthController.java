@@ -19,6 +19,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
@@ -155,6 +156,45 @@ public class AuthController {
     private TextField username_tf;
 
     @FXML
+    private Label pwstrength_label;
+
+    @FXML
+    private ProgressBar pwstrength_progress;
+
+    @FXML
+    void pwdsu_pf_pressed(KeyEvent event) {
+        if (pwdsu_pf.getText().isEmpty()) {
+            pwstrength_progress.setProgress(0);
+            pwstrength_label.setText("Password Strength: Poor");
+            return;
+        }
+        if (pwdsu_pf.getText().length() > 20){
+            pwstrength_label.setText("Password Strength: Invalid Length");
+            pwstrength_progress.setProgress(0);
+            return;
+        }
+        if (pwdsu_pf.getText().matches("^[a-zA-Z0-9]*$")){
+            pwstrength_label.setText("Password Strength: Weak");
+            pwstrength_progress.setProgress(0.3);
+            pwstrength_progress.setStyle("-color-progress-bar-fill: red;");
+        }
+        if (pwdsu_pf.getText().matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?!.* ).{8,20}$")){
+            pwstrength_label.setText("Password Strength: Medium");
+            pwstrength_progress.setProgress(0.6);
+            pwstrength_progress.setStyle("-color-progress-bar-fill: orange;");
+        }
+
+        if (pwdsu_pf.getText().matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\\W)(?!.* ).{8,20}$")) {
+            pwstrength_label.setText("Password Strength: Strong");
+            pwstrength_progress.setProgress(1);
+            pwstrength_progress.setStyle("-color-progress-bar-fill: green;");
+        }
+
+
+
+    }
+
+    @FXML
     void back_btn_act(ActionEvent event) {
         fadeOutRightAnimation.setNode(signupad_pane);
         fadeOutRightAnimation.setOnFinished(e -> {
@@ -193,6 +233,7 @@ public class AuthController {
             return;
         if (!validateNumber(cin_tf.getText()))
             return;
+
 
         File file = new File(photo_tf.getText());
         if (!file.exists()) {
@@ -364,7 +405,7 @@ public class AuthController {
     }
 
     private boolean validateText(String username){
-        if (username.length() < 4 && username.length() > 20){
+        if (username.length() < 4 || username.length() > 20){
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.initStyle(StageStyle.UNDECORATED);
             alert.setTitle("Warning");

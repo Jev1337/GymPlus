@@ -316,8 +316,8 @@ public class ObjectifListController  {
         DateDebutField.setText(dateString);
         DateFinField.setText(dateString2);
 
-        String coachPhotoPath = objectif.getCoachPhoto();
-      //  System.out.println(coachPhotoPath);
+        String coachPhotoPath =  "src/assets/profileuploads/"+ objectif.getCoachPhoto();
+        System.out.println(coachPhotoPath);
         if (coachPhotoPath != null && !coachPhotoPath.isEmpty()) {
             File file = new File(coachPhotoPath);
             if (file.exists()) {

@@ -11,8 +11,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.w3c.dom.events.Event;
 
 import java.io.IOException;
 import java.net.URL;
@@ -22,7 +24,8 @@ import java.util.logging.Logger;
 
 public class ObjectifController  implements Initializable {
 
-
+    @FXML
+    private VBox caloriesPrompted;
     @FXML
     private VBox WarningVbox;
 
@@ -86,6 +89,18 @@ public class ObjectifController  implements Initializable {
 
 
 
+    public void refreshNodeCaloriesFx() throws IOException {
+        caloriesPrompted.getChildren().clear();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/gestionSuivi/CaloriesGenerator.fxml"));
+        Node node = loader.load();
+        caloriesPrompted.getChildren().add(node);
+
+
+
+        CaloriesGeneratorController caloriesGeneratorController = loader.getController();
+
+    }
+
 
     public void refreshNodesListeItems() throws IOException {
         pnl_scroll2.getChildren().clear();
@@ -99,23 +114,16 @@ public class ObjectifController  implements Initializable {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/gestionSuivi/Item.fxml"));
                 Node node = loader.load();
                 ObjectifListController itemController = loader.getController();
-                Button button = (Button) node.lookup("#blueButton");
-
                 itemController.setObjectif(objecitf);
-
                 itemController.buton();
                 itemController.buttonPanel();
                 itemController.scrollButton(objecitf);
                 pnl_scroll2.getChildren().add(node);
-
                 FXMLLoader loader3 = new FXMLLoader(getClass().getResource("/gestionSuivi/AddingObjectif.fxml"));
                 Node node3 = loader3.load();
-
-
                 AddObjectifController addoj = loader3.getController();
                 itemController.setObjectifController(this);
                 addoj.setObjectifController(this);
-
 
                 Button itemButton = (Button) node.lookup("#itemButton");
                 if (itemButton != null) {
@@ -137,24 +145,21 @@ public class ObjectifController  implements Initializable {
 
 
 
-    private void refreshNodesChatBot()
-    {
+    private void refreshNodesChatBot() throws IOException {
         pnl_scorllChatBot.getChildren().clear();
+        // Node[] nodes = new Node[1];
+        //FXMLLoader loader = FXMLLoader.load(getClass().getResource("/gestionSuivi/chatBot.fxml"));
 
-        Node[] nodes = new Node[1];
 
-        for(int i = 0; i<1; i++)
-        {
-            try {
-                nodes[i] = (Node) FXMLLoader.load(getClass().getResource("/gestionSuivi/chatBot.fxml"));
-                pnl_scorllChatBot.getChildren().add(nodes[i]);
 
-            } catch (IOException ex) {
-                Logger.getLogger(ObjectifController.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/gestionSuivi/chatBot.fxml"));
+            Node node = loader.load();
+            pnl_scorllChatBot.getChildren().add(node);
+            ChatControler chatControler = loader.getController() ;
+           // chatControler.chatGPT();
 
         }
-    }
+
 
 
     @FXML
@@ -185,6 +190,11 @@ public class ObjectifController  implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        try {
+            refreshNodeCaloriesFx();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         refreshNodesWeb();
             refreshNodes();
 
@@ -194,10 +204,14 @@ public class ObjectifController  implements Initializable {
             throw new RuntimeException(e);
         }
 
-        refreshNodesChatBot();
-
-
+        try {
+            refreshNodesChatBot();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
+
+
+    }
 
 
 }

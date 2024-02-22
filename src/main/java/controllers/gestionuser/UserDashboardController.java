@@ -7,15 +7,20 @@ import atlantafx.base.util.Animations;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
-import com.google.zxing.common.BitMatrix;
-import com.google.zxing.oned.EAN13Writer;
-import com.google.zxing.oned.EAN8Writer;
-import com.google.zxing.oned.MultiFormatOneDReader;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+import de.micromata.paypal.PayPalConfig;
+import de.micromata.paypal.PayPalConnector;
+import de.micromata.paypal.data.Currency;
+import de.micromata.paypal.data.Payment;
+import de.micromata.paypal.data.ShippingPreference;
+import de.micromata.paypal.data.Transaction;
 import entities.gestionuser.Abonnement;
 import entities.gestionuser.Client;
 import javafx.animation.*;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.concurrent.Task;
+import javafx.concurrent.Worker;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -26,6 +31,12 @@ import javafx.scene.chart.BarChart;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -36,23 +47,29 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import net.glxn.qrgen.core.image.ImageType;
 import net.glxn.qrgen.javase.QRCode;
+import okhttp3.*;
+import org.json.JSONObject;
+import org.opencv.core.*;
+import org.opencv.imgcodecs.Imgcodecs;
+import org.opencv.objdetect.CascadeClassifier;
+import org.opencv.objdetect.Objdetect;
+import org.opencv.videoio.VideoCapture;
 import services.gestionuser.AbonnementService;
 import services.gestionuser.ClientService;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.nio.file.Files;
 import java.sql.Date;
 import java.time.LocalDate;
-
-import java.io.IOException;
 
 public class UserDashboardController {
 
@@ -288,6 +305,7 @@ public class UserDashboardController {
     private Pane ObjectifPan;
 
 
+
     @FXML
     private ImageView user_imageview;
 
@@ -296,6 +314,175 @@ public class UserDashboardController {
 
     @FXML
     private ImageView userprofile_imageview;
+
+    @FXML
+    private ImageView faceid_change;
+    @FXML
+    void faceid_change_clicked(){
+        setFaceID();
+    }
+    String faceId = "";
+    public void setFaceID(){
+        faceid_change.setDisable(true);
+        Dialog<String> alert = new Dialog<>();
+        alert.initStyle(StageStyle.UNDECORATED);
+        alert.setTitle("FaceID Verification");
+        alert.setHeaderText("FaceID Verification");
+        ButtonType okButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+        alert.getDialogPane().getButtonTypes().add(okButton);
+        Label label = new Label("Waiting for camera to initialize...");
+        label.setLayoutX(0);
+        label.setLayoutY(39);
+        label.setPrefWidth(461);
+        label.alignmentProperty().setValue(javafx.geometry.Pos.CENTER);
+        ProgressBar progressBar = new ProgressBar();
+        progressBar.setProgress(ProgressBar.INDETERMINATE_PROGRESS);
+        progressBar.setLayoutX(27);
+        progressBar.setLayoutY(75);
+        progressBar.setPrefWidth(407);
+        progressBar.setPrefHeight(20);
+        alert.getDialogPane().setContent(new Pane(label, progressBar));
+        alert.show();
+
+
+        Task<Void> cameraTask = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                int i = 0;
+                VideoCapture capture = new VideoCapture(0);
+                Mat frame = new Mat();
+                if (capture.isOpened()) {
+                    while (!isCancelled()) {
+                        if (capture.read(frame)) {
+                            if (!frame.empty()) {
+                                if (i == 5)
+                                    break;
+                                i++;
+                                System.out.println("Camera Initialized!");
+                                Platform.runLater(()-> label.setText("Camera Initialized!"));
+                                Thread.sleep(1000);
+                                System.out.println("Capturing Frame...");
+                                Platform.runLater(()-> label.setText("Capturing Frame..."));
+                                Thread.sleep(1000);
+                                MatOfRect facesDetected = new MatOfRect();
+                                CascadeClassifier cascadeClassifier = new CascadeClassifier();
+                                int minFaceSize = Math.round(frame.rows() * 0.1f);
+                                cascadeClassifier.load(getClass().getResource("/assets/haarcascade_frontalface_alt.xml").toURI().getPath().toString().substring(1));
+                                cascadeClassifier.detectMultiScale(frame,
+                                        facesDetected,
+                                        1.1,
+                                        3,
+                                        Objdetect.CASCADE_SCALE_IMAGE,
+                                        new Size(minFaceSize, minFaceSize),
+                                        new Size()
+                                );
+                                Rect[] facesArray = facesDetected.toArray();
+                                if (facesArray.length > 0) {
+                                    System.out.println("Face Found!");
+                                    Platform.runLater(() -> label.setText("Face Found! Verifying..."));
+                                    Platform.runLater(() -> progressBar.setProgress(1));
+
+                                    MatOfByte matOfByte = new MatOfByte();
+                                    Imgcodecs.imencode(".jpg", frame, matOfByte);
+                                    byte[] byteArray = matOfByte.toArray();
+                                    InputStream in = new ByteArrayInputStream(byteArray);
+                                    BufferedImage img = null;
+                                    try {
+                                        img = ImageIO.read(in);
+                                    }catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                                    try {
+                                        ImageIO.write(img, "png", bos);
+                                    }catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+
+                                    byte[] imgBytes = bos.toByteArray();
+
+                                    OkHttpClient client = new OkHttpClient().newBuilder()
+                                            .build();
+                                    MediaType mediaType = MediaType.parse("image/png");
+                                    RequestBody body = new MultipartBody.Builder().setType(MultipartBody.FORM)
+                                            .addFormDataPart("image_file","image.png",
+                                                    RequestBody.create(imgBytes, mediaType))
+                                            .addFormDataPart("api_key","oVAqEDbCYmaILayXJdKAsuYbFcJ0LBP6")
+                                            .addFormDataPart("api_secret","e76obC1xsr-zSMynWZoQCt62vWDgtZ6O")
+                                            .addFormDataPart("return_attributes","emotion")
+                                            .build();
+                                    Request request = new Request.Builder()
+                                            .url("https://api-us.faceplusplus.com/facepp/v3/detect")
+                                            .method("POST", body)
+                                            .build();
+                                    try{
+                                        Response response = client.newCall(request).execute();
+                                        Platform.runLater(() -> {
+                                            try {
+                                                JSONObject jsonObject = new JSONObject(response.body().string());
+                                                faceId = jsonObject.getJSONArray("faces").getJSONObject(0).getString("face_token");
+                                                updateFaceId(faceId);
+                                            }catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+
+                                        });
+                                    }catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                    break;
+                                }
+                                else {
+                                    System.out.println("Face not found ");
+                                    Platform.runLater(() -> label.setText("Face not found! Trying Again..."));
+                                    Thread.sleep(2000);
+                                }
+                            }
+                        }
+                    }
+                }
+                capture.release();
+
+                if(faceId == null || faceId.equals("")){
+                    Platform.runLater(() -> {
+                        Alert alert = new Alert(Alert.AlertType.WARNING);
+                        alert.initStyle(StageStyle.UNDECORATED);
+                        alert.setTitle("Warning");
+                        alert.setHeaderText("Warning");
+                        if (!isCancelled())
+                            alert.setContentText("No face detected! Please try again.");
+                        else
+                            alert.setContentText("Faceid Cancelled!");
+                        alert.show();
+                    });
+                }
+                Platform.runLater(() -> faceid_change.setDisable(false));
+                Platform.runLater(alert::close);
+                return null;
+            }
+
+        };
+
+        Thread cameraThread = new Thread(cameraTask);
+        alert.setOnCloseRequest(e -> {
+            cameraTask.cancel(false);
+        });
+        cameraThread.start();
+
+
+    }
+
+    private void updateFaceId(String faceId) {
+        try {
+            Client client = new Client(GlobalVar.getUser().getId(), GlobalVar.getUser().getUsername(), GlobalVar.getUser().getFirstname(), GlobalVar.getUser().getLastname(), GlobalVar.getUser().getDate_naiss(), GlobalVar.getUser().getPassword(), GlobalVar.getUser().getEmail(), GlobalVar.getUser().getNum_tel(), GlobalVar.getUser().getAdresse(), GlobalVar.getUser().getPhoto(), faceId, new Date(System.currentTimeMillis()).toString());
+            clientService.update(client);
+            GlobalVar.setUser(client);
+            initProfile();
+            notify("FaceID has been updated successfully!");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     @FXML
     void browse_btn_act(ActionEvent event) {
@@ -473,10 +660,15 @@ public class UserDashboardController {
         }
     }
 
-
-    public void buy1_btn_act(ActionEvent actionEvent) {
+    private void buy(int pkg){
         try {
-            abonnementService.add(new Abonnement(GlobalVar.getUser().getId(), Date.valueOf(LocalDate.now().plusMonths(3)).toString(), "GP 1"));
+            if (pkg == 1)
+                abonnementService.add(new Abonnement(GlobalVar.getUser().getId(), Date.valueOf(LocalDate.now().plusMonths(3)).toString(), "GP 1"));
+            else if (pkg == 2)
+                abonnementService.add(new Abonnement(GlobalVar.getUser().getId(), Date.valueOf(LocalDate.now().plusMonths(6)).toString(), "GP 2"));
+            else if (pkg == 3)
+                abonnementService.add(new Abonnement(GlobalVar.getUser().getId(), Date.valueOf(LocalDate.now().plusMonths(12)).toString(), "GP 3"));
+
             Date date = Date.valueOf(abonnementService.getCurrentSubscription(GlobalVar.getUser().getId()).getDuree_abon());
             long diff = date.getTime() - System.currentTimeMillis();
             long days = diff / (24 * 60 * 60 * 1000);
@@ -502,67 +694,87 @@ public class UserDashboardController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public boolean setupBuy(float price){
+        PayPalConfig paypalConfig = new PayPalConfig()
+                .setClientId("Af9N6m41ryO-aKuZO3cwgGr1PZeBsbxLTeSYVJ7iUr71UO3tA8Uc0p50NeEMbewLzmq00go8MoXAzXPC").setClientSecret("EBfq6ayRpNgVeWdALsblGLrMKUspTHt5GzfuH5MOM1FN7gqsoR6y5TCOTTYlm4R3adGWPgKoWYOI46Xz")
+                .setReturnUrl("http://localhost/gymplus/checkout/success/").setCancelUrl("http://localhost/gymplus/checkout/cancel/")
+                .setMode(PayPalConfig.Mode.SANDBOX);
+        Transaction transaction = new Transaction(Currency.EUR); // Every price in EUR
+        transaction.addItem("Gym Plus Membership", price);  // Item to sell for 29.99 plus optional tax.
+        transaction.setInoviceNumber(String.valueOf(GlobalVar.getUser().getId() + Date.valueOf(LocalDate.now()).toString()));
+        Payment payment = new Payment(transaction);              // A payment has transaction(s).
+        payment.setNoteToPayer("Please contact ...");            // Note to payer for important messages.
+        payment.setShipping(ShippingPreference.NO_SHIPPING);     // Don't prompt the user for a shipping address.
+        try {
+            Payment paymentCreated = PayPalConnector.createPayment(paypalConfig, payment);
+            //database.save(paymentCreated.getOriginalPayPalResponse()); // optional but recommended.
+            if (paymentCreated != null) {
+                String redirectUrl = paymentCreated.getPayPalApprovalUrl();
+                // create new window that has webview to show the redirectUrl
+                Dialog<String> alert = new Dialog<>();
+                alert.initStyle(StageStyle.UNDECORATED);
+                alert.setTitle("PayPal Payment");
+                alert.setHeaderText("PayPal Payment");
+                ButtonType okButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+                alert.getDialogPane().getButtonTypes().add(okButton);
+                WebView webView = new WebView();
+                webView.getEngine().load(redirectUrl);
+                alert.getDialogPane().setContent(webView);
+                Worker<Void> worker = webView.getEngine().getLoadWorker();
+                worker.stateProperty().addListener(e->{
+                if (worker.getState() == Worker.State.SUCCEEDED) {
+                        if (webView.getEngine().getLocation().contains("success")) {
+                            alert.close();
+                        }else if (webView.getEngine().getLocation().contains("cancel")) {
+                            alert.close();
+                        }
+                    }
+                });
+                alert.showAndWait();
+                if (webView.getEngine().getLocation().contains("success")) {
+                    alert.close();
+                    return true;
+                }else {
+                    alert.close();
+                    return false;
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public void buy1_btn_act(ActionEvent actionEvent) {
+        if (setupBuy(29.99f)) {
+            buy(1);
+            notify("Payment was successful!");
+        }
+        else
+            notify("Payment was cancelled!");
     }
 
     public void buy2_btn_act(ActionEvent actionEvent) {
-        try {
-            abonnementService.add(new Abonnement(GlobalVar.getUser().getId(), Date.valueOf(LocalDate.now().plusMonths(6)).toString(), "GP 2"));
-            Date date = Date.valueOf(abonnementService.getCurrentSubscription(GlobalVar.getUser().getId()).getDuree_abon());
-            long diff = date.getTime() - System.currentTimeMillis();
-            long days = diff / (24 * 60 * 60 * 1000);
-            daysremain_label.setText(days + " days");
-            packname_label.setText(abonnementService.getCurrentSubscription(GlobalVar.getUser().getId()).getType());
-            ByteArrayOutputStream out = QRCode.from(String.valueOf(GlobalVar.getUser().getId())).to(ImageType.PNG).withSize(168, 149).stream();
-            ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
-            QR_imageview.setImage(new Image(in));
-            MultiFormatWriter ean8Writer = new MultiFormatWriter();
-            ByteArrayOutputStream out2 = new ByteArrayOutputStream();
-            MatrixToImageWriter.writeToStream(ean8Writer.encode(String.valueOf(GlobalVar.getUser().getId()), BarcodeFormat.CODE_128, 280,73), "png", out2);
-            ByteArrayInputStream in2 = new ByteArrayInputStream(out2.toByteArray());
-            barcode_imageview.setImage(new Image(in2));
-            fadeOutRightAnimation.setNode(unsubscribed_pane);
-            fadeOutRightAnimation.setOnFinished(e -> {
-                unsubscribed_pane.setVisible(false);
-                subscribed_pane.setOpacity(0);
-                subscribed_pane.setVisible(true);
-                fadeInRightAnimation.setNode(subscribed_pane);
-                fadeInRightAnimation.play();
-            });
-            fadeOutRightAnimation.play();
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (setupBuy(49.99f)) {
+            buy(2);
+            notify("Payment was successful!");
         }
+        else
+            notify("Payment was cancelled!");
     }
 
     public void buy3_btn_act(ActionEvent actionEvent) {
-        try {
-            abonnementService.add(new Abonnement(GlobalVar.getUser().getId(), Date.valueOf(LocalDate.now().plusMonths(12)).toString(), "GP 3"));
-            Date date = Date.valueOf(abonnementService.getCurrentSubscription(GlobalVar.getUser().getId()).getDuree_abon());
-            long diff = date.getTime() - System.currentTimeMillis();
-            long days = diff / (24 * 60 * 60 * 1000);
-            daysremain_label.setText(days + " days");
-            packname_label.setText(abonnementService.getCurrentSubscription(GlobalVar.getUser().getId()).getType());
-            ByteArrayOutputStream out = QRCode.from(String.valueOf(GlobalVar.getUser().getId())).to(ImageType.PNG).withSize(168, 149).stream();
-            ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
-            QR_imageview.setImage(new Image(in));
-            MultiFormatWriter ean8Writer = new MultiFormatWriter();
-            ByteArrayOutputStream out2 = new ByteArrayOutputStream();
-            MatrixToImageWriter.writeToStream(ean8Writer.encode(String.valueOf(GlobalVar.getUser().getId()), BarcodeFormat.CODE_128, 280,73), "png", out2);
-            ByteArrayInputStream in2 = new ByteArrayInputStream(out2.toByteArray());
-            barcode_imageview.setImage(new Image(in2));
-            fadeOutRightAnimation.setNode(unsubscribed_pane);
-            fadeOutRightAnimation.setOnFinished(e -> {
-                unsubscribed_pane.setVisible(false);
-                subscribed_pane.setOpacity(0);
-                subscribed_pane.setVisible(true);
-                fadeInRightAnimation.setNode(subscribed_pane);
-                fadeInRightAnimation.play();
-            });
-            fadeOutRightAnimation.play();
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (setupBuy(99.99f)) {
+            buy(3);
+            notify("Payment was successful!");
         }
+        else
+            notify("Payment was cancelled!");
     }
+
+
     private double xOffset = 0;
     private double yOffset = 0;
     public void initialize() {
@@ -591,6 +803,14 @@ public class UserDashboardController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        try {
+            Pane pane_Objectif= FXMLLoader.load(getClass().getResource("/gestionSuivi/objectif1.fxml"));
+            ObjectifPan.getChildren().setAll(pane_Objectif);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
     }
 
     private void initSubsciption(){

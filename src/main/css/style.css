@@ -7,7 +7,7 @@
 .topBorder{
     -fx-border-width: 1 0 1 0;
     -fx-background-color: #F0F2F1;
-    -fx-background-radius: 15;
+    -fx-background-radius: 5;
 }
 
 .roundButton{

@@ -33,7 +33,7 @@
                </children>
             </VBox>
             <Pane prefHeight="60.0" prefWidth="91.0" />
-            <HBox alignment="CENTER" prefHeight="60.0" spacing="20.0">
+            <HBox fx:id="editPost" alignment="CENTER" prefHeight="60.0" spacing="20.0">
                <children>
                   <FontAwesomeIconView fill="#616770" glyphName="EDIT" onMouseClicked="#showUpdatePost" size="20" strokeLineCap="ROUND" strokeLineJoin="ROUND" wrappingWidth="8.799986839294434">
                      <cursor>

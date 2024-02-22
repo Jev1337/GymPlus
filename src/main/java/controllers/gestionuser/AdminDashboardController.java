@@ -24,6 +24,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.chart.BarChart;
@@ -31,16 +32,15 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
@@ -395,8 +395,13 @@ public class AdminDashboardController {
     @FXML
     private Pane hidepane;
 
+    @FXML
+    private VBox userlist_vbox;
+
     private VideoCapture capture;
     private Mat frame;
+
+
 
 
     @FXML
@@ -1737,6 +1742,61 @@ public class AdminDashboardController {
         addresscol.setCellValueFactory(new PropertyValueFactory<>("adresse"));
         acctypecol.setCellValueFactory(new PropertyValueFactory<>("role"));
         phonenumbercol.setCellValueFactory(new PropertyValueFactory<>("num_tel"));
+
+
+        //now into the vbox
+        //new hBox for each user
+        for (User user : users) {
+            HBox hBox = new HBox();
+            hBox.setSpacing(10);
+            hBox.setPadding(new Insets(10, 10, 10, 10));
+            hBox.setStyle("-fx-background-color: #f4f4f4; -fx-border-radius: 10px; -fx-background-radius: 10px;");
+            hBox.setAlignment(Pos.CENTER_LEFT);
+            hBox.setPrefWidth(1000);
+            hBox.setPrefHeight(100);
+            hBox.setCursor(Cursor.HAND);
+            hBox.setOnMouseEntered(e -> {
+                hBox.setStyle("-fx-background-color: #e4e4e4; -fx-border-radius: 10px; -fx-background-radius: 10px;");
+            });
+            hBox.setOnMouseExited(e -> {
+                hBox.setStyle("-fx-background-color: #f4f4f4; -fx-border-radius: 10px; -fx-background-radius: 10px;");
+            });
+            hBox.setOnMouseClicked(e -> {
+                initProfileTemp(user);
+                switchToPane(AdminInfoPane);
+            });
+            ImageView imageView = new ImageView(new Image(new File("src/assets/profileuploads/" + user.getPhoto()).toURI().toString()));
+            imageView.setFitWidth(80);
+            imageView.setFitHeight(80);
+            imageView.setPreserveRatio(false);
+            imageView.setClip(new Circle(imageView.getFitWidth()/2, imageView.getFitHeight()/2, imageView.getFitWidth()/2));
+            hBox.getChildren().add(imageView);
+            //vbox
+            VBox vBox = new VBox();
+            vBox.setSpacing(5);
+            vBox.setPadding(new Insets(5, 5, 5, 5));
+            vBox.setAlignment(Pos.CENTER_LEFT);
+            vBox.setPrefWidth(800);
+            vBox.setPrefHeight(100);
+            //username
+            Label username = new Label(user.getUsername());
+            username.setTextFill(Color.web("#000000"));
+            vBox.getChildren().add(username);
+            //role
+            Label role = new Label(user.getRole());
+            role.setTextFill(Color.web("#000000"));
+            vBox.getChildren().add(role);
+            //email
+            Label email = new Label(user.getEmail());
+            email.setTextFill(Color.web("#000000"));
+            vBox.getChildren().add(email);
+            //phone
+            Label phone = new Label(user.getNum_tel());
+            phone.setTextFill(Color.web("#000000"));
+            vBox.getChildren().add(phone);
+            hBox.getChildren().add(vBox);
+            userlist_vbox.getChildren().add(hBox);
+        }
     }
 
     private void initNonSubbedUserList(String condition) {

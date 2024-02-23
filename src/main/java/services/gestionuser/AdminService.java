@@ -163,5 +163,11 @@ public class AdminService implements IService<Admin> {
         }
         return null;
     }
-
+    public void updatePassword(int id, String password) throws SQLException {
+        String query = "UPDATE user SET password = ? WHERE id = ?";
+        PreparedStatement pst = connection.prepareStatement(query);
+        pst.setString(1, Password.hash(password).withBcrypt().getResult());
+        pst.setInt(2, id);
+        pst.executeUpdate();
+    }
 }

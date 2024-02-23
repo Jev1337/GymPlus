@@ -236,6 +236,7 @@ CREATE TABLE `user` (
   `num_tel` varchar(255) DEFAULT NULL,
   `adresse` text DEFAULT NULL,
   `photo` text DEFAULT NULL,
+  `event_points` int(11) DEFAULT NULL,
   `faceid` varchar(255) DEFAULT NULL,
   `faceid_ts` date NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

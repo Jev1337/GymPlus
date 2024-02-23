@@ -111,15 +111,14 @@
             <version>2.15.2</version>
         </dependency>
         <dependency>
-            <groupId>com.calendarfx</groupId>
-            <artifactId>view</artifactId>
-            <version>11.12.6</version>
-        </dependency>
-
-        <dependency>
             <groupId>de.micromata.paypal</groupId>
             <artifactId>paypal-core</artifactId>
             <version>0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.twilio.sdk</groupId>
+            <artifactId>twilio</artifactId>
+            <version>10.0.0</version>
         </dependency>
     </dependencies>
     <build>

@@ -18,13 +18,12 @@ public class EquipementService implements IService<Equipements_details>{
 
     @Override
     public void add(Equipements_details equipementsDetails) throws SQLException {
-        String sql="insert into equipements_details values(?,?,?,?,?)";
+        String sql="insert into equipements_details(name,description,duree_de_vie,etat) values (?,?,?,?)";
         PreparedStatement ps =connection.prepareStatement(sql);
-        ps.setInt(1,equipementsDetails.getId());
-        ps.setString(2, equipementsDetails.getName());
-        ps.setString(3,equipementsDetails.getDescription());
-        ps.setString(4,equipementsDetails.getDuree_de_vie());
-        ps.setString(5,equipementsDetails.getEtat());
+        ps.setString(1, equipementsDetails.getName());
+        ps.setString(2,equipementsDetails.getDescription());
+        ps.setString(3,equipementsDetails.getDuree_de_vie());
+        ps.setString(4,equipementsDetails.getEtat());
         ps.executeUpdate();
     }
 

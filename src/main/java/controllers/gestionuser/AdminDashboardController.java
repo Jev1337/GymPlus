@@ -1649,8 +1649,12 @@ public class AdminDashboardController {
             e.printStackTrace();
         }
         activememclients_label.setText(String.valueOf(count2));
-        percentactivemem_label.setText((count2 * 100) / count1 + "%");
-        percentactivemem_prog.setProgress((double) (count2 * 100) / count1 / 100);
+        if (count1 == 0)
+            percentactivemem_label.setText("0%");
+        else {
+            percentactivemem_label.setText((count2 * 100) / count1 + "%");
+            percentactivemem_prog.setProgress((double) (count2 * 100) / count1 / 100);
+        }
 
         XYChart.Series<String,Number> series = new XYChart.Series<>();
         series.getData().add(new XYChart.Data<>("Jan", 100));

@@ -19,6 +19,13 @@ public  class Equipements_details{
         this.etat = etat;
     }
 
+    public Equipements_details(String name, String description, String duree_de_vie, String etat) {
+        this.name = name;
+        this.description = description;
+        this.duree_de_vie = duree_de_vie;
+        this.etat = etat;
+    }
+
     public int getId() {
         return id;
     }

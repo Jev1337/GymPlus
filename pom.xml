@@ -32,6 +32,19 @@
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
+            <artifactId>javafx-web</artifactId>
+            <version>20.0.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>font-awesome</artifactId>
+            <version>6.4.0</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
             <version>21.0.2</version>
         </dependency>
@@ -55,6 +68,7 @@
             <artifactId>password4j</artifactId>
             <version>1.7.3</version>
         </dependency>
+
         <dependency>
             <groupId>com.github.javafaker</groupId>
             <artifactId>javafaker</artifactId>
@@ -70,6 +84,42 @@
             <groupId>com.github.kenglxn.QRGen</groupId>
             <artifactId>javase</artifactId>
             <version>2.7.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openpnp</groupId>
+            <artifactId>opencv</artifactId>
+            <version>4.9.0-0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>4.12.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20240205</version>
+        </dependency>
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>rest-assured</artifactId>
+            <version>5.3.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.15.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.calendarfx</groupId>
+            <artifactId>view</artifactId>
+            <version>11.12.6</version>
+        </dependency>
+
+        <dependency>
+            <groupId>de.micromata.paypal</groupId>
+            <artifactId>paypal-core</artifactId>
+            <version>0.2</version>
         </dependency>
     </dependencies>
     <build>

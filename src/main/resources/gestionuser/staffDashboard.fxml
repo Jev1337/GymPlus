@@ -16,6 +16,7 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -24,7 +25,9 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.RadialGradient?>
 <?import javafx.scene.paint.Stop?>
+<?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane fx:id="mainPane" prefHeight="720.0" prefWidth="1200.0" stylesheets="@../assets/css/font.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionuser.StaffDashboardController">
@@ -381,6 +384,19 @@
                                           </Button>
                                           <DatePicker fx:id="dateofbirth_tf" layoutX="26.0" layoutY="204.0" prefHeight="36.0" prefWidth="229.0" />
                                           <TextArea fx:id="address_ta" layoutX="289.0" layoutY="203.0" prefHeight="97.0" prefWidth="227.0" />
+                                          <ImageView fx:id="faceid_change" fitHeight="33.0" fitWidth="31.0" layoutX="525.0" layoutY="17.0" onMouseClicked="#faceid_change_clicked" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../assets/images/Face_ID_logo.svg.png" />
+                                             </image>
+                                             <cursor>
+                                                <Cursor fx:constant="HAND" />
+                                             </cursor>
+                                          </ImageView>
+                                          <Label layoutX="526.0" layoutY="48.0" text="Update">
+                                             <font>
+                                                <Font size="9.0" />
+                                             </font>
+                                          </Label>
                                        </children>
                                     </Pane>
                                     <Pane layoutX="92.0" layoutY="420.0" prefHeight="190.0" prefWidth="363.0" style="-fx-background-color: white; -fx-border-radius: 30px; -fx-background-radius: 30px;">
@@ -496,7 +512,7 @@
                         </ScrollPane>
                         <ScrollPane fx:id="StaffSubscriptionPane" prefHeight="646.0" prefWidth="1155.0" visible="false">
                            <content>
-                              <Pane fx:id="subpane" prefHeight="808.0" prefWidth="1156.0">
+                              <Pane fx:id="subpane" prefHeight="1138.0" prefWidth="1156.0">
                                  <children>
                                     <Label layoutX="39.0" layoutY="14.0" style="-fx-text-fill: linear-gradient(to right, #00aaff, #00688b);" text="Staff / Subscriptions">
                                        <font>
@@ -556,6 +572,98 @@
                                           </Button>
                                        </children>
                                     </Pane>
+                                    <Pane fx:id="qr_pane" layoutX="44.0" layoutY="615.0" prefHeight="503.0" prefWidth="1082.0" style="-fx-background-color: white; -fx-border-radius: 30px; -fx-background-radius: 30px;">
+                                       <children>
+                                          <ImageView fx:id="camerafeed_imageview" fitHeight="341.0" fitWidth="613.0" layoutX="33.0" layoutY="82.0" pickOnBounds="true">
+                                             <image>
+                                                <Image url="@../assets/images/offlinemedia.png" />
+                                             </image>
+                                          </ImageView>
+                                          <Line endX="8.0" endY="407.0" layoutX="668.0" layoutY="14.0" startX="8.0" startY="70.0" />
+                                          <Label layoutX="33.0" layoutY="24.0" text="QR Scan">
+                                             <font>
+                                                <Font size="22.0" />
+                                             </font>
+                                          </Label>
+                                          <Label layoutX="698.0" layoutY="82.0" text="User Info">
+                                             <font>
+                                                <Font size="22.0" />
+                                             </font>
+                                          </Label>
+                                          <ImageView fx:id="scanneduser_imageview" fitHeight="64.0" fitWidth="65.0" layoutX="730.0" layoutY="130.0" pickOnBounds="true">
+                                             <image>
+                                                <Image url="@../assets/images/user.png" />
+                                             </image></ImageView>
+                                          <Label layoutX="813.0" layoutY="162.0" text="Client">
+                                             <font>
+                                                <Font size="11.0" />
+                                             </font></Label>
+                                          <Label fx:id="namesub_label" layoutX="813.0" layoutY="140.0" text="Full Name" />
+                                          <Label fx:id="id_label" layoutX="967.0" layoutY="140.0" text="12345678" />
+                                          <Label fx:id="dobsub_label" layoutX="961.0" layoutY="160.0" prefHeight="20.0" prefWidth="76.0" text="01/01/1970" textAlignment="CENTER" wrapText="true" />
+                                          <FontAwesomeIconView fx:id="verified_icon" glyphName="CHECK" layoutX="858.0" layoutY="394.0" size="50" text="">
+                                             <fill>
+                                                <RadialGradient centerX="0.5" centerY="0.5" radius="0.5">
+                                                   <stops>
+                                                      <Stop>
+                                                         <color>
+                                                            <Color green="0.6666666865348816" blue="1.0" />
+                                                         </color>
+                                                      </Stop>
+                                                      <Stop offset="0.006711409395973154">
+                                                         <color>
+                                                            <Color green="0.6666666865348816" blue="1.0" />
+                                                         </color>
+                                                      </Stop>
+                                                      <Stop offset="1.0">
+                                                         <color>
+                                                            <Color green="0.40784314274787903" blue="0.545098066329956" />
+                                                         </color>
+                                                      </Stop>
+                                                   </stops>
+                                                </RadialGradient>
+                                             </fill>
+                                          </FontAwesomeIconView>
+                                          <ToggleButton fx:id="opencam_btn" layoutX="33.0" layoutY="440.0" mnemonicParsing="false" onAction="#opencam_btn_act" style="-color-button-bg: -color-success-4; -color-button-fg: white;" text="Open Camera">
+                                             <cursor>
+                                                <Cursor fx:constant="HAND" />
+                                             </cursor>
+                                          </ToggleButton>
+                                          <Pane fx:id="hidepane" layoutX="30.0" layoutY="438.0" prefHeight="40.0" prefWidth="120.0" style="-fx-background-color: white;" visible="false" />
+                                          <Label layoutX="698.0" layoutY="207.0" text="User Subscription Info">
+                                             <font>
+                                                <Font size="22.0" />
+                                             </font>
+                                          </Label>
+                                          <Label layoutX="722.0" layoutY="252.0" text="Subscription Type:" />
+                                          <Label layoutX="722.0" layoutY="272.0" text="Expiration Date:" />
+                                          <Label fx:id="subtype" layoutX="846.0" layoutY="252.0" text="Not Subscribed" />
+                                          <Label fx:id="subexpire" layoutX="833.0" layoutY="272.0" text="Not Subscribed" />
+                                          <FontAwesomeIconView fx:id="nonverified_icon" glyphName="TIMES" layoutX="863.0" layoutY="392.0" size="50" visible="false">
+                                             <fill>
+                                                <RadialGradient centerX="0.5" centerY="0.5" radius="0.5">
+                                                   <stops>
+                                                      <Stop>
+                                                         <color>
+                                                            <Color green="0.6666666865348816" blue="1.0" />
+                                                         </color>
+                                                      </Stop>
+                                                      <Stop offset="0.006711409395973154">
+                                                         <color>
+                                                            <Color red="1.0" />
+                                                         </color>
+                                                      </Stop>
+                                                      <Stop offset="1.0">
+                                                         <color>
+                                                            <Color red="0.5400000214576721" />
+                                                         </color>
+                                                      </Stop>
+                                                   </stops>
+                                                </RadialGradient>
+                                             </fill>
+                                          </FontAwesomeIconView>
+                                       </children>
+                                    </Pane>
                                  </children>
                               </Pane>
                            </content>
@@ -586,6 +694,19 @@
                               </Pane>
                            </content>
                         </ScrollPane>
+                        <ScrollPane fx:id="StaffObjectivePane" prefHeight="646.0" prefWidth="1155.0" visible="false">
+                           <content>
+                              <Pane fx:id="affichage_events_adstaff1" prefHeight="808.0" prefWidth="1156.0">
+                                 <children>
+                                    <Label layoutX="39.0" layoutY="14.0" style="-fx-text-fill: linear-gradient(to right, #00aaff, #00688b);" text="Staff / Objectives">
+                                       <font>
+                                          <Font name="Open Sans Regular" size="16.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </Pane>
+                           </content>
+                        </ScrollPane>
                         <ScrollPane fx:id="StaffSettingsPane" prefHeight="646.0" prefWidth="1155.0" visible="false">
                            <content>
                               <Pane prefHeight="808.0" prefWidth="1156.0">
@@ -601,7 +722,7 @@
                         </ScrollPane>
                         <ScrollPane fx:id="StaffEquipmentManagementPane" prefHeight="646.0" prefWidth="1155.0" visible="false">
                            <content>
-                              <Pane fx:id="EquipmentIdAdminStaff" prefHeight="808.0" prefWidth="1156.0">
+                              <Pane fx:id="EquipmentIdAdminStaff" prefHeight="800.0" prefWidth="1156.0">
                                  <children>
                                     <Label layoutX="39.0" layoutY="14.0" style="-fx-text-fill: linear-gradient(to right, #00aaff, #00688b);" text="Staff / Equipments">
                                        <font>
@@ -637,7 +758,12 @@
                               </LinearGradient>
                            </fill>
                         </FontAwesomeIconView>
-                        <FontAwesomeIconView glyphName="HOME" layoutX="15.0" layoutY="285.0" onMouseClicked="#home_btn_clicked" size="24">
+                        <Button fx:id="home_btn" layoutX="1.0" layoutY="240.0" mnemonicParsing="false" onAction="#home_btn_act" prefHeight="37.0" prefWidth="199.0" stylesheets="@../assets/css/buttons.css" text="Home" visible="false">
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Button>
+                        <FontAwesomeIconView glyphName="HOME" layoutX="15.0" layoutY="267.0" onMouseClicked="#home_btn_clicked" size="24">
                            <cursor>
                               <Cursor fx:constant="HAND" />
                            </cursor>
@@ -658,7 +784,12 @@
                               </LinearGradient>
                            </fill>
                         </FontAwesomeIconView>
-                        <FontAwesomeIconView glyphName="SHOPPING_BAG" layoutX="13.0" layoutY="322.0" onMouseClicked="#shop_btn_clicked" size="24">
+                        <Button fx:id="shop_btn" layoutX="1.0" layoutY="277.0" mnemonicParsing="false" onAction="#shop_btn_act" prefHeight="37.0" prefWidth="199.0" stylesheets="@../assets/css/buttons.css" text="Shop" visible="false">
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Button>
+                        <FontAwesomeIconView glyphName="SHOPPING_BAG" layoutX="13.0" layoutY="304.0" onMouseClicked="#shop_btn_clicked" size="24">
                            <cursor>
                               <Cursor fx:constant="HAND" />
                            </cursor>
@@ -679,6 +810,11 @@
                               </LinearGradient>
                            </fill>
                         </FontAwesomeIconView>
+                        <Button fx:id="settings_btn" layoutX="1.0" layoutY="593.0" mnemonicParsing="false" onAction="#settings_btn_act" prefHeight="37.0" prefWidth="199.0" stylesheets="@../assets/css/buttons.css" text="Settings" visible="false">
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Button>
                         <FontAwesomeIconView glyphName="GEAR" layoutX="14.0" layoutY="620.0" onMouseClicked="#settings_btn_clicked" size="24">
                            <cursor>
                               <Cursor fx:constant="HAND" />
@@ -700,6 +836,11 @@
                               </LinearGradient>
                            </fill>
                         </FontAwesomeIconView>
+                        <Button fx:id="logout_btn" layoutX="1.0" layoutY="641.0" mnemonicParsing="false" onAction="#logout_btn_act" prefHeight="37.0" prefWidth="199.0" stylesheets="@../assets/css/buttons.css" text="Logout" visible="false">
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Button>
                         <FontAwesomeIconView glyphName="SIGN_OUT" layoutX="14.0" layoutY="668.0" onMouseClicked="#logout_btn_clicked" size="24">
                            <cursor>
                               <Cursor fx:constant="HAND" />
@@ -721,27 +862,12 @@
                               </LinearGradient>
                            </fill>
                         </FontAwesomeIconView>
-                        <Button fx:id="home_btn" layoutX="1.0" layoutY="258.0" mnemonicParsing="false" onAction="#home_btn_act" prefHeight="37.0" prefWidth="199.0" stylesheets="@../assets/css/buttons.css" text="Home" visible="false">
+                        <Button fx:id="subscription_btn" layoutX="1.0" layoutY="314.0" mnemonicParsing="false" onAction="#subscription_btn_act" prefHeight="37.0" prefWidth="199.0" stylesheets="@../assets/css/buttons.css" text="Subscription" visible="false">
                            <cursor>
                               <Cursor fx:constant="HAND" />
                            </cursor>
                         </Button>
-                        <Button fx:id="shop_btn" layoutX="1.0" layoutY="295.0" mnemonicParsing="false" onAction="#shop_btn_act" prefHeight="37.0" prefWidth="199.0" stylesheets="@../assets/css/buttons.css" text="Shop" visible="false">
-                           <cursor>
-                              <Cursor fx:constant="HAND" />
-                           </cursor>
-                        </Button>
-                        <Button fx:id="settings_btn" layoutX="1.0" layoutY="593.0" mnemonicParsing="false" onAction="#settings_btn_act" prefHeight="37.0" prefWidth="199.0" stylesheets="@../assets/css/buttons.css" text="Settings" visible="false">
-                           <cursor>
-                              <Cursor fx:constant="HAND" />
-                           </cursor>
-                        </Button>
-                        <Button fx:id="logout_btn" layoutX="1.0" layoutY="641.0" mnemonicParsing="false" onAction="#logout_btn_act" prefHeight="37.0" prefWidth="199.0" stylesheets="@../assets/css/buttons.css" text="Logout" visible="false">
-                           <cursor>
-                              <Cursor fx:constant="HAND" />
-                           </cursor>
-                        </Button>
-                        <FontAwesomeIconView glyphName="ID_CARD" layoutX="12.0" layoutY="359.0" onMouseClicked="#subscription_btn_clicked" size="24">
+                        <FontAwesomeIconView glyphName="ID_CARD" layoutX="12.0" layoutY="341.0" onMouseClicked="#subscription_btn_clicked" size="24">
                            <cursor>
                               <Cursor fx:constant="HAND" />
                            </cursor>
@@ -762,17 +888,12 @@
                               </LinearGradient>
                            </fill>
                         </FontAwesomeIconView>
-                        <Button fx:id="subscription_btn" layoutX="1.0" layoutY="332.0" mnemonicParsing="false" onAction="#subscription_btn_act" prefHeight="37.0" prefWidth="199.0" stylesheets="@../assets/css/buttons.css" text="Subscription" visible="false">
+                        <Button fx:id="event_btn" layoutX="1.0" layoutY="351.0" mnemonicParsing="false" onAction="#event_btn_act" prefHeight="37.0" prefWidth="199.0" stylesheets="@../assets/css/buttons.css" text="Events" visible="false">
                            <cursor>
                               <Cursor fx:constant="HAND" />
                            </cursor>
                         </Button>
-                        <Button fx:id="event_btn" layoutX="1.0" layoutY="369.0" mnemonicParsing="false" onAction="#event_btn_act" prefHeight="37.0" prefWidth="199.0" stylesheets="@../assets/css/buttons.css" text="Events" visible="false">
-                           <cursor>
-                              <Cursor fx:constant="HAND" />
-                           </cursor>
-                        </Button>
-                        <FontAwesomeIconView glyphName="CALENDAR" layoutX="12.0" layoutY="396.0" onMouseClicked="#event_btn_clicked" size="24">
+                        <FontAwesomeIconView glyphName="CALENDAR" layoutX="13.0" layoutY="378.0" onMouseClicked="#event_btn_clicked" size="24">
                            <cursor>
                               <Cursor fx:constant="HAND" />
                            </cursor>
@@ -793,12 +914,38 @@
                               </LinearGradient>
                            </fill>
                         </FontAwesomeIconView>
-                        <Button fx:id="equipment_btn" layoutX="1.0" layoutY="406.0" mnemonicParsing="false" onAction="#equipment_btn_act" prefHeight="37.0" prefWidth="199.0" stylesheets="@../assets/css/buttons.css" text="Equipments" visible="false">
+                        <Button fx:id="objective_btn" layoutX="1.0" layoutY="390.0" mnemonicParsing="false" onAction="#objective_btn_act" prefHeight="37.0" prefWidth="199.0" stylesheets="@../assets/css/buttons.css" text="Objectives" visible="false">
                            <cursor>
                               <Cursor fx:constant="HAND" />
                            </cursor>
                         </Button>
-                        <FontAwesomeIconView glyphName="SITEMAP" layoutX="11.0" layoutY="433.0" onMouseClicked="#equipment_btn_clicked" size="24">
+                        <FontAwesomeIconView glyphName="BULLSEYE" layoutX="13.0" layoutY="417.0" onMouseClicked="#objective_btn_clicked" size="24">
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                           <fill>
+                              <LinearGradient endX="1.0" endY="1.0">
+                                 <stops>
+                                    <Stop>
+                                       <color>
+                                          <Color green="0.6666666865348816" blue="1.0" />
+                                       </color>
+                                    </Stop>
+                                    <Stop offset="1.0">
+                                       <color>
+                                          <Color green="0.40784314274787903" blue="0.545098066329956" />
+                                       </color>
+                                    </Stop>
+                                 </stops>
+                              </LinearGradient>
+                           </fill>
+                        </FontAwesomeIconView>
+                        <Button fx:id="equipment_btn" layoutX="1.0" layoutY="425.0" mnemonicParsing="false" onAction="#equipment_btn_act" prefHeight="37.0" prefWidth="199.0" stylesheets="@../assets/css/buttons.css" text="Equipments" visible="false">
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Button>
+                        <FontAwesomeIconView glyphName="SITEMAP" layoutX="12.0" layoutY="452.0" onMouseClicked="#equipment_btn_clicked" size="24" text="">
                            <cursor>
                               <Cursor fx:constant="HAND" />
                            </cursor>

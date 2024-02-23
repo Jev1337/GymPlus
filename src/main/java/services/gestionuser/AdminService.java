@@ -17,7 +17,7 @@ public class AdminService implements IService<Admin> {
 
     @Override
     public void add(Admin admin) throws SQLException {
-        String query = "INSERT INTO user (id, username, firstname, lastname, date_naiss, password, email, num_tel, adresse, photo, role) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+        String query = "INSERT INTO user (id, username, firstname, lastname, date_naiss, password, email, num_tel, adresse, photo, role, faceid, faceid_ts) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
         PreparedStatement pst = connection.prepareStatement(query);
         pst.setInt(1, admin.getId());
         pst.setString(2, admin.getUsername());
@@ -30,6 +30,8 @@ public class AdminService implements IService<Admin> {
         pst.setString(9, admin.getAdresse());
         pst.setString(10, admin.getPhoto());
         pst.setString(11, admin.getRole());
+        pst.setString(12, admin.getFaceid());
+        pst.setString(13, admin.getFaceid_ts());
         pst.executeUpdate();
     }
 
@@ -44,7 +46,7 @@ public class AdminService implements IService<Admin> {
 
     @Override
     public void update(Admin admin) throws SQLException {
-        String query = "UPDATE user SET username = ?, firstname = ?, lastname = ?, date_naiss = ?, email = ?, num_tel = ?, adresse = ?, photo = ? WHERE id = ?";
+        String query = "UPDATE user SET username = ?, firstname = ?, lastname = ?, date_naiss = ?, email = ?, num_tel = ?, adresse = ?, photo = ?, faceid = ?, faceid_ts = ? WHERE id = ?";
         PreparedStatement pst = connection.prepareStatement(query);
         pst.setString(1, admin.getUsername());
         pst.setString(2, admin.getFirstname());
@@ -54,7 +56,10 @@ public class AdminService implements IService<Admin> {
         pst.setString(6, admin.getNum_tel());
         pst.setString(7, admin.getAdresse());
         pst.setString(8, admin.getPhoto());
-        pst.setInt(9, admin.getId());
+        pst.setString(9, admin.getFaceid());
+        pst.setString(10, admin.getFaceid_ts());
+        pst.setInt(11, admin.getId());
+
         pst.executeUpdate();
     }
 
@@ -76,6 +81,9 @@ public class AdminService implements IService<Admin> {
             admin.setNum_tel(rs.getString("num_tel"));
             admin.setAdresse(rs.getString("adresse"));
             admin.setPhoto(rs.getString("photo"));
+            admin.setFaceid(rs.getString("faceid"));
+            admin.setFaceid_ts(rs.getString("faceid_ts"));
+            admin.setRole(rs.getString("role"));
             admins.add(admin);
         }
         return admins;
@@ -98,6 +106,9 @@ public class AdminService implements IService<Admin> {
             admin.setNum_tel(rs.getString("num_tel"));
             admin.setAdresse(rs.getString("adresse"));
             admin.setPhoto(rs.getString("photo"));
+            admin.setFaceid(rs.getString("faceid"));
+            admin.setFaceid_ts(rs.getString("faceid_ts"));
+            admin.setRole(rs.getString("role"));
             return admin;
         }
         return null;
@@ -120,6 +131,9 @@ public class AdminService implements IService<Admin> {
             admin.setNum_tel(rs.getString("num_tel"));
             admin.setAdresse(rs.getString("adresse"));
             admin.setPhoto(rs.getString("photo"));
+            admin.setFaceid(rs.getString("faceid"));
+            admin.setFaceid_ts(rs.getString("faceid_ts"));
+            admin.setRole(rs.getString("role"));
             return admin;
         }
         return null;
@@ -142,6 +156,9 @@ public class AdminService implements IService<Admin> {
             admin.setNum_tel(rs.getString("num_tel"));
             admin.setAdresse(rs.getString("adresse"));
             admin.setPhoto(rs.getString("photo"));
+            admin.setFaceid(rs.getString("faceid"));
+            admin.setFaceid_ts(rs.getString("faceid_ts"));
+            admin.setRole(rs.getString("role"));
             return admin;
         }
         return null;

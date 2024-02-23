@@ -5,6 +5,7 @@ import animatefx.animation.FadeInRight;
 import animatefx.animation.FadeOutRight;
 import atlantafx.base.controls.Message;
 import atlantafx.base.controls.Notification;
+import atlantafx.base.controls.RingProgressIndicator;
 import atlantafx.base.theme.Styles;
 import atlantafx.base.util.Animations;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
@@ -16,8 +17,10 @@ import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -28,6 +31,12 @@ import javafx.scene.chart.BarChart;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -44,14 +53,26 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
+import okhttp3.*;
+import org.json.JSONObject;
+import org.opencv.core.*;
+import org.opencv.core.Point;
+import org.opencv.imgcodecs.Imgcodecs;
+import org.opencv.imgproc.Imgproc;
+import org.opencv.objdetect.CascadeClassifier;
+import org.opencv.objdetect.Objdetect;
+import org.opencv.objdetect.QRCodeDetector;
+import org.opencv.videoio.VideoCapture;
 import services.gestionuser.AbonnementService;
 import services.gestionuser.ClientService;
 import services.gestionuser.StaffService;
 
-import java.io.File;
-import java.io.IOException;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.nio.file.Files;
 import java.sql.Date;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -62,7 +83,7 @@ public class StaffDashboardController {
     private final ClientService clientService = new ClientService();
     private final AbonnementService abonnementService = new AbonnementService();
 
-    private FadeIn[] fadeInAnimation = new FadeIn[7];
+    private FadeIn[] fadeInAnimation = new FadeIn[8];
     private FadeOutRight fadeOutRightAnimation = new FadeOutRight();
     private FadeInRight fadeInRightAnimation = new FadeInRight();
 
@@ -70,6 +91,9 @@ public class StaffDashboardController {
 
     @FXML
     private Button subscription_btn;
+
+    @FXML
+    private Button objective_btn;
 
     @FXML
     private ImageView user_imageview;
@@ -225,6 +249,316 @@ public class StaffDashboardController {
 
     @FXML
     private Pane subpane;
+
+    @FXML
+    private ScrollPane StaffObjectivePane;
+
+    @FXML
+    private ImageView faceid_change;
+
+    @FXML
+    private FontAwesomeIconView verified_icon;
+
+    @FXML
+    private FontAwesomeIconView nonverified_icon;
+
+    @FXML
+    private Label namesub_label;
+
+    @FXML
+    private Label subexpire;
+
+    @FXML
+    private Label subtype;
+
+    @FXML
+    private Label id_label;
+
+    @FXML
+    private Label dobsub_label;
+
+    @FXML
+    private ImageView scanneduser_imageview;
+
+    @FXML
+    private ImageView camerafeed_imageview;
+
+    @FXML
+    private ToggleButton opencam_btn;
+
+    @FXML
+    private Pane qr_pane;
+
+    @FXML
+    private Pane hidepane;
+
+    private VideoCapture capture;
+    private Mat frame;
+
+
+    @FXML
+    private void opencam_btn_act(ActionEvent event){
+        Task<Void> cameraTask = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+
+                capture = new VideoCapture(0);
+                frame = new Mat();
+                if (capture.isOpened()) {
+                    hidepane.setVisible(false);
+                    Mat gray = new Mat();
+                    Mat points = new Mat();
+                    while (opencam_btn.isSelected() && !isCancelled() && getCurrentPane() == StaffSubscriptionPane){
+                        if (capture.read(frame)) {
+                            if (!frame.empty()) {
+                                Imgproc.cvtColor(frame, gray, Imgproc.COLOR_BGR2GRAY);
+                                Imgproc.GaussianBlur(gray, gray, new Size(5, 5), 0);
+                                QRCodeDetector qrCodeDetector = new QRCodeDetector();
+                                String data = qrCodeDetector.detectAndDecode(gray, points);
+                                if (!points.empty() && !data.isEmpty()) {
+                                    //check if data is an int
+                                    if (data.matches("^\\d+$")) {
+                                        Client c = clientService.getUserById(Integer.parseInt(data));
+                                        if (c != null)
+                                            Platform.runLater(() -> {
+                                                namesub_label.setText(c.getLastname() + " " + c.getFirstname());
+                                                id_label.setText(String.valueOf(c.getId()));
+                                                dobsub_label.setText(c.getDate_naiss());
+                                                scanneduser_imageview.setImage(new Image(new File("src/assets/profileuploads/" + c.getPhoto()).toURI().toString()));
+                                                Circle clip = new Circle(scanneduser_imageview.getFitWidth()/2, scanneduser_imageview.getFitHeight()/2, scanneduser_imageview.getFitWidth()/2);
+                                                scanneduser_imageview.setClip(clip);
+                                                scanneduser_imageview.setPreserveRatio(false);
+                                                try {
+                                                    if (abonnementService.isUserSubscribed(c.getId())) {
+                                                        Abonnement abonnement = abonnementService.getCurrentSubscription(c.getId());
+                                                        subexpire.setText(abonnement.getDuree_abon());
+                                                        subtype.setText(abonnement.getType());
+                                                        verified_icon.setVisible(true);
+                                                        nonverified_icon.setVisible(false);
+                                                    }else {
+                                                        subexpire.setText("Not Subscribed");
+                                                        subtype.setText("Not Subscribed");
+                                                        nonverified_icon.setVisible(true);
+                                                        verified_icon.setVisible(false);
+                                                    }
+                                                } catch (SQLException e) {
+                                                    throw new RuntimeException(e);
+                                                }
+                                            });
+
+                                    }
+
+                                    for (int i = 0; i < points.cols(); i++) {
+                                        Point pt1 = new Point(points.get(0, i));
+                                        Point pt2 = new Point(points.get(0, (i + 1) % 4));
+                                        Imgproc.line(frame, pt1, pt2, new Scalar(255, 0, 0), 3);
+                                    }
+                                }
+                                MatOfByte bytes = new MatOfByte();
+                                Imgcodecs.imencode(".png", frame, bytes);
+                                InputStream inputStream = new ByteArrayInputStream(bytes.toArray());
+                                camerafeed_imageview.setImage(new Image(inputStream));
+                            }
+                        }
+                    }
+                }
+                capture.release();
+                Platform.runLater(() -> {
+                    camerafeed_imageview.setImage(new Image(getClass().getResource("/assets/images/offlinemedia.png").toString()));
+                    if (getCurrentPane() != StaffSubscriptionPane){
+                        opencam_btn.setSelected(false);
+                        opencam_btn.setText("Open Camera");
+                        opencam_btn.setStyle("-color-button-bg: -color-success-4;");
+                    }
+                });
+                return null;
+            }
+        };
+
+        if (opencam_btn.isSelected()){
+            opencam_btn.setText("Close Camera");
+            opencam_btn.setStyle("-color-button-bg: -color-danger-4;");
+            hidepane.setVisible(true);
+            Thread cameraThread = new Thread(cameraTask);
+            cameraThread.setDaemon(true);
+            cameraThread.start();
+        }else {
+            opencam_btn.setText("Open Camera");
+            opencam_btn.setStyle("-color-button-bg: -color-success-4;");
+
+        }
+
+
+
+    }
+    @FXML
+    void faceid_change_clicked(){
+        setFaceID();
+    }
+    String faceId = "";
+    public void setFaceID(){
+        faceid_change.setDisable(true);
+        Dialog<String> alert = new Dialog<>();
+        alert.initStyle(StageStyle.UNDECORATED);
+        alert.setTitle("FaceID Verification");
+        alert.setHeaderText("FaceID Verification");
+        ButtonType okButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+        alert.getDialogPane().getButtonTypes().add(okButton);
+        Label label = new Label("Waiting for camera to initialize...");
+        label.setLayoutX(0);
+        label.setLayoutY(39);
+        label.setPrefWidth(461);
+        label.alignmentProperty().setValue(javafx.geometry.Pos.CENTER);
+        ProgressBar progressBar = new ProgressBar();
+        progressBar.setProgress(ProgressBar.INDETERMINATE_PROGRESS);
+        progressBar.setLayoutX(27);
+        progressBar.setLayoutY(75);
+        progressBar.setPrefWidth(407);
+        progressBar.setPrefHeight(20);
+        alert.getDialogPane().setContent(new Pane(label, progressBar));
+        alert.show();
+
+
+        Task<Void> cameraTask = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                int i = 0;
+                VideoCapture capture = new VideoCapture(0);
+                Mat frame = new Mat();
+                if (capture.isOpened()) {
+                    while (!isCancelled()) {
+                        if (capture.read(frame)) {
+                            if (!frame.empty()) {
+                                if (i == 5)
+                                    break;
+                                i++;
+                                System.out.println("Camera Initialized!");
+                                Platform.runLater(()-> label.setText("Camera Initialized!"));
+                                Thread.sleep(1000);
+                                System.out.println("Capturing Frame...");
+                                Platform.runLater(()-> label.setText("Capturing Frame..."));
+                                Thread.sleep(1000);
+                                MatOfRect facesDetected = new MatOfRect();
+                                CascadeClassifier cascadeClassifier = new CascadeClassifier();
+                                int minFaceSize = Math.round(frame.rows() * 0.1f);
+                                cascadeClassifier.load(getClass().getResource("/assets/haarcascade_frontalface_alt.xml").toURI().getPath().toString().substring(1));
+                                cascadeClassifier.detectMultiScale(frame,
+                                        facesDetected,
+                                        1.1,
+                                        3,
+                                        Objdetect.CASCADE_SCALE_IMAGE,
+                                        new Size(minFaceSize, minFaceSize),
+                                        new Size()
+                                );
+                                Rect[] facesArray = facesDetected.toArray();
+                                if (facesArray.length > 0) {
+                                    System.out.println("Face Found!");
+                                    Platform.runLater(() -> label.setText("Face Found! Verifying..."));
+                                    Platform.runLater(() -> progressBar.setProgress(1));
+
+                                    MatOfByte matOfByte = new MatOfByte();
+                                    Imgcodecs.imencode(".jpg", frame, matOfByte);
+                                    byte[] byteArray = matOfByte.toArray();
+                                    InputStream in = new ByteArrayInputStream(byteArray);
+                                    BufferedImage img = null;
+                                    try {
+                                        img = ImageIO.read(in);
+                                    }catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                                    try {
+                                        ImageIO.write(img, "png", bos);
+                                    }catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+
+                                    byte[] imgBytes = bos.toByteArray();
+
+                                    OkHttpClient client = new OkHttpClient().newBuilder()
+                                            .build();
+                                    MediaType mediaType = MediaType.parse("image/png");
+                                    RequestBody body = new MultipartBody.Builder().setType(MultipartBody.FORM)
+                                            .addFormDataPart("image_file","image.png",
+                                                    RequestBody.create(imgBytes, mediaType))
+                                            .addFormDataPart("api_key","oVAqEDbCYmaILayXJdKAsuYbFcJ0LBP6")
+                                            .addFormDataPart("api_secret","e76obC1xsr-zSMynWZoQCt62vWDgtZ6O")
+                                            .addFormDataPart("return_attributes","emotion")
+                                            .build();
+                                    Request request = new Request.Builder()
+                                            .url("https://api-us.faceplusplus.com/facepp/v3/detect")
+                                            .method("POST", body)
+                                            .build();
+                                    try{
+                                        Response response = client.newCall(request).execute();
+                                        Platform.runLater(() -> {
+                                            try {
+                                                JSONObject jsonObject = new JSONObject(response.body().string());
+                                                faceId = jsonObject.getJSONArray("faces").getJSONObject(0).getString("face_token");
+                                                updateFaceId(faceId);
+                                            }catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+
+                                        });
+                                    }catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                    break;
+                                }
+                                else {
+                                    System.out.println("Face not found ");
+                                    Platform.runLater(() -> label.setText("Face not found! Trying Again..."));
+                                    Thread.sleep(2000);
+                                }
+                            }
+                        }
+                    }
+                }
+                capture.release();
+
+                if(faceId == null || faceId.equals("")){
+                    Platform.runLater(() -> {
+                        Alert alert = new Alert(Alert.AlertType.WARNING);
+                        alert.initStyle(StageStyle.UNDECORATED);
+                        alert.setTitle("Warning");
+                        alert.setHeaderText("Warning");
+                        if (!isCancelled())
+                            alert.setContentText("No face detected! Please try again.");
+                        else
+                            alert.setContentText("Faceid Cancelled!");
+                        alert.show();
+                    });
+                }
+                Platform.runLater(() -> faceid_change.setDisable(false));
+                Platform.runLater(alert::close);
+                return null;
+            }
+
+        };
+
+        Thread cameraThread = new Thread(cameraTask);
+        alert.setOnCloseRequest(e -> {
+            cameraTask.cancel(false);
+        });
+        cameraThread.start();
+
+
+    }
+
+    private void updateFaceId(String faceId) {
+        try {
+            Client client = new Client(GlobalVar.getUser().getId(), GlobalVar.getUser().getUsername(), GlobalVar.getUser().getFirstname(), GlobalVar.getUser().getLastname(), GlobalVar.getUser().getDate_naiss(), GlobalVar.getUser().getPassword(), GlobalVar.getUser().getEmail(), GlobalVar.getUser().getNum_tel(), GlobalVar.getUser().getAdresse(), GlobalVar.getUser().getPhoto(), faceId, new Date(System.currentTimeMillis()).toString());
+            clientService.update(client);
+            GlobalVar.setUser(client);
+            initProfile();
+            notify("FaceID has been updated successfully!");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
     @FXML
     void user_imageview_clicked(MouseEvent event) {
         switchToPane(StaffInfoPane);
@@ -270,7 +604,7 @@ public class StaffDashboardController {
             return;
         try {
             if (profilepic_pf.getText().isEmpty()) {
-                Staff staff = new Staff(GlobalVar.getUser().getId(), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), dateofbirth_tf.getValue().toString(), GlobalVar.getUser().getPassword(), email_tf.getText(), phone_tf.getText(), address_ta.getText(), GlobalVar.getUser().getPhoto());
+                Staff staff = new Staff(GlobalVar.getUser().getId(), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), dateofbirth_tf.getValue().toString(), GlobalVar.getUser().getPassword(), email_tf.getText(), phone_tf.getText(), address_ta.getText(), GlobalVar.getUser().getPhoto(), GlobalVar.getUser().getFaceid(), GlobalVar.getUser().getFaceid_ts());
                 staffService.update(staff);
                 GlobalVar.setUser(staff);
                 initProfile();
@@ -290,17 +624,12 @@ public class StaffDashboardController {
                 File oldFile = new File("src/assets/profileuploads/" +GlobalVar.getUser().getPhoto());
                 oldFile.delete();
                 Files.copy(file.toPath(), new File("src/assets/profileuploads/USERIMG"+ GlobalVar.getUser().getId() + file.getName().substring(file.getName().lastIndexOf("."))).toPath());
-                Staff staff = new Staff(GlobalVar.getUser().getId(), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), dateofbirth_tf.getValue().toString(), GlobalVar.getUser().getPassword(), email_tf.getText(), phone_tf.getText(), address_ta.getText(), "USERIMG"+ GlobalVar.getUser().getId() + file.getName().substring(file.getName().lastIndexOf(".")));
+                Staff staff = new Staff(GlobalVar.getUser().getId(), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), dateofbirth_tf.getValue().toString(), GlobalVar.getUser().getPassword(), email_tf.getText(), phone_tf.getText(), address_ta.getText(), "USERIMG"+ GlobalVar.getUser().getId() + file.getName().substring(file.getName().lastIndexOf(".")), GlobalVar.getUser().getFaceid(), GlobalVar.getUser().getFaceid_ts());
                 staffService.update(staff);
                 GlobalVar.setUser(staff);
                 initProfile();
             }
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.initStyle(StageStyle.UNDECORATED);
-            alert.setTitle("Success");
-            alert.setHeaderText("Profile picture updated");
-            alert.setContentText("Your profile picture has been updated successfully");
-            alert.showAndWait();
+            notify("Account has been updated successfully!");
         }catch (Exception e){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.initStyle(StageStyle.UNDECORATED);
@@ -459,7 +788,14 @@ public class StaffDashboardController {
     void subscription_btn_clicked(MouseEvent event) {
         switchToPane(StaffSubscriptionPane);
     }
-
+    @FXML
+    public void objective_btn_act(ActionEvent actionEvent) {
+        switchToPane(StaffObjectivePane);
+    }
+    @FXML
+    public void objective_btn_clicked(MouseEvent mouseEvent) {
+        switchToPane(StaffObjectivePane);
+    }
     private void initDecoratedStage(){
         dragpane.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override
@@ -488,6 +824,7 @@ public class StaffDashboardController {
         StaffEquipmentManagementPane.setFitToWidth(true);
         StaffStorePane.setFitToWidth(true);
         StaffSettingsPane.setFitToWidth(true);
+        StaffObjectivePane.setFitToWidth(true);
     }
     private ScrollPane getCurrentPane(){
         if (StaffHomePane.isVisible())
@@ -504,6 +841,8 @@ public class StaffDashboardController {
             return StaffStorePane;
         if (StaffSettingsPane.isVisible())
             return StaffSettingsPane;
+        if (StaffObjectivePane.isVisible())
+            return StaffObjectivePane;
         return null;
     }
 
@@ -557,6 +896,7 @@ public class StaffDashboardController {
         fadeInAnimation[4] = new FadeIn(subscription_btn);
         fadeInAnimation[5] = new FadeIn(event_btn);
         fadeInAnimation[6] = new FadeIn(equipment_btn);
+        fadeInAnimation[7] = new FadeIn(objective_btn);
     }
     private void visibleAll(){
         home_btn.setVisible(true);
@@ -566,6 +906,7 @@ public class StaffDashboardController {
         subscription_btn.setVisible(true);
         event_btn.setVisible(true);
         equipment_btn.setVisible(true);
+        objective_btn.setVisible(true);
     }
 
     private void invisibleAll(){
@@ -576,6 +917,7 @@ public class StaffDashboardController {
         subscription_btn.setVisible(false);
         event_btn.setVisible(false);
         equipment_btn.setVisible(false);
+        objective_btn.setVisible(false);
     }
     private void nullOpacityAll(){
         home_btn.setOpacity(0);
@@ -585,6 +927,7 @@ public class StaffDashboardController {
         subscription_btn.setOpacity(0);
         event_btn.setOpacity(0);
         equipment_btn.setOpacity(0);
+        objective_btn.setOpacity(0);
     }
     public void searchbarsub_tf_textchanged(KeyEvent keyEvent) {
         initSubList(subtype_cb.getValue(), searchbarsub_tf.getText());
@@ -651,11 +994,11 @@ public class StaffDashboardController {
         }
         Abonnement abonnement = subscriptionslist_tableview.getSelectionModel().getSelectedItem();
         Date date = null;
-        if (subtypeedit_cb.getValue().equals("GP1"))
+        if (subtypeedit_cb.getValue().equals("GP 1"))
             date = Date.valueOf(LocalDate.now().plusMonths(3));
-        else if (subtypeedit_cb.getValue().equals("GP2"))
+        else if (subtypeedit_cb.getValue().equals("GP 2"))
             date = Date.valueOf(LocalDate.now().plusMonths(6));
-        else if (subtypeedit_cb.getValue().equals("GP3"))
+        else if (subtypeedit_cb.getValue().equals("GP 3"))
             date = Date.valueOf(LocalDate.now().plusMonths(12));
         assert date != null;
         abonnement.setDuree_abon(date.toString());
@@ -703,11 +1046,11 @@ public class StaffDashboardController {
         Abonnement abonnement = new Abonnement();
         abonnement.setUser_id(userlistsub_tableview.getSelectionModel().getSelectedItem().getId());
         Date date = null;
-        if (subtypeadd_cb.getValue().equals("GP1"))
+        if (subtypeadd_cb.getValue().equals("GP 1"))
             date = Date.valueOf(LocalDate.now().plusMonths(3));
-        else if (subtypeadd_cb.getValue().equals("GP2"))
+        else if (subtypeadd_cb.getValue().equals("GP 2"))
             date = Date.valueOf(LocalDate.now().plusMonths(6));
-        else if (subtypeadd_cb.getValue().equals("GP3"))
+        else if (subtypeadd_cb.getValue().equals("GP 3"))
             date = Date.valueOf(LocalDate.now().plusMonths(12));
         assert date != null;
         abonnement.setDuree_abon(date.toString());
@@ -738,19 +1081,26 @@ public class StaffDashboardController {
         fadeInRightAnimation.play();
         stat_combobox.getItems().addAll(FXCollections.observableArrayList("Abonnements", "Clients", "Staff"));
         subtype_cb.getItems().addAll(FXCollections.observableArrayList( "All","GP 1", "GP 2", "GP 3"));
-        subtypeadd_cb.getItems().addAll(FXCollections.observableArrayList("GP1", "GP2", "GP3"));
-        subtypeedit_cb.getItems().addAll(FXCollections.observableArrayList("GP1", "GP2", "GP3"));
+        subtypeadd_cb.getItems().addAll(FXCollections.observableArrayList("GP 1", "GP 2", "GP 3"));
+        subtypeedit_cb.getItems().addAll(FXCollections.observableArrayList("GP 1", "GP 2", "GP 3"));
 
         initProfile();
         initCharts();
         setFitToWidthAll();
         initAnimations();
         initDecoratedStage();
-        notify("Successfully Logged In as " + GlobalVar.getUser().getUsername() + "!");
         initSubList("All", "");
         initNonSubbedUserList("");
         notify("Successfully Logged In as " + GlobalVar.getUser().getUsername() + "!");
 
+
+        RingProgressIndicator progressIndicator = new RingProgressIndicator();
+        progressIndicator.setProgress(ProgressIndicator.INDETERMINATE_PROGRESS);
+        progressIndicator.setLayoutX(hidepane.getPrefWidth()/2 - progressIndicator.getPrefWidth()/2 - 12);
+        progressIndicator.setLayoutY(hidepane.getPrefHeight()/2 - progressIndicator.getPrefHeight()/2 - 12);
+        progressIndicator.setPrefWidth(24);
+        progressIndicator.setPrefHeight(24);
+        hidepane.getChildren().add(progressIndicator);
         var warning = new Message("Warning!", "Be careful with the actions you take, they are irreversible! Proceed with caution.");
         warning.getStyleClass().addAll(
                 Styles.WARNING
@@ -795,9 +1145,9 @@ public class StaffDashboardController {
         List<Abonnement> list = null;
         try {
             if (type == null || type.equals("All"))
-                list = abonnementService.getAll();
+                list = abonnementService.getAllCurrent();
             else
-                list = abonnementService.getAbonnementByType(type);
+                list = abonnementService.getAbonnementByTypeCurrent(type);
             ObservableList<Abonnement> observableList = FXCollections.observableArrayList(list);
             if(search != null && !search.isEmpty()) {
                 for (int i = 0; i < observableList.size(); i++) {
@@ -900,4 +1250,6 @@ public class StaffDashboardController {
         }
         return true;
     }
+
+
 }

@@ -26,11 +26,13 @@ public class User {
     private String adresse;
     private String photo;
     private String role;
+    private String faceid;
+    private String faceid_ts;
 
     public User() {
     }
 
-    public User(int id, String username, String firstname, String lastname, String date_naiss, String password, String email, String num_tel, String adresse, String photo, String role) {
+    public User(int id, String username, String firstname, String lastname, String date_naiss, String password, String email, String num_tel, String adresse, String photo, String role, String faceid, String faceid_ts) {
         this.id = id;
         this.username = username;
         this.firstname = firstname;
@@ -42,6 +44,8 @@ public class User {
         this.adresse = adresse;
         this.photo = photo;
         this.role = role;
+        this.faceid = faceid;
+        this.faceid_ts = faceid_ts;
     }
 
     public int getId() {
@@ -133,6 +137,22 @@ public class User {
         this.role = role;
     }
 
+    public String getFaceid() {
+        return faceid;
+    }
+
+    public void setFaceid(String faceid) {
+        this.faceid = faceid;
+    }
+
+    public String getFaceid_ts() {
+        return faceid_ts;
+    }
+
+    public void setFaceid_ts(String faceid_ts) {
+        this.faceid_ts = faceid_ts;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -146,6 +166,8 @@ public class User {
                 ", adresse='" + adresse + '\'' +
                 ", photo='" + photo + '\'' +
                 ", role='" + role + '\'' +
+                ", faceid='" + faceid + '\'' +
+                ", faceid_ts='" + faceid_ts + '\'' +
                 '}';
     }
 }

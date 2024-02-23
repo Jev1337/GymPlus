@@ -11,4 +11,24 @@
      -fx-background-color: linear-gradient(to bottom right, lightgray, floralwhite);
 }
 
+.border-table {
+     -fx-border-radius: 30px;
+     -fx-background-radius:  30px;
+}
 
+.blue-button {
+     -fx-background-color: #007bff;
+     -fx-text-fill: #ffffff;
+}
+
+.blue-button:hover {
+     -fx-background-color: #0069d9;
+}
+
+
+.transparent {
+     -fx-background-color: transparent;
+}
+.label-style {
+     -fx-text-fill: #fcfcfc;
+}

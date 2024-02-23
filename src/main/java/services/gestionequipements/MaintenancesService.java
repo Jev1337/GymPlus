@@ -18,12 +18,15 @@ public class MaintenancesService implements IService<Maintenances>{
 
     @Override
     public void add(Maintenances maintenances) throws SQLException {
-        String sql="insert into maintenances values (?,?,?,?)";
+        String sql="insert into maintenances (equipements_details_id, date_maintenance, status) values (?,?,?)";
         PreparedStatement ps =connection.prepareStatement(sql);
-        ps.setInt(1,maintenances.getIdm());
-        ps.setInt(2, maintenances.getIde());
-        ps.setString(3,maintenances.getDate_maintenance());
-        ps.setString(4,maintenances.getStatus());
+        ps.setInt(1, maintenances.getIde());
+        ps.setString(2,maintenances.getDate_maintenance());
+        ps.setString(3,maintenances.getStatus());
+        ps.executeUpdate();
+        sql="update equipements_details set etat='Under Maintenance' where id=?";
+        ps =connection.prepareStatement(sql);
+        ps.setInt(1, maintenances.getIde());
         ps.executeUpdate();
     }
 
@@ -40,8 +43,13 @@ public class MaintenancesService implements IService<Maintenances>{
 
     @Override
     public void delete(int id) throws SQLException {
-        String sql="delete from maintenances where id =?";
+        String sql = "update equipements_details set etat='Good' where id=(select equipements_details_id from maintenances where id=?)";
         PreparedStatement ps =connection.prepareStatement(sql);
+        ps =connection.prepareStatement(sql);
+        ps.setInt(1, id);
+        ps.executeUpdate();
+        sql="delete from maintenances where id =?";
+        ps =connection.prepareStatement(sql);
         ps.setInt(1, id);
         ps.executeUpdate();
     }
@@ -55,5 +63,13 @@ public class MaintenancesService implements IService<Maintenances>{
         while (rs.next())
             maint.add(new Maintenances(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getString(4)));
         return maint;
+    }
+
+    public Boolean isUnderMaintenance(int id) throws SQLException {
+        String sql = "select * from maintenances where equipements_details_id=?";
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ps.setInt(1, id);
+        ResultSet rs = ps.executeQuery();
+        return rs.next();
     }
 }

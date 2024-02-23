@@ -383,16 +383,17 @@ public class EquipementController {
                 maintenances.setDate_maintenance(add_date1.getValue().toString());
                 maintenances.setStatus(add_status1.getText());
                 maintenancesService.update(maintenances);
-                getAllMaint();
                 FadeOutRight f = new FadeOutRight(ModifyMaintPane);
                 f.setOnFinished((e) -> {
                     ModifyMaintPane.setVisible(false);
-                    FadeInRight f2 = new FadeInRight(maintPane);
-                    maintPane.setOpacity(0);
-                    maintPane.setVisible(true);
+                    FadeInRight f2 = new FadeInRight(addmaintpane);
+                    addmaintpane.setOpacity(0);
+                    addmaintpane.setVisible(true);
                     f2.play();
                 });
                 f.play();
+                getAllMaint();
+
             } else {
                 System.out.println("No maintenance selected");
             }
@@ -400,18 +401,7 @@ public class EquipementController {
             throw new RuntimeException(e);
         }
 
-        FadeOutLeft f = new FadeOutLeft();
-        FadeInLeft f1 = new FadeInLeft();
-        f.setNode(ModifyMaintPane);
-        f.setOnFinished((e) -> {
-            f1.setNode(maintPane);
-            maintPane.setVisible(true);
-            maintPane.setOpacity(0);
-            ModifyMaintPane.setVisible(false);
-            f1.play();
-        });
-        f.play();
-        getAllMaint();
+
     }
 
     private void notify(String message) {

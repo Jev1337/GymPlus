@@ -111,7 +111,6 @@ public class UserDashboardController {
     @FXML
     private ImageView barcode_imageview;
 
-
     @FXML
     void settings_btn_clicked(MouseEvent event) {
         switchToPane(UserSettingsPane);
@@ -194,7 +193,7 @@ public class UserDashboardController {
         Timeline timeline = new Timeline(
                 new KeyFrame(cycleDuration,
                         new KeyValue(bars_pane.prefWidthProperty(), bars_pane.getPrefWidth() == 200 ? 51 : 200, Interpolator.EASE_BOTH)
-        ));
+                ));
         timeline.play();
         timeline.setOnFinished(e -> bars_btn.setDisable(false));
 
@@ -742,7 +741,7 @@ public class UserDashboardController {
                 alert.getDialogPane().setContent(webView);
                 Worker<Void> worker = webView.getEngine().getLoadWorker();
                 worker.stateProperty().addListener(e->{
-                if (worker.getState() == Worker.State.SUCCEEDED) {
+                    if (worker.getState() == Worker.State.SUCCEEDED) {
                         if (webView.getEngine().getLocation().contains("success")) {
                             alert.close();
                         }else if (webView.getEngine().getLocation().contains("cancel")) {

@@ -2,10 +2,12 @@ package controllers.gestionuser;
 
 import animatefx.animation.*;
 import com.password4j.Password;
+import com.twilio.Twilio;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import entities.gestionuser.Admin;
 import entities.gestionuser.Client;
 import entities.gestionuser.Staff;
+import entities.gestionuser.User;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.concurrent.Task;
@@ -22,6 +24,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -32,6 +35,7 @@ import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.objdetect.CascadeClassifier;
 import org.opencv.objdetect.Objdetect;
 import org.opencv.videoio.VideoCapture;
+import org.w3c.dom.Text;
 import services.gestionuser.AdminService;
 import services.gestionuser.ClientService;
 import services.gestionuser.StaffService;
@@ -63,6 +67,20 @@ public class AuthController {
     private FadeInLeft fadeInLeftAnimation = new FadeInLeft();
     private FadeOutLeft fadeOutLeftAnimation = new FadeOutLeft();
     private FadeOutRight fadeOutRightAnimation = new FadeOutRight();
+    private FadeInUp fadeInUpAnimation = new FadeInUp();
+    private FadeOutDown fadeOutDownAnimation = new FadeOutDown();
+
+    @FXML
+    private Button forgotpw_btn;
+
+    @FXML
+    private Label nameforgot_label;
+
+    @FXML
+    private Label usernameforgot_label;
+
+    @FXML
+    private TextField forgotnumber_tf;
 
     @FXML
     public ImageView faceid_btn;
@@ -162,6 +180,230 @@ public class AuthController {
     private ProgressBar pwstrength_progress;
 
     @FXML
+    private Label phonelabelforgot_label;
+
+    @FXML
+    private Pane forgotpaneverif;
+
+    @FXML
+    private ImageView userforgot_imageview;
+
+    @FXML
+    private Label nameres_label;
+
+    @FXML
+    private Label usernameres_label;
+
+    @FXML
+    private Label phoneres_label;
+
+    @FXML
+    private Pane resetpane;
+
+    @FXML
+    private PasswordField passwordres_pf;
+
+    @FXML
+    private PasswordField passwordconfres_pf;
+
+    @FXML
+    private ImageView userreset_imageview;
+
+    @FXML
+    private void changepw_btn_act(ActionEvent event) {
+        if (passwordres_pf.getText().isEmpty() || passwordconfres_pf.getText().isEmpty()){
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.initStyle(StageStyle.UNDECORATED);
+            alert.setTitle("Warning");
+            alert.setHeaderText("Warning");
+            alert.setContentText("Please fill in all the fields!");
+            alert.showAndWait();
+            return;
+        }
+        if (!validateText(passwordres_pf.getText()))
+            return;
+        if (!passwordres_pf.getText().equals(passwordconfres_pf.getText())){
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.initStyle(StageStyle.UNDECORATED);
+            alert.setTitle("Warning");
+            alert.setHeaderText("Warning");
+            alert.setContentText("Passwords do not match! Please try again.");
+            alert.showAndWait();
+            return;
+        }
+        try {
+            if (clientService.getUserByEmail(email_tf.getText()) != null) {
+                clientService.updatePassword(clientService.getUserByEmail(email_tf.getText()).getId(), passwordres_pf.getText());
+            }
+            if (staffService.getUserByEmail(email_tf.getText()) != null) {
+                staffService.updatePassword(staffService.getUserByEmail(email_tf.getText()).getId(), passwordres_pf.getText());
+            }
+            if (adminService.getUserByEmail(email_tf.getText()) != null) {
+                adminService.updatePassword(adminService.getUserByEmail(email_tf.getText()).getId(), passwordres_pf.getText());
+            }
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.initStyle(StageStyle.UNDECORATED);
+            alert.setTitle("Success");
+            alert.setHeaderText("Success");
+            alert.setContentText("Password has been changed successfully! Please sign in to continue.");
+            alert.showAndWait();
+            fadeOutDownAnimation.setNode(resetpane);
+            fadeOutDownAnimation.setOnFinished(e -> {
+                resetpane.setVisible(false);
+                signin_pane.setVisible(true);
+                signup_switch_pane.setVisible(true);
+                signin_pane.setOpacity(0);
+                signup_switch_pane.setOpacity(0);
+                fadeInLeftAnimation.setNode(signin_pane);
+                fadeInRightAnimation.setNode(signup_switch_pane);
+                fadeInRightAnimation.play();
+                fadeInLeftAnimation.play();
+            });
+            fadeOutDownAnimation.play();
+        }catch (Exception e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.initStyle(StageStyle.UNDECORATED);
+            alert.setTitle("Error");
+            alert.setHeaderText("Error");
+            alert.setContentText("An error occurred while trying to connect to the database! Please try again later.");
+            alert.showAndWait();
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void cancelres_btn_act(ActionEvent event) {
+        fadeOutDownAnimation.setNode(resetpane);
+        fadeOutDownAnimation.setOnFinished(e -> {
+            resetpane.setVisible(false);
+            signin_pane.setVisible(true);
+            signup_switch_pane.setVisible(true);
+            signin_pane.setOpacity(0);
+            signup_switch_pane.setOpacity(0);
+            fadeInLeftAnimation.setNode(signin_pane);
+            fadeInRightAnimation.setNode(signup_switch_pane);
+            fadeInRightAnimation.play();
+            fadeInLeftAnimation.play();
+        });
+        fadeOutDownAnimation.play();
+    }
+
+    @FXML
+    private void verify_btn_act(){
+        if (forgotnumber_tf.getText().isEmpty()){
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.initStyle(StageStyle.UNDECORATED);
+            alert.setTitle("Warning");
+            alert.setHeaderText("Warning");
+            alert.setContentText("Please fill in your phone number!");
+            alert.showAndWait();
+            return;
+        }
+
+        try {
+            User user = null;
+            if (clientService.getUserByEmail(email_tf.getText()) != null) {
+                user = clientService.getUserByEmail(email_tf.getText());
+            }
+            if (staffService.getUserByEmail(email_tf.getText()) != null) {
+                user = staffService.getUserByEmail(email_tf.getText());
+            }
+            if (adminService.getUserByEmail(email_tf.getText()) != null) {
+                user = adminService.getUserByEmail(email_tf.getText());
+            }
+            assert user != null;
+            if (!forgotnumber_tf.getText().equals(user.getNum_tel())){
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.initStyle(StageStyle.UNDECORATED);
+                alert.setTitle("Warning");
+                alert.setHeaderText("Warning");
+                alert.setContentText("Phone number does not match the one in the database! Please try again.");
+                alert.showAndWait();
+                return;
+            }
+            //using twilio to send sms
+            String account_sid = "ACa0a9c02e124f285821fe62b736260421";
+            String auth_token = "e8cd361a90ce0dbcd5485d5719f935fb";
+            String verify_sid = "VA10dd8bfd053741ce7361fd967c83a1e6";
+
+            String code = (int)(Math.random() * (9999 - 1000 + 1) + 1000) + "";
+
+            Twilio.init(account_sid, auth_token);
+            com.twilio.rest.api.v2010.account.Message message = com.twilio.rest.api.v2010.account.Message.creator(
+                    new com.twilio.type.PhoneNumber("+216" + user.getNum_tel()),
+                    new com.twilio.type.PhoneNumber("+15306658974"),
+                    "Your verification code is: " + code)
+                    .create();
+            System.out.println(message.getSid());
+            TextInputDialog dialog = new TextInputDialog();
+            dialog.initStyle(StageStyle.UNDECORATED);
+            dialog.setTitle("Verification");
+            dialog.setHeaderText("Verification");
+            dialog.setContentText("Please enter the verification code sent to your phone:");
+            dialog.showAndWait();
+            if (dialog.getResult().isEmpty()){
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.initStyle(StageStyle.UNDECORATED);
+                alert.setTitle("Warning");
+                alert.setHeaderText("Warning");
+                alert.setContentText("Please enter the verification code!");
+                alert.showAndWait();
+                return;
+            }
+            if (!dialog.getResult().equals(code)){
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.initStyle(StageStyle.UNDECORATED);
+                alert.setTitle("Warning");
+                alert.setHeaderText("Warning");
+                alert.setContentText("Verification code does not match! Please try again.");
+                alert.showAndWait();
+                return;
+            }
+            nameres_label.setText(user.getFirstname() + " " + user.getLastname());
+            usernameres_label.setText(user.getUsername());
+            phoneres_label.setText(user.getNum_tel());
+            Circle clip = new Circle(50, 50, 50);
+            userreset_imageview.setClip(clip);
+            userreset_imageview.setImage(new Image(new File("src/assets/profileuploads/" + user.getPhoto()).toURI().toString()));
+            fadeOutDownAnimation.setNode(forgotpaneverif);
+            fadeOutDownAnimation.setOnFinished(e -> {
+                forgotpaneverif.setVisible(false);
+                resetpane.setVisible(true);
+                resetpane.setOpacity(0);
+                fadeInUpAnimation.setNode(resetpane);
+                fadeInUpAnimation.play();
+            });
+            fadeOutDownAnimation.play();
+
+
+        }catch (Exception e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.initStyle(StageStyle.UNDECORATED);
+            alert.setTitle("Error");
+            alert.setHeaderText("Error");
+            alert.setContentText("An error occurred while trying to connect to the database! Please try again later.");
+            alert.showAndWait();
+            e.printStackTrace();
+        }
+
+    }
+    @FXML
+    private void notyou_label_clicked(MouseEvent event) {
+        fadeOutDownAnimation.setNode(forgotpaneverif);
+        fadeOutDownAnimation.setOnFinished(e -> {
+            forgotpaneverif.setVisible(false);
+            signin_pane.setVisible(true);
+            signup_switch_pane.setVisible(true);
+            signin_pane.setOpacity(0);
+            signup_switch_pane.setOpacity(0);
+            fadeInLeftAnimation.setNode(signin_pane);
+            fadeInRightAnimation.setNode(signup_switch_pane);
+            fadeInRightAnimation.play();
+            fadeInLeftAnimation.play();
+        });
+        fadeOutDownAnimation.play();
+    }
+    @FXML
     void pwdsu_pf_pressed(KeyEvent event) {
         if (pwdsu_pf.getText().isEmpty()) {
             pwstrength_progress.setProgress(0);
@@ -190,8 +432,77 @@ public class AuthController {
             pwstrength_progress.setStyle("-color-progress-bar-fill: green;");
         }
 
+    }
+
+    @FXML
+    void forgotpw_clicked(MouseEvent event) {
+        if (email_tf.getText().isEmpty()){
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.initStyle(StageStyle.UNDECORATED);
+            alert.setTitle("Warning");
+            alert.setHeaderText("Warning");
+            alert.setContentText("Please fill in the email field!");
+            alert.showAndWait();
+            return;
+        }
+        if (!validateEmail(email_tf.getText()))
+            return;
+        try {
+            if (clientService.getUserByEmail(email_tf.getText()) == null && staffService.getUserByEmail(email_tf.getText()) == null && adminService.getUserByEmail(email_tf.getText()) == null) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.initStyle(StageStyle.UNDECORATED);
+                alert.setTitle("Warning");
+                alert.setHeaderText("Warning");
+                alert.setContentText("Client with this email does not exist! Please try again.");
+                alert.showAndWait();
+                return;
+            }
+            User user = null;
+            if (clientService.getUserByEmail(email_tf.getText()) != null){
+                user = clientService.getUserByEmail(email_tf.getText());
+            }
+            if (staffService.getUserByEmail(email_tf.getText()) != null){
+                user = staffService.getUserByEmail(email_tf.getText());
+            }
+            if (adminService.getUserByEmail(email_tf.getText()) != null){
+                user = adminService.getUserByEmail(email_tf.getText());
+            }
+            assert user != null;
+            nameforgot_label.setText(user.getFirstname() + " " + user.getLastname());
+            usernameforgot_label.setText(user.getUsername());
+            String phone = user.getNum_tel();
+            String last4 = phone.substring(phone.length() - 4);
+            String first = phone.substring(0, phone.length() - 4);
+            String newphone = first.replaceAll("[0-9]", "*") + last4;
+            phonelabelforgot_label.setText(newphone);
+            Image image = new Image(new File("src/assets/profileuploads/" + user.getPhoto()).toURI().toString());
+            Circle clip = new Circle(50, 50, 50);
+            userforgot_imageview.setClip(clip);
+            userforgot_imageview.setImage(image);
+            fadeOutLeftAnimation.setNode(signin_pane);
+            fadeOutRightAnimation.setNode(signup_switch_pane);
+            fadeOutRightAnimation.setOnFinished(e -> {
 
 
+                signup_switch_pane.setVisible(false);
+                signin_pane.setVisible(false);
+                forgotpaneverif.setOpacity(0);
+                forgotpaneverif.setVisible(true);
+                fadeInUpAnimation.setNode(forgotpaneverif);
+                fadeInUpAnimation.play();
+            });
+            fadeOutLeftAnimation.play();
+            fadeOutRightAnimation.play();
+
+        }catch (Exception e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.initStyle(StageStyle.UNDECORATED);
+            alert.setTitle("Error");
+            alert.setHeaderText("Error");
+            alert.setContentText("An error occurred while trying to connect to the database! Please try again later.");
+            alert.showAndWait();
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -410,7 +721,7 @@ public class AuthController {
             alert.initStyle(StageStyle.UNDECORATED);
             alert.setTitle("Warning");
             alert.setHeaderText("Warning");
-            alert.setContentText("Username must be between 4 and 20 characters long! Please try again.");
+            alert.setContentText("Text must be between 4 and 20 characters long! Please try again.");
             alert.showAndWait();
             return false;
         }

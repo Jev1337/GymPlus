@@ -92,7 +92,7 @@
                                     </Label>
                                     <Pane layoutX="47.0" layoutY="69.0" prefHeight="124.0" prefWidth="280.0" style="-fx-background-color: white; -fx-border-radius: 30px; -fx-background-radius: 30px;">
                                        <children>
-                                          <Label layoutX="81.0" layoutY="25.0" style="-fx-font-size: 12;" text="Weekly Progress">
+                                          <Label layoutX="81.0" layoutY="25.0" style="-fx-font-size: 12;" text="Total Registered Clients">
                                              <font>
                                                 <Font name="Open Sans Regular" size="12.0" />
                                              </font>
@@ -118,12 +118,12 @@
                                                 </LinearGradient>
                                              </fill>
                                           </FontAwesomeIconView>
-                                          <Label layoutX="81.0" layoutY="45.0" style="-fx-font-size: 24;" text="42%">
+                                          <Label fx:id="registeredusers_label" layoutX="81.0" layoutY="45.0" style="-fx-font-size: 24;" text="42%">
                                              <font>
                                                 <Font name="Open Sans Regular" size="24.0" />
                                              </font>
                                           </Label>
-                                          <ProgressBar layoutX="19.0" layoutY="122.0" prefHeight="2.0" prefWidth="241.0" progress="0.46" style="-color-progress-bar-track: white; -color-progress-bar-fill: linear-gradient(to right, #00aaff, #00688b);" />
+                                          <ProgressBar layoutX="19.0" layoutY="122.0" prefHeight="2.0" prefWidth="239.0" progress="1.0" style="-color-progress-bar-track: white; -color-progress-bar-fill: linear-gradient(to right, #00aaff, #00688b);" />
                                        </children>
                                     </Pane>
                                     <Pane layoutX="690.0" layoutY="69.0" prefHeight="291.0" prefWidth="431.0" style="-fx-background-color: white; -fx-border-radius: 30px; -fx-background-radius: 30px;">
@@ -147,7 +147,7 @@
                                     </Pane>
                                     <Pane layoutX="368.0" layoutY="69.0" prefHeight="124.0" prefWidth="280.0" style="-fx-background-color: white; -fx-border-radius: 30px; -fx-background-radius: 30px;">
                                        <children>
-                                          <Label layoutX="81.0" layoutY="25.0" text="Weekly Running">
+                                          <Label layoutX="81.0" layoutY="25.0" text="Clients with Active Memberships">
                                              <font>
                                                 <Font name="Open Sans Regular" size="12.0" />
                                              </font>
@@ -173,17 +173,17 @@
                                                 </LinearGradient>
                                              </fill>
                                           </FontAwesomeIconView>
-                                          <Label layoutX="81.0" layoutY="45.0" style="-fx-font-size: 24;" text="42 km">
+                                          <Label fx:id="activememclients_label" layoutX="81.0" layoutY="45.0" style="-fx-font-size: 24;" text="42 km">
                                              <font>
                                                 <Font name="Open Sans Regular" size="24.0" />
                                              </font>
                                           </Label>
-                                          <ProgressBar layoutX="19.0" layoutY="122.0" prefHeight="2.0" prefWidth="241.0" progress="0.8" style="-color-progress-bar-track: white; -color-progress-bar-fill: linear-gradient(to right, #00aaff, #00688b);" />
+                                          <ProgressBar layoutX="19.0" layoutY="122.0" prefHeight="2.0" prefWidth="239.0" progress="1.0" style="-color-progress-bar-track: white; -color-progress-bar-fill: linear-gradient(to right, #00aaff, #00688b);" />
                                        </children>
                                     </Pane>
                                     <Pane layoutX="47.0" layoutY="234.0" prefHeight="124.0" prefWidth="280.0" style="-fx-background-color: white; -fx-border-radius: 30px; -fx-background-radius: 30px;">
                                        <children>
-                                          <Label layoutX="81.0" layoutY="25.0" text="Daily Cycling">
+                                          <Label layoutX="81.0" layoutY="14.0" prefHeight="34.0" prefWidth="147.0" text="Percentage of Clients with Active Memberships" wrapText="true">
                                              <font>
                                                 <Font name="Open Sans Regular" size="12.0" />
                                              </font>
@@ -209,12 +209,12 @@
                                                 </LinearGradient>
                                              </fill>
                                           </FontAwesomeIconView>
-                                          <Label layoutX="81.0" layoutY="45.0" style="-fx-font-size: 24;" text="230 km">
+                                          <Label fx:id="percentactivemem_label" layoutX="81.0" layoutY="45.0" style="-fx-font-size: 24;" text="230 km">
                                              <font>
                                                 <Font name="Open Sans Regular" size="24.0" />
                                              </font>
                                           </Label>
-                                          <ProgressBar layoutX="19.0" layoutY="122.0" prefHeight="2.0" prefWidth="241.0" progress="0.9" style="-color-progress-bar-track: white; -color-progress-bar-fill: linear-gradient(to right, #00aaff, #00688b);" />
+                                          <ProgressBar fx:id="percentactivemem_prog" layoutX="20.0" layoutY="122.0" prefHeight="2.0" prefWidth="239.0" progress="1.0" style="-color-progress-bar-track: white; -color-progress-bar-fill: linear-gradient(to right, #00aaff, #00688b);" />
                                        </children>
                                     </Pane>
                                     <Pane layoutX="368.0" layoutY="234.0" prefHeight="124.0" prefWidth="280.0" style="-fx-background-color: white; -fx-border-radius: 30px; -fx-background-radius: 30px;">
@@ -250,7 +250,7 @@
                                                 <Font name="Open Sans Regular" size="24.0" />
                                              </font>
                                           </Label>
-                                          <ProgressBar layoutX="19.0" layoutY="122.0" prefHeight="2.0" prefWidth="241.0" progress="1.0" style="-color-progress-bar-track: white; -color-progress-bar-fill: linear-gradient(to right, #00aaff, #00688b);" />
+                                          <ProgressBar layoutX="20.0" layoutY="122.0" prefHeight="2.0" prefWidth="239.0" progress="1.0" style="-color-progress-bar-track: white; -color-progress-bar-fill: linear-gradient(to right, #00aaff, #00688b);" />
                                        </children>
                                     </Pane>
                                     <Pane layoutX="47.0" layoutY="416.0" prefHeight="243.0" prefWidth="1074.0" style="-fx-background-color: white; -fx-border-radius: 30px; -fx-background-radius: 30px;">
@@ -263,7 +263,7 @@
                                               <NumberAxis side="LEFT" />
                                             </yAxis>
                                           </BarChart>
-                                          <Label layoutX="50.0" layoutY="8.0" style="-fx-font-size: 18;" text="Calories Chart">
+                                          <Label layoutX="50.0" layoutY="8.0" style="-fx-font-size: 18;" text="Clients with different Subscription Types">
                                              <font>
                                                 <Font name="Open Sans Regular" size="17.0" />
                                              </font>
@@ -529,7 +529,7 @@
                         </ScrollPane>
                         <ScrollPane fx:id="AdminSubscriptionPane" prefHeight="646.0" prefWidth="1155.0" visible="false">
                            <content>
-                              <Pane fx:id="subpane" prefHeight="1138.0" prefWidth="1156.0">
+                              <Pane fx:id="subpane" prefHeight="1462.0" prefWidth="1156.0">
                                  <children>
                                     <Label layoutX="39.0" layoutY="14.0" style="-fx-text-fill: linear-gradient(to right, #00aaff, #00688b);" text="Admin / Subscriptions">
                                        <font>
@@ -683,6 +683,105 @@
                                                 </RadialGradient>
                                              </fill>
                                           </FontAwesomeIconView>
+                                       </children>
+                                    </Pane>
+                                    <Pane fx:id="qr_pane1" layoutX="618.0" layoutY="1151.0" prefHeight="271.0" prefWidth="250.0" style="-fx-background-color: white; -fx-border-radius: 30px; -fx-background-radius: 30px;">
+                                       <children>
+                                          <Pane fx:id="hidepane1" layoutX="30.0" layoutY="438.0" prefHeight="40.0" prefWidth="120.0" style="-fx-background-color: white;" visible="false" />
+                                          <FontAwesomeIconView fx:id="nonverified_icon1" glyphName="TIMES" layoutX="863.0" layoutY="392.0" size="50" visible="false">
+                                             <fill>
+                                                <RadialGradient centerX="0.5" centerY="0.5" radius="0.5">
+                                                   <stops>
+                                                      <Stop>
+                                                         <color>
+                                                            <Color green="0.6666666865348816" blue="1.0" />
+                                                         </color>
+                                                      </Stop>
+                                                      <Stop offset="0.006711409395973154">
+                                                         <color>
+                                                            <Color red="1.0" />
+                                                         </color>
+                                                      </Stop>
+                                                      <Stop offset="1.0">
+                                                         <color>
+                                                            <Color red="0.5400000214576721" />
+                                                         </color>
+                                                      </Stop>
+                                                   </stops>
+                                                </RadialGradient>
+                                             </fill>
+                                          </FontAwesomeIconView>
+                                          <TextField fx:id="gp1edit_tf" layoutX="60.0" layoutY="51.0" prefHeight="36.0" prefWidth="130.0" promptText="GP 1 Price" />
+                                          <TextField fx:id="gp2edit_tf" layoutX="60.0" layoutY="100.0" prefHeight="36.0" prefWidth="130.0" promptText="GP 2 Price" />
+                                          <TextField fx:id="gp3edit_tf" layoutX="60.0" layoutY="150.0" prefHeight="36.0" prefWidth="128.0" promptText="GP 3 Price" />
+                                          <Button fx:id="savegp_btn" layoutX="69.0" layoutY="215.0" mnemonicParsing="false" onAction="#savegp_btn_act" prefHeight="36.0" prefWidth="112.0" style="-color-button-bg: -color-success-4; -color-button-fg: white;" text="Save">
+                                             <cursor>
+                                                <Cursor fx:constant="HAND" />
+                                             </cursor>
+                                          </Button>
+                                       </children>
+                                    </Pane>
+                                    <Pane fx:id="packagelist" layoutX="251.0" layoutY="1151.0" prefHeight="271.0" prefWidth="356.0" style="-fx-background-color: white; -fx-border-radius: 30px; -fx-background-radius: 30px;">
+                                       <children>
+                                          <Pane fx:id="hidepane11" layoutX="30.0" layoutY="438.0" prefHeight="40.0" prefWidth="120.0" style="-fx-background-color: white;" visible="false" />
+                                          <FontAwesomeIconView fx:id="nonverified_icon11" glyphName="TIMES" layoutX="863.0" layoutY="392.0" size="50" visible="false">
+                                             <fill>
+                                                <RadialGradient centerX="0.5" centerY="0.5" radius="0.5">
+                                                   <stops>
+                                                      <Stop>
+                                                         <color>
+                                                            <Color green="0.6666666865348816" blue="1.0" />
+                                                         </color>
+                                                      </Stop>
+                                                      <Stop offset="0.006711409395973154">
+                                                         <color>
+                                                            <Color red="1.0" />
+                                                         </color>
+                                                      </Stop>
+                                                      <Stop offset="1.0">
+                                                         <color>
+                                                            <Color red="0.5400000214576721" />
+                                                         </color>
+                                                      </Stop>
+                                                   </stops>
+                                                </RadialGradient>
+                                             </fill>
+                                          </FontAwesomeIconView>
+                                          <Label layoutX="87.0" layoutY="33.0" text="Subscription Types">
+                                             <font>
+                                                <Font size="22.0" />
+                                             </font>
+                                          </Label>
+                                          <Label layoutX="99.0" layoutY="100.0" style="-fx-text-fill: linear-gradient(to right, #00aaff, #005f7a);" text="GP 1 Price:">
+                                             <font>
+                                                <Font size="20.0" />
+                                             </font>
+                                          </Label>
+                                          <Label layoutX="99.0" layoutY="140.0" style="-fx-text-fill: linear-gradient(to right, #00aaff, #005f7a);" text="GP 2 Price:">
+                                             <font>
+                                                <Font size="20.0" />
+                                             </font>
+                                          </Label>
+                                          <Label layoutX="99.0" layoutY="180.0" style="-fx-text-fill: linear-gradient(to right, #00aaff, #005f7a);" text="GP 3 Price:">
+                                             <font>
+                                                <Font size="20.0" />
+                                             </font>
+                                          </Label>
+                                          <Label fx:id="gp1_label" layoutX="209.0" layoutY="100.0" text="29.99">
+                                             <font>
+                                                <Font size="20.0" />
+                                             </font>
+                                          </Label>
+                                          <Label fx:id="gp2_label" layoutX="209.0" layoutY="140.0" text="29.99">
+                                             <font>
+                                                <Font size="20.0" />
+                                             </font>
+                                          </Label>
+                                          <Label fx:id="gp3_label" layoutX="209.0" layoutY="180.0" text="29.99">
+                                             <font>
+                                                <Font size="20.0" />
+                                             </font>
+                                          </Label>
                                        </children>
                                     </Pane>
                                  </children>
@@ -840,7 +939,7 @@
                         </ScrollPane>
                         <ScrollPane fx:id="AdminEquipmentManagementPane" prefHeight="646.0" prefWidth="1155.0" visible="false">
                            <content>
-                              <Pane fx:id="EquipmentIdAdminStaff" prefHeight="808.0" prefWidth="1156.0">
+                              <Pane fx:id="EquipmentIdAdminStaff" prefHeight="800.0" prefWidth="1156.0">
                                  <children>
                                     <Label layoutX="39.0" layoutY="14.0" style="-fx-text-fill: linear-gradient(to right, #00aaff, #00688b);" text="Admin / Equipments">
                                        <font>
@@ -876,6 +975,11 @@
                               </LinearGradient>
                            </fill>
                         </FontAwesomeIconView>
+                        <Button fx:id="home_btn" layoutX="1.0" layoutY="221.0" mnemonicParsing="false" onAction="#home_btn_act" prefHeight="37.0" prefWidth="199.0" stylesheets="@../assets/css/buttons.css" text="Home" visible="false">
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Button>
                         <FontAwesomeIconView glyphName="HOME" layoutX="15.0" layoutY="248.0" onMouseClicked="#home_btn_clicked" size="24">
                            <cursor>
                               <Cursor fx:constant="HAND" />
@@ -897,6 +1001,11 @@
                               </LinearGradient>
                            </fill>
                         </FontAwesomeIconView>
+                        <Button fx:id="shop_btn" layoutX="1.0" layoutY="258.0" mnemonicParsing="false" onAction="#shop_btn_act" prefHeight="37.0" prefWidth="199.0" stylesheets="@../assets/css/buttons.css" text="Shop" visible="false">
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Button>
                         <FontAwesomeIconView glyphName="SHOPPING_BAG" layoutX="13.0" layoutY="285.0" onMouseClicked="#shop_btn_clicked" size="24">
                            <cursor>
                               <Cursor fx:constant="HAND" />
@@ -918,6 +1027,11 @@
                               </LinearGradient>
                            </fill>
                         </FontAwesomeIconView>
+                        <Button fx:id="settings_btn" layoutX="1.0" layoutY="593.0" mnemonicParsing="false" onAction="#settings_btn_act" prefHeight="37.0" prefWidth="199.0" stylesheets="@../assets/css/buttons.css" text="Settings" visible="false">
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Button>
                         <FontAwesomeIconView glyphName="GEAR" layoutX="14.0" layoutY="620.0" onMouseClicked="#settings_btn_clicked" size="24">
                            <cursor>
                               <Cursor fx:constant="HAND" />
@@ -939,48 +1053,12 @@
                               </LinearGradient>
                            </fill>
                         </FontAwesomeIconView>
-                        <FontAwesomeIconView glyphName="SIGN_OUT" layoutX="14.0" layoutY="668.0" onMouseClicked="#logout_btn_clicked" size="24">
-                           <cursor>
-                              <Cursor fx:constant="HAND" />
-                           </cursor>
-                           <fill>
-                              <LinearGradient endX="1.0" endY="1.0">
-                                 <stops>
-                                    <Stop>
-                                       <color>
-                                          <Color green="0.6666666865348816" blue="1.0" />
-                                       </color>
-                                    </Stop>
-                                    <Stop offset="1.0">
-                                       <color>
-                                          <Color green="0.40784314274787903" blue="0.545098066329956" />
-                                       </color>
-                                    </Stop>
-                                 </stops>
-                              </LinearGradient>
-                           </fill>
-                        </FontAwesomeIconView>
-                        <Button fx:id="home_btn" layoutX="1.0" layoutY="221.0" mnemonicParsing="false" onAction="#home_btn_act" prefHeight="37.0" prefWidth="199.0" stylesheets="@../assets/css/buttons.css" text="Home" visible="false">
-                           <cursor>
-                              <Cursor fx:constant="HAND" />
-                           </cursor>
-                        </Button>
-                        <Button fx:id="shop_btn" layoutX="1.0" layoutY="258.0" mnemonicParsing="false" onAction="#shop_btn_act" prefHeight="37.0" prefWidth="199.0" stylesheets="@../assets/css/buttons.css" text="Shop" visible="false">
-                           <cursor>
-                              <Cursor fx:constant="HAND" />
-                           </cursor>
-                        </Button>
-                        <Button fx:id="settings_btn" layoutX="1.0" layoutY="593.0" mnemonicParsing="false" onAction="#settings_btn_act" prefHeight="37.0" prefWidth="199.0" stylesheets="@../assets/css/buttons.css" text="Settings" visible="false">
-                           <cursor>
-                              <Cursor fx:constant="HAND" />
-                           </cursor>
-                        </Button>
                         <Button fx:id="logout_btn" layoutX="1.0" layoutY="641.0" mnemonicParsing="false" onAction="#logout_btn_act" prefHeight="37.0" prefWidth="199.0" stylesheets="@../assets/css/buttons.css" text="Logout" visible="false">
                            <cursor>
                               <Cursor fx:constant="HAND" />
                            </cursor>
                         </Button>
-                        <FontAwesomeIconView glyphName="ID_CARD" layoutX="12.0" layoutY="322.0" onMouseClicked="#subscription_btn_clicked" size="24">
+                        <FontAwesomeIconView glyphName="SIGN_OUT" layoutX="14.0" layoutY="668.0" onMouseClicked="#logout_btn_clicked" size="24">
                            <cursor>
                               <Cursor fx:constant="HAND" />
                            </cursor>
@@ -1006,17 +1084,54 @@
                               <Cursor fx:constant="HAND" />
                            </cursor>
                         </Button>
+                        <FontAwesomeIconView glyphName="ID_CARD" layoutX="12.0" layoutY="322.0" onMouseClicked="#subscription_btn_clicked" size="24">
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                           <fill>
+                              <LinearGradient endX="1.0" endY="1.0">
+                                 <stops>
+                                    <Stop>
+                                       <color>
+                                          <Color green="0.6666666865348816" blue="1.0" />
+                                       </color>
+                                    </Stop>
+                                    <Stop offset="1.0">
+                                       <color>
+                                          <Color green="0.40784314274787903" blue="0.545098066329956" />
+                                       </color>
+                                    </Stop>
+                                 </stops>
+                              </LinearGradient>
+                           </fill>
+                        </FontAwesomeIconView>
                         <Button fx:id="users_btn" layoutX="2.0" layoutY="332.0" mnemonicParsing="false" onAction="#users_btn_click" prefHeight="37.0" prefWidth="199.0" stylesheets="@../assets/css/buttons.css" text="Users" visible="false">
                            <cursor>
                               <Cursor fx:constant="HAND" />
                            </cursor>
                         </Button>
-                        <Button fx:id="blog_btn" layoutX="1.0" layoutY="369.0" mnemonicParsing="false" onAction="#blog_btn_act" prefHeight="37.0" prefWidth="199.0" stylesheets="@../assets/css/buttons.css" text="Blogs" visible="false">
+                        <FontAwesomeIconView glyphName="USERS" layoutX="13.0" layoutY="359.0" onMouseClicked="#users_btn_clicked" size="24">
                            <cursor>
                               <Cursor fx:constant="HAND" />
                            </cursor>
-                        </Button>
-                        <Button fx:id="event_btn" layoutX="2.0" layoutY="406.0" mnemonicParsing="false" onAction="#event_btn_act" prefHeight="37.0" prefWidth="199.0" stylesheets="@../assets/css/buttons.css" text="Events" visible="false">
+                           <fill>
+                              <LinearGradient endX="1.0" endY="1.0">
+                                 <stops>
+                                    <Stop>
+                                       <color>
+                                          <Color green="0.6666666865348816" blue="1.0" />
+                                       </color>
+                                    </Stop>
+                                    <Stop offset="1.0">
+                                       <color>
+                                          <Color green="0.40784314274787903" blue="0.545098066329956" />
+                                       </color>
+                                    </Stop>
+                                 </stops>
+                              </LinearGradient>
+                           </fill>
+                        </FontAwesomeIconView>
+                        <Button fx:id="blog_btn" layoutX="1.0" layoutY="369.0" mnemonicParsing="false" onAction="#blog_btn_act" prefHeight="37.0" prefWidth="199.0" stylesheets="@../assets/css/buttons.css" text="Blogs" visible="false">
                            <cursor>
                               <Cursor fx:constant="HAND" />
                            </cursor>
@@ -1042,28 +1157,12 @@
                               </LinearGradient>
                            </fill>
                         </FontAwesomeIconView>
-                        <FontAwesomeIconView glyphName="CALENDAR" layoutX="13.0" layoutY="433.0" onMouseClicked="#event_btn_clicked" size="24">
+                        <Button fx:id="event_btn" layoutX="2.0" layoutY="406.0" mnemonicParsing="false" onAction="#event_btn_act" prefHeight="37.0" prefWidth="199.0" stylesheets="@../assets/css/buttons.css" text="Events" visible="false">
                            <cursor>
                               <Cursor fx:constant="HAND" />
                            </cursor>
-                           <fill>
-                              <LinearGradient endX="1.0" endY="1.0">
-                                 <stops>
-                                    <Stop>
-                                       <color>
-                                          <Color green="0.6666666865348816" blue="1.0" />
-                                       </color>
-                                    </Stop>
-                                    <Stop offset="1.0">
-                                       <color>
-                                          <Color green="0.40784314274787903" blue="0.545098066329956" />
-                                       </color>
-                                    </Stop>
-                                 </stops>
-                              </LinearGradient>
-                           </fill>
-                        </FontAwesomeIconView>
-                        <FontAwesomeIconView glyphName="USERS" layoutX="13.0" layoutY="359.0" onMouseClicked="#users_btn_clicked" size="24">
+                        </Button>
+                        <FontAwesomeIconView glyphName="CALENDAR" layoutX="13.0" layoutY="433.0" onMouseClicked="#event_btn_clicked" size="24">
                            <cursor>
                               <Cursor fx:constant="HAND" />
                            </cursor>

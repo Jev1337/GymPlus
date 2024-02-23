@@ -61,6 +61,7 @@ import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.objdetect.CascadeClassifier;
 import org.opencv.objdetect.Objdetect;
 import org.opencv.videoio.VideoCapture;
+import services.gestionuser.AbonnementDetailsService;
 import services.gestionuser.AbonnementService;
 import services.gestionuser.ClientService;
 
@@ -75,6 +76,7 @@ public class UserDashboardController {
 
     private ClientService clientService = new ClientService();
     private AbonnementService abonnementService = new AbonnementService();
+    private AbonnementDetailsService abonnementDetailsService = new AbonnementDetailsService();
     private FadeIn[] fadeInAnimation = new FadeIn[8];
 
     private Notification msg = new Notification();
@@ -590,12 +592,7 @@ public class UserDashboardController {
                 GlobalVar.setUser(client);
                 initProfile();
             }
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.initStyle(StageStyle.UNDECORATED);
-            alert.setTitle("Success");
-            alert.setHeaderText("Profile picture updated");
-            alert.setContentText("Your profile info has been updated successfully");
-            alert.showAndWait();
+            notify("Account has been updated successfully!");
         }catch (Exception e){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.initStyle(StageStyle.UNDECORATED);
@@ -662,13 +659,13 @@ public class UserDashboardController {
 
     private void buy(int pkg){
         try {
-            if (pkg == 1)
+            if (pkg == 1) {
                 abonnementService.add(new Abonnement(GlobalVar.getUser().getId(), Date.valueOf(LocalDate.now().plusMonths(3)).toString(), "GP 1"));
-            else if (pkg == 2)
+            }else if (pkg == 2) {
                 abonnementService.add(new Abonnement(GlobalVar.getUser().getId(), Date.valueOf(LocalDate.now().plusMonths(6)).toString(), "GP 2"));
-            else if (pkg == 3)
+            }else if (pkg == 3) {
                 abonnementService.add(new Abonnement(GlobalVar.getUser().getId(), Date.valueOf(LocalDate.now().plusMonths(12)).toString(), "GP 3"));
-
+            }
             Date date = Date.valueOf(abonnementService.getCurrentSubscription(GlobalVar.getUser().getId()).getDuree_abon());
             long diff = date.getTime() - System.currentTimeMillis();
             long days = diff / (24 * 60 * 60 * 1000);
@@ -696,7 +693,7 @@ public class UserDashboardController {
         }
     }
 
-    public boolean setupBuy(float price){
+    public boolean setupBuy(double price){
         PayPalConfig paypalConfig = new PayPalConfig()
                 .setClientId("Af9N6m41ryO-aKuZO3cwgGr1PZeBsbxLTeSYVJ7iUr71UO3tA8Uc0p50NeEMbewLzmq00go8MoXAzXPC").setClientSecret("EBfq6ayRpNgVeWdALsblGLrMKUspTHt5GzfuH5MOM1FN7gqsoR6y5TCOTTYlm4R3adGWPgKoWYOI46Xz")
                 .setReturnUrl("http://localhost/gymplus/checkout/success/").setCancelUrl("http://localhost/gymplus/checkout/cancel/")
@@ -748,30 +745,39 @@ public class UserDashboardController {
     }
 
     public void buy1_btn_act(ActionEvent actionEvent) {
-        if (setupBuy(29.99f)) {
-            buy(1);
-            notify("Payment was successful!");
+        try {
+            if (setupBuy(abonnementDetailsService.getPriceByType("GP 1"))) {
+                buy(1);
+                notify("Payment was successful!");
+            } else
+                notify("Payment was cancelled!");
+        }catch (Exception e){
+            e.printStackTrace();
         }
-        else
-            notify("Payment was cancelled!");
     }
 
     public void buy2_btn_act(ActionEvent actionEvent) {
-        if (setupBuy(49.99f)) {
-            buy(2);
-            notify("Payment was successful!");
+        try {
+            if (setupBuy(abonnementDetailsService.getPriceByType("GP 2"))) {
+                buy(2);
+                notify("Payment was successful!");
+            } else
+                notify("Payment was cancelled!");
+        }catch (Exception e){
+            e.printStackTrace();
         }
-        else
-            notify("Payment was cancelled!");
     }
 
     public void buy3_btn_act(ActionEvent actionEvent) {
-        if (setupBuy(99.99f)) {
-            buy(3);
-            notify("Payment was successful!");
+        try {
+            if (setupBuy(abonnementDetailsService.getPriceByType("GP 3"))) {
+                buy(3);
+                notify("Payment was successful!");
+            } else
+                notify("Payment was cancelled!");
+        }catch (Exception e){
+            e.printStackTrace();
         }
-        else
-            notify("Payment was cancelled!");
     }
 
 
@@ -791,6 +797,7 @@ public class UserDashboardController {
         initDecoratedStage();
         notify("Successfully Logged In as " + GlobalVar.getUser().getUsername() + "!");
         initSubsciption();
+        initGPPrices();
         try {
             Pane pane= FXMLLoader.load(getClass().getResource("/gestionBlog/Blog.fxml"));
             blogId.getChildren().setAll(pane);
@@ -811,6 +818,23 @@ public class UserDashboardController {
         }
 
 
+    }
+
+    @FXML
+    private Label gp1_label;
+    @FXML
+    private Label gp2_label;
+    @FXML
+    private Label gp3_label;
+
+    private void initGPPrices(){
+        try {
+            gp1_label.setText(abonnementDetailsService.getPriceByType("GP 1") + "€ / 3 months");
+            gp2_label.setText(abonnementDetailsService.getPriceByType("GP 2") + "€ / 6 months");
+            gp3_label.setText(abonnementDetailsService.getPriceByType("GP 3") + "€ / 12 months");
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     private void initSubsciption(){

@@ -7,8 +7,8 @@
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.BoxBlur?>
 <?import javafx.scene.effect.DropShadow?>
-<?import javafx.scene.effect.Glow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -18,50 +18,81 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="542.0" prefWidth="429.0" stylesheets="@../assets/images/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionsuivi.AddObjectifController">
+<AnchorPane prefHeight="525.0" prefWidth="429.0" stylesheets="@../assets/images/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionsuivi.AddObjectifController">
    <children>
-      <Pane layoutX="21.0" layoutY="23.0" prefHeight="481.0" prefWidth="387.0" styleClass="border-table" stylesheets="@../assets/images/style.css">
+      <Pane layoutX="21.0" layoutY="18.0" prefHeight="512.0" prefWidth="387.0" stylesheets="@../assets/images/style.css">
          <children>
-            <ImageView disable="true" fitHeight="481.0" fitWidth="387.0" layoutY="7.0" opacity="0.95" pickOnBounds="true" preserveRatio="true">
+            <ImageView disable="true" fitHeight="481.0" fitWidth="366.0" layoutX="12.0" layoutY="24.0" opacity="0.95" pickOnBounds="true" preserveRatio="true" styleClass="border-table">
                <image>
                   <Image url="@../assets/images/cover2.jpg" />
                </image>
                <effect>
-                  <DropShadow />
+                  <BoxBlur />
                </effect>
             </ImageView>
-            <ImageView fitHeight="56.0" fitWidth="47.0" layoutX="25.0" layoutY="25.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="59.0" fitWidth="68.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../assets/images/Goal.png" />
+                  <Image url="@../assets/images/equip.png" />
                </image>
+               <effect>
+                  <DropShadow />
+               </effect>
             </ImageView>
             <Label fx:id="TtileLabel" layoutX="74.0" layoutY="36.0" text="Ajouter Objecitf" textFill="#f8f8f8">
                <font>
                   <Font name="System Bold Italic" size="22.0" />
                </font>
             </Label>
-            <TextField fx:id="tfPoidsObjectif" layoutX="51.0" layoutY="94.0" promptText="Objectif  poids" />
-            <TextField fx:id="tfPoidsActuelle" layoutX="51.0" layoutY="189.0" promptText="Poids actuele" />
-            <DatePicker fx:id="dpDureeObjectif" layoutX="51.0" layoutY="141.0" promptText="Date fin" />
-            <Slider fx:id="slTaille" blockIncrement="5.0" layoutX="313.0" layoutY="129.0" max="200.0" min="100.0" orientation="VERTICAL" prefWidth="14.0" showTickLabels="true" showTickMarks="true" value="20.0">
+            <TextField fx:id="tfPoidsObjectif" layoutX="52.0" layoutY="82.0" promptText="Objectif  poids">
                <effect>
-                  <Glow />
+                  <DropShadow />
+               </effect></TextField>
+            <TextField fx:id="tfPoidsActuelle" layoutX="50.0" layoutY="175.0" promptText="Poids actuele">
+               <effect>
+                  <DropShadow />
+               </effect></TextField>
+            <DatePicker fx:id="dpDureeObjectif" layoutX="51.0" layoutY="129.0" promptText="Date fin">
+               <effect>
+                  <DropShadow />
+               </effect></DatePicker>
+            <Slider fx:id="slTaille" blockIncrement="5.0" layoutX="313.0" layoutY="102.0" max="200.0" min="100.0" orientation="VERTICAL" prefWidth="14.0" showTickLabels="true" showTickMarks="true" value="20.0">
+               <effect>
+                  <DropShadow />
                </effect>
             </Slider>
-            <Text fx:id="labelTaille" fill="WHITE" layoutX="257.0" layoutY="121.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Précisez votre Taille" />
-            <TextArea fx:id="taAlergie" layoutX="51.0" layoutY="230.0" prefHeight="53.0" prefWidth="208.0" promptText="Alergie" />
-            <Text fill="WHITE" layoutX="50.0" layoutY="309.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Type d'objectf" />
-            <Text fill="WHITE" layoutX="54.0" layoutY="377.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Coach Name" />
-            <VBox fx:id="VboxModify" layoutX="242.0" layoutY="299.0" prefHeight="53.0" prefWidth="130.0" />
-            <VBox fx:id="vboxTest" fillWidth="false" layoutX="242.0" layoutY="373.0" prefHeight="59.0" prefWidth="130.0" />
-            <ChoiceBox fx:id="lsTypeObjectif" layoutX="50.0" layoutY="325.0" prefWidth="150.0" />
-            <ChoiceBox fx:id="lsCoachName" layoutX="50.0" layoutY="389.0" prefWidth="150.0" />
-            <HBox fx:id="HboxAddNotif" layoutY="444.0" prefHeight="68.0" prefWidth="387.0" />
+            <Text fx:id="labelTaille" fill="WHITE" layoutX="257.0" layoutY="90.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Précisez votre Taille" />
+            <TextArea fx:id="taAlergie" layoutX="50.0" layoutY="240.0" prefHeight="53.0" prefWidth="208.0" promptText="Alergie">
+               <effect>
+                  <DropShadow />
+               </effect></TextArea>
+            <Text fill="WHITE" layoutX="51.0" layoutY="389.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Type d'objectf" />
+            <Text fill="WHITE" layoutX="54.0" layoutY="322.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Coach Name" />
+            <VBox fx:id="VboxModify" layoutX="248.0" layoutY="311.0" prefHeight="53.0" prefWidth="130.0" />
+            <VBox fx:id="vboxTest" fillWidth="false" layoutX="241.0" layoutY="381.0" prefHeight="59.0" prefWidth="130.0" />
+            <ChoiceBox fx:id="lsTypeObjectif" layoutX="47.0" layoutY="404.0" prefWidth="150.0">
+               <effect>
+                  <DropShadow />
+               </effect></ChoiceBox>
+            <ChoiceBox fx:id="lsCoachName" layoutX="48.0" layoutY="334.0" prefWidth="150.0">
+               <effect>
+                  <DropShadow />
+               </effect></ChoiceBox>
+            <HBox fx:id="HboxAddNotif" layoutX="8.0" layoutY="434.0" prefHeight="70.0" prefWidth="387.0" />
          </children>
+         <effect>
+            <DropShadow />
+         </effect>
+         <styleClass>
+            <String fx:value="border-table" />
+            <String fx:value="degrade-diagonal" />
+         </styleClass>
       </Pane>
    </children>
    <styleClass>
       <String fx:value="border-table" />
       <String fx:value="degrade-diagonal2" />
    </styleClass>
+   <effect>
+      <DropShadow />
+   </effect>
 </AnchorPane>

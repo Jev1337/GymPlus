@@ -40,9 +40,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.Region;
+import javafx.scene.layout.*;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.shape.Circle;
@@ -75,14 +73,14 @@ import java.time.LocalDate;
 
 public class UserDashboardController {
 
-    private ClientService clientService = new ClientService();
-    private AbonnementService abonnementService = new AbonnementService();
-    private AbonnementDetailsService abonnementDetailsService = new AbonnementDetailsService();
-    private FadeIn[] fadeInAnimation = new FadeIn[8];
+    private final ClientService clientService = new ClientService();
+    private final AbonnementService abonnementService = new AbonnementService();
+    private final AbonnementDetailsService abonnementDetailsService = new AbonnementDetailsService();
+    private final FadeIn[] fadeInAnimation = new FadeIn[8];
 
-    private Notification msg = new Notification();
-    private FadeOutRight fadeOutRightAnimation = new FadeOutRight();
-    private FadeInRight fadeInRightAnimation = new FadeInRight();
+    private final Notification msg = new Notification();
+    private final FadeOutRight fadeOutRightAnimation = new FadeOutRight();
+    private final FadeInRight fadeInRightAnimation = new FadeInRight();
 
     @FXML
     private Pane blogId = new Pane();
@@ -130,12 +128,7 @@ public class UserDashboardController {
             logout_btn.getScene().getWindow().setHeight(400);
             logout_btn.getScene().setRoot(root);
         } catch (Exception e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.initStyle(StageStyle.UNDECORATED);
-            alert.setTitle("Error");
-            alert.setHeaderText("An error has occured");
-            alert.setContentText("An error has occured while trying to logout");
-            alert.showAndWait();
+            stackTraceAlert(e);
         }
     }
     @FXML
@@ -344,6 +337,7 @@ public class UserDashboardController {
         progressBar.setPrefWidth(407);
         progressBar.setPrefHeight(20);
         alert.getDialogPane().setContent(new Pane(label, progressBar));
+        alert.initOwner(UserHomePane.getScene().getWindow());
         alert.show();
 
 
@@ -392,13 +386,13 @@ public class UserDashboardController {
                                     try {
                                         img = ImageIO.read(in);
                                     }catch (Exception e) {
-                                        e.printStackTrace();
+                                        stackTraceAlert(e);
                                     }
                                     ByteArrayOutputStream bos = new ByteArrayOutputStream();
                                     try {
                                         ImageIO.write(img, "png", bos);
                                     }catch (Exception e) {
-                                        e.printStackTrace();
+                                        stackTraceAlert(e);
                                     }
 
                                     byte[] imgBytes = bos.toByteArray();
@@ -425,12 +419,12 @@ public class UserDashboardController {
                                                 faceId = jsonObject.getJSONArray("faces").getJSONObject(0).getString("face_token");
                                                 updateFaceId(faceId);
                                             }catch (Exception e) {
-                                                e.printStackTrace();
+                                                stackTraceAlert(e);
                                             }
 
                                         });
                                     }catch (Exception e) {
-                                        e.printStackTrace();
+                                        stackTraceAlert(e);
                                     }
                                     break;
                                 }
@@ -445,12 +439,13 @@ public class UserDashboardController {
                 }
                 capture.release();
 
-                if(faceId == null || faceId.equals("")){
+                if(faceId == null || faceId.isEmpty()){
                     Platform.runLater(() -> {
                         Alert alert = new Alert(Alert.AlertType.WARNING);
                         alert.initStyle(StageStyle.UNDECORATED);
                         alert.setTitle("Warning");
                         alert.setHeaderText("Warning");
+                        alert.initOwner(UserHomePane.getScene().getWindow());
                         if (!isCancelled())
                             alert.setContentText("No face detected! Please try again.");
                         else
@@ -482,7 +477,7 @@ public class UserDashboardController {
             initProfile();
             notify("FaceID has been updated successfully!");
         } catch (Exception e) {
-            e.printStackTrace();
+            stackTraceAlert(e);
         }
     }
 
@@ -564,21 +559,11 @@ public class UserDashboardController {
     void saveacc_btn_act(ActionEvent event) {
 
         if (firstname_tf.getText().isEmpty() || lastname_tf.getText().isEmpty() || username_tf.getText().isEmpty() || email_tf.getText().isEmpty() || phone_tf.getText().isEmpty() || address_ta.getText().isEmpty()) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.initStyle(StageStyle.UNDECORATED);
-            alert.setTitle("Error");
-            alert.setHeaderText("Empty fields");
-            alert.setContentText("Please fill all the fields");
-            alert.showAndWait();
+            errorAlert("Error", "Empty Fields", "Please fill in all the fields");
             return;
         }
         if (dateofbirth_tf.getValue() == null) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.initStyle(StageStyle.UNDECORATED);
-            alert.setTitle("Error");
-            alert.setHeaderText("Date of birth is empty");
-            alert.setContentText("Please choose a date of birth");
-            alert.showAndWait();
+            errorAlert("Error", "Invalid Date", "Please choose a valid date of birth");
             return;
         }
         if (!validateEmail(email_tf.getText()))
@@ -586,6 +571,30 @@ public class UserDashboardController {
         if (!validateText(username_tf.getText()))
             return;
         try {
+            if (!phone_tf.getText().equals(GlobalVar.getUser().getNum_tel())){
+                if (clientService.getUserByPhone(phone_tf.getText()) != null) {
+                    errorAlert("Error", "Phone Number Already in Use", "The phone number you have entered is already in use");
+                    return;
+                }
+                String code = (int)(Math.random() * (9999 - 1000 + 1) + 1000) + "";
+                sendSms(phone_tf.getText(), "Your verification code is: " + code);
+
+                TextInputDialog dialog = new TextInputDialog();
+                dialog.initStyle(StageStyle.UNDECORATED);
+                dialog.setTitle("Phone Verification");
+                dialog.initOwner(UserHomePane.getScene().getWindow());
+                dialog.setHeaderText("Phone Verification");
+                dialog.setContentText("Please enter the verification code sent to your phone:");
+                dialog.showAndWait();
+                if (dialog.getResult().isEmpty()){
+                    errorAlert("Verification code cannot be empty!", "Verification code cannot be empty!", "Verification Failed due to empty code! Please try again.");
+                    return;
+                }
+                if (!dialog.getResult().equals(code)){
+                    errorAlert("Verification code is incorrect!", "Verification code is incorrect!", "Verification code is incorrect! Please try again.");
+                    return;
+                }
+            }
             if (profilepic_pf.getText().isEmpty()) {
                 Client client = new Client(GlobalVar.getUser().getId(), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), dateofbirth_tf.getValue().toString(), GlobalVar.getUser().getPassword(), email_tf.getText(), phone_tf.getText(), address_ta.getText(), GlobalVar.getUser().getPhoto(), GlobalVar.getUser().getFaceid(), GlobalVar.getUser().getFaceid_ts());
                 clientService.update(client);
@@ -594,12 +603,7 @@ public class UserDashboardController {
             }else{
                 File file = new File(profilepic_pf.getText());
                 if (!file.exists()) {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.initStyle(StageStyle.UNDECORATED);
-                    alert.setTitle("Error");
-                    alert.setHeaderText("Profile picture not found");
-                    alert.setContentText("Please choose a valid profile picture");
-                    alert.showAndWait();
+                    errorAlert("Error", "Invalid File", "The file you have chosen does not exist");
                     return;
                 }
                 userprofile_imageview.setImage(null);
@@ -614,14 +618,7 @@ public class UserDashboardController {
             }
             notify("Account has been updated successfully!");
         }catch (Exception e){
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.initStyle(StageStyle.UNDECORATED);
-            alert.setTitle("Error");
-            alert.setHeaderText("An error has occured");
-            alert.setContentText("An error has occured while trying to update your account");
-            alert.showAndWait();
-            e.printStackTrace();
-            return;
+            stackTraceAlert(e);
         }
     }
 
@@ -632,6 +629,7 @@ public class UserDashboardController {
         alert.setTitle("Confirmation");
         alert.setHeaderText("Are you sure you want to delete your account?");
         alert.setContentText("This action is irreversible");
+        alert.initOwner(UserHomePane.getScene().getWindow());
         alert.showAndWait();
         if (alert.getResult() == ButtonType.OK) {
             try {
@@ -641,13 +639,7 @@ public class UserDashboardController {
                 file.delete();
                 clientService.delete(GlobalVar.getUser().getId());
             }catch (Exception e){
-                alert = new Alert(Alert.AlertType.ERROR);
-                alert.initStyle(StageStyle.UNDECORATED);
-                alert.setTitle("Error");
-                alert.setHeaderText("An error has occured");
-                alert.setContentText("An error has occured while trying to delete your account");
-                alert.showAndWait();
-                e.printStackTrace();
+                stackTraceAlert(e);
                 return;
 
             }
@@ -673,7 +665,7 @@ public class UserDashboardController {
             });
             fadeOutRightAnimation.play();
         }catch (Exception e){
-            e.printStackTrace();
+            stackTraceAlert(e);
         }
     }
 
@@ -709,7 +701,7 @@ public class UserDashboardController {
             });
             fadeOutRightAnimation.play();
         } catch (Exception e) {
-            e.printStackTrace();
+            stackTraceAlert(e);
         }
     }
 
@@ -759,7 +751,7 @@ public class UserDashboardController {
                 }
             }
         }catch (Exception e){
-            e.printStackTrace();
+            stackTraceAlert(e);
         }
         return false;
     }
@@ -772,7 +764,7 @@ public class UserDashboardController {
             } else
                 notify("Payment was cancelled!");
         }catch (Exception e){
-            e.printStackTrace();
+           stackTraceAlert(e);
         }
     }
 
@@ -784,7 +776,7 @@ public class UserDashboardController {
             } else
                 notify("Payment was cancelled!");
         }catch (Exception e){
-            e.printStackTrace();
+            stackTraceAlert(e);
         }
     }
 
@@ -796,7 +788,7 @@ public class UserDashboardController {
             } else
                 notify("Payment was cancelled!");
         }catch (Exception e){
-            e.printStackTrace();
+            stackTraceAlert(e);
         }
     }
 
@@ -822,19 +814,19 @@ public class UserDashboardController {
             Pane pane= FXMLLoader.load(getClass().getResource("/gestionBlog/Blog.fxml"));
             blogId.getChildren().setAll(pane);
         } catch (IOException e) {
-            e.printStackTrace();
+            stackTraceAlert(e);
         }
         try {
             Pane pane_event= FXMLLoader.load(getClass().getResource("/gestionevents/event.fxml"));
             usereventpane_id.getChildren().setAll(pane_event);
         } catch (IOException e) {
-            e.printStackTrace();
+            stackTraceAlert(e);
         }
         try {
             Pane pane_Objectif= FXMLLoader.load(getClass().getResource("/gestionSuivi/objectif1.fxml"));
             ObjectifPan.getChildren().setAll(pane_Objectif);
         } catch (IOException e) {
-            e.printStackTrace();
+            stackTraceAlert(e);
         }
 
 
@@ -853,7 +845,7 @@ public class UserDashboardController {
             gp2_label.setText(abonnementDetailsService.getPriceByType("GP 2") + "€ / 6 months");
             gp3_label.setText(abonnementDetailsService.getPriceByType("GP 3") + "€ / 12 months");
         }catch (Exception e){
-            e.printStackTrace();
+            stackTraceAlert(e);
         }
     }
 
@@ -881,7 +873,7 @@ public class UserDashboardController {
                 unsubscribed_pane.setVisible(true);
             }
         }catch (Exception e){
-            e.printStackTrace();
+            stackTraceAlert(e);
         }
     }
 
@@ -930,6 +922,7 @@ public class UserDashboardController {
         if(!email.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")){
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.initStyle(StageStyle.UNDECORATED);
+            alert.initOwner(UserHomePane.getScene().getWindow());
             alert.setTitle("Warning");
             alert.setHeaderText("Warning");
             alert.setContentText("Invalid email format! Please try again.");
@@ -943,6 +936,7 @@ public class UserDashboardController {
         if (username.length() < 4 && username.length() > 20){
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.initStyle(StageStyle.UNDECORATED);
+            alert.initOwner(UserHomePane.getScene().getWindow());
             alert.setTitle("Warning");
             alert.setHeaderText("Warning");
             alert.setContentText("Username must be between 4 and 20 characters long! Please try again.");
@@ -952,7 +946,6 @@ public class UserDashboardController {
         return true;
     }
     private void initProfile(){
-
         String photoname = GlobalVar.getUser().getPhoto();
         user_imageview.setImage(new Image(new File("src/assets/profileuploads/" +photoname).toURI().toString()));
         Circle clip1 = new Circle(user_imageview.getFitWidth()/2, user_imageview.getFitHeight()/2, user_imageview.getFitWidth()/2);
@@ -1099,4 +1092,120 @@ public class UserDashboardController {
         stat_barchart.getData().add(series2);
     }
 
+    private void errorAlert(String title, String header, String message){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.initStyle(StageStyle.UNDECORATED);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(message);
+        alert.initOwner(UserHomePane.getScene().getWindow());
+        alert.showAndWait();
+    }
+
+    private void successAlert(String title, String header, String message){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.initStyle(StageStyle.UNDECORATED);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(message);
+        alert.initOwner(UserHomePane.getScene().getWindow());
+        alert.showAndWait();
+    }
+
+    private void infoAlert(String title, String header, String message){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.initStyle(StageStyle.UNDECORATED);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(message);
+        alert.initOwner(UserHomePane.getScene().getWindow());
+        alert.showAndWait();
+    }
+
+    private void stackTraceAlert(Exception exception){
+        var alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Exception Dialog");
+        alert.setHeaderText("An exception occurred");
+        alert.setContentText("An exception occurred, please check the stacktrace below");
+
+        var stringWriter = new StringWriter();
+        var printWriter = new PrintWriter(stringWriter);
+        exception.printStackTrace(printWriter);
+
+        var textArea = new TextArea(stringWriter.toString());
+        textArea.setEditable(false);
+        textArea.setWrapText(false);
+        textArea.setMaxWidth(Double.MAX_VALUE);
+        textArea.setMaxHeight(Double.MAX_VALUE);
+        GridPane.setVgrow(textArea, Priority.ALWAYS);
+        GridPane.setHgrow(textArea, Priority.ALWAYS);
+
+        var content = new GridPane();
+        content.setMaxWidth(Double.MAX_VALUE);
+        content.add(new Label("Full stacktrace:"), 0, 0);
+        content.add(textArea, 0, 1);
+
+        alert.getDialogPane().setExpandableContent(content);
+        alert.initOwner(UserHomePane.getScene().getWindow());
+        alert.showAndWait();
+    }
+
+    private void sendSms(String phone, String message) {
+        try {
+            OkHttpClient client = new OkHttpClient();
+
+            // Step 1: Get token
+            RequestBody body = new FormBody.Builder()
+                    .add("grant_type", "client_credentials")
+                    .build();
+
+            Request request = new Request.Builder()
+                    .url("https://api.orange.com/oauth/v3/token")
+                    .post(body)
+                    .addHeader("Content-Type", "application/x-www-form-urlencoded")
+                    .addHeader("Authorization", "Basic RnllZ3NrN0MyREVMMVdMWTZ4NVV1MGo1RTAwaFRUT3Y6d3BoZzlRQWRIY1pFZmlRWA==")
+                    .build();
+
+            Response response = client.newCall(request).execute();
+            if (!response.isSuccessful()) {
+                errorAlert("Error", "Failed to get token", "Failed to get token from Orange API");
+                return;
+            }
+
+            JSONObject accesstoken = new JSONObject(response.body().string());
+
+            // Step 2: Send SMS
+            JSONObject sms = new JSONObject();
+            JSONObject outboundSMSMessageRequest = new JSONObject();
+            outboundSMSMessageRequest.put("address", "tel:+216" + phone);
+            JSONObject outboundSMSTextMessage = new JSONObject();
+            outboundSMSTextMessage.put("message", message);
+            outboundSMSMessageRequest.put("outboundSMSTextMessage", outboundSMSTextMessage);
+            outboundSMSMessageRequest.put("senderAddress", "tel:+21652920276");
+            outboundSMSMessageRequest.put("senderName", "string");
+            sms.put("outboundSMSMessageRequest", outboundSMSMessageRequest);
+
+
+            RequestBody smsBody = RequestBody.create(
+                    MediaType.parse("application/json; charset=utf-8"),
+                    sms.toString()
+            );
+
+            Request smsRequest = new Request.Builder()
+                    .url("https://api.orange.com/smsmessaging/v1/outbound/tel%3A%2B21652920276/requests")
+                    .post(smsBody)
+                    .addHeader("Content-Type", "application/json")
+                    .addHeader("Authorization", "Bearer " + accesstoken.getString("access_token"))
+                    .build();
+
+            Response smsResponse = client.newCall(smsRequest).execute();
+            if (!smsResponse.isSuccessful()) {
+                errorAlert("Error", "Failed to send SMS", "Failed to send SMS to " + phone);
+                return;
+            }
+            notify("SMS has been sent successfully!");
+        } catch (Exception e) {
+            stackTraceAlert(e);
+        }
+    }
 }

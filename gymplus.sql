@@ -111,6 +111,7 @@ CREATE TABLE `event_details` (
   `type` varchar(255) DEFAULT NULL,
   `event_date` datetime DEFAULT NULL,
   `duree` varchar(255) DEFAULT NULL,
+  `nb_places` int(11) DEFAULT NULL,
   `nb_total` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -236,6 +237,7 @@ CREATE TABLE `user` (
   `num_tel` varchar(255) DEFAULT NULL,
   `adresse` text DEFAULT NULL,
   `photo` text DEFAULT NULL,
+  `event_points` int(11) DEFAULT NULL,
   `faceid` varchar(255) DEFAULT NULL,
   `faceid_ts` date NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -398,6 +400,8 @@ ALTER TABLE `abonnement`
 ALTER TABLE `commentaire`
   ADD CONSTRAINT `commentaire_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `commentaire_ibfk_2` FOREIGN KEY (`id_post`) REFERENCES `post` (`id_post`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ALTER TABLE `commentaire`
+    MODIFY `id_comment` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- Constraints for table `detailfacture`
@@ -444,6 +448,8 @@ ALTER TABLE `planning`
 ALTER TABLE `post`
   ADD CONSTRAINT `post_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
+ALTER TABLE `post`
+  MODIFY `id_post` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

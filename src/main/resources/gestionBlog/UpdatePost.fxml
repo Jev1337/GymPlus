@@ -10,13 +10,13 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<VBox prefHeight="177.0" prefWidth="546.0" styleClass="postBackground" stylesheets="@../../css/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.BlogController.UpdatePostController">
+<VBox prefHeight="177.0" prefWidth="546.0" styleClass="postBackground" stylesheets="@../assets/css/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.BlogController.UpdatePostController">
    <children>
       <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="514.0" spacing="10.0">
          <children>
             <ImageView fx:id="userPic" fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../icon/avatar.png" />
+                  <Image url="@../assets/icon/avatar.png" />
                </image>
             </ImageView>
             <Text fx:id="userName" strokeType="OUTSIDE" strokeWidth="0.0" text="user's name">
@@ -39,7 +39,7 @@
       </TextArea>
       <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="542.0" spacing="10.0">
          <children>
-            <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="60.0" mnemonicParsing="false" onAction="#updatePost" prefHeight="30.0" prefWidth="70.0" styleClass="simpleButton" stylesheets="@../../css/style.css" text="Update" />
+            <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="60.0" mnemonicParsing="false" onAction="#updatePost" prefHeight="30.0" prefWidth="70.0" styleClass="simpleButton" stylesheets="@../assets/css/style.css" text="Update" />
          </children>
          <padding>
             <Insets left="10.0" right="10.0" />

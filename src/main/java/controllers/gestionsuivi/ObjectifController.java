@@ -37,7 +37,11 @@ public class ObjectifController  implements Initializable {
     @FXML
     private VBox pnl_scorllChatBot;
 
+    @FXML
+    private VBox ExerciceCalorieVbox;
 
+    @FXML
+    private VBox CaloriesRequirmentVbox;
     private static Stage stage ;
 
 
@@ -101,6 +105,22 @@ public class ObjectifController  implements Initializable {
 
     }
 
+    public  void refreshNodeExercicesGenerator() throws IOException {
+        ExerciceCalorieVbox.getChildren().clear();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/gestionSuivi/ExercicesGenerator.fxml"));
+        Node node = loader.load();
+        ExerciceCalorieVbox.getChildren().add(node);
+
+    }
+
+    public  void refreshBurnedCaloriesController() throws IOException {
+        CaloriesRequirmentVbox.getChildren().clear();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/gestionSuivi/CaloriesRequirment.fxml"));
+        Node node = loader.load();
+        CaloriesRequirmentVbox.getChildren().add(node);
+
+    }
+
 
     public void refreshNodesListeItems() throws IOException {
         pnl_scroll2.getChildren().clear();
@@ -149,9 +169,6 @@ public class ObjectifController  implements Initializable {
         pnl_scorllChatBot.getChildren().clear();
         // Node[] nodes = new Node[1];
         //FXMLLoader loader = FXMLLoader.load(getClass().getResource("/gestionSuivi/chatBot.fxml"));
-
-
-
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/gestionSuivi/chatBot.fxml"));
             Node node = loader.load();
             pnl_scorllChatBot.getChildren().add(node);
@@ -190,11 +207,20 @@ public class ObjectifController  implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
+        try {
+            refreshNodeExercicesGenerator();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+
         try {
             refreshNodeCaloriesFx();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
         refreshNodesWeb();
             refreshNodes();
 
@@ -204,8 +230,16 @@ public class ObjectifController  implements Initializable {
             throw new RuntimeException(e);
         }
 
+
+
         try {
             refreshNodesChatBot();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        try {
+            refreshBurnedCaloriesController();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

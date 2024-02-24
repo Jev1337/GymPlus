@@ -203,4 +203,36 @@ public class ClientService implements IService<Client> {
         }
         return clients;
     }
+
+    public Client getUserByPhone(String phone) throws SQLException {
+        String query = "SELECT * FROM user WHERE num_tel = ?";
+        PreparedStatement pst = connection.prepareStatement(query);
+        pst.setString(1, phone);
+        ResultSet rs = pst.executeQuery();
+        if (rs.next()) {
+            Client client = new Client();
+            client.setId(rs.getInt("id"));
+            client.setUsername(rs.getString("username"));
+            client.setFirstname(rs.getString("firstname"));
+            client.setLastname(rs.getString("lastname"));
+            client.setDate_naiss(rs.getString("date_naiss"));
+            client.setPassword(rs.getString("password"));
+            client.setEmail(rs.getString("email"));
+            client.setNum_tel(rs.getString("num_tel"));
+            client.setAdresse(rs.getString("adresse"));
+            client.setPhoto(rs.getString("photo"));
+            client.setRole(rs.getString("role"));
+            client.setFaceid(rs.getString("faceid"));
+            client.setFaceid_ts(rs.getString("faceid_ts"));
+            return client;
+        }
+        return null;
+    }
+    public void updatePassword(int id, String password) throws SQLException {
+        String query = "UPDATE user SET password = ? WHERE id = ?";
+        PreparedStatement pst = connection.prepareStatement(query);
+        pst.setString(1, Password.hash(password).withBcrypt().getResult());
+        pst.setInt(2, id);
+        pst.executeUpdate();
+    }
 }

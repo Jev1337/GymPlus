@@ -18,6 +18,89 @@
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionuser.AuthController">
    <children>
+      <Pane fx:id="signin_pane" prefHeight="400.0" prefWidth="300.0">
+         <children>
+            <Button fx:id="signin_btn" layoutX="85.0" layoutY="272.0" mnemonicParsing="false" onAction="#signin_btn_act" prefHeight="41.0" prefWidth="132.0" style="-color-button-fg: white; -color-button-bg: #00aaff; -color-button-border-focused: white;" styleClass="rounded" text="Sign In">
+               <font>
+                  <Font name="Open Sans Regular" size="12.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <TextField fx:id="email_tf" layoutX="50.0" layoutY="139.0" prefHeight="41.0" prefWidth="202.0" promptText="Email" />
+            <Label layoutX="117.0" layoutY="96.0" text="Sign In">
+               <font>
+                  <Font name="Open Sans Regular" size="22.0" />
+               </font>
+            </Label>
+            <Label layoutX="90.0" layoutY="241.0" onMouseReleased="#forgotpw_clicked" style="-fx-cursor: hand;" text="Forgot your password?">
+               <font>
+                  <Font name="Open Sans Regular" size="12.0" />
+               </font></Label>
+            <PasswordField fx:id="pwd_pf" layoutX="49.0" layoutY="191.0" prefHeight="41.0" prefWidth="202.0" promptText="Password" />
+            <ImageView fx:id="faceid_btn" fitHeight="22.0" fitWidth="23.0" layoutX="121.0" layoutY="350.0" onMouseClicked="#faceid_btn_clicked" pickOnBounds="true">
+               <image>
+                  <Image url="@../assets/images/Face_ID_logo.svg.png" />
+               </image>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </ImageView>
+            <FontAwesomeIconView fx:id="google_btn" glyphName="GOOGLE" layoutX="158.0" layoutY="370.0" onMouseClicked="#google_btn_clicked" size="24">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </FontAwesomeIconView>
+            <Line endX="19.64599609375" layoutX="191.0" layoutY="334.0" startX="-100.0" stroke="#00aaff" />
+            <FontAwesomeIconView glyphName="ENVELOPE" layoutX="226.0" layoutY="165.0" text="" />
+            <FontAwesomeIconView glyphName="LOCK" layoutX="229.0" layoutY="217.0" />
+         </children>
+      </Pane>
+      <Pane fx:id="signup_switch_pane" layoutX="300.0" prefHeight="400.0" prefWidth="300.0" style="-fx-background-color: linear-gradient(to right, #00aaff, #00688b);;">
+         <children>
+            <Label layoutX="52.0" layoutY="91.0" style="-fx-text-fill: -color-light;" text="Hello, Friend!">
+               <font>
+                  <Font name="Open Sans Regular" size="32.0" />
+               </font>
+            </Label>
+            <Label layoutX="27.0" layoutY="147.0" prefHeight="53.0" prefWidth="246.0" style="-fx-text-fill: -color-light;" text="Enter your personal details and&#10;start journey with us" textAlignment="CENTER">
+               <font>
+                  <Font name="Open Sans Regular" size="16.0" />
+               </font>
+            </Label>
+            <Button fx:id="signup_switch_btn" layoutX="84.0" layoutY="216.0" mnemonicParsing="false" onAction="#signup_switch_btn_act" prefHeight="41.0" prefWidth="132.0" style="-color-button-fg: white; -color-button-bg: linear-gradient(to right, #00aaff, #00688b);; -color-button-fg-hover: black; -color-button-bg-hover: white; -color-button-border-focused: white;" styleClass="rounded" text="Sign Up">
+               <font>
+                  <Font name="Open Sans Regular" size="12.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+         </children>
+      </Pane>
+      <Pane fx:id="signin_switch_pane" prefHeight="400.0" prefWidth="300.0" style="-fx-background-color: linear-gradient(to right, #00aaff, #00688b);;" visible="false">
+         <children>
+            <Label layoutX="37.0" layoutY="91.0" style="-fx-text-fill: -color-light;" text="Welcome Back!">
+               <font>
+                  <Font name="Open Sans Regular" size="32.0" />
+               </font>
+            </Label>
+            <Label layoutX="16.0" layoutY="136.0" prefHeight="70.0" prefWidth="274.0" style="-fx-text-fill: -color-light;" text="To stay connected with us &#10;please login with your personal info" textAlignment="CENTER">
+               <font>
+                  <Font name="Open Sans Regular" size="16.0" />
+               </font>
+            </Label>
+            <Button fx:id="signin_switch_btn" layoutX="84.0" layoutY="216.0" mnemonicParsing="false" onAction="#signin_switch_btn_act" prefHeight="41.0" prefWidth="132.0" style="-color-button-fg: white; -color-button-bg: linear-gradient(to right, #00aaff, #00688b);; -color-button-fg-hover: black; -color-button-bg-hover: white; -color-button-border-focused: white;" styleClass="rounded" text="Sign In">
+               <font>
+                  <Font name="Open Sans Regular" size="12.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+         </children>
+      </Pane>
       <Pane fx:id="signup_pane" layoutX="300.0" prefHeight="400.0" prefWidth="300.0" visible="false">
          <children>
             <Button fx:id="next_btn" layoutX="84.0" layoutY="337.0" mnemonicParsing="false" onAction="#next_btn_act" prefHeight="41.0" prefWidth="132.0" style="-color-button-fg: white; -color-button-bg: #00aaff; -color-button-border-focused: white;" styleClass="rounded" text="Next">
@@ -53,89 +136,6 @@
             <FontAwesomeIconView glyphName="LOCK" layoutX="231.0" layoutY="296.0" />
          </children>
       </Pane>
-      <Pane fx:id="signin_pane" prefHeight="400.0" prefWidth="300.0">
-         <children>
-            <Button fx:id="signin_btn" layoutX="85.0" layoutY="272.0" mnemonicParsing="false" onAction="#signin_btn_act" prefHeight="41.0" prefWidth="132.0" style="-color-button-fg: white; -color-button-bg: #00aaff; -color-button-border-focused: white;" styleClass="rounded" text="Sign In">
-               <font>
-                  <Font name="Open Sans Regular" size="12.0" />
-               </font>
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-            </Button>
-            <TextField fx:id="email_tf" layoutX="50.0" layoutY="139.0" prefHeight="41.0" prefWidth="202.0" promptText="Email" />
-            <Label layoutX="117.0" layoutY="96.0" text="Sign In">
-               <font>
-                  <Font name="Open Sans Regular" size="22.0" />
-               </font>
-            </Label>
-            <Label layoutX="90.0" layoutY="241.0" style="-fx-cursor: hand;" text="Forgot your password?">
-               <font>
-                  <Font name="Open Sans Regular" size="12.0" />
-               </font></Label>
-            <PasswordField fx:id="pwd_pf" layoutX="49.0" layoutY="191.0" prefHeight="41.0" prefWidth="202.0" promptText="Password" />
-            <ImageView fx:id="faceid_btn" fitHeight="22.0" fitWidth="23.0" layoutX="121.0" layoutY="350.0" onMouseClicked="#faceid_btn_clicked" pickOnBounds="true">
-               <image>
-                  <Image url="@../assets/images/Face_ID_logo.svg.png" />
-               </image>
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-            </ImageView>
-            <FontAwesomeIconView fx:id="google_btn" glyphName="GOOGLE" layoutX="158.0" layoutY="370.0" onMouseClicked="#google_btn_clicked" size="24">
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-            </FontAwesomeIconView>
-            <Line endX="19.64599609375" layoutX="191.0" layoutY="334.0" startX="-100.0" stroke="#00aaff" />
-            <FontAwesomeIconView glyphName="ENVELOPE" layoutX="226.0" layoutY="165.0" text="" />
-            <FontAwesomeIconView glyphName="LOCK" layoutX="229.0" layoutY="217.0" />
-         </children>
-      </Pane>
-      <Pane fx:id="signin_switch_pane" prefHeight="400.0" prefWidth="300.0" style="-fx-background-color: linear-gradient(to right, #00aaff, #00688b);;" visible="false">
-         <children>
-            <Label layoutX="37.0" layoutY="91.0" style="-fx-text-fill: -color-light;" text="Welcome Back!">
-               <font>
-                  <Font name="Open Sans Regular" size="32.0" />
-               </font>
-            </Label>
-            <Label layoutX="16.0" layoutY="136.0" prefHeight="70.0" prefWidth="274.0" style="-fx-text-fill: -color-light;" text="To stay connected with us &#10;please login with your personal info" textAlignment="CENTER">
-               <font>
-                  <Font name="Open Sans Regular" size="16.0" />
-               </font>
-            </Label>
-            <Button fx:id="signin_switch_btn" layoutX="84.0" layoutY="216.0" mnemonicParsing="false" onAction="#signin_switch_btn_act" prefHeight="41.0" prefWidth="132.0" style="-color-button-fg: white; -color-button-bg: linear-gradient(to right, #00aaff, #00688b);; -color-button-fg-hover: black; -color-button-bg-hover: white; -color-button-border-focused: white;" styleClass="rounded" text="Sign In">
-               <font>
-                  <Font name="Open Sans Regular" size="12.0" />
-               </font>
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-            </Button>
-         </children>
-      </Pane>
-      <Pane fx:id="signup_switch_pane" layoutX="300.0" prefHeight="400.0" prefWidth="300.0" style="-fx-background-color: linear-gradient(to right, #00aaff, #00688b);;">
-         <children>
-            <Label layoutX="52.0" layoutY="91.0" style="-fx-text-fill: -color-light;" text="Hello, Friend!">
-               <font>
-                  <Font name="Open Sans Regular" size="32.0" />
-               </font>
-            </Label>
-            <Label layoutX="27.0" layoutY="147.0" prefHeight="53.0" prefWidth="246.0" style="-fx-text-fill: -color-light;" text="Enter your personal details and&#10;start journey with us" textAlignment="CENTER">
-               <font>
-                  <Font name="Open Sans Regular" size="16.0" />
-               </font>
-            </Label>
-            <Button fx:id="signup_switch_btn" layoutX="84.0" layoutY="216.0" mnemonicParsing="false" onAction="#signup_switch_btn_act" prefHeight="41.0" prefWidth="132.0" style="-color-button-fg: white; -color-button-bg: linear-gradient(to right, #00aaff, #00688b);; -color-button-fg-hover: black; -color-button-bg-hover: white; -color-button-border-focused: white;" styleClass="rounded" text="Sign Up">
-               <font>
-                  <Font name="Open Sans Regular" size="12.0" />
-               </font>
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-            </Button>
-         </children>
-      </Pane>
       <Pane fx:id="signupad_pane" layoutY="17.0" prefHeight="383.0" prefWidth="600.0" visible="false">
          <children>
             <TextField fx:id="cin_tf" layoutX="30.0" layoutY="99.0" prefHeight="36.0" prefWidth="246.0" promptText="ID Card Number" />
@@ -165,6 +165,55 @@
             <FontAwesomeIconView glyphName="INFO" layoutX="257.0" layoutY="196.0" />
             <FontAwesomeIconView glyphName="INFO" layoutX="539.0" layoutY="124.0" />
             <FontAwesomeIconView glyphName="PHONE" layoutX="256.0" layoutY="268.0" text="" />
+         </children>
+      </Pane>
+      <Pane fx:id="forgotpaneverif" prefHeight="400.0" prefWidth="600.0" visible="false">
+         <children>
+            <Label layoutX="374.0" layoutY="155.0" onMouseReleased="#notyou_label_clicked" style="-fx-text-fill: linear-gradient(to right, #00aaff, #005f7a);" text="Not you?">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor></Label>
+            <ImageView fx:id="userforgot_imageview" fitHeight="91.0" fitWidth="94.0" layoutX="116.0" layoutY="84.0" pickOnBounds="true" />
+            <Label fx:id="nameforgot_label" layoutX="218.0" layoutY="84.0" text="First Name + Last Name">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Label>
+            <Label fx:id="usernameforgot_label" layoutX="218.0" layoutY="114.0" onMouseReleased="#notyou_label_clicked" text="Username" />
+            <Label layoutX="116.0" layoutY="232.0" text="For security measures, please complete your phone number" />
+            <TextField fx:id="forgotnumber_tf" layoutX="199.0" layoutY="263.0" prefHeight="36.0" prefWidth="202.0" promptText="Phone Number" />
+            <Button layoutX="253.0" layoutY="311.0" mnemonicParsing="false" onAction="#verify_btn_act" prefHeight="36.0" prefWidth="94.0" style="-color-button-bg: linear-gradient(to right, #00aaff, #005f7a); -color-button-fg: white;" styleClass="rounded" text="Verify">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor></Button>
+            <FontAwesomeIconView glyphName="PHONE" layoutX="381.0" layoutY="286.0" />
+            <Label fx:id="phonelabelforgot_label" layoutX="218.0" layoutY="134.0" onMouseReleased="#notyou_label_clicked" text="Phone" />
+         </children>
+      </Pane>
+      <Pane fx:id="resetpane" prefHeight="400.0" prefWidth="600.0" visible="false">
+         <children>
+            <ImageView fx:id="userreset_imageview" fitHeight="91.0" fitWidth="94.0" layoutX="116.0" layoutY="77.0" pickOnBounds="true" />
+            <Label fx:id="nameres_label" layoutX="218.0" layoutY="77.0" text="First Name + Last Name">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Label>
+            <Label fx:id="usernameres_label" layoutX="218.0" layoutY="107.0" onMouseReleased="#notyou_label_clicked" text="Username" />
+            <Button layoutX="228.0" layoutY="295.0" mnemonicParsing="false" onAction="#changepw_btn_act" prefHeight="36.0" prefWidth="144.0" style="-color-button-bg: linear-gradient(to right, #00aaff, #005f7a); -color-button-fg: white;" styleClass="rounded" text="Change Password">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Label fx:id="phoneres_label" layoutX="218.0" layoutY="127.0" onMouseReleased="#notyou_label_clicked" text="Phone" />
+            <Button layoutX="518.0" layoutY="350.0" mnemonicParsing="false" onAction="#cancelres_btn_act" prefHeight="36.0" prefWidth="68.0" style="-color-button-bg: -color-warning-3; -color-button-fg: white;" styleClass="rounded" text="Cancel">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <PasswordField fx:id="passwordres_pf" layoutX="199.0" layoutY="200.0" prefHeight="36.0" prefWidth="202.0" promptText="New Password" />
+            <FontAwesomeIconView glyphName="LOCK" layoutX="382.0" layoutY="224.0" text="" />
+            <PasswordField fx:id="passwordconfres_pf" layoutX="199.0" layoutY="246.0" prefHeight="36.0" prefWidth="202.0" promptText="Password Confirmation" />
+            <FontAwesomeIconView glyphName="LOCK" layoutX="382.0" layoutY="269.0" />
          </children>
       </Pane>
       <Pane fx:id="dragpane" prefHeight="17.0" prefWidth="600.0" style="-fx-background-color: linear-gradient(to right, #00aaff, #005f7a);;">

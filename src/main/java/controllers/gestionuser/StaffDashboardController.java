@@ -8,6 +8,7 @@ import atlantafx.base.controls.Notification;
 import atlantafx.base.controls.RingProgressIndicator;
 import atlantafx.base.theme.Styles;
 import atlantafx.base.util.Animations;
+import com.twilio.Twilio;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import entities.gestionuser.Abonnement;
 import entities.gestionuser.Client;
@@ -592,6 +593,36 @@ public class StaffDashboardController {
         if (!validateText(username_tf.getText()))
             return;
         try {
+            if (!phone_tf.getText().equals(GlobalVar.getUser().getNum_tel())){
+                if (staffService.getUserByPhone(phone_tf.getText()) != null) {
+                    errorAlert("Error", "Phone Number Already in Use", "The phone number you have entered is already in use");
+                    return;
+                }
+                String code = (int)(Math.random() * (9999 - 1000 + 1) + 1000) + "";
+                Twilio.init("ACa0a9c02e124f285821fe62b736260421", "e8cd361a90ce0dbcd5485d5719f935fb");
+                com.twilio.rest.api.v2010.account.Message message = com.twilio.rest.api.v2010.account.Message.creator(
+                                new com.twilio.type.PhoneNumber("+216" + phone_tf.getText()),
+                                new com.twilio.type.PhoneNumber("+15306658974"),
+                                "Your verification code is: " + code)
+                        .create();
+                System.out.println(message.getSid());
+
+                TextInputDialog dialog = new TextInputDialog();
+                dialog.initStyle(StageStyle.UNDECORATED);
+                dialog.setTitle("Phone Verification");
+                dialog.initOwner(StaffHomePane.getScene().getWindow());
+                dialog.setHeaderText("Phone Verification");
+                dialog.setContentText("Please enter the verification code sent to your phone:");
+                dialog.showAndWait();
+                if (dialog.getResult().isEmpty()){
+                    errorAlert("Verification code cannot be empty!", "Verification code cannot be empty!", "Verification Failed due to empty code! Please try again.");
+                    return;
+                }
+                if (!dialog.getResult().equals(code)){
+                    errorAlert("Verification code is incorrect!", "Verification code is incorrect!", "Verification code is incorrect! Please try again.");
+                    return;
+                }
+            }
             if (profilepic_pf.getText().isEmpty()) {
                 Staff staff = new Staff(GlobalVar.getUser().getId(), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), dateofbirth_tf.getValue().toString(), GlobalVar.getUser().getPassword(), email_tf.getText(), phone_tf.getText(), address_ta.getText(), GlobalVar.getUser().getPhoto(), GlobalVar.getUser().getFaceid(), GlobalVar.getUser().getFaceid_ts());
                 staffService.update(staff);
@@ -1026,7 +1057,7 @@ public class StaffDashboardController {
         progressIndicator.setPrefWidth(24);
         progressIndicator.setPrefHeight(24);
         hidepane.getChildren().add(progressIndicator);
-        var warning = new Message("Warning!", "Be careful with the actions you take, they are irreversible! Proceed with caution.");
+        var warning = new Message("Warning!", "Please note that as a Staff you have the ability to cause changes that could cost the company money. Please be careful with your actions!");
         warning.getStyleClass().addAll(
                 Styles.WARNING
         );

@@ -550,6 +550,30 @@ public class UserDashboardController {
         if (!validateText(username_tf.getText()))
             return;
         try {
+            if (!phone_tf.getText().equals(GlobalVar.getUser().getNum_tel())){
+                if (clientService.getUserByPhone(phone_tf.getText()) != null) {
+                    errorAlert("Error", "Phone Number Already in Use", "The phone number you have entered is already in use");
+                    return;
+                }
+                String code = (int)(Math.random() * (9999 - 1000 + 1) + 1000) + "";
+                sendSms(phone_tf.getText(), "Your verification code is: " + code);
+
+                TextInputDialog dialog = new TextInputDialog();
+                dialog.initStyle(StageStyle.UNDECORATED);
+                dialog.setTitle("Phone Verification");
+                dialog.initOwner(UserHomePane.getScene().getWindow());
+                dialog.setHeaderText("Phone Verification");
+                dialog.setContentText("Please enter the verification code sent to your phone:");
+                dialog.showAndWait();
+                if (dialog.getResult().isEmpty()){
+                    errorAlert("Verification code cannot be empty!", "Verification code cannot be empty!", "Verification Failed due to empty code! Please try again.");
+                    return;
+                }
+                if (!dialog.getResult().equals(code)){
+                    errorAlert("Verification code is incorrect!", "Verification code is incorrect!", "Verification code is incorrect! Please try again.");
+                    return;
+                }
+            }
             if (profilepic_pf.getText().isEmpty()) {
                 Client client = new Client(GlobalVar.getUser().getId(), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), dateofbirth_tf.getValue().toString(), GlobalVar.getUser().getPassword(), email_tf.getText(), phone_tf.getText(), address_ta.getText(), GlobalVar.getUser().getPhoto(), GlobalVar.getUser().getFaceid(), GlobalVar.getUser().getFaceid_ts());
                 clientService.update(client);
@@ -1103,5 +1127,64 @@ public class UserDashboardController {
         alert.getDialogPane().setExpandableContent(content);
         alert.initOwner(UserHomePane.getScene().getWindow());
         alert.showAndWait();
+    }
+
+    private void sendSms(String phone, String message) {
+        try {
+            OkHttpClient client = new OkHttpClient();
+
+            // Step 1: Get token
+            RequestBody body = new FormBody.Builder()
+                    .add("grant_type", "client_credentials")
+                    .build();
+
+            Request request = new Request.Builder()
+                    .url("https://api.orange.com/oauth/v3/token")
+                    .post(body)
+                    .addHeader("Content-Type", "application/x-www-form-urlencoded")
+                    .addHeader("Authorization", "Basic RnllZ3NrN0MyREVMMVdMWTZ4NVV1MGo1RTAwaFRUT3Y6d3BoZzlRQWRIY1pFZmlRWA==")
+                    .build();
+
+            Response response = client.newCall(request).execute();
+            if (!response.isSuccessful()) {
+                errorAlert("Error", "Failed to get token", "Failed to get token from Orange API");
+                return;
+            }
+
+            JSONObject accesstoken = new JSONObject(response.body().string());
+
+            // Step 2: Send SMS
+            JSONObject sms = new JSONObject();
+            JSONObject outboundSMSMessageRequest = new JSONObject();
+            outboundSMSMessageRequest.put("address", "tel:+216" + phone);
+            JSONObject outboundSMSTextMessage = new JSONObject();
+            outboundSMSTextMessage.put("message", message);
+            outboundSMSMessageRequest.put("outboundSMSTextMessage", outboundSMSTextMessage);
+            outboundSMSMessageRequest.put("senderAddress", "tel:+21652920276");
+            outboundSMSMessageRequest.put("senderName", "string");
+            sms.put("outboundSMSMessageRequest", outboundSMSMessageRequest);
+
+
+            RequestBody smsBody = RequestBody.create(
+                    MediaType.parse("application/json; charset=utf-8"),
+                    sms.toString()
+            );
+
+            Request smsRequest = new Request.Builder()
+                    .url("https://api.orange.com/smsmessaging/v1/outbound/tel%3A%2B21652920276/requests")
+                    .post(smsBody)
+                    .addHeader("Content-Type", "application/json")
+                    .addHeader("Authorization", "Bearer " + accesstoken.getString("access_token"))
+                    .build();
+
+            Response smsResponse = client.newCall(smsRequest).execute();
+            if (!smsResponse.isSuccessful()) {
+                errorAlert("Error", "Failed to send SMS", "Failed to send SMS to " + phone);
+                return;
+            }
+            notify("SMS has been sent successfully!");
+        } catch (Exception e) {
+            stackTraceAlert(e);
+        }
     }
 }

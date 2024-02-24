@@ -774,11 +774,11 @@ public class AdminDashboardController {
     }
 
     private void updateFaceId(String faceId) {
-
         try {
             if(managedSelectedUser == null) {
                 GlobalVar.getUser().setFaceid(faceId);
                 GlobalVar.getUser().setFaceid_ts(new Date(System.currentTimeMillis()).toString());
+                adminService.update((Admin)GlobalVar.getUser());
                 initProfile();
             }
             else {
@@ -1568,6 +1568,7 @@ public class AdminDashboardController {
         return true;
     }
     private void initProfile(){
+        managedSelectedUser = null;
         goback_btn.setVisible(false);
         deleteacc_btn.setVisible(true);
         saveacc_btn.setVisible(true);

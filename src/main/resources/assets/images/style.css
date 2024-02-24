@@ -29,6 +29,25 @@
 .transparent {
      -fx-background-color: transparent;
 }
+
 .label-style {
-     -fx-text-fill: #fcfcfc;
+     -fx-text-fill: black;
+     -fx-font-weight: bold;
+
+}
+
+.text {
+     -fx-text-fill: white;
+     -fx-font-size: 14px;
+}
+
+
+.title-style {
+     -fx-text-fill: gray;
+     -fx-font-weight: bold;
+     -fx-alignment: center;
+}
+
+.textFiedl {
+     -fx-text-fill: white;
 }

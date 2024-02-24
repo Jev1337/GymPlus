@@ -87,7 +87,7 @@ public class ChatControler  {
 
                 String content = choiceObject.getJSONObject("message").getString("content");
                 Label labelNode = new Label(content);
-                labelNode.getStyleClass().add("label-style");
+                labelNode.getStyleClass().add("text");
                 PromptingVbox.getChildren().clear();
                 PromptingVbox.getChildren().add(labelNode);
 

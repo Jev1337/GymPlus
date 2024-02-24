@@ -6,6 +6,7 @@ import atlantafx.base.theme.Styles;
 import com.github.javafaker.Faker;
 import com.github.javafaker.service.FakeValues;
 import com.github.javafaker.service.FakeValuesInterface;
+import controllers.gestionuser.GlobalVar;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import entities.gestionSuivi.Objectif;
@@ -83,7 +84,7 @@ public class ObjectifListController  {
 
 
     public int getCoachIdByName(String name_coach_selected) {
-        String query = "SELECT id  FROM user WHERE FirstName = ? AND Role='Coach'";
+        String query = "SELECT id  FROM user WHERE FirstName = ? AND Role='staff'";
         int coachId = -1;
 
         try {
@@ -185,9 +186,9 @@ public class ObjectifListController  {
     {
         var toggle2 = new ToggleSwitch("Supprimer");
         toggle2.selectedProperty().addListener((obs, old, val) -> {
-            toggle2.setText(val ? "en cours" : "Supprimer");
-            // Perform the desired action when the toggle switch is clicked
-            if (val) {
+                toggle2.setText(val ? "en cours" : "Supprimer");
+                // Perform the desired action when the toggle switch is clicked
+                if (val) {
 
 
                 var dialog = new TextInputDialog();
@@ -251,12 +252,12 @@ public class ObjectifListController  {
 
         ObservableList<Objectif> objectifList = FXCollections.observableArrayList();
         try {
-            int userId = 2;
+            int userId = GlobalVar.getUser().getId();
 
             String query = "SELECT o.idObjectif , o.userId, o.poidsObj, o.DateD, o.DateF, o.PoidsAct, o.Taille, o.Alergie, o.TypeObj, u.photo, u.username AS username " +
                     "FROM objectif o " +
                     "JOIN user u ON o.CoachId = u.id " +
-                    "WHERE o.userId = ?  AND u.role='Coach' ";
+                    "WHERE o.userId = ?  AND u.role='staff' ";
 
 
             PreparedStatement ps = c.getConnection().prepareStatement(query);

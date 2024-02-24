@@ -160,4 +160,37 @@ public class StaffService implements IService<Staff> {
         }
         return null;
     }
+
+    public Staff getUserByPhone(String num_tel) throws SQLException {
+        String query = "SELECT * FROM user WHERE num_tel = ?";
+        PreparedStatement pst = connection.prepareStatement(query);
+        pst.setString(1, num_tel);
+        ResultSet rs = pst.executeQuery();
+        Staff staff = new Staff();
+        while (rs.next()) {
+            staff.setId(rs.getInt("id"));
+            staff.setUsername(rs.getString("username"));
+            staff.setFirstname(rs.getString("firstname"));
+            staff.setLastname(rs.getString("lastname"));
+            staff.setDate_naiss(rs.getString("date_naiss"));
+            staff.setPassword(rs.getString("password"));
+            staff.setEmail(rs.getString("email"));
+            staff.setNum_tel(rs.getString("num_tel"));
+            staff.setAdresse(rs.getString("adresse"));
+            staff.setPhoto(rs.getString("photo"));
+            staff.setFaceid(rs.getString("faceid"));
+            staff.setFaceid_ts(rs.getString("faceid_ts"));
+            staff.setRole(rs.getString("role"));
+            return staff;
+        }
+        return null;
+    }
+
+    public void updatePassword(int id, String password) throws SQLException {
+        String query = "UPDATE user SET password = ? WHERE id = ?";
+        PreparedStatement pst = connection.prepareStatement(query);
+        pst.setString(1, Password.hash(password).withBcrypt().getResult());
+        pst.setInt(2, id);
+        pst.executeUpdate();
+    }
 }

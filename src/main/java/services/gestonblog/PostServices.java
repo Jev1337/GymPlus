@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class PostServices implements IService {
+public class PostServices implements IService{
     private final Connection connection;
 
     public PostServices() {
@@ -20,7 +20,7 @@ public class PostServices implements IService {
     @Override
     public void add(Object o) throws SQLException {
         Post p = (Post) o;
-        if (!Objects.equals(p.getPhoto(), "") && !Objects.equals(p.getContent(), "")) {
+        if (!Objects.equals(p.getPhoto(), "") || !Objects.equals(p.getContent(), "")) {
             String sql = "insert into post (id_post, user_id, mode, content, date, photo, likes) values (" + p.getId_post() + ", " + p.getUser_id() + ", '" + p.getMode() + "', '" + p.getContent() + "', '" + p.getDate() + "', '" + p.getPhoto() + "', " + p.getLikes() + ");";
             Statement st = connection.createStatement();
             st.executeUpdate(sql);

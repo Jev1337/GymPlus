@@ -18,6 +18,12 @@ public class Maintenances {
         this.status = status;
     }
 
+    public Maintenances(int ide, String date_maintenance, String status) {
+        this.ide=ide;
+        this.date_maintenance = date_maintenance;
+        this.status = status;
+    }
+
     public int getIde() {
         return ide;
     }

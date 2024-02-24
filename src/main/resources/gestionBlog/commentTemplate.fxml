@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="100.0" prefWidth="550.0" spacing="5.0" styleClass="topBorder" stylesheets="@../../css/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.BlogController.CommentTemplateController">
+<VBox alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="100.0" prefWidth="550.0" spacing="5.0" styleClass="topBorder" stylesheets="@../assets/css/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.BlogController.CommentTemplateController">
    <children>
       <HBox alignment="CENTER" prefHeight="33.0" prefWidth="487.0" spacing="10.0" style="-fx-border-width: 0 0 1 0; -fx-border-color: #fff;">
          <children>

@@ -722,7 +722,7 @@
                         </ScrollPane>
                         <ScrollPane fx:id="StaffEquipmentManagementPane" prefHeight="646.0" prefWidth="1155.0" visible="false">
                            <content>
-                              <Pane fx:id="EquipmentIdAdminStaff" prefHeight="808.0" prefWidth="1156.0">
+                              <Pane fx:id="EquipmentIdAdminStaff" prefHeight="800.0" prefWidth="1156.0">
                                  <children>
                                     <Label layoutX="39.0" layoutY="14.0" style="-fx-text-fill: linear-gradient(to right, #00aaff, #00688b);" text="Staff / Equipments">
                                        <font>
@@ -758,6 +758,11 @@
                               </LinearGradient>
                            </fill>
                         </FontAwesomeIconView>
+                        <Button fx:id="home_btn" layoutX="1.0" layoutY="240.0" mnemonicParsing="false" onAction="#home_btn_act" prefHeight="37.0" prefWidth="199.0" stylesheets="@../assets/css/buttons.css" text="Home" visible="false">
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Button>
                         <FontAwesomeIconView glyphName="HOME" layoutX="15.0" layoutY="267.0" onMouseClicked="#home_btn_clicked" size="24">
                            <cursor>
                               <Cursor fx:constant="HAND" />
@@ -779,11 +784,6 @@
                               </LinearGradient>
                            </fill>
                         </FontAwesomeIconView>
-                        <Button fx:id="home_btn" layoutX="1.0" layoutY="240.0" mnemonicParsing="false" onAction="#home_btn_act" prefHeight="37.0" prefWidth="199.0" stylesheets="@../assets/css/buttons.css" text="Home" visible="false">
-                           <cursor>
-                              <Cursor fx:constant="HAND" />
-                           </cursor>
-                        </Button>
                         <Button fx:id="shop_btn" layoutX="1.0" layoutY="277.0" mnemonicParsing="false" onAction="#shop_btn_act" prefHeight="37.0" prefWidth="199.0" stylesheets="@../assets/css/buttons.css" text="Shop" visible="false">
                            <cursor>
                               <Cursor fx:constant="HAND" />

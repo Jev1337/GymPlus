@@ -41,8 +41,6 @@
             <artifactId>font-awesome</artifactId>
             <version>6.4.0</version>
         </dependency>
-
-
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
@@ -121,15 +119,14 @@
             <version>2.15.2</version>
         </dependency>
         <dependency>
-            <groupId>com.calendarfx</groupId>
-            <artifactId>view</artifactId>
-            <version>11.12.6</version>
-        </dependency>
-
-        <dependency>
             <groupId>de.micromata.paypal</groupId>
             <artifactId>paypal-core</artifactId>
             <version>0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.diffplug.spotless</groupId>
+            <artifactId>spotless-maven-plugin</artifactId>
+            <version>2.43.0</version>
         </dependency>
     </dependencies>
     <build>

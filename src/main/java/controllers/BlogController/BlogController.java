@@ -22,10 +22,9 @@ import java.io.File;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class BlogController implements Initializable {
 
@@ -44,7 +43,8 @@ public class BlogController implements Initializable {
     @FXML
     private Text username;
     private final PostServices ps = new PostServices();
-    String date = LocalDateTime.now().toLocalDate().toString();
+    Date date = new Date();
+    List<String> badWords = Arrays.asList("fuck", "suck", "kill", "suicide");
 
     @FXML
     void browse_btn_act(){
@@ -58,12 +58,23 @@ public class BlogController implements Initializable {
             photo_tf.setText(file.getAbsolutePath());
         }
     }
+
+    String verifContent(String c){
+        String contentVerified = c;
+        for (String word : badWords){
+            if (c.toLowerCase().contains(word)){
+                contentVerified = c.replaceAll(word, "****");
+            }
+        }
+        return contentVerified;
+    }
+
     @FXML
     void addPost(ActionEvent event) {
         String photo = "";
         String content = "";
         if (!contentTxt.getText().isEmpty()){
-            content = contentTxt.getText();
+            content = verifContent(contentTxt.getText());
         }
         File file = new File(photo_tf.getText());
         try {
@@ -72,7 +83,8 @@ public class BlogController implements Initializable {
                 Files.copy(file.toPath(), dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
                 photo = dest.getName();
             }
-            Post p = new Post(GlobalVar.getUser().getId(), "bbb", content, java.sql.Date.valueOf(date), photo, 0);
+            Timestamp timeStamp = new Timestamp(date.getTime());
+            Post p = new Post(GlobalVar.getUser().getId(), "bbb", content, timeStamp, photo, 0);
             ps.add(p);
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Info");

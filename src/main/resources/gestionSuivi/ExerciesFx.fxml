@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.effect.GaussianBlur?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="203.0" prefWidth="980.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionsuivi.ExericesController">
+   <children>
+      <Pane prefHeight="148.0" prefWidth="982.0">
+         <children>
+            <VBox prefHeight="180.0" prefWidth="995.0">
+               <children>
+                  <ImageView fitHeight="169.0" fitWidth="982.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../assets/images/ExercicesPlanFx.jpg" />
+                     </image>
+                     <effect>
+                        <GaussianBlur radius="5.55" />
+                     </effect>
+                  </ImageView>
+               </children>
+            </VBox>
+            <Label layoutX="74.0" layoutY="20.0" prefHeight="25.0" prefWidth="131.0" text="Exercice Name :">
+               <font>
+                  <Font name="System Bold Italic" size="16.0" />
+               </font>
+            </Label>
+         </children>
+      </Pane>
+      <Label fx:id="EquipmntName" layoutX="27.0" layoutY="108.0" prefHeight="17.0" prefWidth="124.0" text="Equipment" />
+      <Label layoutX="33.0" layoutY="75.0" text="Equipment">
+         <font>
+            <Font name="System Bold Italic" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="175.0" layoutY="75.0" text="Intensity_Level">
+         <font>
+            <Font name="System Bold Italic" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="344.0" layoutY="75.0" text="Intensity_Level">
+         <font>
+            <Font name="System Bold Italic" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="517.0" layoutY="75.0" text="Intensity_Level">
+         <font>
+            <Font name="System Bold Italic" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="beginnerIntensity" layoutX="169.0" layoutY="108.0" prefHeight="17.0" prefWidth="131.0" text="4 Sets with 8 to 12 reps" />
+      <Label fx:id="intermediereIntensity" layoutX="337.0" layoutY="108.0" prefHeight="17.0" prefWidth="137.0" text="3 Sets with 12 to 15 reps" />
+      <Label fx:id="hardintensity" layoutX="516.0" layoutY="108.0" prefHeight="17.0" prefWidth="156.0" text="5 Sets with 3 to 10 reps" />
+      <Label fx:id="ExerciceName" layoutX="207.0" layoutY="14.0" prefHeight="36.0" prefWidth="207.0" text="Exercice Name">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font></Label>
+      <ImageView fitHeight="72.0" fitWidth="111.0" layoutX="4.0" layoutY="-2.0" pickOnBounds="true" preserveRatio="true" rotate="-33.7">
+         <image>
+            <Image url="@../assets/images/Barbeeell.png" />
+         </image>
+      </ImageView>
+      <Pane layoutY="150.0" prefHeight="52.0" prefWidth="982.0" styleClass="degrade-diagonal" stylesheets="@../assets/images/style.css">
+         <children>
+            <ImageView fitHeight="25.0" fitWidth="30.0" layoutX="37.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../assets/images/Error.png" />
+               </image>
+            </ImageView>
+            <Label layoutX="63.0" layoutY="15.0" prefHeight="20.0" prefWidth="90.0" text="Explanation:">
+               <font>
+                  <Font name="System Bold Italic" size="12.0" />
+               </font>
+            </Label>
+            <Label fx:id="explanation" layoutX="185.0" layoutY="17.0" prefHeight="20.0" prefWidth="537.0" text="Seated Alternating Dumbbell Curl: Alternate curling dumbbells while seated, focusing on each bicep.&quot;" />
+         </children>
+      </Pane>
+      <Separator layoutX="75.0" layoutY="54.0" prefHeight="0.0" prefWidth="525.0" />
+      <Hyperlink fx:id="VideoLink" layoutX="370.0" layoutY="20.0" onMouseClicked="#goToYoutubeViaLink" prefHeight="23.0" prefWidth="156.0" text="Click here to get the video" underline="true" />
+   </children>
+</AnchorPane>

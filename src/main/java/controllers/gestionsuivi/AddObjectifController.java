@@ -4,6 +4,7 @@ import atlantafx.base.controls.Message;
 import atlantafx.base.controls.RingProgressIndicator;
 import atlantafx.base.theme.Styles;
 import com.github.javafaker.Faker;
+import controllers.gestionuser.GlobalVar;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import entities.gestionSuivi.Objectif;
@@ -47,6 +48,8 @@ public class AddObjectifController implements Initializable {
 
 
 
+    @FXML
+    private TextField ageField;
 
     @FXML
     private DatePicker dpDureeObjectif;
@@ -157,7 +160,7 @@ void updateObjectif(ActionEvent event) {
         // Handle the dialog result here
         result.ifPresent(buttonType -> {
             if (buttonType == okButton) {
-                int userid=2;
+                int userid= GlobalVar.getUser().getId();;
 
                 ObjectifService querry = new ObjectifService();
                 int coachId = querry.getCoachIdByName(name_coach_selected); // Retrieve the coach's ID
@@ -224,7 +227,6 @@ public void addingNotif() throws IOException {
         String alergie = taAlergie.getText();
         String typeObj = lsTypeObjectif.getSelectionModel().getSelectedItem();
         String name_coach_selected =  lsCoachName.getSelectionModel().getSelectedItem();
-
         //*********************************************Confirmation Pannel************************//
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setTitle("Add Confirmation");
@@ -243,7 +245,7 @@ public void addingNotif() throws IOException {
             // Handle the dialog result here
             result.ifPresent(buttonType -> {
                 if (buttonType == okButton) {
-                    int userid=2;
+                    int userid= GlobalVar.getUser().getId();
 
                     ObjectifService querry = new ObjectifService();
                     int coachId = querry.getCoachIdByName(name_coach_selected); // Retrieve the coach's ID
@@ -275,7 +277,7 @@ public void addingNotif() throws IOException {
 
 
     public void displayCoachNamefromCoachTable() {
-        String  selectAllData ="SELECT * FROM user WHERE role='Coach'";
+        String  selectAllData ="SELECT * FROM user WHERE role='staff'";
         MyDatabase c = new MyDatabase();
 
         try {
@@ -393,6 +395,7 @@ public void addingNotif() throws IOException {
              String typeObj = obj.getTypeObj();
              lsTypeObjectif.getSelectionModel().select(typeObj);
              lsCoachName.getSelectionModel().select(coachName);
+
 
              loadingButton();
 

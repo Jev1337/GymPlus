@@ -17,7 +17,7 @@ public class WebViewController implements Initializable {
     @FXML
     private WebView webView;
 
-    private WebEngine engine;
+    private static WebEngine engine;
 
     @FXML
     private Button RefreshButton;
@@ -34,6 +34,10 @@ public class WebViewController implements Initializable {
     public void loadPage() {
 
         engine.load("https://"+WebTextField.getText());
+    }
+
+    public void loadPageExercices(String url){
+        engine.load(url);
     }
 
 public void refreshPage(){

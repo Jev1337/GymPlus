@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.BoxBlur?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.effect.Glow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="323.0" prefWidth="378.0" styleClass="border-table" stylesheets="@../assets/images/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionsuivi.MacrosController">
+   <children>
+      <Pane prefHeight="323.0" prefWidth="378.0" styleClass="border-table" stylesheets="@../assets/images/style.css">
+         <children>
+            <ImageView fitHeight="337.0" fitWidth="407.0" layoutX="-2.0" layoutY="-3.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../assets/images/MacrosBackground.jpg" />
+               </image>
+               <effect>
+                  <BoxBlur />
+               </effect>
+            </ImageView>
+            <Label fx:id="caloriesLabel" layoutX="266.0" layoutY="69.0" text="Label" textFill="WHITE" />
+            <Label fx:id="servingLabel" layoutX="265.0" layoutY="84.0" text="Label" textFill="WHITE" />
+            <Label fx:id="fatTotalLabel" layoutX="264.0" layoutY="100.0" text="Label" textFill="WHITE" />
+            <Label fx:id="fatSaturatedLabel" layoutX="264.0" layoutY="116.0" text="Label" textFill="WHITE" />
+            <Label fx:id="proteinLabel" layoutX="265.0" layoutY="133.0" text="Label" textFill="WHITE" />
+            <Label fx:id="SoduimLabel" layoutX="264.0" layoutY="149.0" text="Label" textFill="WHITE" />
+            <Label fx:id="PotassuimLabel" layoutX="264.0" layoutY="165.0" text="Label" textFill="WHITE" />
+            <Label fx:id="CarbsLabel" layoutX="263.0" layoutY="198.0" text="Label" textFill="WHITE" />
+            <ImageView fitHeight="38.0" fitWidth="31.0" layoutX="164.0" layoutY="35.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../assets/images/Protein.png" />
+               </image>
+               <effect>
+                  <Glow level="0.57" />
+               </effect>
+            </ImageView>
+            <Label layoutX="160.0" layoutY="161.0" prefHeight="26.0" prefWidth="79.0" text="potassium:" textFill="WHITE">
+               <font>
+                  <Font name="System Bold Italic" size="13.0" />
+               </font>
+               <effect>
+                  <Glow />
+               </effect>
+            </Label>
+            <Label fx:id="cholesterolLabel" layoutX="264.0" layoutY="181.0" text="Label" textFill="WHITE" />
+            <Label fx:id="FibreLabel" layoutX="262.0" layoutY="215.0" text="Label" textFill="WHITE" />
+            <Label fx:id="sugarLabel" layoutX="262.0" layoutY="233.0" text="Label" textFill="WHITE" />
+         </children>
+      </Pane>
+      <Label fx:id="nameLabel" layoutX="210.0" layoutY="35.0" prefHeight="30.0" prefWidth="108.0" text="Name" textFill="WHITE">
+         <font>
+            <Font name="System Bold Italic" size="25.0" />
+         </font>
+         <effect>
+            <DropShadow />
+         </effect>
+      </Label>
+      <Label layoutX="161.0" layoutY="66.0" prefHeight="25.0" prefWidth="79.0" text="calories:" textFill="WHITE">
+         <font>
+            <Font name="System Bold Italic" size="13.0" />
+         </font>
+         <effect>
+            <Glow />
+         </effect>
+      </Label>
+      <Label layoutX="161.0" layoutY="80.0" prefHeight="25.0" prefWidth="79.0" text="serving_size:" textFill="WHITE">
+         <font>
+            <Font name="System Bold Italic" size="13.0" />
+         </font>
+         <effect>
+            <Glow />
+         </effect>
+      </Label>
+      <Label layoutX="161.0" layoutY="96.0" prefHeight="25.0" prefWidth="79.0" text="fat_total:" textFill="WHITE">
+         <font>
+            <Font name="System Bold Italic" size="13.0" />
+         </font>
+         <effect>
+            <Glow />
+         </effect>
+      </Label>
+      <Label layoutX="161.0" layoutY="113.0" prefHeight="25.0" prefWidth="99.0" text="fat_saturated:" textFill="WHITE">
+         <font>
+            <Font name="System Bold Italic" size="13.0" />
+         </font>
+         <effect>
+            <Glow />
+         </effect>
+      </Label>
+      <Label layoutX="161.0" layoutY="129.0" prefHeight="25.0" prefWidth="57.0" text="protein:" textFill="WHITE">
+         <font>
+            <Font name="System Bold Italic" size="13.0" />
+         </font>
+         <effect>
+            <Glow />
+         </effect>
+      </Label>
+      <Label layoutX="161.0" layoutY="146.0" prefHeight="25.0" prefWidth="57.0" text="sodium:" textFill="WHITE">
+         <font>
+            <Font name="System Bold Italic" size="13.0" />
+         </font>
+         <effect>
+            <Glow />
+         </effect>
+      </Label>
+      <Label layoutX="160.0" layoutY="211.0" prefHeight="25.0" prefWidth="57.0" text="fiber:" textFill="WHITE">
+         <font>
+            <Font name="System Bold Italic" size="13.0" />
+         </font>
+         <effect>
+            <Glow />
+         </effect>
+      </Label>
+      <Label layoutX="159.0" layoutY="179.0" prefHeight="25.0" prefWidth="75.0" text="cholesterol:" textFill="WHITE">
+         <font>
+            <Font name="System Bold Italic" size="13.0" />
+         </font>
+         <effect>
+            <Glow />
+         </effect>
+      </Label>
+      <Label layoutX="160.0" layoutY="195.0" prefHeight="25.0" prefWidth="57.0" text="carbs:" textFill="WHITE">
+         <font>
+            <Font name="System Bold Italic" size="13.0" />
+         </font>
+         <effect>
+            <Glow />
+         </effect>
+      </Label>
+      <Label layoutX="160.0" layoutY="226.0" prefHeight="25.0" prefWidth="57.0" text="sugar:" textFill="WHITE">
+         <font>
+            <Font name="System Bold Italic" size="13.0" />
+         </font>
+         <effect>
+            <Glow />
+         </effect>
+      </Label>
+   </children>
+</AnchorPane>

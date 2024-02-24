@@ -26,6 +26,9 @@
             <String fx:value="degrade-diagonal" />
             <String fx:value="border-table" />
          </styleClass>
+         <effect>
+            <DropShadow height="35.66" radius="15.862499999999997" spread="0.07" width="29.79" />
+         </effect>
       </Pane>
       <Pane layoutX="38.0" layoutY="57.0" prefHeight="381.0" prefWidth="346.0" styleClass="border-table" stylesheets="@../assets/images/style.css">
          <children>
@@ -187,4 +190,7 @@
       <String fx:value="degrade-diagonal2" />
       <String fx:value="border-table" />
    </styleClass>
+   <effect>
+      <DropShadow height="70.35" radius="32.5975" spread="0.27" width="62.04" />
+   </effect>
 </AnchorPane>

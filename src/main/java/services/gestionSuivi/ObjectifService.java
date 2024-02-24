@@ -1,5 +1,6 @@
 package services.gestionSuivi;
 
+import controllers.gestionuser.GlobalVar;
 import entities.gestionSuivi.Objectif;
 import entities.gestionSuivi.Planning;
 import javafx.collections.FXCollections;
@@ -19,7 +20,7 @@ public class ObjectifService implements IService<Objectif> {
 
 
     public int getCoachIdByName(String name_coach_selected) {
-        String query = "SELECT id  FROM user WHERE username = ? AND role='Coach'";
+        String query = "SELECT id  FROM user WHERE username = ? AND role='staff'";
         int coachId =0 ;
 
         try {
@@ -94,6 +95,7 @@ public class ObjectifService implements IService<Objectif> {
                     +"`TypeObj`=?, \n"
                     +"`CoachId`=? \n"
                     + "WHERE `idObjectif`=?");
+
             ps.setFloat(1, obj.getPoids_Obj());
             ps.setDate(2, obj.getDateF());
             ps.setFloat(3, obj.getPoids_Act());
@@ -102,6 +104,7 @@ public class ObjectifService implements IService<Objectif> {
             ps.setString(6, obj.getTypeObj());
             ps.setInt(7, obj.getCoachId());
             ps.setInt(8, obj.getId_objectif());
+
             ps.executeUpdate();
             ps.close();
 
@@ -115,12 +118,12 @@ public class ObjectifService implements IService<Objectif> {
 
     @Override
     public List getAll() throws SQLException {
-        int userId= 2;
+        int userId= GlobalVar.getUser().getId();
         List<Objectif> obj =new ArrayList<>();
         String query = "SELECT o.idObjectif , o.poidsObj, o.DateD, o.DateF, o.PoidsAct, o.Taille, o.Alergie, o.TypeObj, u.username AS username " +
                 "FROM objectif o " +
                 "JOIN user u ON o.CoachId = u.id " +
-                "WHERE o.userId = ?  AND u.role='Coach' ";
+                "WHERE o.userId = ?  AND u.role='staff' ";
 
         PreparedStatement ps = connection.prepareStatement(query);
         ps.setInt(1, userId);

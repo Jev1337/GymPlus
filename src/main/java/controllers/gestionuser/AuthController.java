@@ -23,7 +23,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
 import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -42,10 +44,7 @@ import services.gestionuser.StaffService;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URI;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -60,15 +59,15 @@ import java.time.LocalTime;
 public class AuthController {
 
     String faceId = "";
-    private StaffService staffService = new StaffService();
-    private ClientService clientService = new ClientService();
-    private AdminService adminService = new AdminService();
-    private FadeInRight fadeInRightAnimation = new FadeInRight();
-    private FadeInLeft fadeInLeftAnimation = new FadeInLeft();
-    private FadeOutLeft fadeOutLeftAnimation = new FadeOutLeft();
-    private FadeOutRight fadeOutRightAnimation = new FadeOutRight();
-    private FadeInUp fadeInUpAnimation = new FadeInUp();
-    private FadeOutDown fadeOutDownAnimation = new FadeOutDown();
+    private final StaffService staffService = new StaffService();
+    private final ClientService clientService = new ClientService();
+    private final AdminService adminService = new AdminService();
+    private final FadeInRight fadeInRightAnimation = new FadeInRight();
+    private final FadeInLeft fadeInLeftAnimation = new FadeInLeft();
+    private final FadeOutLeft fadeOutLeftAnimation = new FadeOutLeft();
+    private final FadeOutRight fadeOutRightAnimation = new FadeOutRight();
+    private final FadeInUp fadeInUpAnimation = new FadeInUp();
+    private final FadeOutDown fadeOutDownAnimation = new FadeOutDown();
 
     @FXML
     private Button forgotpw_btn;
@@ -212,23 +211,13 @@ public class AuthController {
     @FXML
     private void changepw_btn_act(ActionEvent event) {
         if (passwordres_pf.getText().isEmpty() || passwordconfres_pf.getText().isEmpty()){
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.initStyle(StageStyle.UNDECORATED);
-            alert.setTitle("Warning");
-            alert.setHeaderText("Warning");
-            alert.setContentText("Please fill in all the fields!");
-            alert.showAndWait();
+            errorAlert("Fields cannot be empty!", "Fields cannot be empty!", "Please fill in all the fields!");
             return;
         }
         if (!validateText(passwordres_pf.getText()))
             return;
         if (!passwordres_pf.getText().equals(passwordconfres_pf.getText())){
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.initStyle(StageStyle.UNDECORATED);
-            alert.setTitle("Warning");
-            alert.setHeaderText("Warning");
-            alert.setContentText("Passwords do not match! Please try again.");
-            alert.showAndWait();
+            errorAlert("Passwords do not match!", "Passwords do not match!", "Passwords do not match! Please try again.");
             return;
         }
         try {
@@ -241,12 +230,7 @@ public class AuthController {
             if (adminService.getUserByEmail(email_tf.getText()) != null) {
                 adminService.updatePassword(adminService.getUserByEmail(email_tf.getText()).getId(), passwordres_pf.getText());
             }
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.initStyle(StageStyle.UNDECORATED);
-            alert.setTitle("Success");
-            alert.setHeaderText("Success");
-            alert.setContentText("Password has been changed successfully! Please sign in to continue.");
-            alert.showAndWait();
+            successAlert("Password changed successfully!", "Password changed successfully!", "Your password has been changed successfully! Please sign in to continue.");
             fadeOutDownAnimation.setNode(resetpane);
             fadeOutDownAnimation.setOnFinished(e -> {
                 resetpane.setVisible(false);
@@ -261,13 +245,7 @@ public class AuthController {
             });
             fadeOutDownAnimation.play();
         }catch (Exception e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.initStyle(StageStyle.UNDECORATED);
-            alert.setTitle("Error");
-            alert.setHeaderText("Error");
-            alert.setContentText("An error occurred while trying to connect to the database! Please try again later.");
-            alert.showAndWait();
-            e.printStackTrace();
+            stackTraceAlert(e);
         }
     }
 
@@ -291,12 +269,7 @@ public class AuthController {
     @FXML
     private void verify_btn_act(){
         if (forgotnumber_tf.getText().isEmpty()){
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.initStyle(StageStyle.UNDECORATED);
-            alert.setTitle("Warning");
-            alert.setHeaderText("Warning");
-            alert.setContentText("Please fill in your phone number!");
-            alert.showAndWait();
+            errorAlert("Phone number cannot be empty!", "Phone number cannot be empty!", "Please fill in the phone number field!");
             return;
         }
 
@@ -313,12 +286,7 @@ public class AuthController {
             }
             assert user != null;
             if (!forgotnumber_tf.getText().equals(user.getNum_tel())){
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.initStyle(StageStyle.UNDECORATED);
-                alert.setTitle("Warning");
-                alert.setHeaderText("Warning");
-                alert.setContentText("Phone number does not match the one in the database! Please try again.");
-                alert.showAndWait();
+                errorAlert("Phone number does not match!", "Phone number does not match!", "Phone number does not match! Please try again.");
                 return;
             }
             //using twilio to send sms
@@ -342,21 +310,11 @@ public class AuthController {
             dialog.setContentText("Please enter the verification code sent to your phone:");
             dialog.showAndWait();
             if (dialog.getResult().isEmpty()){
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.initStyle(StageStyle.UNDECORATED);
-                alert.setTitle("Warning");
-                alert.setHeaderText("Warning");
-                alert.setContentText("Please enter the verification code!");
-                alert.showAndWait();
+                errorAlert("Verification code cannot be empty!", "Verification code cannot be empty!", "Please fill in the verification code field!");
                 return;
             }
             if (!dialog.getResult().equals(code)){
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.initStyle(StageStyle.UNDECORATED);
-                alert.setTitle("Warning");
-                alert.setHeaderText("Warning");
-                alert.setContentText("Verification code does not match! Please try again.");
-                alert.showAndWait();
+                errorAlert("Verification code is incorrect!", "Verification code is incorrect!", "Verification code is incorrect! Please try again.");
                 return;
             }
             nameres_label.setText(user.getFirstname() + " " + user.getLastname());
@@ -377,13 +335,7 @@ public class AuthController {
 
 
         }catch (Exception e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.initStyle(StageStyle.UNDECORATED);
-            alert.setTitle("Error");
-            alert.setHeaderText("Error");
-            alert.setContentText("An error occurred while trying to connect to the database! Please try again later.");
-            alert.showAndWait();
-            e.printStackTrace();
+            stackTraceAlert(e);
         }
 
     }
@@ -437,24 +389,14 @@ public class AuthController {
     @FXML
     void forgotpw_clicked(MouseEvent event) {
         if (email_tf.getText().isEmpty()){
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.initStyle(StageStyle.UNDECORATED);
-            alert.setTitle("Warning");
-            alert.setHeaderText("Warning");
-            alert.setContentText("Please fill in the email field!");
-            alert.showAndWait();
+            errorAlert("Email cannot be empty!", "Email cannot be empty!", "Please fill in the email field!");
             return;
         }
         if (!validateEmail(email_tf.getText()))
             return;
         try {
             if (clientService.getUserByEmail(email_tf.getText()) == null && staffService.getUserByEmail(email_tf.getText()) == null && adminService.getUserByEmail(email_tf.getText()) == null) {
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.initStyle(StageStyle.UNDECORATED);
-                alert.setTitle("Warning");
-                alert.setHeaderText("Warning");
-                alert.setContentText("Client with this email does not exist! Please try again.");
-                alert.showAndWait();
+                errorAlert("User with this email does not exist!", "User with this email does not exist!", "User with this email does not exist! Please try again.");
                 return;
             }
             User user = null;
@@ -495,13 +437,7 @@ public class AuthController {
             fadeOutRightAnimation.play();
 
         }catch (Exception e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.initStyle(StageStyle.UNDECORATED);
-            alert.setTitle("Error");
-            alert.setHeaderText("Error");
-            alert.setContentText("An error occurred while trying to connect to the database! Please try again later.");
-            alert.showAndWait();
-            e.printStackTrace();
+            stackTraceAlert(e);
         }
     }
 
@@ -524,12 +460,7 @@ public class AuthController {
     @FXML
     void signup_btn_act(ActionEvent event) {
         if (cin_tf.getText().isEmpty() || firstname_tf.getText().isEmpty() || lastname_tf.getText().isEmpty() || date_dp.getValue() == null || address_tf.getText().isEmpty() || phone_tf.getText().isEmpty() || photo_tf.getText().isEmpty() || username_tf.getText().isEmpty()) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.initStyle(StageStyle.UNDECORATED);
-            alert.setTitle("Warning");
-            alert.setHeaderText("Warning");
-            alert.setContentText("Please fill in all the fields!");
-            alert.showAndWait();
+            errorAlert("Fields cannot be empty!", "Fields cannot be empty!", "Please fill in all the fields!");
             return;
         }
         if (!validateText(firstname_tf.getText()))
@@ -548,22 +479,12 @@ public class AuthController {
 
         File file = new File(photo_tf.getText());
         if (!file.exists()) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.initStyle(StageStyle.UNDECORATED);
-            alert.setTitle("Warning");
-            alert.setHeaderText("Warning");
-            alert.setContentText("Invalid photo path! Please try again.");
-            alert.showAndWait();
+            errorAlert("File does not exist!", "File does not exist!", "The file you are trying to upload does not exist! Please try again.");
             return;
         }
         try {
             if (clientService.getUserById(Integer.parseInt(cin_tf.getText())) != null) {
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.initStyle(StageStyle.UNDECORATED);
-                alert.setTitle("Warning");
-                alert.setHeaderText("Warning");
-                alert.setContentText("Staff with this username already exists! Please try another one.");
-                alert.showAndWait();
+                errorAlert("Client with this CIN already exists!", "Client with this CIN already exists!", "Client with this CIN already exists! Please try another one.");
                 return;
             }
 
@@ -575,12 +496,7 @@ public class AuthController {
             File dest = new File("src/assets/profileuploads/USERIMG" + cin_tf.getText() + file.getName().substring(file.getName().lastIndexOf(".")));
             Files.copy(file.toPath(), dest.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
             clientService.add(new Client(Integer.parseInt(cin_tf.getText()), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), date_dp.getValue().toString(), pwdsu_pf.getText(), emailsu_tf.getText(), phone_tf.getText(), address_tf.getText(), dest.getName(), "", new SimpleDateFormat("yyyy-MM-dd").format(new Date(System.currentTimeMillis()))));
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.initStyle(StageStyle.UNDECORATED);
-            alert.setTitle("Success");
-            alert.setHeaderText("Success");
-            alert.setContentText("Your account has been created successfully! Please sign in to continue.");
-            alert.showAndWait();
+            successAlert("Client added successfully!", "Client added successfully!", "Client added successfully! Please sign in to continue.");
 
             fadeOutRightAnimation.setNode(signupad_pane);
             fadeOutRightAnimation.setOnFinished(e -> {
@@ -596,24 +512,13 @@ public class AuthController {
             });
             fadeOutRightAnimation.play();
         } catch (Exception e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.initStyle(StageStyle.UNDECORATED);
-            alert.setTitle("Error");
-            alert.setHeaderText("Error");
-            alert.setContentText("An error occurred while trying to connect to the database! Please try again later.");
-            alert.showAndWait();
-            e.printStackTrace();
+            stackTraceAlert(e);
         }
     }
 
     private boolean validateNumber(String number){
         if (!number.matches("^[0-9]{8}$")){
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.initStyle(StageStyle.UNDECORATED);
-            alert.setTitle("Warning");
-            alert.setHeaderText("Warning");
-            alert.setContentText("Invalid phone number format! Please try again.");
-            alert.showAndWait();
+            errorAlert("Invalid number format!", "Invalid number format!", "Number must be 8 digits long! Please try again.");
             return false;
         }
         return true;
@@ -649,12 +554,7 @@ public class AuthController {
             Admin admin = adminService.getUserByEmail(email_tf.getText());
             Staff staff = staffService.getUserByEmail(email_tf.getText());
             if (client == null && admin == null && staff == null) {
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.initStyle(StageStyle.UNDECORATED);
-                alert.setTitle("Warning");
-                alert.setHeaderText("Warning");
-                alert.setContentText("Client with this email does not exist! Please try again.");
-                alert.showAndWait();
+                errorAlert("User does not exist!", "User does not exist!", "User with this email does not exist! Please try again.");
                 return;
             }
             if (client != null && Password.check(pwd_pf.getText(), client.getPassword()).withBcrypt()){
@@ -684,32 +584,16 @@ public class AuthController {
                 signin_btn.getScene().setRoot(root);
                 return;
             }
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.initStyle(StageStyle.UNDECORATED);
-            alert.setTitle("Warning");
-            alert.setHeaderText("Warning");
-            alert.setContentText("Incorrect password! Please try again.");
-            alert.showAndWait();
+            errorAlert("Invalid credentials!", "Invalid credentials!", "Invalid credentials! Please try again.");
 
         } catch (Exception e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.initStyle(StageStyle.UNDECORATED);
-            alert.setTitle("Error");
-            alert.setHeaderText("Error");
-            alert.setContentText("An error occurred while trying to connect to the database! Please try again later.");
-            alert.showAndWait();
-            e.printStackTrace();
+            stackTraceAlert(e);
         }
     }
 
     private boolean validateEmail(String email){
         if(!email.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")){
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.initStyle(StageStyle.UNDECORATED);
-            alert.setTitle("Warning");
-            alert.setHeaderText("Warning");
-            alert.setContentText("Invalid email format! Please try again.");
-            alert.showAndWait();
+            errorAlert("Invalid email format!", "Invalid email format!", "Email must be in its correct format!");
             return false;
         }
         return true;
@@ -717,12 +601,7 @@ public class AuthController {
 
     private boolean validateText(String username){
         if (username.length() < 4 || username.length() > 20){
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.initStyle(StageStyle.UNDECORATED);
-            alert.setTitle("Warning");
-            alert.setHeaderText("Warning");
-            alert.setContentText("Text must be between 4 and 20 characters long! Please try again.");
-            alert.showAndWait();
+            errorAlert("Invalid length!", "Invalid length!", "Texts must be between 4 and 20 characters long!");
             return false;
         }
         return true;
@@ -730,21 +609,11 @@ public class AuthController {
     @FXML
     void next_btn_act(ActionEvent event) {
         if (username_tf.getText().isEmpty() || pwdsu_pf.getText().isEmpty() || emailsu_tf.getText().isEmpty() || confpwd_pf.getText().isEmpty()) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.initStyle(StageStyle.UNDECORATED);
-            alert.setTitle("Warning");
-            alert.setHeaderText("Warning");
-            alert.setContentText("Please fill in all the fields!");
-            alert.showAndWait();
+            errorAlert("Fields cannot be empty!", "Fields cannot be empty!", "Please fill in all the fields!");
             return;
         }
         if (!pwdsu_pf.getText().equals(confpwd_pf.getText())) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.initStyle(StageStyle.UNDECORATED);
-            alert.setTitle("Warning");
-            alert.setHeaderText("Warning");
-            alert.setContentText("Passwords do not match! Please try again.");
-            alert.showAndWait();
+            errorAlert("Passwords do not match!", "Passwords do not match!", "Passwords do not match! Please try again.");
             return;
         }
         if (!validateEmail(emailsu_tf.getText()))
@@ -756,29 +625,14 @@ public class AuthController {
 
         try {
             if (clientService.getUserByUsername(username_tf.getText()) != null) {
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.initStyle(StageStyle.UNDECORATED);
-                alert.setTitle("Warning");
-                alert.setHeaderText("Warning");
-                alert.setContentText("Client with this username already exists! Please try another one.");
-                alert.showAndWait();
+                errorAlert("Client with this username already exists!", "Client with this username already exists!", "Client with this username already exists! Please try another one.");
                 return;
             } else if (clientService.getUserByEmail(username_tf.getText()) != null) {
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.initStyle(StageStyle.UNDECORATED);
-                alert.setTitle("Warning");
-                alert.setHeaderText("Warning");
-                alert.setContentText("Client with this username already exists! Please try another one.");
-                alert.showAndWait();
+                errorAlert("Client with this email already exists!", "Client with this email already exists!", "Client with this email already exists! Please try another one.");
                 return;
             }
-        }catch (SQLException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.initStyle(StageStyle.UNDECORATED);
-            alert.setTitle("Error");
-            alert.setHeaderText("Error");
-            alert.setContentText("An error occurred while trying to connect to the database! Please try again later.");
-            alert.showAndWait();
+        }catch (Exception e) {
+            stackTraceAlert(e);
         }
         fadeOutLeftAnimation.setNode(signup_pane);
         fadeOutLeftAnimation.play();
@@ -842,34 +696,19 @@ public class AuthController {
     public void faceid_btn_clicked(MouseEvent mouseEvent) {
         try {
             if (clientService.getUserByEmail(email_tf.getText()) == null && staffService.getUserByEmail(email_tf.getText()) == null && adminService.getUserByEmail(email_tf.getText()) == null) {
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.initStyle(StageStyle.UNDECORATED);
-                alert.setTitle("Warning");
-                alert.setHeaderText("Warning");
-                alert.setContentText("Client with this email does not exist! Please try again.");
-                alert.showAndWait();
+                errorAlert("User does not exist!", "User does not exist!", "User with this email does not exist! Please try again.");
                 return;
             }
 
 
             if (clientService.getUserByEmail(email_tf.getText()) != null){
                 if (clientService.getUserByEmail(email_tf.getText()).getFaceid() == null || clientService.getUserByEmail(email_tf.getText()).getFaceid().isEmpty() || clientService.getUserByEmail(email_tf.getText()).getFaceid_ts() == null || clientService.getUserByEmail(email_tf.getText()).getFaceid_ts().isEmpty()) {
-                    Alert alert = new Alert(Alert.AlertType.WARNING);
-                    alert.initStyle(StageStyle.UNDECORATED);
-                    alert.setTitle("Warning");
-                    alert.setHeaderText("Warning");
-                    alert.setContentText("Client with this email does not have a faceid! Please try again.");
-                    alert.showAndWait();
+                    errorAlert("Client with this email does not have a faceid!", "Client with this email does not have a faceid!", "Client with this email does not have a faceid! Please try again.");
                     return;
                 }
                 Date parsed = Date.valueOf(clientService.getUserByEmail(email_tf.getText()).getFaceid_ts());
                 if (LocalDate.now().minusDays(30).isAfter(parsed.toLocalDate())){
-                    Alert alert = new Alert(Alert.AlertType.WARNING);
-                    alert.initStyle(StageStyle.UNDECORATED);
-                    alert.setTitle("Warning");
-                    alert.setHeaderText("Warning");
-                    alert.setContentText("Faceid has expired! Please login with email and password!");
-                    alert.showAndWait();
+                    errorAlert("Faceid has expired!", "Faceid has expired!", "Faceid has expired! Please login with email and password!");
                     Client c = clientService.getUserByEmail(email_tf.getText());
                     c.setFaceid("");
                     clientService.update(c);
@@ -880,22 +719,12 @@ public class AuthController {
             }
             if (staffService.getUserByEmail(email_tf.getText()) != null){
                 if (staffService.getUserByEmail(email_tf.getText()).getFaceid() == null || staffService.getUserByEmail(email_tf.getText()).getFaceid().isEmpty() || staffService.getUserByEmail(email_tf.getText()).getFaceid_ts() == null || staffService.getUserByEmail(email_tf.getText()).getFaceid_ts().isEmpty()) {
-                    Alert alert = new Alert(Alert.AlertType.WARNING);
-                    alert.initStyle(StageStyle.UNDECORATED);
-                    alert.setTitle("Warning");
-                    alert.setHeaderText("Warning");
-                    alert.setContentText("Staff with this email does not have a faceid! Please try again.");
-                    alert.showAndWait();
+                    errorAlert("Staff with this email does not have a faceid!", "Staff with this email does not have a faceid!", "Staff with this email does not have a faceid! Please try again.");
                     return;
                 }
                 Date parsed = Date.valueOf(staffService.getUserByEmail(email_tf.getText()).getFaceid_ts());
                 if (LocalDate.now().minusDays(30).isAfter(parsed.toLocalDate())){
-                    Alert alert = new Alert(Alert.AlertType.WARNING);
-                    alert.initStyle(StageStyle.UNDECORATED);
-                    alert.setTitle("Warning");
-                    alert.setHeaderText("Warning");
-                    alert.setContentText("Faceid has expired! Please login with email and password!");
-                    alert.showAndWait();
+                    errorAlert("Faceid has expired!", "Faceid has expired!", "Faceid has expired! Please login with email and password!");
                     Staff c = staffService.getUserByEmail(email_tf.getText());
                     c.setFaceid("");
                     staffService.update(c);
@@ -905,22 +734,12 @@ public class AuthController {
             }
             if (adminService.getUserByEmail(email_tf.getText()) != null){
                 if(adminService.getUserByEmail(email_tf.getText()).getFaceid() == null || adminService.getUserByEmail(email_tf.getText()).getFaceid().isEmpty() || adminService.getUserByEmail(email_tf.getText()).getFaceid_ts() == null || adminService.getUserByEmail(email_tf.getText()).getFaceid_ts().isEmpty()) {
-                    Alert alert = new Alert(Alert.AlertType.WARNING);
-                    alert.initStyle(StageStyle.UNDECORATED);
-                    alert.setTitle("Warning");
-                    alert.setHeaderText("Warning");
-                    alert.setContentText("Admin with this email does not have a faceid! Please try again.");
-                    alert.showAndWait();
+                    errorAlert("Admin with this email does not have a faceid!", "Admin with this email does not have a faceid!", "Admin with this email does not have a faceid! Please try again.");
                     return;
                 }
                 Date parsed = Date.valueOf(adminService.getUserByEmail(email_tf.getText()).getFaceid_ts());
                 if (LocalDate.now().minusDays(30).isAfter(parsed.toLocalDate())){
-                    Alert alert = new Alert(Alert.AlertType.WARNING);
-                    alert.initStyle(StageStyle.UNDECORATED);
-                    alert.setTitle("Warning");
-                    alert.setHeaderText("Warning");
-                    alert.setContentText("Faceid has expired! Please login with email and password!");
-                    alert.showAndWait();
+                    errorAlert("Faceid has expired!", "Faceid has expired!", "Faceid has expired! Please login with email and password!");
                     Admin c = adminService.getUserByEmail(email_tf.getText());
                     c.setFaceid("");
                     adminService.update(c);
@@ -932,13 +751,7 @@ public class AuthController {
             setFaceID();
 
         }catch (Exception e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.initStyle(StageStyle.UNDECORATED);
-            alert.setTitle("Error");
-            alert.setHeaderText("Error");
-            alert.setContentText("An error occurred while trying to connect to the database! Please try again later.");
-            alert.showAndWait();
-            e.printStackTrace();
+            stackTraceAlert(e);
         }
 
     }
@@ -965,12 +778,7 @@ public class AuthController {
                 enableAllSI(true);
             }
             else {
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.initStyle(StageStyle.UNDECORATED);
-                alert.setTitle("Warning");
-                alert.setHeaderText("Warning");
-                alert.setContentText("Faceid does not match! Please try again.");
-                alert.showAndWait();
+                errorAlert("Faceid does not match!", "Faceid does not match!", "Faceid does not match! Please try again.");
                 GlobalVar.setUser(null);
                 enableAllSI(false);
             }
@@ -1048,13 +856,13 @@ public class AuthController {
                                     try {
                                         img = ImageIO.read(in);
                                     }catch (Exception e) {
-                                        e.printStackTrace();
+                                        stackTraceAlert(e);
                                     }
                                     ByteArrayOutputStream bos = new ByteArrayOutputStream();
                                     try {
                                         ImageIO.write(img, "png", bos);
                                     }catch (Exception e) {
-                                        e.printStackTrace();
+                                        stackTraceAlert(e);
                                     }
 
                                     byte[] imgBytes = bos.toByteArray();
@@ -1087,12 +895,12 @@ public class AuthController {
                                                     compare(faceId, GlobalVar.getUser().getFaceid());
                                                 }
                                             }catch (Exception e) {
-                                                e.printStackTrace();
+                                                stackTraceAlert(e);
                                             }
 
                                         });
                                     }catch (Exception e) {
-                                        e.printStackTrace();
+                                        stackTraceAlert(e);
                                     }
                                     break;
                                 }
@@ -1107,7 +915,7 @@ public class AuthController {
                 }
                 capture.release();
 
-                if(faceId == null || faceId.equals("")){
+                if(faceId == null || faceId.isEmpty()){
                     Platform.runLater(() -> {
                         Alert alert = new Alert(Alert.AlertType.WARNING);
                         alert.initStyle(StageStyle.UNDECORATED);
@@ -1170,12 +978,7 @@ public class AuthController {
                 File dest = new File("src/assets/profileuploads/USERIMG" + cin_tf.getText() + file.getName().substring(file.getName().lastIndexOf(".")));
                 Files.copy(file.toPath(), dest.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
                 clientService.add(new Client(Integer.parseInt(cin_tf.getText()), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), date_dp.getValue().toString(), pwdsu_pf.getText(), emailsu_tf.getText(), phone_tf.getText(), address_tf.getText(), dest.getName(), faceId, new SimpleDateFormat("yyyy-MM-dd").format(new Date(System.currentTimeMillis()))));
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.initStyle(StageStyle.UNDECORATED);
-                alert.setTitle("Success");
-                alert.setHeaderText("Success");
-                alert.setContentText("Your account has been created successfully! Please sign in to continue.");
-                alert.showAndWait();
+                successAlert("Client added successfully!", "Client added successfully!", "Client added successfully! Please sign in to continue.");
 
                 fadeOutRightAnimation.setNode(signupad_pane);
                 fadeOutRightAnimation.setOnFinished(e -> {
@@ -1191,13 +994,7 @@ public class AuthController {
                 });
                 fadeOutRightAnimation.play();
             } catch (Exception e) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.initStyle(StageStyle.UNDECORATED);
-                alert.setTitle("Error");
-                alert.setHeaderText("Error");
-                alert.setContentText("An error occurred while trying to connect to the database! Please try again later.");
-                alert.showAndWait();
-                e.printStackTrace();
+                stackTraceAlert(e);
             }
         }
         cin_tf.setDisable(false);
@@ -1246,13 +1043,7 @@ public class AuthController {
                     signin_btn.getScene().setRoot(root);
                 }
             } catch (Exception e) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.initStyle(StageStyle.UNDECORATED);
-                alert.setTitle("Error");
-                alert.setHeaderText("Error");
-                alert.setContentText("An error occurred while trying to connect to the database! Please try again later.");
-                alert.showAndWait();
-                e.printStackTrace();
+                stackTraceAlert(e);
             }
         }
         email_tf.setDisable(false);
@@ -1292,6 +1083,62 @@ public class AuthController {
         });
     }
 
+    private void errorAlert(String title, String header, String message){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.initStyle(StageStyle.UNDECORATED);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(message);
+        alert.initOwner(email_tf.getScene().getWindow());
+        alert.showAndWait();
+    }
 
+    private void successAlert(String title, String header, String message){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.initStyle(StageStyle.UNDECORATED);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(message);
+        alert.initOwner(email_tf.getScene().getWindow());
+        alert.showAndWait();
+    }
+
+    private void infoAlert(String title, String header, String message){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.initStyle(StageStyle.UNDECORATED);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(message);
+        alert.initOwner(email_tf.getScene().getWindow());
+        alert.showAndWait();
+    }
+
+    private void stackTraceAlert(Exception exception){
+        var alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Exception Dialog");
+        alert.setHeaderText("An exception occurred");
+        alert.setContentText("An exception occurred, please check the stacktrace below");
+
+        var stringWriter = new StringWriter();
+        var printWriter = new PrintWriter(stringWriter);
+        exception.printStackTrace(printWriter);
+
+        var textArea = new TextArea(stringWriter.toString());
+        textArea.setEditable(false);
+        textArea.setWrapText(false);
+        textArea.setMaxWidth(Double.MAX_VALUE);
+        textArea.setMaxHeight(Double.MAX_VALUE);
+        GridPane.setVgrow(textArea, Priority.ALWAYS);
+        GridPane.setHgrow(textArea, Priority.ALWAYS);
+
+        var content = new GridPane();
+        content.setMaxWidth(Double.MAX_VALUE);
+        content.add(new Label("Full stacktrace:"), 0, 0);
+        content.add(textArea, 0, 1);
+
+        alert.initOwner(email_tf.getScene().getWindow());
+        alert.getDialogPane().setExpandableContent(content);
+        alert.showAndWait();
+    }
 
 }

@@ -519,6 +519,7 @@ public class StaffDashboardController {
                     Platform.runLater(() -> {
                         Alert alert = new Alert(Alert.AlertType.WARNING);
                         alert.initStyle(StageStyle.UNDECORATED);
+                        alert.initOwner(StaffInfoPane.getScene().getWindow());
                         alert.setTitle("Warning");
                         alert.setHeaderText("Warning");
                         if (!isCancelled())
@@ -622,6 +623,7 @@ public class StaffDashboardController {
     void deleteacc_btn_act(ActionEvent event) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.initStyle(StageStyle.UNDECORATED);
+        alert.initOwner(StaffInfoPane.getScene().getWindow());
         alert.setTitle("Confirmation");
         alert.setHeaderText("Are you sure you want to delete your account?");
         alert.setContentText("This action is irreversible");
@@ -913,6 +915,7 @@ public class StaffDashboardController {
         Abonnement abonnement = subscriptionslist_tableview.getSelectionModel().getSelectedItem();
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.initStyle(StageStyle.UNDECORATED);
+        alert.initOwner(StaffInfoPane.getScene().getWindow());
         alert.setTitle("Confirmation");
         alert.setHeaderText("Are you sure you want to delete this subscription?");
         alert.setContentText("This action is irreversible");

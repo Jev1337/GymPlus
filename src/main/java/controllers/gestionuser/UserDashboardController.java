@@ -336,6 +336,7 @@ public class UserDashboardController {
         progressBar.setPrefWidth(407);
         progressBar.setPrefHeight(20);
         alert.getDialogPane().setContent(new Pane(label, progressBar));
+        alert.initOwner(UserHomePane.getScene().getWindow());
         alert.show();
 
 
@@ -443,6 +444,7 @@ public class UserDashboardController {
                         alert.initStyle(StageStyle.UNDECORATED);
                         alert.setTitle("Warning");
                         alert.setHeaderText("Warning");
+                        alert.initOwner(UserHomePane.getScene().getWindow());
                         if (!isCancelled())
                             alert.setContentText("No face detected! Please try again.");
                         else
@@ -582,6 +584,7 @@ public class UserDashboardController {
         alert.setTitle("Confirmation");
         alert.setHeaderText("Are you sure you want to delete your account?");
         alert.setContentText("This action is irreversible");
+        alert.initOwner(UserHomePane.getScene().getWindow());
         alert.showAndWait();
         if (alert.getResult() == ButtonType.OK) {
             try {
@@ -874,6 +877,7 @@ public class UserDashboardController {
         if(!email.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")){
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.initStyle(StageStyle.UNDECORATED);
+            alert.initOwner(UserHomePane.getScene().getWindow());
             alert.setTitle("Warning");
             alert.setHeaderText("Warning");
             alert.setContentText("Invalid email format! Please try again.");
@@ -887,6 +891,7 @@ public class UserDashboardController {
         if (username.length() < 4 && username.length() > 20){
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.initStyle(StageStyle.UNDECORATED);
+            alert.initOwner(UserHomePane.getScene().getWindow());
             alert.setTitle("Warning");
             alert.setHeaderText("Warning");
             alert.setContentText("Username must be between 4 and 20 characters long! Please try again.");

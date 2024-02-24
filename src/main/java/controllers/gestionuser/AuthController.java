@@ -306,6 +306,7 @@ public class AuthController {
             TextInputDialog dialog = new TextInputDialog();
             dialog.initStyle(StageStyle.UNDECORATED);
             dialog.setTitle("Verification");
+            dialog.initOwner(email_tf.getScene().getWindow());
             dialog.setHeaderText("Verification");
             dialog.setContentText("Please enter the verification code sent to your phone:");
             dialog.showAndWait();
@@ -806,6 +807,7 @@ public class AuthController {
         progressBar.setLayoutY(75);
         progressBar.setPrefWidth(407);
         progressBar.setPrefHeight(20);
+        alert.initOwner(email_tf.getScene().getWindow());
         alert.getDialogPane().setContent(new Pane(label, progressBar));
         alert.show();
 
@@ -921,6 +923,7 @@ public class AuthController {
                         alert.initStyle(StageStyle.UNDECORATED);
                         alert.setTitle("Warning");
                         alert.setHeaderText("Warning");
+                        alert.initOwner(email_tf.getScene().getWindow());
                         if (!isCancelled())
                             alert.setContentText("No face detected! Please try again.");
                         else

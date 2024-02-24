@@ -641,6 +641,7 @@ public class AdminDashboardController {
         progressBar.setPrefWidth(407);
         progressBar.setPrefHeight(20);
         alert.getDialogPane().setContent(new Pane(label, progressBar));
+        alert.initOwner(AdminHomePane.getScene().getWindow());
         alert.show();
 
 
@@ -750,6 +751,7 @@ public class AdminDashboardController {
                         alert.initStyle(StageStyle.UNDECORATED);
                         alert.setTitle("Warning");
                         alert.setHeaderText("Warning");
+                        alert.initOwner(AdminInfoPane.getScene().getWindow());
                         if (!isCancelled())
                             alert.setContentText("No face detected! Please try again.");
                         else
@@ -1008,6 +1010,7 @@ public class AdminDashboardController {
         alert.setTitle("Confirmation");
         alert.setHeaderText("Are you sure you want to delete this account?");
         alert.setContentText("This action is irreversible");
+        alert.initOwner(AdminInfoPane.getScene().getWindow());
         alert.showAndWait();
         if (alert.getResult() == ButtonType.OK) {
             try {
@@ -1111,6 +1114,7 @@ public class AdminDashboardController {
             alert.setTitle("Confirmation");
             alert.setHeaderText("This is your own account");
             alert.setContentText("Would you like to go to your own profile instead?");
+            alert.initOwner(AdminInfoPane.getScene().getWindow());
             alert.showAndWait();
             if (alert.getResult() == ButtonType.OK) {
                 initProfile();
@@ -1168,6 +1172,7 @@ public class AdminDashboardController {
         alert.setTitle("Confirmation");
         alert.setHeaderText("Are you sure you want to delete this subscription?");
         alert.setContentText("This action is irreversible");
+        alert.initOwner(AdminInfoPane.getScene().getWindow());
         alert.showAndWait();
         if (alert.getResult() == ButtonType.OK) {
             try {
@@ -1557,12 +1562,7 @@ public class AdminDashboardController {
     }
     private boolean validateEmail(String email){
         if(!email.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")){
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.initStyle(StageStyle.UNDECORATED);
-            alert.setTitle("Warning");
-            alert.setHeaderText("Warning");
-            alert.setContentText("Invalid email format! Please try again.");
-            alert.showAndWait();
+            errorAlert("Invalid Email", "Invalid Email", "Please enter a valid email address");
             return false;
         }
         return true;
@@ -1631,24 +1631,14 @@ public class AdminDashboardController {
 
     private boolean validateText(String username){
         if (username.length() < 4 && username.length() > 20){
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.initStyle(StageStyle.UNDECORATED);
-            alert.setTitle("Warning");
-            alert.setHeaderText("Warning");
-            alert.setContentText("Username must be between 4 and 20 characters long! Please try again.");
-            alert.showAndWait();
+            errorAlert("Invalid Username", "Invalid Username", "Username must be between 4 and 20 characters");
             return false;
         }
         return true;
     }
     private boolean validateNumber(String number){
         if (!number.matches("^[0-9]{8}$")){
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.initStyle(StageStyle.UNDECORATED);
-            alert.setTitle("Warning");
-            alert.setHeaderText("Warning");
-            alert.setContentText("Invalid Number format! Please try again.");
-            alert.showAndWait();
+            errorAlert("Invalid Phone Number", "Invalid Phone Number", "Phone number must be 8 digits");
             return false;
         }
         return true;
@@ -1737,6 +1727,7 @@ public class AdminDashboardController {
                     alert.setTitle("Confirmation");
                     alert.setHeaderText("This is your own account");
                     alert.setContentText("Would you like to go to your own profile instead?");
+                    alert.initOwner(AdminInfoPane.getScene().getWindow());
                     alert.showAndWait();
                     if (alert.getResult() == ButtonType.OK) {
                         initProfile();

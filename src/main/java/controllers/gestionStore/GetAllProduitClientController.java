@@ -1,6 +1,10 @@
 package controllers.gestionStore;
 
+import animatefx.animation.FadeInRight;
+import animatefx.animation.FadeOut;
+import animatefx.animation.FadeOutRight;
 import controllers.gestionuser.GlobalVar;
+import controllers.gestionuser.UserDashboardController;
 import entities.gestionStore.produit;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -8,36 +12,51 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.event.ActionEvent;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.stage.Stage;
 import services.gestionStore.PanierService;
 import services.gestionStore.ProduitService;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 
 import javafx.scene.control.Label;
 
+import javax.imageio.IIOParam;
 
-public class GetAllProduitClientController implements Initializable {
+import static controllers.gestionStore.GlobalStore.Ipc;
 
+
+public class GetAllProduitClientController implements Initializable
+{
+    @FXML
+    private Label AddProdFX;
     @FXML
     private Button ConsulterPnaierFX;
     @FXML
     private Button GetAllFactureBtn;
     @FXML
-    private Label AddProdFX;
-    @FXML
     private Label GetAllFactureLB;
+    @FXML
+    private HBox HBoxRecentlyAdded;
+    @FXML
+    private GridPane ProductContainer;
+    @FXML
+    private ScrollPane ScrollAllProduct;
     @FXML
     private Button ajouterProduitBtn;
     @FXML
@@ -47,51 +66,14 @@ public class GetAllProduitClientController implements Initializable {
     @FXML
     private TextField searchFX;
     @FXML
-    private HBox HBoxRecentlyAdded;
-    @FXML
-    private GridPane ProductContainer;
-    @FXML
-    private ScrollPane ScrollAllProduct;
+    private Pane GetAllProduit;
+
 
     private final ProduitService prodService = new ProduitService();
-    public static PanierService MonPanier ;
+    public static PanierService MonPanier;
 
-    @FXML
-    void ConsulterPanier(ActionEvent event)
-    {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/resourcesGestionStore/Panier.fxml"));
-            Parent root = loader.load();
-            searchFX.getScene().setRoot(root);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
+    private InterfacePaneController interfacePaneController;
 
-    @FXML
-    void GetAllFactureFX()
-    {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/resourcesGestionStore/GetAllFacture.fxml"));
-            Parent root = loader.load();
-            searchFX.getScene().setRoot(root);
-        } catch (IOException e)
-        {
-            throw new RuntimeException(e);
-        }
-    }
-    @FXML
-    void ajouterProduitFX()
-    {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/resourcesGestionStore/AddProduit.fxml"));
-            Parent root = loader.load();
-            searchFX.getScene().setRoot(root);
-        } catch (IOException e)
-        {
-            throw new RuntimeException(e);
-        }
-    }
     @FXML
     void boxCategorie(ActionEvent event)
     {
@@ -104,9 +86,11 @@ public class GetAllProduitClientController implements Initializable {
         String s = boxMontantFX.getSelectionModel().getSelectedItem().toString();
     }
 
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle)
     {
+
         if (MonPanier == null)
         {
             MonPanier = new PanierService();
@@ -131,6 +115,7 @@ public class GetAllProduitClientController implements Initializable {
             AddProdFX.setManaged(false);
         }
 
+
         //comboBox categorie
         ObservableList<String> list_categorie = FXCollections.observableArrayList("Food", "equipement", "vetement");
         boxCategorieFX.setItems(list_categorie);
@@ -139,7 +124,13 @@ public class GetAllProduitClientController implements Initializable {
         ObservableList<String> list_Montant = FXCollections.observableArrayList("Price low to high", "Price high to low");
         boxMontantFX.setItems(list_Montant);
 
-        //Afficher All Product
+        AfficherAllProduct();
+
+    }
+
+
+    public void AfficherAllProduct()
+    {
         try {
             // Récupérer toutes les produits
             ObservableList<produit> produits = FXCollections.observableArrayList(prodService.getAll());
@@ -212,12 +203,16 @@ public class GetAllProduitClientController implements Initializable {
         }
     }
 
+
     private void loadFXML(String s , int productId)
     {
-        try
-        {
+        //try
+        //{
+            Ipc.callPaneCharger("Get1Produit.fxml" , productId);
+            /*
+
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/resourcesGestionStore/Get1Produit.fxml"));
-            Parent root = fxmlLoader.load();
+            //Parent root = fxmlLoader.load();
 
             // Accéder au contrôleur du fichier FXML chargé
             Get1ProduitController controller = fxmlLoader.getController();
@@ -225,11 +220,34 @@ public class GetAllProduitClientController implements Initializable {
             // Passer l'ID du produit au contrôleur
             controller.setIdProduit(productId);
 
-            searchFX.getScene().setRoot(root);
+            //searchFX.getScene().setRoot(root);
+
+
 
         } catch (Exception e)
         {
             e.printStackTrace();
         }
+
+             */
     }
+
+    @FXML
+    void GetAllFactureFX(ActionEvent event)
+    {
+        Ipc.callPane("GetAllFacture.fxml");
+    }
+
+    @FXML
+    void ajouterProduitFX()
+    {
+        Ipc.callPane("AddProduit.fxml");
+    }
+
+    @FXML
+    void ConsulterPanier(ActionEvent event)
+    {
+        Ipc.callPane("Panier.fxml");
+    }
+
 }

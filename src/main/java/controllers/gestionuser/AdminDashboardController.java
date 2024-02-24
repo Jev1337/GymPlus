@@ -1044,7 +1044,7 @@ public class AdminDashboardController {
             e.printStackTrace();
         }
         try {
-            Pane pane= FXMLLoader.load(getClass().getResource("/resourcesGestionStore/GetAllProduitClient.fxml"));
+            AnchorPane pane= FXMLLoader.load(getClass().getResource("/resourcesGestionStore/interfacePane.fxml"));
             storeId.getChildren().setAll(pane);
         } catch (IOException e) {
             e.printStackTrace();

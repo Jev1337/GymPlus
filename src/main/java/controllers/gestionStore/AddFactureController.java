@@ -21,7 +21,8 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
-public class AddFactureController implements Initializable {
+public class AddFactureController implements Initializable
+{
 
     @FXML
     private Button AjouterFX;

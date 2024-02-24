@@ -19,11 +19,13 @@ public class test_store_MainFX extends Application
         //FXMLLoader loarder = new FXMLLoader(getClass().getResource("/resourcesGestionStore/AddFacture.fxml"));
         //FXMLLoader loarder = new FXMLLoader(getClass().getResource("/resourcesGestionStore/UpdateProduit.fxml"));
         //FXMLLoader loarder = new FXMLLoader(getClass().getResource("/resourcesGestionStore/UpdateFacture.fxml"));
-        FXMLLoader loarder = new FXMLLoader(getClass().getResource("/resourcesGestionStore/GetAllFacture.fxml"));
-        //FXMLLoader loarder = new FXMLLoader(getClass().getResource("/resourcesGestionStore/GetAllProduitClient.fxml"));
+        //FXMLLoader loarder = new FXMLLoader(getClass().getResource("/resourcesGestionStore/GetAllFacture.fxml"));
+        FXMLLoader loarder = new FXMLLoader(getClass().getResource("/resourcesGestionStore/GetAllProduitClient.fxml"));
         //FXMLLoader loarder = new FXMLLoader(getClass().getResource("/resourcesGestionStore/Get1Produit.fxml"));
         //FXMLLoader loarder = new FXMLLoader(getClass().getResource("/resourcesGestionStore/Panier.fxml"));
         //FXMLLoader loarder = new FXMLLoader(getClass().getResource("/resourcesGestionStore/OneproduitPanier.fxml"));
+        //FXMLLoader loarder = new FXMLLoader(getClass().getResource("/resourcesGestionStore/GetOneFacture.fxml"));
+
 
 
         Parent root = loarder.load();

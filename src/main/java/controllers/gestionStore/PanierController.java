@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import static controllers.gestionStore.GetAllProduitClientController.MonPanier;
+import static controllers.gestionStore.GlobalStore.Ipc;
 
 public class PanierController implements Initializable
 {
@@ -73,27 +74,12 @@ public class PanierController implements Initializable
     @FXML
     void ContinuerAchat(ActionEvent event)
     {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/resourcesGestionStore/GetAllProduitClient.fxml"));
-            Parent root = loader.load();
-            TotalPanierFX.getScene().setRoot(root);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        Ipc.callPane("GetAllProduitClient.fxml");
     }
 
     private void afficherFacture(facture f)
     {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/resourcesGestionStore/GetOneFacture.fxml"));
-            Parent root = loader.load();
-            GetOneFactureController controller = loader.getController();
-            controller.setFacture(f);
-            TotalPanierFX.getScene().setRoot(root);
-        } catch (IOException e)
-        {
-            throw new RuntimeException(e);
-        }
+        Ipc.callPane("GetOneFacture.fxml");
     }
 
     @FXML
@@ -107,16 +93,7 @@ public class PanierController implements Initializable
         //var idClient = javax.swing.JOptionPane.showInputDialog("What is your ID Client?");
         MonPanier.getMonPanier().setId(GlobalVar.getUser().getId());
 
-        try
-        {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/resourcesGestionStore/GetAllFacture.fxml"));
-            Parent root = loader.load();
-            TotalPanierFX.getScene().setRoot(root);
-        }
-        catch (IOException e)
-        {
-            throw new RuntimeException(e);
-        }
+        Ipc.callPane("GetOneFacture.fxml");
     }
 
     @Override
@@ -137,23 +114,22 @@ public class PanierController implements Initializable
     public void chargerContenuPanier()
     {
 
-        //Afficher All Product List Panier
         try {
-            // Récupérer toutes les produits
             //ObservableList<produit> produits = FXCollections.observableArrayList(prodService.getAll());
             //MonPanier.getMonPanier();
 
+            //rafrechirrr Gridpane
+            GridPanier.getChildren().clear();
 
-            // Nombre de produits par ligne
             int produitsParLigne = 1;
 
             // Ajout des données dans la GridPane
             int row = 0;
             int col = 0;
             List<detailfacture> lp = MonPanier.getMonPanier().ListeDetails;
+
             for (int i = 0; i < MonPanier.getMonPanier().ListeDetails.size(); i++)
             {
-
                 lp.get(i);
 
                 ProduitService produitService = new ProduitService();
@@ -175,20 +151,18 @@ public class PanierController implements Initializable
                 Label labelPrixTotalArtile = new Label("Prix Total: " + prixtotalArticle);
                 Button Supprimer = new Button("Supprimer"); //RetirerProduit()
 
-                // Ajout de l'événement de clic au bouton "Supprimer"
-                int finalI = i;
-
+                int index = i;
                 Supprimer.setOnAction(event -> {
+                    //.out.println("Indice à supprimer : " + index);
+                    //System.out.println("Taille de la liste avant supp : " + MonPanier.getMonPanier().ListeDetails.size());
+                    MonPanier.RetirerProduit(index);
+                    nbArticleFX.setText(String.valueOf( MonPanier.getMonPanier().ListeDetails.size()));
+                    TotalPanierFX.setText(String.valueOf(MonPanier.getMonPanier().calculerPrixTotalFacture()));
 
-                    System.out.println("Indice à supprimer : " + finalI);
-                    System.out.println("Taille de la liste avant suppression : " + MonPanier.getMonPanier().ListeDetails.size());
-                    panierService.RetirerProduit(finalI);
-                    System.out.println("Taille de la liste après suppression : " + MonPanier.getMonPanier().ListeDetails.size());
-
+                    chargerContenuPanier();
+                    //System.out.println("Taille de la liste après supp : " + MonPanier.getMonPanier().ListeDetails.size());
                 });
 
-
-                // Créer un VBox pour empiler verticalement les labels
                 VBox vbox = new VBox(10); // Espacement de 10 pixels entre chaque produit
                 vbox.getChildren().addAll(new VBox(new Label("Entité Produit " + (i + 1)), labelPhoto, labelNom, labelPrix , labelPrixTotalArtile , Supprimer));
 
@@ -205,7 +179,8 @@ public class PanierController implements Initializable
 
                 // Incrémenter les indices de colonne et de ligne
                 col++;
-                if (col == produitsParLigne) {
+                if (col == produitsParLigne)
+                {
                     col = 0;
                     row++;
                 }

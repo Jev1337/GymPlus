@@ -124,6 +124,28 @@ public class ProduitService implements IService<produit>
         return getOne(idProduit);
     }
 
+    public List<produit> recupererByName(String name) throws SQLException
+    {
+        String sql = "select * from produit where name= '"+name+"' ";
+        Statement st = connection.createStatement();
+        ResultSet rs = st.executeQuery(sql);
+        List<produit> prod = new ArrayList<>();
+        while (rs.next())
+        {
+            produit p = new produit();
+            p.setIdProduit(rs.getInt("idProduit"));
+            p.setName(rs.getString("name"));
+            p.setPrix(rs.getFloat("prix"));
+            p.setStock(rs.getInt("stock"));
+            p.setDescription(rs.getString("description"));
+            p.setCategorie(rs.getString("categorie"));
+            p.setPhoto(rs.getString("photo"));
+            p.setSeuil(rs.getInt("seuil"));
+            p.setPromo(rs.getFloat("promo"));
+            prod.add(p);
+        }
+        return prod;
+    }
 
 }
 

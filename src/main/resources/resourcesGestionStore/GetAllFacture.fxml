@@ -4,12 +4,16 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="AnchorPaneGetAllF" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionStore.GetAllFactureContoller">
+<Pane fx:id="PaneGetAllF" prefHeight="757.0" prefWidth="1153.0" styleClass="white-Background" stylesheets="@store.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionStore.GetAllFactureContoller">
    <children>
-      <TableView fx:id="GetAllFacture" layoutX="81.0" layoutY="100.0" prefHeight="200.0" prefWidth="439.0">
+      <TableView fx:id="GetAllFacture" layoutX="471.0" layoutY="171.0" prefHeight="416.0" prefWidth="443.0">
         <columns>
           <TableColumn fx:id="idFactureCol" prefWidth="88.0" text="id Facture" />
           <TableColumn fx:id="idClientCol" prefWidth="85.0" text="id Client" />
@@ -18,15 +22,29 @@
             <TableColumn fx:id="MethodeP" prefWidth="90.0" text="MethodeP" />
         </columns>
       </TableView>
-      <Label layoutX="215.0" layoutY="20.0" text="Get All Facture">
-         <font>
-            <Font size="25.0" />
-         </font>
-      </Label>
-      <Button layoutX="106.0" layoutY="344.0" mnemonicParsing="false" onAction="#AffOneFacture" text="Afficher" />
-      <Button layoutX="223.0" layoutY="344.0" mnemonicParsing="false" onAction="#UpdateOneFacture" text="Update" />
-      <Button layoutX="335.0" layoutY="344.0" mnemonicParsing="false" onAction="#DeleteOneFacture" text="Delete" />
-      <Button layoutX="444.0" layoutY="344.0" mnemonicParsing="false" onAction="#Quitter" text="Quitter" />
-      <Button layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#RefreshTable" text="refrech" />
+      <VBox prefHeight="757.0" prefWidth="205.0" styleClass="white-Background" stylesheets="@store.css">
+         <children>
+            <Label prefHeight="36.0" prefWidth="207.0" text="Get All Facture :" textFill="BLUE">
+               <font>
+                  <Font size="25.0" />
+               </font>
+            </Label>
+            <ImageView fitHeight="208.0" fitWidth="205.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../assets/images/GymplusLogo.png" />
+               </image>
+            </ImageView>
+            <HBox prefHeight="31.0" prefWidth="208.0" styleClass="white-Background" stylesheets="@store.css" />
+            <Button mnemonicParsing="false" onAction="#AffOneFacture" prefHeight="30.0" prefWidth="205.0" styleClass="bleu-Background" stylesheets="@store.css" text="Afficher" />
+            <HBox prefHeight="31.0" prefWidth="208.0" styleClass="white-Background" stylesheets="@store.css" />
+            <Button mnemonicParsing="false" onAction="#UpdateOneFacture" prefHeight="30.0" prefWidth="205.0" styleClass="bleu-Background" stylesheets="@store.css" text="Update" />
+            <HBox prefHeight="31.0" prefWidth="208.0" styleClass="white-Background" stylesheets="@store.css" />
+            <Button mnemonicParsing="false" onAction="#DeleteOneFacture" prefHeight="30.0" prefWidth="205.0" styleClass="bleu-Background" stylesheets="@store.css" text="Delete" />
+            <HBox prefHeight="31.0" prefWidth="208.0" styleClass="white-Background" stylesheets="@store.css" />
+            <Button mnemonicParsing="false" onAction="#Quitter" prefHeight="30.0" prefWidth="205.0" styleClass="bleu-Background" stylesheets="@store.css" text="Quitter" />
+            <HBox prefHeight="31.0" prefWidth="208.0" styleClass="white-Background" stylesheets="@store.css" />
+         </children>
+      </VBox>
+      <Button layoutX="598.0" layoutY="626.0" mnemonicParsing="false" onAction="#RefreshTable" prefHeight="30.0" prefWidth="205.0" styleClass="bleu-Background" stylesheets="@store.css" text="refrech" />
    </children>
-</AnchorPane>
+</Pane>

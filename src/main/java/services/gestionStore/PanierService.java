@@ -38,14 +38,8 @@ public class PanierService
     public PanierService( ){}
 
 
-
-
-
-    public void AjouterProduit(int idp , int Quantite , float Remise ) throws SQLException
-
-    //produit p , int Quantite , float Remise , int idDetail)
+    public void AjouterProduit(int idp , int Quantite , float Remise ) throws SQLException    //produit p , int Quantite , float Remise , int idDetail)
     {
-
         detailfacture df = new detailfacture();
         produit p = prodService.getOne(idp);
 
@@ -110,8 +104,9 @@ public class PanierService
 
     public void Afficher()
     {
-        for (detailfacture df : MonPanier.ListeDetails) {
-            System.out.println(df.toString()); // Ou utilisez un système d'affichage approprié
+        for (detailfacture df : MonPanier.ListeDetails)
+        {
+            System.out.println(df.toString());
         }
     }
 
@@ -125,21 +120,26 @@ public class PanierService
 
      */
 
-
     public void RetirerProduit(int index)
     {
+        System.out.println("indexe a supprimer envouye  : " + index);
+        System.out.println("panierrr  : " + MonPanier.ListeDetails.size());
+
         if (!MonPanier.ListeDetails.isEmpty() && index >= 0 && index < MonPanier.ListeDetails.size())
         {
+
             MonPanier.ListeDetails.remove(index);
-        } else {
-            System.err.println("Index out of bounds or empty list.");
-            // Gérer l'erreur ou afficher un message d'avertissement approprié ici
+            System.out.println("Taille de la liste après supp : " + MonPanier.ListeDetails.size());
+
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Information");
+            alert.setContentText("Produit retiré avec succès");
+            alert.showAndWait();
+        } else
+        {
+            System.err.println("Erreur");
         }
-
     }
-
-
-
 
     private static final Logger logger = Logger.getLogger(PanierService.class.getName());
     public List<detailfacture> getContenuPanier()
@@ -150,6 +150,22 @@ public class PanierService
         List<detailfacture> contenuPanier = MonPanier.ListeDetails;
         logger.info("Le contenu du panier est : " + contenuPanier);
         return contenuPanier;
+    }
+
+    public void Valider()
+    {
+        try
+        {
+            FactureService fs = new FactureService();
+            fs.add(MonPanier);
+        }
+        catch (SQLException e)
+        {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setContentText(e.getMessage());
+            alert.showAndWait();
+        }
     }
 
     public void ModifierProduit(produit p , int Quantite , float Remise , int idDetail)
@@ -170,21 +186,6 @@ public class PanierService
         MonPanier.setId(client.getId());
     }
 
-    public void Valider()
-    {
-        try
-        {
-            FactureService fs = new FactureService();
-            fs.add(MonPanier);
-        }
-        catch (SQLException e)
-        {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setContentText(e.getMessage());
-            alert.showAndWait();
-        }
-    }
 
 /*
     public facture getDerniereFacture() throws SQLException

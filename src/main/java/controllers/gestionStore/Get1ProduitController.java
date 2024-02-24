@@ -25,8 +25,10 @@ import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 import static controllers.gestionStore.GetAllProduitClientController.MonPanier;
+import static controllers.gestionStore.GlobalStore.Ipc;
 
-public class Get1ProduitController implements Initializable {
+public class Get1ProduitController implements Initializable
+{
 
     @FXML
     private Button AddPanierFX;
@@ -84,9 +86,14 @@ public class Get1ProduitController implements Initializable {
             //loadFXML("/resourcesGestionStore/OneproduitPanier.fxml" , 13);
             //loadFXML("/resourcesGestionStore/Panier.fxml" , 13);
 
+            Ipc.callPane("Panier.fxml");
+
+/*
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/resourcesGestionStore/Panier.fxml"));
             Parent root = loader.load();
             NameFX.getScene().setRoot(root);
+
+ */
 
         } catch (Exception e)
         {
@@ -145,13 +152,7 @@ public class Get1ProduitController implements Initializable {
     @FXML
     void Quittez(ActionEvent event)
     {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/resourcesGestionStore/GetAllProduitClient.fxml"));
-            Parent root = loader.load();
-            NameFX.getScene().setRoot(root);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        Ipc.callPane("GetAllProduitClient.fxml");
     }
 
     @Override
@@ -239,7 +240,6 @@ public class Get1ProduitController implements Initializable {
         });
     }
 
-
     @FXML
     void DeleteProduct(ActionEvent event)
     {
@@ -254,15 +254,7 @@ public class Get1ProduitController implements Initializable {
                 alert.setContentText("Le produit a été supprimée avec succès.");
                 alert.showAndWait();
 
-                try
-                {
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/resourcesGestionStore/GetAllProduitClient.fxml"));
-                    Parent root = loader.load();
-                    NameFX.getScene().setRoot(root);
-                } catch (IOException e)
-                {
-                    throw new RuntimeException(e);
-                }
+                Ipc.callPane("GetAllProduitClient.fxml");
 
             } catch (SQLException e)
             {
@@ -276,6 +268,11 @@ public class Get1ProduitController implements Initializable {
     @FXML
     void UpdateProductFX(ActionEvent event)
     {
+        Ipc.callPane("UpdateProduit.fxml");
+        Ipc.callPaneUpdate("UpdateProduit.fxml" , productId);
+        //UpdateProduitController up = new UpdateProduitController();
+        //up.setIdProduit(productId);
+/*
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/resourcesGestionStore/UpdateProduit.fxml"));
             Parent root = loader.load();
@@ -290,6 +287,8 @@ public class Get1ProduitController implements Initializable {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+ */
     }
 
     private void loadFXML(String s , int productId)

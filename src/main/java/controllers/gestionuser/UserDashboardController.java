@@ -11,6 +11,7 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.oned.EAN13Writer;
 import com.google.zxing.oned.EAN8Writer;
 import com.google.zxing.oned.MultiFormatOneDReader;
+import controllers.gestionStore.InterfacePaneController;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import entities.gestionuser.Abonnement;
 import entities.gestionuser.Client;
@@ -566,6 +567,7 @@ public class UserDashboardController {
     }
     private double xOffset = 0;
     private double yOffset = 0;
+
     public void initialize() {
         Media media = new Media(new File(getClass().getResource("/assets/sounds/welcome.mp3").getFile()).toURI().toString());
         MediaPlayer mediaPlayer = new MediaPlayer(media);
@@ -593,7 +595,7 @@ public class UserDashboardController {
             e.printStackTrace();
         }
         try {
-            Pane pane= FXMLLoader.load(getClass().getResource("/resourcesGestionStore/GetAllProduitClient.fxml"));
+            Pane pane= FXMLLoader.load(getClass().getResource("/resourcesGestionStore/interfacePane.fxml"));
             storeId.getChildren().setAll(pane);
         } catch (IOException e) {
             e.printStackTrace();

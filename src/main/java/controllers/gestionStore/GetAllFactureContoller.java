@@ -19,6 +19,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -31,6 +32,8 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.ResourceBundle;
+
+import static controllers.gestionStore.GlobalStore.Ipc;
 
 public class GetAllFactureContoller implements Initializable
 {
@@ -48,7 +51,7 @@ public class GetAllFactureContoller implements Initializable
     @FXML
     private TableColumn<facture, String> MethodeP;
     @FXML
-    private AnchorPane AnchorPaneGetAllF;
+    private Pane PaneGetAllF;
     private facture fc = new facture();
     private final FactureService factureService = new FactureService();
 
@@ -65,13 +68,16 @@ public class GetAllFactureContoller implements Initializable
         if (selectedFacture != null)
         {
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/resourcesGestionStore/GetOneFacture.fxml"));
-                Parent root = loader.load();
+                Ipc.callPaneGet1Facture("GetOneFacture.fxml" , selectedFacture);
 
-                GetOneFactureController controller = loader.getController();
-                controller.setFacture(selectedFacture);
 
-                AnchorPaneGetAllF.getChildren().setAll(root);
+                //FXMLLoader loader = new FXMLLoader(getClass().getResource("/resourcesGestionStore/GetOneFacture.fxml"));
+                //Parent root = loader.load();
+
+                //GetOneFactureController controller = loader.getController();
+                //controller.setFacture(selectedFacture);
+
+                //AnchorPaneGetAllF.getChildren().setAll(root);
 
             } catch (Exception e) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -130,23 +136,23 @@ public class GetAllFactureContoller implements Initializable
     }
 
     @FXML
-    void UpdateOneFacture(ActionEvent event)
-    {
+    void UpdateOneFacture(ActionEvent event) throws IOException {
+
         facture selectedFacture = GetAllFacture.getSelectionModel().getSelectedItem();
+        System.out.println("id facture selectionner " + selectedFacture);
+
         if (selectedFacture != null)
         {
-            try {
 
-                FXMLLoader loader = new FXMLLoader();
-                loader.setLocation(getClass().getResource("/resourcesGestionStore/UpdateOneFacture.fxml"));
-                AnchorPaneGetAllF = loader.load();
-                UpdateOneFactureController upF = loader.getController();
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("/resourcesGestionStore/UpdateOneFacture.fxml"));
+            PaneGetAllF = loader.load();
+            UpdateOneFactureController upF = loader.getController();
 
-                System.out.println("id facture selectionner " + selectedFacture);
 
-                upF.setFacture(selectedFacture.getIdFacture() , GlobalVar.getUser().getId());
+            upF.setFacture(selectedFacture.getIdFacture() );//, GlobalVar.getUser().getId());
 
-                ScaleTransition st = new ScaleTransition(Duration.millis(100), AnchorPaneGetAllF);
+                ScaleTransition st = new ScaleTransition(Duration.millis(100), PaneGetAllF);
                 st.setInterpolator(Interpolator.EASE_IN);
                 st.setFromX(0);
                 st.setFromY(0);
@@ -154,7 +160,7 @@ public class GetAllFactureContoller implements Initializable
                 st.setToY(1);
                 Stage stage = new Stage();
                 stage.setTitle("Update Post");
-                Scene scene = new Scene(AnchorPaneGetAllF, 413, 190);
+                Scene scene = new Scene(PaneGetAllF, 413, 190);
                 stage.initModality(Modality.APPLICATION_MODAL);
                 stage.initStyle(StageStyle.DECORATED);
                 scene.setFill(Color.TRANSPARENT);
@@ -165,10 +171,6 @@ public class GetAllFactureContoller implements Initializable
                 //refreshTable();
 
 
-            } catch (IOException e)
-            {
-                throw new RuntimeException(e);
-            }
 
         } else
         {
@@ -260,15 +262,7 @@ public class GetAllFactureContoller implements Initializable
     @FXML
     void Quitter(ActionEvent event) 
     {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/resourcesGestionStore/GetAllProduitClient.fxml"));
-            Parent root = loader.load();
-            Scene scene = GetAllFacture.getScene();
-            scene.setRoot(root);
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        Ipc.callPane("GetAllProduitClient.fxml");
     }
 
     @Override

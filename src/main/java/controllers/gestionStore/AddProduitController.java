@@ -21,6 +21,8 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import services.gestionStore.ProduitService;
 
+import static controllers.gestionStore.GlobalStore.Ipc;
+
 public class AddProduitController implements Initializable {
 
 
@@ -83,12 +85,13 @@ public class AddProduitController implements Initializable {
     private final ProduitService produitService = new ProduitService();
 
     @FXML
-    void ajouter(ActionEvent event) {
+    void ajouter(ActionEvent event)
+    {
         try {
             produitService.add(new produit( NameFX.getText(),Float.parseFloat(PrixFX.getText()), Integer.parseInt(StockFX.getText()), DescriptionFX.getText(), Categorie_Combo.getValue(), PhotoPath.getText(), Integer.parseInt(SeuilFX.getText()) , Float.parseFloat(PromoFX.getText())));
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Information");
-            alert.setContentText("Personne ajoutée avec succès");
+            alert.setContentText("Produit ajouté avec succès");
             alert.showAndWait();
 
             refreshFields();
@@ -116,13 +119,7 @@ public class AddProduitController implements Initializable {
     @FXML
     void naviger(ActionEvent event)
     {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/resourcesGestionStore/GetAllProduitClient.fxml"));
-            Parent root = loader.load();
-            NameFX.getScene().setRoot(root);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        Ipc.callPane("GetAllProduitClient.fxml");
     }
 
 

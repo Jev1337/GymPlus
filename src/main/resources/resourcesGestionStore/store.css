@@ -1,0 +1,12 @@
+.round-layout{
+    -fx-border-radius: 50;
+    -fx-border-color: #DFE9F5;
+}
+
+.bleu-Background{
+    -fx-background-color: #DFE9F5;
+}
+
+.white-Background{
+    -fx-background-color: #fff;
+}

@@ -22,6 +22,8 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
+import static controllers.gestionStore.GlobalStore.Ipc;
+
 public class UpdateProduitController implements Initializable {
 
 
@@ -127,13 +129,7 @@ public class UpdateProduitController implements Initializable {
             alert.showAndWait();
 
             //Naviger vers le produit MAJ
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/resourcesGestionStore/GetAllProduitClient.fxml"));
-                Parent root = loader.load();
-                NameFX.getScene().setRoot(root);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            Ipc.callPane("GetAllProduitClient.fxml");
 
         } catch (SQLException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);

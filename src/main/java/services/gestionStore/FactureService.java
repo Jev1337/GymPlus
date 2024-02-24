@@ -58,7 +58,7 @@ public class FactureService implements IService
             { // Check if there are any results
                 int x = resultSetmax.getInt("max") ;
                 //p.setIdFacture(x);
-                System.out.println("max de la colonne idFacture" + x );
+                System.out.println("max de la colonne idFacture : Methode add facture : " + x );
                 p.setIdFacture(x);
             }
         }
@@ -99,8 +99,6 @@ public class FactureService implements IService
         }
 
         // Vérifier si l'utilisateur avec l'ID  existe avant d'insérer la facture
-
-
         String checkUserExistsQuery = "SELECT id FROM user WHERE id = ?";
         PreparedStatement checkUserExistsStatement = connection.prepareStatement(checkUserExistsQuery);
         checkUserExistsStatement.setInt(1, p.getId());
@@ -109,7 +107,6 @@ public class FactureService implements IService
         if (!resultSet.next()) {
             throw new SQLException("L'utilisateur avec l'ID spécifié n'existe pas.");
         }
-
 
 
         // Calculer le prix total de la facture
@@ -249,5 +246,22 @@ public class FactureService implements IService
     }
 
 
+    public facture getDerniereFacture() throws SQLException
+    {
+        facture derniereFacture = null;
+        String sqlMaxId = "SELECT * FROM facture WHERE idFacture = (SELECT MAX(idFacture) FROM facture)";
+        try (PreparedStatement getMax = connection.prepareStatement(sqlMaxId)) {
+            ResultSet resultSetmax = getMax.executeQuery();
+            if (resultSetmax.next()) {
+                derniereFacture = new facture();
+                derniereFacture.setIdFacture(resultSetmax.getInt("idFacture"));
+                derniereFacture.setDateVente(resultSetmax.getDate("dateVente"));
+                derniereFacture.setPrixtotalPaye(resultSetmax.getFloat("prixTatalPaye"));
+                derniereFacture.setId(resultSetmax.getInt("id"));
+                // Vous pouvez définir d'autres attributs de la facture ici si nécessaire
+            }
+        }
+        return derniereFacture;
 
+    }
 }

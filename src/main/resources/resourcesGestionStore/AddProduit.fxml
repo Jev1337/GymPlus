@@ -5,34 +5,50 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionStore.AddProduitController">
+<?import javafx.scene.layout.Pane?>
+<Pane prefHeight="757.0" prefWidth="1153.0" styleClass="white-Background" stylesheets="@store.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionStore.AddProduitController">
    <children>
-      <Label layoutX="222.0" layoutY="14.0" text="Ajouter Produit">
+      <Label layoutX="499.0" layoutY="27.0" text="Ajouter Produit">
          <font>
             <Font size="23.0" />
          </font>
       </Label>
-      <Label layoutX="42.0" layoutY="66.0" text="Nom Produit" />
-      <Label layoutX="42.0" layoutY="103.0" prefHeight="17.0" prefWidth="69.0" text="Prix" />
-      <Label layoutX="42.0" layoutY="137.0" prefHeight="17.0" prefWidth="69.0" text="Stock" />
-      <Label layoutX="42.0" layoutY="172.0" prefHeight="17.0" prefWidth="69.0" text="Seuil" />
-      <Label layoutX="42.0" layoutY="274.0" prefHeight="17.0" prefWidth="69.0" text="Description" />
-      <Label layoutX="42.0" layoutY="210.0" prefHeight="17.0" prefWidth="69.0" text="Categorie" />
-      <Label layoutX="42.0" layoutY="242.0" prefHeight="17.0" prefWidth="69.0" text="Photo" />
-      <Button id="AjouterFX" fx:id="ajouterFX" layoutX="396.0" layoutY="359.0" mnemonicParsing="false" onAction="#ajouter" text="Ajouter" />
-      <Button id="AfficherFX" layoutX="501.0" layoutY="359.0" mnemonicParsing="false" onAction="#naviger" text="Afficher" />
-      <TextField id="NameFX" fx:id="NameFX" layoutX="171.0" layoutY="62.0" promptText="Nom Produit" />
-      <TextArea id="DescriptionFX" fx:id="DescriptionFX" layoutX="171.0" layoutY="272.0" prefHeight="116.0" prefWidth="149.0" promptText="Description..." />
-      <TextField id="PrixFX" fx:id="PrixFX" layoutX="171.0" layoutY="99.0" promptText="Prix" />
-      <TextField id="StockFX" fx:id="StockFX" layoutX="171.0" layoutY="133.0" promptText="Stock" />
-      <TextField id="SeuilFX" fx:id="SeuilFX" layoutX="171.0" layoutY="169.0" promptText="Seuil" />
-      <Label id="promoFX" layoutX="382.0" layoutY="95.0" prefHeight="17.0" prefWidth="84.0" text="Promo" />
-      <TextField fx:id="PromoFX" layoutX="392.0" layoutY="142.0" />
-      <ComboBox id="Categorie_Combo" fx:id="Categorie_Combo" layoutX="171.0" layoutY="206.0" onAction="#Select" prefWidth="150.0" />
-      <Button fx:id="ChoisirPhotoFX" layoutX="171.0" layoutY="238.0" mnemonicParsing="false" onMouseClicked="#choisirPhoto" prefHeight="25.0" prefWidth="149.0" text="choisir Photo" />
-      <Label fx:id="PhotoPath" layoutX="339.0" layoutY="242.0" prefHeight="17.0" prefWidth="201.0" />
+      <Label layoutX="465.0" layoutY="125.0" text="Nom Produit" />
+      <Label layoutX="467.0" layoutY="178.0" prefHeight="17.0" prefWidth="69.0" text="Prix" />
+      <Label layoutX="465.0" layoutY="228.0" prefHeight="17.0" prefWidth="69.0" text="Stock" />
+      <Label layoutX="465.0" layoutY="278.0" prefHeight="17.0" prefWidth="69.0" text="Seuil" />
+      <Label layoutX="467.0" layoutY="482.0" prefHeight="17.0" prefWidth="69.0" text="Description" />
+      <Label layoutX="465.0" layoutY="330.0" prefHeight="17.0" prefWidth="69.0" text="Categorie" />
+      <Label layoutX="465.0" layoutY="379.0" prefHeight="17.0" prefWidth="69.0" text="Photo" />
+      <TextField id="NameFX" fx:id="NameFX" layoutX="604.0" layoutY="121.0" promptText="Nom Produit" />
+      <TextArea id="DescriptionFX" fx:id="DescriptionFX" layoutX="605.0" layoutY="482.0" prefHeight="116.0" prefWidth="149.0" promptText="Description..." />
+      <TextField id="PrixFX" fx:id="PrixFX" layoutX="604.0" layoutY="174.0" promptText="Prix" />
+      <TextField id="StockFX" fx:id="StockFX" layoutX="604.0" layoutY="224.0" promptText="Stock" />
+      <TextField id="SeuilFX" fx:id="SeuilFX" layoutX="604.0" layoutY="274.0" promptText="Seuil" />
+      <Label id="promoFX" layoutX="467.0" layoutY="430.0" prefHeight="17.0" prefWidth="84.0" text="Promo" />
+      <TextField fx:id="PromoFX" layoutX="605.0" layoutY="426.0" promptText="Promo" />
+      <ComboBox id="Categorie_Combo" fx:id="Categorie_Combo" layoutX="604.0" layoutY="326.0" onAction="#Select" prefWidth="150.0" styleClass="bleu-Background" stylesheets="@store.css" />
+      <Button fx:id="ChoisirPhotoFX" layoutX="605.0" layoutY="374.0" mnemonicParsing="false" onMouseClicked="#choisirPhoto" prefHeight="25.0" prefWidth="149.0" styleClass="bleu-Background" stylesheets="@store.css" text="choisir Photo" />
+      <Label fx:id="PhotoPath" layoutX="784.0" layoutY="372.0" prefHeight="30.0" prefWidth="201.0" />
+      <VBox layoutX="-2.0" prefHeight="757.0" prefWidth="208.0">
+         <children>
+            <ImageView fitHeight="221.0" fitWidth="209.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../assets/images/GymplusLogo.png" />
+               </image>
+            </ImageView>
+            <HBox prefHeight="31.0" prefWidth="208.0" />
+            <Button id="AjouterFX" fx:id="ajouterFX" mnemonicParsing="false" onAction="#ajouter" prefHeight="30.0" prefWidth="209.0" styleClass="bleu-Background" stylesheets="@store.css" text="Ajouter Produit " />
+            <HBox prefHeight="31.0" prefWidth="208.0" />
+            <Button id="AfficherFX" mnemonicParsing="false" onAction="#naviger" prefHeight="30.0" prefWidth="209.0" styleClass="bleu-Background" stylesheets="@store.css" text="Afficher" />
+         </children>
+      </VBox>
    </children>
-</AnchorPane>
+</Pane>

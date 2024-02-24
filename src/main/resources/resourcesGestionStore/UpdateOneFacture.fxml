@@ -7,7 +7,8 @@
 <?import javafx.scene.text.Font?>
 
 
-<AnchorPane prefHeight="168.0" prefWidth="440.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionStore.UpdateOneFactureController">
+<?import javafx.scene.layout.Pane?>
+<Pane prefHeight="168.0" prefWidth="440.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionStore.UpdateOneFactureController">
    <children>
       <ComboBox fx:id="comboPaiement" layoutX="251.0" layoutY="82.0" onAction="#Select" prefWidth="150.0" />
       <Label layoutX="49.0" layoutY="86.0" text="methode De Paiement" />
@@ -19,4 +20,4 @@
       <Button layoutX="14.0" layoutY="125.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="60.0" mnemonicParsing="false" onAction="#ModifierFacture" prefHeight="30.0" prefWidth="70.0" styleClass="simpleButton" stylesheets="@../../css/style.css" text="Update" />
       <Label fx:id="idfacture" layoutX="26.0" layoutY="24.0" text="idfacture" />
    </children>
-</AnchorPane>
+</Pane>

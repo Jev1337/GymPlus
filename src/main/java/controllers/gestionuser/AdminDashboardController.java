@@ -1831,6 +1831,7 @@ public class AdminDashboardController {
         alert.setTitle(title);
         alert.setHeaderText(header);
         alert.setContentText(message);
+        alert.initOwner(AdminInfoPane.getScene().getWindow());
         alert.showAndWait();
 
     }
@@ -1841,6 +1842,7 @@ public class AdminDashboardController {
         alert.setTitle(title);
         alert.setHeaderText(header);
         alert.setContentText(message);
+        alert.initOwner(AdminInfoPane.getScene().getWindow());
         alert.showAndWait();
     }
 
@@ -1850,6 +1852,7 @@ public class AdminDashboardController {
         alert.setTitle(title);
         alert.setHeaderText(header);
         alert.setContentText(message);
+        alert.initOwner(AdminInfoPane.getScene().getWindow());
         alert.showAndWait();
     }
 
@@ -1859,6 +1862,7 @@ public class AdminDashboardController {
         alert.setTitle(title);
         alert.setHeaderText(header);
         alert.setContentText(message);
+        alert.initOwner(AdminInfoPane.getScene().getWindow());
         alert.showAndWait();
     }
 
@@ -1885,6 +1889,7 @@ public class AdminDashboardController {
             content.add(new Label("Full stacktrace:"), 0, 0);
             content.add(textArea, 0, 1);
 
+            alert.initOwner(AdminInfoPane.getScene().getWindow());
             alert.getDialogPane().setExpandableContent(content);
             alert.showAndWait();
     }

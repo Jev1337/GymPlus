@@ -906,6 +906,12 @@ public class AdminDashboardController {
         if (!validateText(username_tf.getText()))
             return;
         try {
+            if (!phone_tf.getText().equals(GlobalVar.getUser().getNum_tel())) {
+                if (adminService.getUserByPhone(phone_tf.getText()) != null) {
+                    errorAlert("Error", "Phone Number Already in Use", "The phone number you have entered is already in use");
+                    return;
+                }
+            }
             if (profilepic_pf.getText().isEmpty()) {
                 Admin admin= new Admin(GlobalVar.getUser().getId(), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), dateofbirth_tf.getValue().toString(), GlobalVar.getUser().getPassword(), email_tf.getText(), phone_tf.getText(), address_ta.getText(), GlobalVar.getUser().getPhoto(), GlobalVar.getUser().getFaceid(), GlobalVar.getUser().getFaceid_ts());
                 adminService.update(admin);
@@ -1048,6 +1054,20 @@ public class AdminDashboardController {
         if (!validateText(username_tf.getText()))
             return;
         try {
+            if (!phone_tf.getText().equals(managedSelectedUser.getNum_tel())) {
+                if (clientService.getUserByPhone(phone_tf.getText()) != null) {
+                    errorAlert("Error", "Phone Number Already in Use", "The phone number you have entered is already in use");
+                    return;
+                }
+                if (staffService.getUserByPhone(phone_tf.getText()) != null) {
+                    errorAlert("Error", "Phone Number Already in Use", "The phone number you have entered is already in use");
+                    return;
+                }
+                if (adminService.getUserByPhone(phone_tf.getText()) != null) {
+                    errorAlert("Error", "Phone Number Already in Use", "The phone number you have entered is already in use");
+                    return;
+                }
+            }
             if (profilepic_pf.getText().isEmpty()) {
                 if (managedSelectedUser.getRole().equals("client")){
                     clientService.update(new Client(managedSelectedUser.getId(), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), dateofbirth_tf.getValue().toString(), managedSelectedUser.getPassword(), email_tf.getText(), phone_tf.getText(), address_ta.getText(), managedSelectedUser.getPhoto(),managedSelectedUser.getFaceid(), managedSelectedUser.getFaceid_ts()));
@@ -1320,7 +1340,7 @@ public class AdminDashboardController {
         }
     }
     private void initWarning(Pane pane){
-        var warning = new Message("Warning!", "Be careful with the actions you take, they are irreversible! Proceed with caution.");
+        var warning = new Message("Warning!", "Please note that as an Admin you have the ability bypass multiple security measures such as bypassing phone verification when editing a user's profile. As such, please be careful when editing a users information or deleting a user. Please make sure to verify the user's identity before making any changes to their account.");
         warning.getStyleClass().addAll(
                 Styles.WARNING
         );

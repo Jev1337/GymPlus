@@ -2,16 +2,13 @@ package controllers.gestionuser;
 
 import animatefx.animation.*;
 import com.password4j.Password;
-import com.twilio.Twilio;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import entities.gestionuser.Admin;
 import entities.gestionuser.Client;
 import entities.gestionuser.Staff;
 import entities.gestionuser.User;
 import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
 import javafx.concurrent.Task;
-import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -37,7 +34,6 @@ import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.objdetect.CascadeClassifier;
 import org.opencv.objdetect.Objdetect;
 import org.opencv.videoio.VideoCapture;
-import org.w3c.dom.Text;
 import services.gestionuser.AdminService;
 import services.gestionuser.ClientService;
 import services.gestionuser.StaffService;
@@ -45,15 +41,10 @@ import services.gestionuser.StaffService;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.net.URI;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.nio.file.Files;
 import java.sql.Date;
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 
 public class AuthController {
@@ -289,20 +280,10 @@ public class AuthController {
                 errorAlert("Phone number does not match!", "Phone number does not match!", "Phone number does not match! Please try again.");
                 return;
             }
-            //using twilio to send sms
-            String account_sid = "ACa0a9c02e124f285821fe62b736260421";
-            String auth_token = "e8cd361a90ce0dbcd5485d5719f935fb";
-            String verify_sid = "VA10dd8bfd053741ce7361fd967c83a1e6";
 
             String code = (int)(Math.random() * (9999 - 1000 + 1) + 1000) + "";
+            sendSms(user.getNum_tel(), "Your GymPlus verification code is: " + code);
 
-            Twilio.init(account_sid, auth_token);
-            com.twilio.rest.api.v2010.account.Message message = com.twilio.rest.api.v2010.account.Message.creator(
-                    new com.twilio.type.PhoneNumber("+216" + user.getNum_tel()),
-                    new com.twilio.type.PhoneNumber("+15306658974"),
-                    "Your verification code is: " + code)
-                    .create();
-            System.out.println(message.getSid());
             TextInputDialog dialog = new TextInputDialog();
             dialog.initStyle(StageStyle.UNDECORATED);
             dialog.setTitle("Verification");
@@ -476,19 +457,45 @@ public class AuthController {
             return;
         if (!validateNumber(cin_tf.getText()))
             return;
-
-
+        if (date_dp.getValue().isAfter(LocalDate.now())){
+            errorAlert("Invalid date!", "Invalid date!", "Date of birth cannot be in the future! Please try again.");
+            return;
+        }
         File file = new File(photo_tf.getText());
         if (!file.exists()) {
             errorAlert("File does not exist!", "File does not exist!", "The file you are trying to upload does not exist! Please try again.");
             return;
         }
+
+
+
         try {
             if (clientService.getUserById(Integer.parseInt(cin_tf.getText())) != null) {
                 errorAlert("Client with this CIN already exists!", "Client with this CIN already exists!", "Client with this CIN already exists! Please try another one.");
                 return;
             }
+            if (clientService.getUserByPhone(phone_tf.getText()) != null) {
+                errorAlert("Error", "Phone Number Already in Use", "The phone number you have entered is already in use");
+                return;
+            }
+            String code = (int)(Math.random() * (9999 - 1000 + 1) + 1000) + "";
+            sendSms(phone_tf.getText(), "Your GymPlus verification code is: " + code);
 
+            TextInputDialog dialog = new TextInputDialog();
+            dialog.initStyle(StageStyle.UNDECORATED);
+            dialog.setTitle("Phone Verification");
+            dialog.initOwner(email_tf.getScene().getWindow());
+            dialog.setHeaderText("Phone Verification");
+            dialog.setContentText("Please enter the verification code sent to your phone:");
+            dialog.showAndWait();
+            if (dialog.getResult().isEmpty()){
+                errorAlert("Verification code cannot be empty!", "Verification code cannot be empty!", "Please fill in the verification code field!");
+                return;
+            }
+            if (!dialog.getResult().equals(code)){
+                errorAlert("Verification code is incorrect!", "Verification code is incorrect!", "Verification code is incorrect! Please try again.");
+                return;
+            }
             if (setupfr_checkbox.isSelected()){
                 disableAllSU();
                 setFaceID();
@@ -1144,4 +1151,63 @@ public class AuthController {
         alert.showAndWait();
     }
 
+    private void sendSms(String phone, String message) {
+        try {
+            OkHttpClient client = new OkHttpClient();
+
+            // Step 1: Get token
+            RequestBody body = new FormBody.Builder()
+                    .add("grant_type", "client_credentials")
+                    .build();
+
+            Request request = new Request.Builder()
+                    .url("https://api.orange.com/oauth/v3/token")
+                    .post(body)
+                    .addHeader("Content-Type", "application/x-www-form-urlencoded")
+                    .addHeader("Authorization", "Basic RnllZ3NrN0MyREVMMVdMWTZ4NVV1MGo1RTAwaFRUT3Y6d3BoZzlRQWRIY1pFZmlRWA==")
+                    .build();
+
+            Response response = client.newCall(request).execute();
+            if (!response.isSuccessful()) {
+                errorAlert("Error", "Failed to get token", "Failed to get token from Orange API");
+                return;
+            }
+
+            JSONObject accesstoken = new JSONObject(response.body().string());
+
+            // Step 2: Send SMS
+            JSONObject sms = new JSONObject();
+            JSONObject outboundSMSMessageRequest = new JSONObject();
+            outboundSMSMessageRequest.put("address", "tel:+216" + phone);
+            JSONObject outboundSMSTextMessage = new JSONObject();
+            outboundSMSTextMessage.put("message", message);
+            outboundSMSMessageRequest.put("outboundSMSTextMessage", outboundSMSTextMessage);
+            outboundSMSMessageRequest.put("senderAddress", "tel:+21652920276");
+            outboundSMSMessageRequest.put("senderName", "string");
+            sms.put("outboundSMSMessageRequest", outboundSMSMessageRequest);
+
+
+
+            RequestBody smsBody = RequestBody.create(
+                    MediaType.parse("application/json; charset=utf-8"),
+                    sms.toString()
+            );
+
+            Request smsRequest = new Request.Builder()
+                    .url("https://api.orange.com/smsmessaging/v1/outbound/tel%3A%2B21652920276/requests")
+                    .post(smsBody)
+                    .addHeader("Content-Type", "application/json")
+                    .addHeader("Authorization", "Bearer " + accesstoken.getString("access_token"))
+                    .build();
+
+            Response smsResponse = client.newCall(smsRequest).execute();
+            if (!smsResponse.isSuccessful()) {
+                errorAlert("Error", "Response not successful", "Response : " + smsResponse.body().string());
+                return;
+            }
+            System.out.println("SMS sent to " + phone);
+        } catch (Exception e) {
+            stackTraceAlert(e);
+        }
+    }
 }

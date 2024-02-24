@@ -1,0 +1,26 @@
+.tableview {
+    -fx-background-color: #FFFFFF;
+    -fx-table-cell-border-color: transparent;
+    -fx-padding: 5px;
+}
+
+.tableview .column-header {
+    -fx-background-color: #3a3a3a;
+    -fx-text-fill: #FFFFFF;
+    -fx-padding: 5px;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+}
+
+.tableview .table-row-cell {
+    -fx-border-color: transparent;
+    -fx-border-width: 0px 0px 1px 0px;
+    -fx-border-style: solid;
+    -fx-border-color: #f2f2f2;
+}
+
+.tableview .table-cell {
+    -fx-text-fill: #3a3a3a;
+    -fx-padding: 5px;
+    -fx-font-size: 14px;
+}

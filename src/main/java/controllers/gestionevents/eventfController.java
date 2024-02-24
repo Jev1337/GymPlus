@@ -19,6 +19,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
 import net.glxn.qrgen.core.image.ImageType;
@@ -165,16 +166,23 @@ public class eventfController {
                     if (empty || item == null) {
                         setGraphic(null);
                     } else {
-
                         int totalSpots = getTableView().getItems().get(getIndex()).getNb_total();
-                        bar.setProgress((double) (totalSpots - item) / totalSpots);
-                        setGraphic(bar);
+                        int availableSpots = totalSpots - item;
+                        bar.setProgress((double) availableSpots / totalSpots);
+
+                        // Create a label to display the number of available spots over the total spots
+                        Label spotsLabel = new Label(availableSpots + "/" + totalSpots);
+                        spotsLabel.setTextFill(Color.BLACK);
+
+                        // Create a StackPane to hold the progress bar and the label
+                        StackPane stack = new StackPane();
+                        stack.getChildren().addAll(bar, spotsLabel);
+
+                        setGraphic(stack);
                     }
                 }
             };
         });
-
-
 
     }
 
@@ -198,6 +206,9 @@ public class eventfController {
 
     @FXML
     public void join_event(ActionEvent actionEvent) throws SQLException {
+        //get selected hbox
+
+
         Event_details selectedEvent = event_detailsTableView.getSelectionModel().getSelectedItem();
 
         int id = 0;
@@ -649,7 +660,6 @@ public class eventfController {
         }
     }
 }
-
 
 
 

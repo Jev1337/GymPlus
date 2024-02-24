@@ -110,7 +110,7 @@
                         <Image url="@../assets/images/Activits.jpg" />
                     </image>
                 </ImageView>
-                <TableView fx:id="event_detailsTableView" layoutX="42.0" layoutY="241.0" prefHeight="312.0" prefWidth="945.0">
+                <TableView fx:id="event_detailsTableView" layoutX="42.0" layoutY="241.0" prefHeight="312.0" prefWidth="945.0" styleClass="TableView" visible="false">
                     <columns>
                         <TableColumn fx:id="namec" prefWidth="238.0" text="Event Name" />
                         <TableColumn fx:id="typec" minWidth="0.0" prefWidth="196.0" text="Type" />
@@ -138,6 +138,11 @@
             </AnchorPane>
             <Button fx:id="my_events" layoutX="550.0" layoutY="191.0" mnemonicParsing="false" onAction="#my_events_btn" text="My Events" />
             <Button fx:id="all_events" layoutX="442.0" layoutY="191.0" mnemonicParsing="false" onAction="#all_events_btn" text="All Events" />
+            <ScrollPane layoutX="19.0" layoutY="277.0" prefHeight="252.0" prefWidth="994.0">
+               <content>
+                  <VBox fx:id="vtable_event" prefHeight="251.0" prefWidth="994.0" />
+               </content>
+            </ScrollPane>
             </children>
         </Pane>
           <Label fx:id="points_label" layoutX="59.0" layoutY="14.0" prefHeight="61.0" prefWidth="187.0" style="-fx-background-color: turquoise; -fx-background-radius: 50; -fx-text-alignment: center;" textFill="#f2f2f2">

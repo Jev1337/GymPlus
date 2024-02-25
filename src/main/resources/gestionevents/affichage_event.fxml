@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="125.0" prefWidth="620.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Pane fx:id="selected" layoutX="16.0" layoutY="-2.0" prefHeight="189.0" prefWidth="601.0">
+         <children>
+            <Text layoutX="9.0" layoutY="56.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Id" />
+            <Text layoutX="100.0" layoutY="56.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name" />
+            <Separator layoutX="42.0" orientation="VERTICAL" prefHeight="125.0" prefWidth="10.0" />
+            <Separator layoutX="182.0" layoutY="15.0" orientation="VERTICAL" prefHeight="174.0" prefWidth="10.0" />
+            <Separator layoutX="274.0" layoutY="15.0" orientation="VERTICAL" prefHeight="111.0" prefWidth="10.0" />
+            <Separator layoutX="409.0" orientation="VERTICAL" prefHeight="174.0" prefWidth="10.0" />
+            <Separator layoutX="513.0" layoutY="15.0" orientation="VERTICAL" prefHeight="174.0" prefWidth="10.0" />
+            <Text layoutX="208.0" layoutY="56.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Type" />
+            <Text layoutX="329.0" layoutY="56.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Date" />
+            <Text layoutX="438.0" layoutY="56.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Duration" />
+            <Text layoutX="542.0" layoutY="56.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Spots" />
+            <Label fx:id="id_id" layoutY="103.0" text="Label" />
+            <Label fx:id="name_id" layoutX="102.0" layoutY="103.0" text="Label" />
+            <Label fx:id="type_id" layoutX="207.0" layoutY="103.0" text="Label" />
+            <Label fx:id="date_id" layoutX="287.0" layoutY="103.0" text="Label" />
+            <Label fx:id="duration_id" layoutX="447.0" layoutY="103.0" text="Label" />
+            <Label fx:id="spots_id" layoutX="543.0" layoutY="103.0" text="Label" />
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>

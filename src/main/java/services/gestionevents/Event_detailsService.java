@@ -118,6 +118,12 @@ public class Event_detailsService implements IService<Event_details> {
         }
         return eventDetailsList;
     }
+    public void updatespots(int id) throws SQLException {
+        String query = "UPDATE event_details SET nb_places=nb_places+1 WHERE id=?";
+        PreparedStatement ps = connection.prepareStatement(query);
+        ps.setInt(1, id);
+        ps.executeUpdate();
+    }
 }
 
 

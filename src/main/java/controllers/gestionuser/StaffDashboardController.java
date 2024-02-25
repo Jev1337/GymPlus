@@ -8,7 +8,6 @@ import atlantafx.base.controls.Notification;
 import atlantafx.base.controls.RingProgressIndicator;
 import atlantafx.base.theme.Styles;
 import atlantafx.base.util.Animations;
-import com.twilio.Twilio;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import entities.gestionuser.Abonnement;
 import entities.gestionuser.Client;
@@ -599,13 +598,7 @@ public class StaffDashboardController {
                     return;
                 }
                 String code = (int)(Math.random() * (9999 - 1000 + 1) + 1000) + "";
-                Twilio.init("ACa0a9c02e124f285821fe62b736260421", "e8cd361a90ce0dbcd5485d5719f935fb");
-                com.twilio.rest.api.v2010.account.Message message = com.twilio.rest.api.v2010.account.Message.creator(
-                                new com.twilio.type.PhoneNumber("+216" + phone_tf.getText()),
-                                new com.twilio.type.PhoneNumber("+15306658974"),
-                                "Your verification code is: " + code)
-                        .create();
-                System.out.println(message.getSid());
+                sendSms(phone_tf.getText(), "Your verification code is: " + code);
 
                 TextInputDialog dialog = new TextInputDialog();
                 dialog.initStyle(StageStyle.UNDECORATED);
@@ -1252,6 +1245,64 @@ public class StaffDashboardController {
         alert.initOwner(StaffInfoPane.getScene().getWindow());
         alert.getDialogPane().setExpandableContent(content);
         alert.showAndWait();
+    }
+    private void sendSms(String phone, String message) {
+        try {
+            OkHttpClient client = new OkHttpClient();
+
+            // Step 1: Get token
+            RequestBody body = new FormBody.Builder()
+                    .add("grant_type", "client_credentials")
+                    .build();
+
+            Request request = new Request.Builder()
+                    .url("https://api.orange.com/oauth/v3/token")
+                    .post(body)
+                    .addHeader("Content-Type", "application/x-www-form-urlencoded")
+                    .addHeader("Authorization", "Basic RnllZ3NrN0MyREVMMVdMWTZ4NVV1MGo1RTAwaFRUT3Y6d3BoZzlRQWRIY1pFZmlRWA==")
+                    .build();
+
+            Response response = client.newCall(request).execute();
+            if (!response.isSuccessful()) {
+                errorAlert("Error", "Failed to get token", "Failed to get token from Orange API");
+                return;
+            }
+
+            JSONObject accesstoken = new JSONObject(response.body().string());
+
+            // Step 2: Send SMS
+            JSONObject sms = new JSONObject();
+            JSONObject outboundSMSMessageRequest = new JSONObject();
+            outboundSMSMessageRequest.put("address", "tel:+216" + phone);
+            JSONObject outboundSMSTextMessage = new JSONObject();
+            outboundSMSTextMessage.put("message", message);
+            outboundSMSMessageRequest.put("outboundSMSTextMessage", outboundSMSTextMessage);
+            outboundSMSMessageRequest.put("senderAddress", "tel:+21652920276");
+            outboundSMSMessageRequest.put("senderName", "string");
+            sms.put("outboundSMSMessageRequest", outboundSMSMessageRequest);
+
+
+            RequestBody smsBody = RequestBody.create(
+                    MediaType.parse("application/json; charset=utf-8"),
+                    sms.toString()
+            );
+
+            Request smsRequest = new Request.Builder()
+                    .url("https://api.orange.com/smsmessaging/v1/outbound/tel%3A%2B21652920276/requests")
+                    .post(smsBody)
+                    .addHeader("Content-Type", "application/json")
+                    .addHeader("Authorization", "Bearer " + accesstoken.getString("access_token"))
+                    .build();
+
+            Response smsResponse = client.newCall(smsRequest).execute();
+            if (!smsResponse.isSuccessful()) {
+                errorAlert("Error", "Failed to send SMS", "Failed to send SMS to " + phone);
+                return;
+            }
+            notify("SMS has been sent successfully!");
+        } catch (Exception e) {
+            stackTraceAlert(e);
+        }
     }
 
 }

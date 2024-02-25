@@ -6,12 +6,16 @@ public class Event_details {
     private String type;
     private String event_date;
     private String duree;
+    private int nb_places;
+    private int nb_total;
 
-    public Event_details(String name, String type, String event_date, String duree) {
+    public Event_details(String name, String type, String event_date, String duree,int nb_places,int nb_total) {
         this.name = name;
         this.type = type;
         this.event_date = event_date;
         this.duree = duree;
+        this.nb_places=nb_places;
+        this.nb_total=nb_total;
     }
     public Event_details()
     {}
@@ -45,11 +49,23 @@ public class Event_details {
     public void setDuree(String duree) {
         this.duree = duree;
     }
+    public void setNb_places(int nb_places) {
+        this.nb_places = nb_places;
+    }
+    public int getNb_places() {
+        return nb_places;
+    }
+    public void setNb_total(int nb_total) {
+        this.nb_total = nb_total;
+    }
+    public int getNb_total() {
+            return nb_total;
+        }
 
     @Override
     public String toString() {
         return "Event_details [id=" + id + ", name=" + name + ", type=" + type + ", event_date=" + event_date + ", duree="
-                + duree + "]";
+                + duree + ", nb_places=" + nb_places + ", nb_total=" + nb_total +"]";
     }
 
 }

@@ -68,6 +68,7 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.file.Files;
 import java.sql.Date;
+import java.sql.SQLException;
 import java.time.LocalDate;
 
 public class UserDashboardController {
@@ -185,7 +186,7 @@ public class UserDashboardController {
         Timeline timeline = new Timeline(
                 new KeyFrame(cycleDuration,
                         new KeyValue(bars_pane.prefWidthProperty(), bars_pane.getPrefWidth() == 200 ? 51 : 200, Interpolator.EASE_BOTH)
-        ));
+                ));
         timeline.play();
         timeline.setOnFinished(e -> bars_btn.setDisable(false));
 
@@ -505,13 +506,33 @@ public class UserDashboardController {
 
     @FXML
     void event_btn_act(ActionEvent event) {
+        //if user not subscribed it redirects him to the siubscription pane
+        try {
+            if (!abonnementService.isUserSubscribed(GlobalVar.getUser().getId())) {
+                switchToPane(UserSubscriptionPane);
+                return;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         switchToPane(UserEventPane);
     }
 
 
     @FXML
     void event_btn_clicked(MouseEvent event) {
-        switchToPane(UserEventPane);
+        {
+            //if user not subscribed it redirects him to the siubscription pane
+            try {
+                if (!abonnementService.isUserSubscribed(GlobalVar.getUser().getId())) {
+                    switchToPane(UserSubscriptionPane);
+                    return;
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            switchToPane(UserEventPane);
+        }
     }
 
     @FXML
@@ -712,7 +733,7 @@ public class UserDashboardController {
                 alert.getDialogPane().setContent(webView);
                 Worker<Void> worker = webView.getEngine().getLoadWorker();
                 worker.stateProperty().addListener(e->{
-                if (worker.getState() == Worker.State.SUCCEEDED) {
+                    if (worker.getState() == Worker.State.SUCCEEDED) {
                         if (webView.getEngine().getLocation().contains("success")) {
                             alert.close();
                         }else if (webView.getEngine().getLocation().contains("cancel")) {

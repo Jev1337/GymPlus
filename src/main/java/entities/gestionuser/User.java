@@ -26,6 +26,7 @@ public class User {
     private String adresse;
     private String photo;
     private String role;
+    private int event_points;
     private String faceid;
     private String faceid_ts;
 
@@ -44,6 +45,7 @@ public class User {
         this.adresse = adresse;
         this.photo = photo;
         this.role = role;
+        this.event_points = 0;
         this.faceid = faceid;
         this.faceid_ts = faceid_ts;
     }
@@ -136,6 +138,12 @@ public class User {
     public void setRole(String role) {
         this.role = role;
     }
+    public void setEvent_points(int event_points) {
+        this.event_points = event_points;
+    }
+    public int getEvent_points() {
+        return event_points;
+    }
 
     public String getFaceid() {
         return faceid;
@@ -166,6 +174,7 @@ public class User {
                 ", adresse='" + adresse + '\'' +
                 ", photo='" + photo + '\'' +
                 ", role='" + role + '\'' +
+                ", event_points='" + event_points + '\'' +
                 ", faceid='" + faceid + '\'' +
                 ", faceid_ts='" + faceid_ts + '\'' +
                 '}';

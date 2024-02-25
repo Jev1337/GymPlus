@@ -243,6 +243,15 @@ CREATE TABLE `user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
+-- Dumping data for table `abonnement_details`
+--
+
+INSERT INTO `user` VALUES
+('12345678','admin', 'admin', 'admin', '2024-02-23', '$2b$10$TOpiii7qnNEcJZ8D.u8hCu6oiJKSyG4e9xLUC0MYEXADFgqoHKaUK', 'admin@gymplus.com', 'admin', '12345678', 'Riadh el Andalous', 'USERIMG12345678.png', 0, '', '2024-02-24');
+
+-- --------------------------------------------------------
+
+--
 -- Indexes for dumped tables
 --
 

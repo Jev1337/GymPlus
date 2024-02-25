@@ -291,7 +291,7 @@ public class AuthController {
             dialog.setHeaderText("Verification");
             dialog.setContentText("Please enter the verification code sent to your phone:");
             dialog.showAndWait();
-            if (dialog.getResult().isEmpty()){
+            if (dialog.getResult() == null || dialog.getResult().isEmpty()){
                 errorAlert("Verification code cannot be empty!", "Verification code cannot be empty!", "Please fill in the verification code field!");
                 return;
             }
@@ -302,9 +302,10 @@ public class AuthController {
             nameres_label.setText(user.getFirstname() + " " + user.getLastname());
             usernameres_label.setText(user.getUsername());
             phoneres_label.setText(user.getNum_tel());
-            Circle clip = new Circle(50, 50, 50);
-            userreset_imageview.setClip(clip);
+
             userreset_imageview.setImage(new Image(new File("src/assets/profileuploads/" + user.getPhoto()).toURI().toString()));
+            Circle clip = new Circle(userreset_imageview.getFitWidth() / 2, userreset_imageview.getFitHeight() / 2, userreset_imageview.getFitWidth() / 2);
+            userreset_imageview.setClip(clip);
             fadeOutDownAnimation.setNode(forgotpaneverif);
             fadeOutDownAnimation.setOnFinished(e -> {
                 forgotpaneverif.setVisible(false);
@@ -399,10 +400,10 @@ public class AuthController {
             String first = phone.substring(0, phone.length() - 4);
             String newphone = first.replaceAll("[0-9]", "*") + last4;
             phonelabelforgot_label.setText(newphone);
-            Image image = new Image(new File("src/assets/profileuploads/" + user.getPhoto()).toURI().toString());
-            Circle clip = new Circle(50, 50, 50);
+
+            userforgot_imageview.setImage(new Image(new File("src/assets/profileuploads/" + user.getPhoto()).toURI().toString()));
+            Circle clip = new Circle(userforgot_imageview.getFitWidth() / 2, userforgot_imageview.getFitHeight() / 2, userforgot_imageview.getFitWidth() / 2);
             userforgot_imageview.setClip(clip);
-            userforgot_imageview.setImage(image);
             fadeOutLeftAnimation.setNode(signin_pane);
             fadeOutRightAnimation.setNode(signup_switch_pane);
             fadeOutRightAnimation.setOnFinished(e -> {
@@ -488,7 +489,7 @@ public class AuthController {
             dialog.setHeaderText("Phone Verification");
             dialog.setContentText("Please enter the verification code sent to your phone:");
             dialog.showAndWait();
-            if (dialog.getResult().isEmpty()){
+            if (dialog.getResult() == null || dialog.getResult().isEmpty()){
                 errorAlert("Verification code cannot be empty!", "Verification code cannot be empty!", "Please fill in the verification code field!");
                 return;
             }

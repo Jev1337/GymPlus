@@ -586,7 +586,7 @@ public class UserDashboardController {
                 dialog.setHeaderText("Phone Verification");
                 dialog.setContentText("Please enter the verification code sent to your phone:");
                 dialog.showAndWait();
-                if (dialog.getResult().isEmpty()){
+                if (dialog.getResult() == null || dialog.getResult().isEmpty()){
                     errorAlert("Verification code cannot be empty!", "Verification code cannot be empty!", "Verification Failed due to empty code! Please try again.");
                     return;
                 }

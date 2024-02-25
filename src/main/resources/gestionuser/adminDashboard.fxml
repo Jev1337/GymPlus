@@ -538,7 +538,7 @@
                                     </Label>
                                     <Pane layoutX="32.0" layoutY="207.0" prefHeight="430.0" prefWidth="483.0" style="-fx-background-color: white; -fx-border-radius: 30px; -fx-background-radius: 30px;">
                                        <children>
-                                          <TableView fx:id="userlistsub_tableview" layoutX="18.0" layoutY="97.0" prefHeight="262.0" prefWidth="447.0" style="-fx-background-color: #e8ecfc;">
+                                          <TableView fx:id="userlistsub_tableview" layoutX="18.0" layoutY="97.0" prefHeight="262.0" prefWidth="447.0" style="-fx-background-color: #e8ecfc;" visible="false">
                                              <columns>
                                                 <TableColumn fx:id="cincoladdsub" prefWidth="133.0" text="CIN" />
                                                 <TableColumn fx:id="emailcoladdsub" minWidth="2.0" prefWidth="148.0" text="Email" />
@@ -557,12 +557,17 @@
                                           </Label>
                                           <TextField fx:id="searchbarusersub_tf" layoutX="318.0" layoutY="47.0" onKeyTyped="#searchbarusersub_tf_textchanged" prefHeight="36.0" prefWidth="147.0" promptText="Search" />
                                           <ComboBox fx:id="subtypeadd_cb" layoutX="19.0" layoutY="380.0" prefHeight="36.0" prefWidth="297.0" promptText="Subscription Type" />
-                                          <CheckBox disable="true" layoutX="242.0" layoutY="54.0" mnemonicParsing="false" selected="true" text="Legacy" />
+                                          <CheckBox fx:id="legacyuserlist_cb" layoutX="242.0" layoutY="54.0" mnemonicParsing="false" onAction="#legacyuserlist_cb_act" text="Legacy" />
+                                          <ScrollPane fx:id="smalluserlist_sp" layoutX="18.0" layoutY="97.0" prefHeight="263.0" prefWidth="447.0">
+                                             <content>
+                                                <VBox fx:id="userlistsub_vbox" prefHeight="263.0" prefWidth="447.0" />
+                                             </content>
+                                          </ScrollPane>
                                        </children>
                                     </Pane>
                                     <Pane layoutX="539.0" layoutY="207.0" prefHeight="432.0" prefWidth="579.0" style="-fx-background-color: white; -fx-border-radius: 30px; -fx-background-radius: 30px;">
                                        <children>
-                                          <TableView fx:id="subscriptionslist_tableview" layoutX="21.0" layoutY="97.0" prefHeight="264.0" prefWidth="538.0" style="-fx-background-color: #e8ecfc;">
+                                          <TableView fx:id="subscriptionslist_tableview" layoutX="21.0" layoutY="97.0" prefHeight="264.0" prefWidth="538.0" style="-fx-background-color: #e8ecfc;" visible="false">
                                              <columns>
                                                 <TableColumn fx:id="subid_col" prefWidth="42.0" text="ID" />
                                                 <TableColumn fx:id="cinsubcol" minWidth="2.0" prefWidth="176.0" text="CIN" />
@@ -588,7 +593,12 @@
                                                 <Cursor fx:constant="HAND" />
                                              </cursor>
                                           </Button>
-                                          <CheckBox disable="true" layoutX="125.0" layoutY="54.0" mnemonicParsing="false" selected="true" text="Legacy" />
+                                          <CheckBox fx:id="legacysubbedlist_cb" layoutX="125.0" layoutY="54.0" mnemonicParsing="false" onAction="#legacysubbedlist_cb_act" text="Legacy" />
+                                          <ScrollPane fx:id="subbedlist_sp" layoutX="21.0" layoutY="98.0" prefHeight="263.0" prefWidth="538.0">
+                                             <content>
+                                                <VBox fx:id="subbed_vbox" prefHeight="263.0" prefWidth="538.0" />
+                                             </content>
+                                          </ScrollPane>
                                        </children>
                                     </Pane>
                                     <Pane fx:id="qr_pane" layoutX="32.0" layoutY="690.0" prefHeight="503.0" prefWidth="1082.0" style="-fx-background-color: white; -fx-border-radius: 30px; -fx-background-radius: 30px;">

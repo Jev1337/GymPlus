@@ -291,7 +291,7 @@ public class AuthController {
             dialog.setHeaderText("Verification");
             dialog.setContentText("Please enter the verification code sent to your phone:");
             dialog.showAndWait();
-            if (dialog.getResult().isEmpty()){
+            if (dialog.getResult() == null || dialog.getResult().isEmpty()){
                 errorAlert("Verification code cannot be empty!", "Verification code cannot be empty!", "Please fill in the verification code field!");
                 return;
             }
@@ -488,7 +488,7 @@ public class AuthController {
             dialog.setHeaderText("Phone Verification");
             dialog.setContentText("Please enter the verification code sent to your phone:");
             dialog.showAndWait();
-            if (dialog.getResult().isEmpty()){
+            if (dialog.getResult() == null || dialog.getResult().isEmpty()){
                 errorAlert("Verification code cannot be empty!", "Verification code cannot be empty!", "Please fill in the verification code field!");
                 return;
             }

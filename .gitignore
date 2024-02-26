@@ -1,3 +1,6 @@
+### Profile Uploads ###
+!**/src/assets/profileuploads/
+
 target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/

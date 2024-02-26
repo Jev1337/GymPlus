@@ -61,6 +61,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -1011,6 +1012,12 @@ public class AdminDashboardController {
                 errorAlert("Duplicate entry", "Duplicate entry", "A user with the same username, email or CIN already exists");
                 return;
             }
+            if (adminService.getUserByPhone(phonemanage_tf.getText()) != null
+                    || staffService.getUserByPhone(phonemanage_tf.getText()) != null
+                    || clientService.getUserByPhone(phonemanage_tf.getText()) != null){
+                errorAlert("Duplicate entry", "Duplicate entry", "A user with the same phone number already exists");
+                return;
+            }
             File file = new File(photomanage_tf.getText());
             if (!file.exists()) {
                 errorAlert("Profile picture not found", "Profile picture not found", "Please choose a valid profile picture");
@@ -1023,7 +1030,7 @@ public class AdminDashboardController {
             }else if (acctypemanage_cb.getValue().equals("Client")) {
                 clientService.add(new Client(Integer.parseInt(cinmanage_tf.getText()), usernamemanage_tf.getText(), firstnamemanage_tf.getText(), lastnamemanage_tf.getText(), dobmanage_dp.getValue().toString(), pwdmanage_pf.getText(), emailmanage_tf.getText(), phonemanage_tf.getText(), addressmanage_ta.getText(), "USERIMG"+ cinmanage_tf.getText() +  file.getName().substring(file.getName().lastIndexOf(".")),"",new SimpleDateFormat("yyyy-MM-dd").format(new Date(System.currentTimeMillis()))));
             }
-            Files.copy(file.toPath(), new File("src/assets/profileuploads/USERIMG"+ cinmanage_tf.getText() + file.getName().substring(file.getName().lastIndexOf("."))).toPath());
+            Files.copy(file.toPath(), new File("src/assets/profileuploads/USERIMG"+ cinmanage_tf.getText() + file.getName().substring(file.getName().lastIndexOf("."))).toPath(), StandardCopyOption.REPLACE_EXISTING);
             notify("Account has been created successfully!");
             initUserList();
         }catch (Exception e) {

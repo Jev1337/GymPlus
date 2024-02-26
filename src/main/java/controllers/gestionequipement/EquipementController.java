@@ -10,21 +10,18 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
+import javafx.scene.Cursor;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Region;
+import javafx.scene.layout.*;
 import javafx.util.Duration;
 import services.gestionequipements.EquipementService;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 
-import javafx.scene.layout.Pane;
 import services.gestionequipements.MaintenancesService;
 
 public class EquipementController {
@@ -122,15 +119,24 @@ public class EquipementController {
     @FXML
     private TextField add_desc1;
 
-    @FXML
-    private TableView<Equipements_details> tableviewEq;
 
     @FXML
-    private TableView<Maintenances> tableviewMaint;
+    private VBox eqlist_vbox;
+
+    @FXML
+    private Button gotomain_btn;
+
+    @FXML
+    private VBox maintlist_vbox;
+
+    @FXML
+    private Button gotoequip_btn;
 
     private final EquipementService EquipementService = new EquipementService();
 
     private final MaintenancesService MaintenancesService = new MaintenancesService();
+
+
 
     @FXML
     void addEquipement(ActionEvent event) {
@@ -157,12 +163,7 @@ public class EquipementController {
             EquipementService.add(new Equipements_details(name, description, lifeSpan, state_cb.getValue()));
             notify("Equipment added successfully!");
             getAllEquipements();
-        } catch (SQLException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setContentText(e.getMessage());
-            alert.showAndWait();
-        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
             alert.setContentText(e.getMessage());
@@ -176,10 +177,13 @@ public class EquipementController {
     @FXML
     void deleteEquipment(ActionEvent event) {
         try {
-            EquipementService.delete(tableviewEq.getSelectionModel().getSelectedItem().getId());
+            if (selectedEquipement == null) {
+                throw new IllegalArgumentException("No equipment selected");
+            }
+            EquipementService.delete(selectedEquipement.getId());
             notify("Equipement deleted successfully!");
             getAllEquipements();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
             alert.setContentText(e.getMessage());
@@ -190,12 +194,13 @@ public class EquipementController {
 
     @FXML
     void modifyEquipment(ActionEvent event) {
-        Equipements_details equipment = tableviewEq.getSelectionModel().getSelectedItem();
-        if (equipment != null) {
-            add_name1.setText(equipment.getName());
-            add_desc1.setText(equipment.getDescription());
-            add_lp1.setText(equipment.getDuree_de_vie());
-            statemod_cb.setValue(equipment.getEtat());
+
+        if (selectedEquipement != null) {
+            gotomain_btn.setDisable(true);
+            add_name1.setText(selectedEquipement.getName());
+            add_desc1.setText(selectedEquipement.getDescription());
+            add_lp1.setText(selectedEquipement.getDuree_de_vie());
+            statemod_cb.setValue(selectedEquipement.getEtat());
             if (statemod_cb.getValue().equals("Under Maintenance")) {
                 statemod_cb.setDisable(true);
             }else {
@@ -203,6 +208,17 @@ public class EquipementController {
             }
             var f = new FadeOutLeft();
             var f1 = new FadeInLeft();
+            if (ModifyEquipPane.isVisible()) {
+                f.setNode(ModifyEquipPane);
+                f.setOnFinished((e) -> {
+                    f1.setNode(ModifyEquipPane);
+                    ModifyEquipPane.setVisible(true);
+                    ModifyEquipPane.setOpacity(0);
+                    f1.play();
+                });
+                f.play();
+                return;
+            }
             f.setNode(addpane);
             f.setOnFinished((e) -> {
                 f1.setNode(ModifyEquipPane);
@@ -211,19 +227,71 @@ public class EquipementController {
                 f1.play();
             });
             f.play();
+        }else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setContentText("No equipment selected");
+            alert.showAndWait();
         }
     }
 
+    private Equipements_details selectedEquipement;
+
+    private Maintenances selectedMaint;
     void getAllEquipements() {
+        selectedEquipement = null;
         try {
             List<Equipements_details> equipements = EquipementService.getAll();
-            ObservableList<Equipements_details> equipementsObservableList = FXCollections.observableArrayList(equipements);
-            show_id.setCellValueFactory(new PropertyValueFactory<>("id"));
-            show_name.setCellValueFactory(new PropertyValueFactory<>("name"));
-            show_desc.setCellValueFactory(new PropertyValueFactory<>("description"));
-            show_lp.setCellValueFactory(new PropertyValueFactory<>("duree_de_vie"));
-            show_state.setCellValueFactory(new PropertyValueFactory<>("etat"));
-            tableviewEq.setItems(equipementsObservableList);
+            eqlist_vbox.getChildren().clear();
+            for (Equipements_details equip : equipements) {
+                //fill the vbox with the hboxes containing the equipements
+                HBox hBox = new HBox();
+                hBox.setCursor(Cursor.HAND);
+                hBox.setSpacing(200);
+                hBox.setPrefHeight(50);
+                hBox.setStyle("-fx-background-color: #f4f4f4; -fx-border-color: transparent  linear-gradient(to right, #00aaff, #00688b)  linear-gradient(to right, #00aaff, #00688b)  linear-gradient(to right, #00aaff, #00688b);");
+                var id = new Label("ID: " + equip.getId());
+                id.setStyle("-fx-font-weight: bold; -fx-font-size: 14px");
+                var name = new Label("Name: " + equip.getName());
+                name.setStyle("-fx-font-weight: bold; -fx-font-size: 14px");
+                var desc = new Label("Description: " + equip.getDescription());
+                desc.setStyle("-fx-font-weight: bold; -fx-font-size: 14px");
+                var lifeSpan = new Label("Life Span: " + equip.getDuree_de_vie());
+                lifeSpan.setStyle("-fx-font-weight: bold; -fx-font-size: 14px");
+                var state = new Label("State: " + equip.getEtat());
+                state.setStyle("-fx-font-weight: bold; -fx-font-size: 14px");
+                hBox.getChildren().add(state);
+
+                VBox vbox1 = new VBox();
+                vbox1.getChildren().addAll(id, name);
+                VBox vbox2 = new VBox();
+                vbox2.getChildren().addAll(desc, lifeSpan);
+                VBox vbox3 = new VBox();
+                vbox3.getChildren().addAll(state);
+                hBox.getChildren().addAll(vbox1, vbox2, vbox3);
+                eqlist_vbox.getChildren().add(hBox);
+                hBox.setOnMouseEntered(e -> {
+                    if (selectedEquipement != null && selectedEquipement.getId() == equip.getId()) {
+                        hBox.setStyle("-fx-background-color: #2196f3; -fx-border-color: transparent  linear-gradient(to right, #00aaff, #00688b) linear-gradient(to right, #00aaff, #00688b) linear-gradient(to right, #00aaff, #00688b); -fx-border-radius: 5px;");
+                    }else
+                        hBox.setStyle("-fx-background-color: #f4f4f4; -fx-border-color: transparent linear-gradient(to right, #00aaff, #00688b) linear-gradient(to right, #00aaff, #00688b) linear-gradient(to right, #00aaff, #00688b); -fx-border-radius: 5px;");
+                });
+                hBox.setOnMouseExited(e -> {
+                    if (selectedEquipement != null && selectedEquipement.getId() == equip.getId()) {
+                        hBox.setStyle("-fx-background-color: #2196f3; -fx-border-color: transparent linear-gradient(to right, #00aaff, #00688b) linear-gradient(to right, #00aaff, #00688b) linear-gradient(to right, #00aaff, #00688b);-fx-border-radius: 5px;");
+                    }else
+                        hBox.setStyle("-fx-background-color: #f4f4f4; -fx-border-color: transparent linear-gradient(to right, #00aaff, #00688b) linear-gradient(to right, #00aaff, #00688b) linear-gradient(to right, #00aaff, #00688b); -fx-border-radius: 5px;");
+                });
+                hBox.setOnMouseClicked(e -> {
+                    selectedEquipement = equip;
+                    for(Node node : eqlist_vbox.getChildren()){
+                        if (node instanceof HBox && node != hBox){
+                            node.setStyle("-fx-background-color: #f4f4f4; -fx-border-color: transparent linear-gradient(to right, #00aaff, #00688b) linear-gradient(to right, #00aaff, #00688b) linear-gradient(to right, #00aaff, #00688b);-fx-border-radius: 5px;");
+                        }
+                    }
+                    hBox.setStyle("-fx-background-color: #2196f3; -fx-border-color: transparent linear-gradient(to right, #00aaff, #00688b) linear-gradient(to right, #00aaff, #00688b) linear-gradient(to right, #00aaff, #00688b); -fx-border-radius: 5px;");
+                });
+            }
         } catch (SQLException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
@@ -257,6 +325,13 @@ public class EquipementController {
     @FXML
     void addMaint(ActionEvent event) {
         try {
+            if (MaintenancesService.isUnderMaintenance(add_ide.getValue())) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setContentText("This equipment is already under maintenance!");
+                alert.showAndWait();
+                return;
+            }
             Integer ide = add_ide.getValue();
             if (ide == null) {
                 throw new IllegalArgumentException("Equipment ID must be selected.");
@@ -295,10 +370,10 @@ public class EquipementController {
     @FXML
     void deleteMaint(ActionEvent event) {
         try {
-            MaintenancesService.delete(tableviewMaint.getSelectionModel().getSelectedItem().getIdm());
+            MaintenancesService.delete(selectedMaint.getIdm());
             notify("Maintenance deleted successfully!");
             getAllMaint();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
             alert.setContentText(e.getMessage());
@@ -308,10 +383,10 @@ public class EquipementController {
 
     @FXML
     void modifyMaint(ActionEvent event) {
-        Maintenances maintenances = tableviewMaint.getSelectionModel().getSelectedItem();
-        if (maintenances != null) {
-            add_date1.setValue(LocalDate.parse(maintenances.getDate_maintenance()));
-            add_status1.setText(maintenances.getStatus());
+        if (selectedMaint != null) {
+            gotoequip_btn.setDisable(true);
+            add_date1.setValue(LocalDate.parse(selectedMaint.getDate_maintenance()));
+            add_status1.setText(selectedMaint.getStatus());
             FadeOutRight f = new FadeOutRight();
             FadeInRight f1 = new FadeInRight();
             f.setNode(addmaintpane);
@@ -323,19 +398,66 @@ public class EquipementController {
                 f1.play();
             });
             f.play();
+        }else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setContentText("No maintenance selected");
+            alert.showAndWait();
         }
     }
 
     void getAllMaint() {
+        selectedMaint = null;
         try {
             List<Maintenances> maintenances = MaintenancesService.getAll();
-            ObservableList<Maintenances> equipementsObservableList = FXCollections.observableArrayList(maintenances);
-            show_idm.setCellValueFactory(new PropertyValueFactory<>("idm"));
-            show_ide.setCellValueFactory(new PropertyValueFactory<>("ide"));
-            show_datem.setCellValueFactory(new PropertyValueFactory<>("date_maintenance"));
-            show_status.setCellValueFactory(new PropertyValueFactory<>("status"));
-            tableviewMaint.setItems(equipementsObservableList);
-        } catch (SQLException e) {
+            maintlist_vbox.getChildren().clear();
+
+            for (Maintenances maint : maintenances) {
+                //fill the vbox with the hboxes containing the equipements
+                HBox hBox = new HBox();
+                hBox.setCursor(Cursor.HAND);
+                hBox.setSpacing(200);
+                hBox.setPrefHeight(50);
+                hBox.setStyle("-fx-background-color: #f4f4f4; -fx-border-color: transparent  linear-gradient(to right, #00aaff, #00688b)  linear-gradient(to right, #00aaff, #00688b)  linear-gradient(to right, #00aaff, #00688b);");
+                var idm = new Label("ID: " + maint.getIdm());
+                idm.setStyle("-fx-font-weight: bold; -fx-font-size: 14px");
+                var ide = new Label("Equipment ID: " + maint.getIde());
+                ide.setStyle("-fx-font-weight: bold; -fx-font-size: 14px");
+                var date = new Label("Date: " + maint.getDate_maintenance());
+                date.setStyle("-fx-font-weight: bold; -fx-font-size: 14px");
+                var status = new Label("Status: " + maint.getStatus());
+                status.setStyle("-fx-font-weight: bold; -fx-font-size: 14px");
+                hBox.getChildren().add(status);
+
+                VBox vbox1 = new VBox();
+                vbox1.getChildren().addAll(idm, ide);
+                VBox vbox2 = new VBox();
+                vbox2.getChildren().addAll(date, status);
+                hBox.getChildren().addAll(vbox1, vbox2);
+                maintlist_vbox.getChildren().add(hBox);
+                hBox.setOnMouseEntered(e -> {
+                    if (selectedMaint != null && selectedMaint.getIdm() == maint.getIdm()) {
+                        hBox.setStyle("-fx-background-color: #2196f3; -fx-border-color: transparent  linear-gradient(to right, #00aaff, #00688b) linear-gradient(to right, #00aaff, #00688b) linear-gradient(to right, #00aaff, #00688b);-fx-border-radius: 5px;");
+                    }else
+                        hBox.setStyle("-fx-background-color: #f4f4f4; -fx-border-color: transparent linear-gradient(to right, #00aaff, #00688b) linear-gradient(to right, #00aaff, #00688b) linear-gradient(to right, #00aaff, #00688b); -fx-border-radius: 5px;");
+                });
+                hBox.setOnMouseExited(e -> {
+                    if (selectedMaint != null && selectedMaint.getIdm() == maint.getIdm()){
+                        hBox.setStyle("-fx-background-color: #2196f3; -fx-border-color: transparent linear-gradient(to right, #00aaff, #00688b) linear-gradient(to right, #00aaff, #00688b) linear-gradient(to right, #00aaff, #00688b);-fx-border-radius: 5px;");
+                    }else
+                        hBox.setStyle("-fx-background-color: #f4f4f4; -fx-border-color: transparent linear-gradient(to right, #00aaff, #00688b) linear-gradient(to right, #00aaff, #00688b) linear-gradient(to right, #00aaff, #00688b); -fx-border-radius: 5px;");
+                });
+                hBox.setOnMouseClicked(e -> {
+                    selectedMaint = maint;
+                    for(Node node : maintlist_vbox.getChildren()){
+                        if (node instanceof HBox && node != hBox){
+                            node.setStyle("-fx-background-color: #f4f4f4; -fx-border-color: transparent linear-gradient(to right, #00aaff, #00688b) linear-gradient(to right, #00aaff, #00688b) linear-gradient(to right, #00aaff, #00688b);-fx-border-radius: 5px;");
+                        }
+                    }
+                    hBox.setStyle("-fx-background-color: #2196f3; -fx-border-color: transparent linear-gradient(to right, #00aaff, #00688b) linear-gradient(to right, #00aaff, #00688b) linear-gradient(to right, #00aaff, #00688b); -fx-border-radius: 5px;");
+                });
+            }
+        } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
             alert.setContentText(e.getMessage());
@@ -382,8 +504,8 @@ public class EquipementController {
     @FXML
     void editEquip(ActionEvent event) {
         try {
-            Equipements_details selectedEvent = tableviewEq.getSelectionModel().getSelectedItem();
-            if (selectedEvent != null) {
+
+            if (selectedEquipement != null) {
                 String name = add_name1.getText().trim();
                 String description = add_desc1.getText().trim();
                 String lifeSpan = add_lp1.getText().trim();
@@ -405,7 +527,7 @@ public class EquipementController {
 
                 EquipementService eventDetailsService = new EquipementService();
                 Equipements_details equipementsDetails = new Equipements_details();
-                equipementsDetails.setId(selectedEvent.getId());
+                equipementsDetails.setId(selectedEquipement.getId());
                 equipementsDetails.setName(name);
                 equipementsDetails.setDescription(description);
                 equipementsDetails.setDuree_de_vie(lifeSpan);
@@ -418,6 +540,7 @@ public class EquipementController {
                     FadeInRight f2 = new FadeInRight(addpane);
                     addpane.setVisible(true);
                     addpane.setOpacity(0);
+                    gotomain_btn.setDisable(false);
                     f2.play();
                 });
                 f.play();
@@ -438,8 +561,7 @@ public class EquipementController {
     @FXML
     void editMaint_btn_act(ActionEvent event) {
         try {
-            Maintenances selectedEvent = tableviewMaint.getSelectionModel().getSelectedItem();
-            if (selectedEvent != null) {
+            if (selectedMaint != null) {
                 LocalDate maintenanceDate = add_date1.getValue();
                 String status = add_status1.getText().trim();
 
@@ -455,8 +577,8 @@ public class EquipementController {
 
                 MaintenancesService maintenancesService = new MaintenancesService();
                 Maintenances maintenances = new Maintenances();
-                maintenances.setIdm(selectedEvent.getIdm());
-                maintenances.setIde(selectedEvent.getIde());
+                maintenances.setIdm(selectedMaint.getIdm());
+                maintenances.setIde(selectedMaint.getIde());
                 maintenances.setDate_maintenance(maintenanceDate.toString());
                 maintenances.setStatus(status);
                 maintenancesService.update(maintenances);
@@ -467,7 +589,9 @@ public class EquipementController {
                     FadeInRight f2 = new FadeInRight(addmaintpane);
                     addmaintpane.setOpacity(0);
                     addmaintpane.setVisible(true);
+                    gotoequip_btn.setDisable(false);
                     f2.play();
+
                 });
                 f.play();
                 getAllMaint();

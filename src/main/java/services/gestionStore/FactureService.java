@@ -108,7 +108,7 @@ public class FactureService implements IService
             throw new SQLException("L'utilisateur avec l'ID spécifié n'existe pas.");
         }
 
-
+/*
         // Calculer le prix total de la facture
         float prixTotalPaye = p.calculerPrixTotalFacture();
 
@@ -121,6 +121,19 @@ public class FactureService implements IService
             preparedStatement.setInt(4, p.getIdFacture());
             preparedStatement.executeUpdate();
         }
+
+ */
+
+        String sql = "UPDATE facture SET methodeDePaiement = ? WHERE idFacture = ?";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            //preparedStatement.setFloat(1, prixTotalPaye);
+            preparedStatement.setString(1, p.getMethodeDePaiement());
+            //preparedStatement.setInt(3, p.getId());
+            preparedStatement.setInt(2, p.getIdFacture());
+            preparedStatement.executeUpdate();
+        }
+
 
         // Mettre à jour les détails de la facture
         DetailFactureService dfs = new DetailFactureService();

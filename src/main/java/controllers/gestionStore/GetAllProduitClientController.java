@@ -124,10 +124,69 @@ public class GetAllProduitClientController implements Initializable
         ObservableList<String> list_Montant = FXCollections.observableArrayList("Price low to high", "Price high to low");
         boxMontantFX.setItems(list_Montant);
 
+        //text Field Search
+        searchFX.textProperty().addListener((observable, oldValue, newValue) -> {
+            filterProducts(newValue);
+        });
+
+        //ComboBox de catégorie
+        boxCategorieFX.setOnAction(event -> {
+            String categorieSelectionnee = boxCategorieFX.getValue();
+            if (categorieSelectionnee != null) {
+                try {
+                    ObservableList<produit> produits = FXCollections.observableArrayList(prodService.recupererByCategorie(categorieSelectionnee));
+                    displayProducts(produits);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        //ComboBox de montant
+        boxMontantFX.setOnAction(event -> {
+            String triSelectionne = boxMontantFX.getValue();
+            if (triSelectionne != null) {
+                try {
+                    ObservableList<produit> produits;
+                    if (triSelectionne.equals("Price low to high")) {
+                        produits = FXCollections.observableArrayList(prodService.trierParPrixCroissant());
+                    } else {
+                        produits = FXCollections.observableArrayList(prodService.trierParPrixDecroissant());
+                    }
+                    displayProducts(produits);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+
         AfficherAllProduct();
 
     }
 
+    private void filterProducts(String searchText) {
+        try {
+            if (searchText.isEmpty()) {
+                AfficherAllProduct();
+                return;
+            }
+            // Récupérer les produits filtrés en fonction du texte de recherche
+            ObservableList<produit> produits = FXCollections.observableArrayList(prodService.recupererByName(searchText));
+
+            // Afficher les produits filtrés
+            displayProducts(produits);
+        } catch (SQLException e) {
+            // Gérer les exceptions
+            e.printStackTrace();
+        }
+    }
+
+    private void displayProducts(ObservableList<produit> produits) {
+        // Réinitialiser l'affichage des produits
+        ProductContainer.getChildren().clear();
+        gridAff(produits);
+    }
 
     public void AfficherAllProduct()
     {
@@ -135,62 +194,7 @@ public class GetAllProduitClientController implements Initializable
             // Récupérer toutes les produits
             ObservableList<produit> produits = FXCollections.observableArrayList(prodService.getAll());
 
-            // Nombre de produits par ligne
-            int produitsParLigne = 4;
-
-            // Ajout des données dans la GridPane
-            int row = 0;
-            int col = 0;
-            for (int i = 0; i < produits.size(); i++)
-            {
-                produit produit = produits.get(i);
-                String photo = produit.getPhoto();
-                String nom = produit.getName();
-                float prix = produit.getPrix();
-
-                Image imageP = new Image("file:///D:/projet_PI/GymPlus/imageProduit/" + photo);
-                ImageView imageView = new ImageView(imageP);
-                Label labelPhoto = new Label();
-                labelPhoto.setGraphic(imageView);
-
-                //Label labelPhoto = new Label(imageP);
-                Label labelNom = new Label("Nom: " + nom);
-                Label labelPrix = new Label("Prix: " + prix);
-
-                // Créer un VBox pour empiler verticalement les labels
-                VBox vbox = new VBox(10); // Espacement de 10 pixels entre chaque produit
-                vbox.getChildren().addAll(new VBox(new Label("Entité Produit " + (i + 1)), labelPhoto, labelNom, labelPrix));
-
-                // Ajouter un gestionnaire d'événements pour ouvrir le fichier FXML spécifique lorsque vous cliquez sur la photo
-                final int productId = produit.getIdProduit(); // Capturer l'ID du produit pour l'utiliser dans le gestionnaire d'événements
-                labelPhoto.setOnMouseClicked(event -> {
-                    loadFXML("/resourcesGestionStore/Get1Produit.fxml" , productId);
-
-                    System.out.println("rania****" + productId);
-
-                });
-
-                // Ajouter du padding pour créer un espace vertical entre les colonnes
-                if (col > 0)
-                {
-                    Insets insets = new Insets(0, 10, 10, 0); //haut / droite / bas / gauche
-                    ProductContainer.add(vbox, col, row);
-                    GridPane.setMargin(vbox, insets);
-                } else
-                {
-                    ProductContainer.add(vbox, col, row);
-                }
-
-                // Incrémenter les indices de colonne et de ligne
-                col++;
-                if (col == produitsParLigne) {
-                    col = 0;
-                    row++;
-                }
-            }
-
-            // Ajouter de l'espace vertical entre les lignes
-            ProductContainer.setVgap(10);
+            gridAff(produits);
 
         } catch (SQLException e)
         {
@@ -203,6 +207,65 @@ public class GetAllProduitClientController implements Initializable
         }
     }
 
+    public void gridAff(ObservableList<produit> produits)
+    {
+        // Nombre de produits par ligne
+        int produitsParLigne = 4;
+
+        // Ajout des données dans la GridPane
+        int row = 0;
+        int col = 0;
+        for (int i = 0; i < produits.size(); i++)
+        {
+            produit produit = produits.get(i);
+            String photo = produit.getPhoto();
+            String nom = produit.getName();
+            float prix = produit.getPrix();
+
+            Image imageP = new Image("file:///D:/projet_PI/GymPlus/imageProduit/" + photo);
+            ImageView imageView = new ImageView(imageP);
+            Label labelPhoto = new Label();
+            labelPhoto.setGraphic(imageView);
+
+            //Label labelPhoto = new Label(imageP);
+            Label labelNom = new Label("Nom: " + nom);
+            Label labelPrix = new Label("Prix: " + prix);
+
+            // Créer un VBox pour empiler verticalement les labels
+            VBox vbox = new VBox(10); // Espacement de 10 pixels entre chaque produit
+            vbox.getChildren().addAll(new VBox(new Label("Entité Produit " + (i + 1)), labelPhoto, labelNom, labelPrix));
+
+            // Ajouter un gestionnaire d'événements pour ouvrir le fichier FXML spécifique lorsque vous cliquez sur la photo
+            final int productId = produit.getIdProduit(); // Capturer l'ID du produit pour l'utiliser dans le gestionnaire d'événements
+            labelPhoto.setOnMouseClicked(event -> {
+                loadFXML("/resourcesGestionStore/Get1Produit.fxml" , productId);
+
+                System.out.println("rania****" + productId);
+
+            });
+
+            // Ajouter du padding pour créer un espace vertical entre les colonnes
+            if (col > 0)
+            {
+                Insets insets = new Insets(0, 10, 10, 0); //haut / droite / bas / gauche
+                ProductContainer.add(vbox, col, row);
+                GridPane.setMargin(vbox, insets);
+            } else
+            {
+                ProductContainer.add(vbox, col, row);
+            }
+
+            // Incrémenter les indices de colonne et de ligne
+            col++;
+            if (col == produitsParLigne) {
+                col = 0;
+                row++;
+            }
+        }
+
+        // Ajouter de l'espace vertical entre les lignes
+        ProductContainer.setVgap(10);
+    }
 
     private void loadFXML(String s , int productId)
     {

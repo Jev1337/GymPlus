@@ -126,7 +126,8 @@ public class ProduitService implements IService<produit>
 
     public List<produit> recupererByName(String name) throws SQLException
     {
-        String sql = "select * from produit where name= '"+name+"' ";
+        //String sql = "select * from produit where name= '"+name+"' ";
+        String sql = "SELECT * FROM produit WHERE name LIKE '%" + name + "%'";
         Statement st = connection.createStatement();
         ResultSet rs = st.executeQuery(sql);
         List<produit> prod = new ArrayList<>();
@@ -145,6 +146,80 @@ public class ProduitService implements IService<produit>
             prod.add(p);
         }
         return prod;
+    }
+
+    public List<produit> recupererByCategorie(String categorie) throws SQLException {
+
+        String sql = "SELECT * FROM produit WHERE categorie = '" + categorie + "'";
+        Statement statement = connection.createStatement();
+        ResultSet rs = statement.executeQuery(sql);
+
+        List<produit> produits = new ArrayList<>();
+
+        while (rs.next())
+        {
+            produit p = new produit();
+            p.setIdProduit(rs.getInt("idProduit"));
+            p.setName(rs.getString("name"));
+            p.setPrix(rs.getFloat("prix"));
+            p.setStock(rs.getInt("stock"));
+            p.setDescription(rs.getString("description"));
+            p.setCategorie(rs.getString("categorie"));
+            p.setPhoto(rs.getString("photo"));
+            p.setSeuil(rs.getInt("seuil"));
+            p.setPromo(rs.getFloat("promo"));
+            produits.add(p);
+        }
+        return produits;
+    }
+
+    public List<produit> trierParPrixCroissant() throws SQLException {
+
+        String sql = "SELECT * FROM produit ORDER BY prix ASC";
+        Statement statement = connection.createStatement();
+        ResultSet rs = statement.executeQuery(sql);
+
+        List<produit> produits = new ArrayList<>();
+
+        while (rs.next()) {
+            produit p = new produit();
+            p.setIdProduit(rs.getInt("idProduit"));
+            p.setName(rs.getString("name"));
+            p.setPrix(rs.getFloat("prix"));
+            p.setStock(rs.getInt("stock"));
+            p.setDescription(rs.getString("description"));
+            p.setCategorie(rs.getString("categorie"));
+            p.setPhoto(rs.getString("photo"));
+            p.setSeuil(rs.getInt("seuil"));
+            p.setPromo(rs.getFloat("promo"));
+            produits.add(p);
+        }
+        return produits;
+    }
+
+    public List<produit> trierParPrixDecroissant() throws SQLException {
+
+        String sql = "SELECT * FROM produit ORDER BY prix DESC";
+        Statement statement = connection.createStatement();
+        ResultSet rs = statement.executeQuery(sql);
+
+        List<produit> produits = new ArrayList<>();
+
+        // Parcourir le résultat de la requête et ajouter les produits à la liste
+        while (rs.next()) {
+            produit p = new produit();
+            p.setIdProduit(rs.getInt("idProduit"));
+            p.setName(rs.getString("name"));
+            p.setPrix(rs.getFloat("prix"));
+            p.setStock(rs.getInt("stock"));
+            p.setDescription(rs.getString("description"));
+            p.setCategorie(rs.getString("categorie"));
+            p.setPhoto(rs.getString("photo"));
+            p.setSeuil(rs.getInt("seuil"));
+            p.setPromo(rs.getFloat("promo"));
+            produits.add(p);
+        }
+        return produits;
     }
 
 }

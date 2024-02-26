@@ -60,7 +60,11 @@ import services.gestionuser.*;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.lang.management.ManagementFactory;
+import java.lang.management.MemoryMXBean;
+import java.lang.management.MemoryUsage;
 import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -950,7 +954,7 @@ public class AdminDashboardController {
                 user_imageview.setImage(null);
                 File oldFile = new File("src/assets/profileuploads/" +GlobalVar.getUser().getPhoto());
                 oldFile.delete();
-                Files.copy(file.toPath(), new File("src/assets/profileuploads/USERIMG"+ GlobalVar.getUser().getId() + file.getName().substring(file.getName().lastIndexOf("."))).toPath());
+                Files.copy(file.toPath(), new File("src/assets/profileuploads/USERIMG"+ GlobalVar.getUser().getId() + file.getName().substring(file.getName().lastIndexOf("."))).toPath(), StandardCopyOption.REPLACE_EXISTING);
                 Admin admin = new Admin(GlobalVar.getUser().getId(), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), dateofbirth_tf.getValue().toString(), GlobalVar.getUser().getPassword(), email_tf.getText(), phone_tf.getText(), address_ta.getText(), "USERIMG"+ GlobalVar.getUser().getId() + file.getName().substring(file.getName().lastIndexOf(".")), GlobalVar.getUser().getFaceid(), GlobalVar.getUser().getFaceid_ts());
                 adminService.update(admin);
                 GlobalVar.setUser(admin);
@@ -1011,6 +1015,12 @@ public class AdminDashboardController {
                 errorAlert("Duplicate entry", "Duplicate entry", "A user with the same username, email or CIN already exists");
                 return;
             }
+            if (adminService.getUserByPhone(phonemanage_tf.getText()) != null
+                    || staffService.getUserByPhone(phonemanage_tf.getText()) != null
+                    || clientService.getUserByPhone(phonemanage_tf.getText()) != null){
+                errorAlert("Duplicate entry", "Duplicate entry", "A user with the same phone number already exists");
+                return;
+            }
             File file = new File(photomanage_tf.getText());
             if (!file.exists()) {
                 errorAlert("Profile picture not found", "Profile picture not found", "Please choose a valid profile picture");
@@ -1023,7 +1033,7 @@ public class AdminDashboardController {
             }else if (acctypemanage_cb.getValue().equals("Client")) {
                 clientService.add(new Client(Integer.parseInt(cinmanage_tf.getText()), usernamemanage_tf.getText(), firstnamemanage_tf.getText(), lastnamemanage_tf.getText(), dobmanage_dp.getValue().toString(), pwdmanage_pf.getText(), emailmanage_tf.getText(), phonemanage_tf.getText(), addressmanage_ta.getText(), "USERIMG"+ cinmanage_tf.getText() +  file.getName().substring(file.getName().lastIndexOf(".")),"",new SimpleDateFormat("yyyy-MM-dd").format(new Date(System.currentTimeMillis()))));
             }
-            Files.copy(file.toPath(), new File("src/assets/profileuploads/USERIMG"+ cinmanage_tf.getText() + file.getName().substring(file.getName().lastIndexOf("."))).toPath());
+            Files.copy(file.toPath(), new File("src/assets/profileuploads/USERIMG"+ cinmanage_tf.getText() + file.getName().substring(file.getName().lastIndexOf("."))).toPath(), StandardCopyOption.REPLACE_EXISTING);
             notify("Account has been created successfully!");
             initUserList();
         }catch (Exception e) {
@@ -1117,7 +1127,7 @@ public class AdminDashboardController {
                 userprofile_imageview.setImage(null);
                 File oldFile = new File("src/assets/profileuploads/" +managedSelectedUser.getPhoto());
                 oldFile.delete();
-                Files.copy(file.toPath(), new File("src/assets/profileuploads/USERIMG"+ managedSelectedUser.getId() + file.getName().substring(file.getName().lastIndexOf("."))).toPath());
+                Files.copy(file.toPath(), new File("src/assets/profileuploads/USERIMG"+ managedSelectedUser.getId() + file.getName().substring(file.getName().lastIndexOf("."))).toPath(), StandardCopyOption.REPLACE_EXISTING);
                 if (managedSelectedUser.getRole().equals("client")){
                     clientService.update(new Client(managedSelectedUser.getId(), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), dateofbirth_tf.getValue().toString(), managedSelectedUser.getPassword(), email_tf.getText(), phone_tf.getText(), address_ta.getText(), managedSelectedUser.getPhoto(),managedSelectedUser.getFaceid(), managedSelectedUser.getFaceid_ts()));
                 }else if (managedSelectedUser.getRole().equals("staff")) {
@@ -1372,7 +1382,6 @@ public class AdminDashboardController {
         progressIndicator.setPrefHeight(24);
         hidepane.getChildren().add(progressIndicator);
 
-
         try {
             Pane event_pane= FXMLLoader.load(getClass().getResource("/gestionevents/eventstaffadmin.fxml"));
             affichage_events_adstaff.getChildren().setAll(event_pane);
@@ -1382,7 +1391,6 @@ public class AdminDashboardController {
         } catch (IOException e) {
             stackTraceAlert(e);
         }
-
 
     }
 
@@ -1430,6 +1438,8 @@ public class AdminDashboardController {
             subtypecol.setCellValueFactory(new PropertyValueFactory<>("type"));
 
             subbed_vbox.getChildren().clear();
+
+
             for (Abonnement abonnement : list) {
                 Client client = clientService.getUserById(abonnement.getUser_id());
                 if (!client.getUsername().contains(search) && !String.valueOf(abonnement.getUser_id()).contains(search) && !abonnement.getType().contains(search) && !abonnement.getDuree_abon().contains(search) && !String.valueOf(abonnement.getId()).contains(search))
@@ -1499,6 +1509,7 @@ public class AdminDashboardController {
         }catch (Exception e){
             stackTraceAlert(e);
         }
+
 
 
     }
@@ -1842,8 +1853,10 @@ public class AdminDashboardController {
         acctypecol.setCellValueFactory(new PropertyValueFactory<>("role"));
         phonenumbercol.setCellValueFactory(new PropertyValueFactory<>("num_tel"));
 
-        //clear the vbox
+
         userlist_vbox.getChildren().clear();
+
+
         for (User user : users) {
             // apply condition
             if (condition != null && !condition.isEmpty()) {

@@ -18,9 +18,9 @@
 
 <AnchorPane prefHeight="808.0" prefWidth="1156.0" stylesheets="@event.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionevents.eventbController">
    <children>
-      <Pane fx:id="affichage_events_adstaff" prefHeight="827.0" prefWidth="1180.0">
+      <Pane fx:id="affichage_events_adstaff" prefHeight="827.0" prefWidth="1180.0" style="-fx-background-color: #a5d8dd;">
          <children>
-            <TableView fx:id="tableevents_id" layoutX="347.0" layoutY="103.0" prefHeight="303.0" prefWidth="763.0" style="-fx-background-color: lightgray;" visible="false">
+            <TableView fx:id="tableevents_id" layoutX="346.0" layoutY="138.0" prefHeight="303.0" prefWidth="766.0" style="-fx-background-color: lightgray;" visible="false">
               <columns>
                 <TableColumn fx:id="event_idcol" prefWidth="110.93331909179688" text="Event_id" />
                 <TableColumn fx:id="event_namecol" prefWidth="133.06668090820312" text="Event_Name" />
@@ -30,34 +30,29 @@
                   <TableColumn fx:id="event_spotscol" prefWidth="86.0" text="Spots" />
               </columns>
             </TableView>
-            <Button fx:id="edit_id" layoutX="581.0" layoutY="423.0" mnemonicParsing="false" onAction="#edit_event" prefHeight="36.0" prefWidth="101.0" text="Edit" />
-            <Button fx:id="delete_id" layoutX="705.0" layoutY="423.0" mnemonicParsing="false" onAction="#delete_event" prefHeight="36.0" prefWidth="101.0" text="Delete" />
-            <TableView fx:id="ListParticipants_id" layoutX="421.0" layoutY="474.0" prefHeight="334.0" prefWidth="341.0" style="-fx-background-color: lightgray;">
+            <Button fx:id="edit_id" layoutX="537.0" layoutY="448.0" mnemonicParsing="false" onAction="#edit_event" prefHeight="36.0" prefWidth="101.0" text="Edit" />
+            <Button fx:id="delete_id" layoutX="747.0" layoutY="448.0" mnemonicParsing="false" onAction="#delete_event" prefHeight="36.0" prefWidth="101.0" text="Delete" />
+            <TableView fx:id="ListParticipants_id" layoutX="526.0" layoutY="493.0" prefHeight="303.0" prefWidth="341.0" style="-fx-background-color: lightgray;">
               <columns>
                   <TableColumn fx:id="firstname_id" minWidth="0.0" prefWidth="103.0" text="First Name" />
                 <TableColumn fx:id="lastname_id" prefWidth="119.0" text="Last Name" />
                 <TableColumn fx:id="username_id" minWidth="0.0" prefWidth="118.0" text="UserName" />
               </columns>
             </TableView>
-            <Button fx:id="kick_id" layoutX="238.0" layoutY="612.0" mnemonicParsing="false" onAction="#kick_user" prefHeight="44.0" prefWidth="88.0" text="Kick" />
-            <TableView fx:id="list_points" layoutX="831.0" layoutY="474.0" prefHeight="320.0" prefWidth="243.0" style="-fx-background-color: lightgray;">
+            <Button fx:id="kick_id" layoutX="312.0" layoutY="612.0" mnemonicParsing="false" onAction="#kick_user" prefHeight="44.0" prefWidth="88.0" text="Kick" />
+            <TableView fx:id="list_points" layoutX="909.0" layoutY="469.0" prefHeight="320.0" prefWidth="243.0" style="-fx-background-color: lightgray;" visible="false">
                <columns>
                   <TableColumn fx:id="username_id1" minWidth="0.0" prefWidth="147.2000732421875" text="UserName" />
                   <TableColumn fx:id="points_id1" minWidth="0.0" prefWidth="95.0" text="Points" />
                </columns>
             </TableView>
-            <ScrollPane layoutX="544.0" layoutY="103.0">
+            <ScrollPane layoutX="540.0" layoutY="134.0">
                <content>
                   <ListView fx:id="eventList" prefHeight="303.0" prefWidth="308.0" style="-fx-background-color: lightgray; -fx-background-radius: 20; -fx-border-color: white;" />
                </content>
             </ScrollPane>
-            <CheckBox fx:id="table_view" layoutX="783.0" layoutY="72.0" mnemonicParsing="false" onAction="#show_table" text="Table" />
-            <Text fill="#136ac6" layoutX="621.0" layoutY="46.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Events">
-               <font>
-                  <Font size="43.0" />
-               </font>
-            </Text>
-            <Pane layoutX="73.0" layoutY="72.0" prefHeight="416.0" prefWidth="253.0" style="-fx-background-color: lightgray; -fx-background-radius: 20;">
+            <CheckBox fx:id="table_view" layoutX="761.0" layoutY="106.0" mnemonicParsing="false" onAction="#show_table" text="Table" />
+            <Pane fx:id="ajout_event" layoutX="72.0" layoutY="126.0" prefHeight="416.0" prefWidth="253.0" style="-fx-background-color: lightgray; -fx-background-radius: 20;">
                <children>
                   <TextField fx:id="eventname_id" layoutX="36.0" layoutY="88.0" style="-fx-background-radius: 15;" />
                   <TextField fx:id="eventtype_id" layoutX="36.0" layoutY="141.0" style="-fx-background-radius: 15;" />
@@ -83,21 +78,40 @@
                   </ImageView>
                </children>
             </Pane>
-         </children>
-      </Pane>
-      <Pane fx:id="editevent_id" layoutX="424.0" layoutY="192.0" prefHeight="425.0" prefWidth="308.0" style="-fx-background-color: lightgray; -fx-background-radius: 20;" visible="false">
-         <children>
-            <TextField fx:id="editeventtype_id" layoutX="53.0" layoutY="129.0" prefHeight="36.0" prefWidth="208.0" promptText="New Event Type" style="-fx-background-radius: 15;" />
-            <TextField fx:id="editeventdate_id1" layoutX="173.0" layoutY="198.0" prefHeight="36.0" prefWidth="88.0" promptText="New Event Date" style="-fx-background-radius: 15;" />
-            <TextField fx:id="editeventduration_id" layoutX="57.0" layoutY="272.0" prefHeight="36.0" prefWidth="208.0" promptText="New Event Euration" style="-fx-background-radius: 15;" />
-            <TextField fx:id="editeventname_id" layoutX="52.0" layoutY="58.0" prefHeight="36.0" prefWidth="208.0" promptText="New Event Eame" style="-fx-background-radius: 15;" />
-            <Label layoutX="56.0" layoutY="34.0" text="Event_Name" />
-            <Label layoutX="50.0" layoutY="96.0" text="Type" />
-            <Label layoutX="50.0" layoutY="173.0" text="Date" />
-            <Label layoutX="50.0" layoutY="254.0" text="Duration" />
-            <Button fx:id="editeventconfirm_id" layoutX="206.0" layoutY="339.0" mnemonicParsing="false" onAction="#edit_event_confirm" prefHeight="36.0" prefWidth="64.0" text="Edit" />
-            <DatePicker fx:id="editeventdate_id" layoutX="54.0" layoutY="198.0" prefHeight="36.0" prefWidth="109.0" style="-fx-background-radius: 15;" />
-            <Button fx:id="editeventconfirm_id1" layoutX="48.0" layoutY="339.0" mnemonicParsing="false" onAction="#edit_event_cancel" prefHeight="36.0" prefWidth="75.0" text="Cancel" />
+            <Pane fx:id="editevent_id" layoutX="72.0" layoutY="126.0" prefHeight="416.0" prefWidth="253.0" style="-fx-background-color: lightgray; -fx-background-radius: 20;" visible="false">
+               <children>
+                  <Label layoutX="36.0" layoutY="71.0" text="Event Name" textFill="#354d86" />
+                  <Label layoutX="36.0" layoutY="134.0" text="Type" textFill="#354d86" />
+                  <Label layoutX="36.0" layoutY="198.0" text="Date" textFill="#354d86" />
+                  <Label layoutX="38.0" layoutY="271.0" text="Duration" textFill="#354d86" />
+                  <Text fill="#1f58c9" layoutX="14.0" layoutY="43.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Edit Event:" wrappingWidth="130.5625">
+                     <font>
+                        <Font size="27.0" />
+                     </font>
+                  </Text>
+                  <ImageView fitHeight="57.0" fitWidth="54.0" layoutX="177.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../assets/icon/addevent.png" />
+                     </image>
+                  </ImageView>
+                  <TextField fx:id="editeventduration_id" layoutX="32.0" layoutY="291.0" prefHeight="36.0" prefWidth="189.0" promptText="New Event Euration" style="-fx-background-radius: 15;" />
+                  <DatePicker fx:id="editeventdate_id" layoutX="40.0" layoutY="218.0" prefHeight="36.0" prefWidth="101.0" style="-fx-background-radius: 15;" />
+                  <TextField fx:id="editeventdate_id1" layoutX="145.0" layoutY="218.0" prefHeight="36.0" prefWidth="75.0" promptText="New Event Date" style="-fx-background-radius: 15;" />
+                  <TextField fx:id="editeventtype_id" layoutX="35.0" layoutY="154.0" prefHeight="36.0" prefWidth="181.0" promptText="New Event Type" style="-fx-background-radius: 15;" />
+                  <TextField fx:id="editeventname_id" layoutX="35.0" layoutY="91.0" prefHeight="36.0" prefWidth="181.0" promptText="New Event Eame" style="-fx-background-radius: 15;" />
+                  <Button fx:id="editeventconfirm_id" layoutX="172.0" layoutY="345.0" mnemonicParsing="false" onAction="#edit_event_confirm" prefHeight="36.0" prefWidth="64.0" text="Edit" />
+                  <Button fx:id="editeventconfirm_id1" layoutX="38.0" layoutY="345.0" mnemonicParsing="false" onAction="#edit_event_cancel" prefHeight="36.0" prefWidth="75.0" text="Cancel" />
+               </children>
+            </Pane>
+            <Pane layoutX="-4.0" layoutY="-9.0" prefHeight="100.0" prefWidth="1189.0" style="-fx-background-color: #4d79ff;">
+               <children>
+                  <Text fill="WHITE" layoutX="499.0" layoutY="79.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Events">
+                     <font>
+                        <Font size="70.0" />
+                     </font>
+                  </Text>
+               </children>
+            </Pane>
          </children>
       </Pane>
    </children>

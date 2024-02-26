@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="mainPane" prefHeight="779.0" prefWidth="1153.0" stylesheets="@event.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionevents.eventfController">
+<AnchorPane fx:id="mainPane" prefHeight="779.0" prefWidth="1153.0" style="-fx-background-color: #a5d8dd;" stylesheets="@event.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionevents.eventfController">
     <stylesheets>
         <URL value="@event.css" />
     </stylesheets>
@@ -97,15 +97,15 @@
                 </Pane>
             <Button fx:id="events" layoutX="872.0" layoutY="54.0" mnemonicParsing="false" onAction="#back_to_events" text="&lt;- Events" />
             </children></Pane>
-        <Pane fx:id="event_pane" layoutX="70.0" layoutY="56.0" prefHeight="723.0" prefWidth="1027.0" style="-fx-background-radius: 10;">
+        <Pane fx:id="event_pane" layoutX="70.0" layoutY="56.0" prefHeight="723.0" prefWidth="1027.0" style="-fx-background-radius: 10; -fx-background-color: #a5d8dd;">
             <children>
-                <Label fx:id="countdownLabel" layoutX="331.0" layoutY="586.0" prefHeight="52.0" prefWidth="326.0" />
-                <Button fx:id="join_id" layoutX="752.0" layoutY="567.0" mnemonicParsing="false" onAction="#join_event" prefHeight="50.0" prefWidth="187.0" text="Join">
+                <Label fx:id="countdownLabel" layoutX="374.0" layoutY="563.0" prefHeight="52.0" prefWidth="336.0" />
+                <Button fx:id="join_id" layoutX="478.0" layoutY="628.0" mnemonicParsing="false" onAction="#join_event" prefHeight="62.0" prefWidth="162.0" text="Join">
                     <font>
                         <Font size="30.0" />
                     </font>
                 </Button>
-                <TableView fx:id="event_detailsTableView" layoutX="20.0" layoutY="241.0" prefHeight="312.0" prefWidth="983.0" styleClass="TableView" visible="false">
+                <TableView fx:id="event_detailsTableView" layoutX="20.0" layoutY="241.0" prefHeight="312.0" prefWidth="997.0" styleClass="TableView" visible="false">
                     <columns>
                         <TableColumn fx:id="namec" prefWidth="238.0" text="Event Name" />
                         <TableColumn fx:id="typec" minWidth="0.0" prefWidth="196.0" text="Type" />
@@ -116,15 +116,15 @@
                 </TableView>
                 <Label layoutX="43.0" layoutY="165.0" text="Search" />
                 <TextField fx:id="search_id" layoutX="42.0" layoutY="185.0" onKeyTyped="#search" promptText="Search For Events" />
-            <Button fx:id="rewards" layoutX="798.0" layoutY="639.0" mnemonicParsing="false" onAction="#go_to_rewards" text="Rewards -&gt;" />
-            <ListView fx:id="list_events" layoutX="372.0" layoutY="241.0" prefHeight="312.0" prefWidth="333.0" />
+            <Button fx:id="rewards" layoutX="881.0" layoutY="656.0" mnemonicParsing="false" onAction="#go_to_rewards" prefHeight="44.0" prefWidth="136.0" text="Rewards -&gt;" />
+            <ListView fx:id="list_events" layoutX="306.0" layoutY="244.0" prefHeight="312.0" prefWidth="333.0" />
             <CheckBox fx:id="check_table" layoutX="372.0" layoutY="210.0" mnemonicParsing="false" onAction="#switch_to_table" text="Table" />
             <ImageView fx:id="image_cover_event" fitHeight="190.0" fitWidth="1174.0" layoutX="-73.0" layoutY="-58.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../assets/images/eventsclient.png" />
                </image>
             </ImageView>
-                <Label fx:id="points_label" layoutX="831.0" layoutY="156.0" prefHeight="36.0" prefWidth="187.0" style="-fx-background-color: turquoise; -fx-background-radius: 50; -fx-text-alignment: center;" textFill="#f2f2f2">
+                <Label fx:id="points_label" layoutX="831.0" layoutY="156.0" prefHeight="36.0" prefWidth="187.0" textFill="#f2f2f2">
                <font>
                   <Font size="27.0" />
                </font>

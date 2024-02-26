@@ -8,6 +8,7 @@ import atlantafx.base.util.Animations;
 import controllers.gestionuser.GlobalVar;
 import entities.gestionevents.Event_details;
 import entities.gestionevents.Event_participants;
+import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
 import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
@@ -241,6 +242,7 @@ public class eventfController {
                 afficher1();
             } catch (SQLException e) {
                 e.printStackTrace();
+
             }
         }
     }
@@ -255,6 +257,20 @@ public class eventfController {
         typec.setCellValueFactory(new PropertyValueFactory<>("type"));
         datec.setCellValueFactory(new PropertyValueFactory<>("event_date"));
         durationc.setCellValueFactory(new PropertyValueFactory<>("duree"));
+        durationc.setCellFactory(column -> {
+            return new TableCell<Event_details, String>() {
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+
+                    if (item == null || empty) {
+                        setText(null);
+                    } else {
+                        setText(item + " minutes");
+                    }
+                }
+            };
+        });
         spotsc.setCellValueFactory(new PropertyValueFactory<>("nb_places"));
         spotsc.setCellFactory(column -> {
             return new TableCell<Event_details, Integer>() {
@@ -309,7 +325,7 @@ public class eventfController {
                     Label nameLabel = new Label("Name: " + item.getName());
                     Label typeLabel = new Label("Type: " + item.getType());
                     Label dateLabel = new Label("Date: " + item.getEvent_date());
-                    Label durationLabel = new Label("Duration: " + item.getDuree());
+                    Label durationLabel = new Label("Duration: " + item.getDuree()+" minutes");
                     //add the progress bar to the list view
                     ProgressBar bar = new ProgressBar();
                     bar.setPrefWidth(100);
@@ -391,6 +407,8 @@ public class eventfController {
                 alert.setTitle("Error");
                 alert.setHeaderText("Event date and time has passed");
                 alert.setContentText("Sorry, you cannot join an event that has already passed");
+                afficher1();
+                afficher();
                 alert.showAndWait();
 
                 return;
@@ -421,6 +439,7 @@ public class eventfController {
                     Event_participantsService eventParticipantsService = new Event_participantsService();
                     eventParticipantsService.delete(ev.getEvent_id());
                     incrementSpots(selectedEvent.getId());
+
                     GlobalVar.getUser().setEvent_points(GlobalVar.getUser().getEvent_points() - 100);
                     update_user_pts(GlobalVar.getUser().getId(), GlobalVar.getUser().getEvent_points());
                     points_label.setText("Points: " + GlobalVar.getUser().getEvent_points());
@@ -553,10 +572,11 @@ public class eventfController {
             long diffHours = diff / (60 * 60 * 1000) % 24;
             long diffDays = diff / (24 * 60 * 60 * 1000);
             String countdown = String.format("%d days and %02d:%02d:%02d", diffDays, diffHours, diffMinutes, diffSeconds);
-            countdownLabel.setText(diff >= 0 ? "Time until next event: " + countdown : "Time since last event: " + countdown);
+            countdownLabel.setText(diff >= 0 ? "Time until Your next event: " + countdown : "Time since last event: " + countdown);
         } else {
             countdownLabel.setText("No upcoming events");
         }
+
     }
 
     @FXML

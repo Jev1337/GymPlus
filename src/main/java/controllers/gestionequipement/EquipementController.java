@@ -135,15 +135,40 @@ public class EquipementController {
     @FXML
     void addEquipement(ActionEvent event) {
         try {
-            EquipementService.add(new Equipements_details(add_name.getText(), add_desc.getText(), add_lp.getText(), state_cb.getValue()));
-            notify("Equipement added successfully!");
+            String name = add_name.getText().trim();
+            String description = add_desc.getText().trim();
+            String lifeSpan = add_lp.getText().trim();
+
+            // Check if name is empty
+            if (name.isEmpty()) {
+                throw new IllegalArgumentException("Name must not be empty");
+            }
+
+            // Check if description is empty
+            if (description.isEmpty()) {
+                throw new IllegalArgumentException("Description must not be empty");
+            }
+
+            // Check if life span is empty
+            if (lifeSpan.isEmpty()) {
+                throw new IllegalArgumentException("Life Span must not be empty");
+            }
+
+            EquipementService.add(new Equipements_details(name, description, lifeSpan, state_cb.getValue()));
+            notify("Equipment added successfully!");
             getAllEquipements();
         } catch (SQLException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
             alert.setContentText(e.getMessage());
             alert.showAndWait();
+        } catch (IllegalArgumentException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setContentText(e.getMessage());
+            alert.showAndWait();
         }
+
 
     }
 
@@ -232,19 +257,33 @@ public class EquipementController {
     @FXML
     void addMaint(ActionEvent event) {
         try {
-            if (MaintenancesService.isUnderMaintenance(add_ide.getValue())) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error");
-                alert.setContentText("This equipment is already under maintenance!");
-                alert.showAndWait();
-                return;
+            Integer ide = add_ide.getValue();
+            if (ide == null) {
+                throw new IllegalArgumentException("Equipment ID must be selected.");
             }
-            String mydate = String.valueOf(add_date.getValue());
-            java.sql.Date sqlAddDate = java.sql.Date.valueOf(mydate);
-            MaintenancesService.add(new Maintenances( add_ide.getValue(), mydate, add_status.getText()));
+
+            LocalDate date = add_date.getValue();
+            if (date == null) {
+                throw new IllegalArgumentException("Date must be selected.");
+            }
+            java.sql.Date sqlAddDate = java.sql.Date.valueOf(date);
+
+            String status = add_status.getText().trim();
+            if (status.isEmpty()) {
+                throw new IllegalArgumentException("Status must not be empty.");
+            }
+
+
+
+            MaintenancesService.add(new Maintenances(ide, sqlAddDate.toString(), status));
             notify("Maintenance added successfully!");
             getAllMaint();
         } catch (SQLException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setContentText(e.getMessage());
+            alert.showAndWait();
+        } catch (IllegalArgumentException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
             alert.setContentText(e.getMessage());
@@ -345,12 +384,31 @@ public class EquipementController {
         try {
             Equipements_details selectedEvent = tableviewEq.getSelectionModel().getSelectedItem();
             if (selectedEvent != null) {
+                String name = add_name1.getText().trim();
+                String description = add_desc1.getText().trim();
+                String lifeSpan = add_lp1.getText().trim();
+
+                // Check if name is empty
+                if (name.isEmpty()) {
+                    throw new IllegalArgumentException("Name must not be empty");
+                }
+
+                // Check if description is empty
+                if (description.isEmpty()) {
+                    throw new IllegalArgumentException("Description must not be empty");
+                }
+
+                // Check if life span is empty
+                if (lifeSpan.isEmpty()) {
+                    throw new IllegalArgumentException("Life Span must not be empty");
+                }
+
                 EquipementService eventDetailsService = new EquipementService();
                 Equipements_details equipementsDetails = new Equipements_details();
                 equipementsDetails.setId(selectedEvent.getId());
-                equipementsDetails.setName(add_name1.getText());
-                equipementsDetails.setDescription(add_desc1.getText());
-                equipementsDetails.setDuree_de_vie(add_lp1.getText());
+                equipementsDetails.setName(name);
+                equipementsDetails.setDescription(description);
+                equipementsDetails.setDuree_de_vie(lifeSpan);
                 equipementsDetails.setEtat(statemod_cb.getValue());
                 eventDetailsService.update(equipementsDetails);
                 getAllEquipements();
@@ -366,7 +424,13 @@ public class EquipementController {
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        } catch (IllegalArgumentException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setContentText(e.getMessage());
+            alert.showAndWait();
         }
+
 
 
     }
@@ -376,13 +440,27 @@ public class EquipementController {
         try {
             Maintenances selectedEvent = tableviewMaint.getSelectionModel().getSelectedItem();
             if (selectedEvent != null) {
+                LocalDate maintenanceDate = add_date1.getValue();
+                String status = add_status1.getText().trim();
+
+                // Check if maintenance date is empty
+                if (maintenanceDate == null) {
+                    throw new IllegalArgumentException("Maintenance Date must not be empty");
+                }
+
+                // Check if status is empty
+                if (status.isEmpty()) {
+                    throw new IllegalArgumentException("Status must not be empty");
+                }
+
                 MaintenancesService maintenancesService = new MaintenancesService();
                 Maintenances maintenances = new Maintenances();
                 maintenances.setIdm(selectedEvent.getIdm());
                 maintenances.setIde(selectedEvent.getIde());
-                maintenances.setDate_maintenance(add_date1.getValue().toString());
-                maintenances.setStatus(add_status1.getText());
+                maintenances.setDate_maintenance(maintenanceDate.toString());
+                maintenances.setStatus(status);
                 maintenancesService.update(maintenances);
+
                 FadeOutRight f = new FadeOutRight(ModifyMaintPane);
                 f.setOnFinished((e) -> {
                     ModifyMaintPane.setVisible(false);
@@ -393,12 +471,16 @@ public class EquipementController {
                 });
                 f.play();
                 getAllMaint();
-
             } else {
                 System.out.println("No maintenance selected");
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        } catch (IllegalArgumentException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setContentText(e.getMessage());
+            alert.showAndWait();
         }
 
 

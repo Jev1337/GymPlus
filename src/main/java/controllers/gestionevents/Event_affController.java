@@ -1,49 +1,67 @@
 package controllers.gestionevents;
 
 import entities.gestionevents.Event_details;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import javafx.scene.input.MouseEvent;
-import services.gestionevents.Event_participantsService;
+import javafx.scene.layout.Pane;
+import org.w3c.dom.events.Event;
 
-import java.util.List;
+import java.awt.event.MouseEvent;
 
-
-public class Event_affController {
-
-    @FXML
-    private Label date;
+public class  Event_affController {
 
     @FXML
-    private Label duration;
+    private Label date_id;
 
     @FXML
-    private Label id_event;
+    private Label duration_id;
 
     @FXML
-    private Label name;
+    private Label id_id;
 
     @FXML
-    private Label spots;
+    private Label name_id;
 
     @FXML
-    private Label type;
-    Event_details eventt=new Event_details();
+    private Label spots_id;
 
-    public void get_event(Event_details e)
-    {   eventt=e;
-        id_event.setText(String.valueOf(e.getId()));
-        name.setText(e.getName());
-        type.setText(e.getType());
-        date.setText(e.getEvent_date());
-        duration.setText(e.getDuree());
-        spots.setText(String.valueOf(e.getNb_places()));
+    @FXML
+    private Label type_id;
+    @FXML
+    private Pane selected;
+    private static eventbController eventbController;
+    public void setEventController(eventbController eventbController) {
+        Event_affController.eventbController = eventbController;
+    }
+    public void setdata(Event_details eventDetails) {
+        id_id.setText(String.valueOf(eventDetails.getId()));
+        name_id.setText(eventDetails.getName());
+        type_id.setText(eventDetails.getType());
+        date_id.setText(eventDetails.getEvent_date());
+        duration_id.setText(eventDetails.getDuree());
+        spots_id.setText(String.valueOf(eventDetails.getNb_places()+"/"+eventDetails.getNb_total()));
+        setEventController(this.eventbController);
+
+    }
+    public Event_details getdata()
+    {
+        Event_details eventDetails = new Event_details();
+        eventDetails.setId(id_id.getText().isEmpty() ? 0 : Integer.parseInt(id_id.getText()));
+        eventDetails.setName(name_id.getText());
+        eventDetails.setType(type_id.getText());
+        eventDetails.setEvent_date(date_id.getText());
+        eventDetails.setDuree(duration_id.getText());
+        eventDetails.setNb_places(Integer.parseInt(spots_id.getText().split("/")[0]));
+        eventDetails.setNb_total(Integer.parseInt(spots_id.getText().split("/")[1]));
+        return eventDetails;
+
     }
 
 
 
+
+
+
+
 }
+

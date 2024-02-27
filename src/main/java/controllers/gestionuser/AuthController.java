@@ -2,6 +2,10 @@ package controllers.gestionuser;
 
 import animatefx.animation.*;
 import com.password4j.Password;
+import com.twilio.Twilio;
+import com.twilio.rest.verify.v2.Service;
+import com.twilio.rest.verify.v2.service.Verification;
+import com.twilio.rest.verify.v2.service.VerificationCheck;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import entities.gestionuser.Admin;
 import entities.gestionuser.Client;
@@ -281,8 +285,7 @@ public class AuthController {
                 return;
             }
 
-            String code = (int)(Math.random() * (9999 - 1000 + 1) + 1000) + "";
-            sendSms(user.getNum_tel(), "Your GymPlus verification code is: " + code);
+            sendSms(user.getNum_tel());
 
             TextInputDialog dialog = new TextInputDialog();
             dialog.initStyle(StageStyle.UNDECORATED);
@@ -291,20 +294,21 @@ public class AuthController {
             dialog.setHeaderText("Verification");
             dialog.setContentText("Please enter the verification code sent to your phone:");
             dialog.showAndWait();
-            if (dialog.getResult().isEmpty()){
+            if (dialog.getResult() == null || dialog.getResult().isEmpty()){
                 errorAlert("Verification code cannot be empty!", "Verification code cannot be empty!", "Please fill in the verification code field!");
                 return;
             }
-            if (!dialog.getResult().equals(code)){
+            if (!checkSms(user.getNum_tel(), dialog.getResult())){
                 errorAlert("Verification code is incorrect!", "Verification code is incorrect!", "Verification code is incorrect! Please try again.");
                 return;
             }
             nameres_label.setText(user.getFirstname() + " " + user.getLastname());
             usernameres_label.setText(user.getUsername());
             phoneres_label.setText(user.getNum_tel());
-            Circle clip = new Circle(50, 50, 50);
-            userreset_imageview.setClip(clip);
+
             userreset_imageview.setImage(new Image(new File("src/assets/profileuploads/" + user.getPhoto()).toURI().toString()));
+            Circle clip = new Circle(userreset_imageview.getFitWidth() / 2, userreset_imageview.getFitHeight() / 2, userreset_imageview.getFitWidth() / 2);
+            userreset_imageview.setClip(clip);
             fadeOutDownAnimation.setNode(forgotpaneverif);
             fadeOutDownAnimation.setOnFinished(e -> {
                 forgotpaneverif.setVisible(false);
@@ -399,10 +403,10 @@ public class AuthController {
             String first = phone.substring(0, phone.length() - 4);
             String newphone = first.replaceAll("[0-9]", "*") + last4;
             phonelabelforgot_label.setText(newphone);
-            Image image = new Image(new File("src/assets/profileuploads/" + user.getPhoto()).toURI().toString());
-            Circle clip = new Circle(50, 50, 50);
+
+            userforgot_imageview.setImage(new Image(new File("src/assets/profileuploads/" + user.getPhoto()).toURI().toString()));
+            Circle clip = new Circle(userforgot_imageview.getFitWidth() / 2, userforgot_imageview.getFitHeight() / 2, userforgot_imageview.getFitWidth() / 2);
             userforgot_imageview.setClip(clip);
-            userforgot_imageview.setImage(image);
             fadeOutLeftAnimation.setNode(signin_pane);
             fadeOutRightAnimation.setNode(signup_switch_pane);
             fadeOutRightAnimation.setOnFinished(e -> {
@@ -478,8 +482,8 @@ public class AuthController {
                 errorAlert("Error", "Phone Number Already in Use", "The phone number you have entered is already in use");
                 return;
             }
-            String code = (int)(Math.random() * (9999 - 1000 + 1) + 1000) + "";
-            sendSms(phone_tf.getText(), "Your GymPlus verification code is: " + code);
+
+            sendSms(phone_tf.getText());
 
             TextInputDialog dialog = new TextInputDialog();
             dialog.initStyle(StageStyle.UNDECORATED);
@@ -488,11 +492,11 @@ public class AuthController {
             dialog.setHeaderText("Phone Verification");
             dialog.setContentText("Please enter the verification code sent to your phone:");
             dialog.showAndWait();
-            if (dialog.getResult().isEmpty()){
+            if (dialog.getResult() == null || dialog.getResult().isEmpty()){
                 errorAlert("Verification code cannot be empty!", "Verification code cannot be empty!", "Please fill in the verification code field!");
                 return;
             }
-            if (!dialog.getResult().equals(code)){
+            if (!checkSms(phone_tf.getText(), dialog.getResult())){
                 errorAlert("Verification code is incorrect!", "Verification code is incorrect!", "Verification code is incorrect! Please try again.");
                 return;
             }
@@ -638,7 +642,7 @@ public class AuthController {
             if (clientService.getUserByUsername(username_tf.getText()) != null) {
                 errorAlert("Client with this username already exists!", "Client with this username already exists!", "Client with this username already exists! Please try another one.");
                 return;
-            } else if (clientService.getUserByEmail(username_tf.getText()) != null) {
+            } else if (clientService.getUserByEmail(email_tf.getText()) != null) {
                 errorAlert("Client with this email already exists!", "Client with this email already exists!", "Client with this email already exists! Please try another one.");
                 return;
             }
@@ -1068,6 +1072,7 @@ public class AuthController {
     }
 
     public void initialize() {
+        GlobalVar.setUser(null);
         fadeInLeftAnimation.setNode(signin_pane);
         fadeInLeftAnimation.play();
         fadeInRightAnimation.setNode(signup_switch_pane);
@@ -1154,63 +1159,40 @@ public class AuthController {
         alert.showAndWait();
     }
 
-    private void sendSms(String phone, String message) {
+    private void sendSms(String phone) {
         try {
-            OkHttpClient client = new OkHttpClient();
+            //using twilio to send sms
+            String account_sid = "ACa0a9c02e124f285821fe62b736260421";
+            String auth_token = "e8cd361a90ce0dbcd5485d5719f935fb";
+            String verify_sid = "VA10dd8bfd053741ce7361fd967c83a1e6";
 
-            // Step 1: Get token
-            RequestBody body = new FormBody.Builder()
-                    .add("grant_type", "client_credentials")
-                    .build();
-
-            Request request = new Request.Builder()
-                    .url("https://api.orange.com/oauth/v3/token")
-                    .post(body)
-                    .addHeader("Content-Type", "application/x-www-form-urlencoded")
-                    .addHeader("Authorization", "Basic RnllZ3NrN0MyREVMMVdMWTZ4NVV1MGo1RTAwaFRUT3Y6d3BoZzlRQWRIY1pFZmlRWA==")
-                    .build();
-
-            Response response = client.newCall(request).execute();
-            if (!response.isSuccessful()) {
-                errorAlert("Error", "Failed to get token", "Failed to get token from Orange API");
-                return;
-            }
-
-            JSONObject accesstoken = new JSONObject(response.body().string());
-
-            // Step 2: Send SMS
-            JSONObject sms = new JSONObject();
-            JSONObject outboundSMSMessageRequest = new JSONObject();
-            outboundSMSMessageRequest.put("address", "tel:+216" + phone);
-            JSONObject outboundSMSTextMessage = new JSONObject();
-            outboundSMSTextMessage.put("message", message);
-            outboundSMSMessageRequest.put("outboundSMSTextMessage", outboundSMSTextMessage);
-            outboundSMSMessageRequest.put("senderAddress", "tel:+21652920276");
-            outboundSMSMessageRequest.put("senderName", "string");
-            sms.put("outboundSMSMessageRequest", outboundSMSMessageRequest);
-
-
-
-            RequestBody smsBody = RequestBody.create(
-                    MediaType.parse("application/json; charset=utf-8"),
-                    sms.toString()
-            );
-
-            Request smsRequest = new Request.Builder()
-                    .url("https://api.orange.com/smsmessaging/v1/outbound/tel%3A%2B21652920276/requests")
-                    .post(smsBody)
-                    .addHeader("Content-Type", "application/json")
-                    .addHeader("Authorization", "Bearer " + accesstoken.getString("access_token"))
-                    .build();
-
-            Response smsResponse = client.newCall(smsRequest).execute();
-            if (!smsResponse.isSuccessful()) {
-                errorAlert("Error", "Response not successful", "Response : " + smsResponse.body().string());
-                return;
-            }
-            System.out.println("SMS sent to " + phone);
+            Twilio.init(account_sid, auth_token);
+            Verification verification = Verification.creator(
+                    verify_sid,
+                    "+216"+phone,
+                    "whatsapp")
+                    .create();
+            System.out.println(verification.getStatus());
         } catch (Exception e) {
             stackTraceAlert(e);
         }
+    }
+
+    private Boolean checkSms(String phone, String code){
+        try {
+            String account_sid = "ACa0a9c02e124f285821fe62b736260421";
+            String auth_token = "e8cd361a90ce0dbcd5485d5719f935fb";
+            String verify_sid = "VA10dd8bfd053741ce7361fd967c83a1e6";
+            Twilio.init(account_sid, auth_token);
+            VerificationCheck verificationCheck = VerificationCheck.creator(
+                            verify_sid)
+                    .setTo("+216" + phone)
+                    .setCode(code)
+                    .create();
+            return verificationCheck.getStatus().equals("approved");
+        }catch (Exception e) {
+            stackTraceAlert(e);
+        }
+        return false;
     }
 }

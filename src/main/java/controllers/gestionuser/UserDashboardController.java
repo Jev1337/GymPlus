@@ -7,6 +7,9 @@ import atlantafx.base.util.Animations;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.twilio.Twilio;
+import com.twilio.rest.verify.v2.service.Verification;
+import com.twilio.rest.verify.v2.service.VerificationCheck;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import de.micromata.paypal.PayPalConfig;
 import de.micromata.paypal.PayPalConnector;
@@ -67,6 +70,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -576,8 +580,8 @@ public class UserDashboardController {
                     errorAlert("Error", "Phone Number Already in Use", "The phone number you have entered is already in use");
                     return;
                 }
-                String code = (int)(Math.random() * (9999 - 1000 + 1) + 1000) + "";
-                sendSms(phone_tf.getText(), "Your verification code is: " + code);
+
+                sendSms(phone_tf.getText());
 
                 TextInputDialog dialog = new TextInputDialog();
                 dialog.initStyle(StageStyle.UNDECORATED);
@@ -586,11 +590,11 @@ public class UserDashboardController {
                 dialog.setHeaderText("Phone Verification");
                 dialog.setContentText("Please enter the verification code sent to your phone:");
                 dialog.showAndWait();
-                if (dialog.getResult().isEmpty()){
+                if (dialog.getResult() == null || dialog.getResult().isEmpty()){
                     errorAlert("Verification code cannot be empty!", "Verification code cannot be empty!", "Verification Failed due to empty code! Please try again.");
                     return;
                 }
-                if (!dialog.getResult().equals(code)){
+                if (!checkSms(phone_tf.getText(), dialog.getResult())) {
                     errorAlert("Verification code is incorrect!", "Verification code is incorrect!", "Verification code is incorrect! Please try again.");
                     return;
                 }
@@ -610,7 +614,7 @@ public class UserDashboardController {
                 user_imageview.setImage(null);
                 File oldFile = new File("src/assets/profileuploads/" +GlobalVar.getUser().getPhoto());
                 oldFile.delete();
-                Files.copy(file.toPath(), new File("src/assets/profileuploads/USERIMG"+ GlobalVar.getUser().getId() + file.getName().substring(file.getName().lastIndexOf("."))).toPath());
+                Files.copy(file.toPath(), new File("src/assets/profileuploads/USERIMG"+ GlobalVar.getUser().getId() + file.getName().substring(file.getName().lastIndexOf("."))).toPath(), StandardCopyOption.REPLACE_EXISTING);
                 Client client = new Client(GlobalVar.getUser().getId(), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), dateofbirth_tf.getValue().toString(), GlobalVar.getUser().getPassword(), email_tf.getText(), phone_tf.getText(), address_ta.getText(), "USERIMG"+ GlobalVar.getUser().getId() + file.getName().substring(file.getName().lastIndexOf(".")), GlobalVar.getUser().getFaceid(), GlobalVar.getUser().getFaceid_ts());
                 clientService.update(client);
                 GlobalVar.setUser(client);
@@ -1149,63 +1153,39 @@ public class UserDashboardController {
         alert.initOwner(UserHomePane.getScene().getWindow());
         alert.showAndWait();
     }
-
-    private void sendSms(String phone, String message) {
+    private void sendSms(String phone) {
         try {
-            OkHttpClient client = new OkHttpClient();
+            String account_sid = "ACa0a9c02e124f285821fe62b736260421";
+            String auth_token = "e8cd361a90ce0dbcd5485d5719f935fb";
+            String verify_sid = "VA10dd8bfd053741ce7361fd967c83a1e6";
 
-            // Step 1: Get token
-            RequestBody body = new FormBody.Builder()
-                    .add("grant_type", "client_credentials")
-                    .build();
-
-            Request request = new Request.Builder()
-                    .url("https://api.orange.com/oauth/v3/token")
-                    .post(body)
-                    .addHeader("Content-Type", "application/x-www-form-urlencoded")
-                    .addHeader("Authorization", "Basic RnllZ3NrN0MyREVMMVdMWTZ4NVV1MGo1RTAwaFRUT3Y6d3BoZzlRQWRIY1pFZmlRWA==")
-                    .build();
-
-            Response response = client.newCall(request).execute();
-            if (!response.isSuccessful()) {
-                errorAlert("Error", "Failed to get token", "Failed to get token from Orange API");
-                return;
-            }
-
-            JSONObject accesstoken = new JSONObject(response.body().string());
-
-            // Step 2: Send SMS
-            JSONObject sms = new JSONObject();
-            JSONObject outboundSMSMessageRequest = new JSONObject();
-            outboundSMSMessageRequest.put("address", "tel:+216" + phone);
-            JSONObject outboundSMSTextMessage = new JSONObject();
-            outboundSMSTextMessage.put("message", message);
-            outboundSMSMessageRequest.put("outboundSMSTextMessage", outboundSMSTextMessage);
-            outboundSMSMessageRequest.put("senderAddress", "tel:+21652920276");
-            outboundSMSMessageRequest.put("senderName", "string");
-            sms.put("outboundSMSMessageRequest", outboundSMSMessageRequest);
-
-
-            RequestBody smsBody = RequestBody.create(
-                    MediaType.parse("application/json; charset=utf-8"),
-                    sms.toString()
-            );
-
-            Request smsRequest = new Request.Builder()
-                    .url("https://api.orange.com/smsmessaging/v1/outbound/tel%3A%2B21652920276/requests")
-                    .post(smsBody)
-                    .addHeader("Content-Type", "application/json")
-                    .addHeader("Authorization", "Bearer " + accesstoken.getString("access_token"))
-                    .build();
-
-            Response smsResponse = client.newCall(smsRequest).execute();
-            if (!smsResponse.isSuccessful()) {
-                errorAlert("Error", "Failed to send SMS", "Failed to send SMS to " + phone);
-                return;
-            }
-            notify("SMS has been sent successfully!");
+            Twilio.init(account_sid, auth_token);
+            Verification verification = Verification.creator(
+                            verify_sid,
+                            "+216"+phone,
+                            "whatsapp")
+                    .create();
+            System.out.println(verification.getStatus());
         } catch (Exception e) {
             stackTraceAlert(e);
         }
+    }
+
+    private Boolean checkSms(String phone, String code){
+        try {
+            String account_sid = "ACa0a9c02e124f285821fe62b736260421";
+            String auth_token = "e8cd361a90ce0dbcd5485d5719f935fb";
+            String verify_sid = "VA10dd8bfd053741ce7361fd967c83a1e6";
+            Twilio.init(account_sid, auth_token);
+            VerificationCheck verificationCheck = VerificationCheck.creator(
+                            verify_sid)
+                    .setTo("+216" + phone)
+                    .setCode(code)
+                    .create();
+            return verificationCheck.getStatus().equals("approved");
+        }catch (Exception e) {
+            stackTraceAlert(e);
+        }
+        return false;
     }
 }

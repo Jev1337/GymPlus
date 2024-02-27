@@ -8,13 +8,17 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="mainPane" prefHeight="779.0" prefWidth="1153.0" style="-fx-background-color: #a5d8dd;" stylesheets="@event.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionevents.eventfController">
+<AnchorPane fx:id="mainPane" prefHeight="779.0" prefWidth="1153.0" style="-fx-background-color: linear-gradient(to bottom right, lightgray, floralwhite);;" stylesheets="@event.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionevents.eventfController">
     <stylesheets>
         <URL value="@event.css" />
     </stylesheets>
@@ -97,13 +101,16 @@
                 </Pane>
             <Button fx:id="events" layoutX="872.0" layoutY="54.0" mnemonicParsing="false" onAction="#back_to_events" text="&lt;- Events" />
             </children></Pane>
-        <Pane fx:id="event_pane" layoutX="70.0" layoutY="56.0" prefHeight="723.0" prefWidth="1027.0" style="-fx-background-radius: 10; -fx-background-color: #a5d8dd;">
+        <Pane fx:id="event_pane" layoutX="70.0" layoutY="56.0" prefHeight="723.0" prefWidth="1027.0" style="-fx-background-radius: 10; -fx-background-color: lightgreen4;">
             <children>
                 <Label fx:id="countdownLabel" layoutX="374.0" layoutY="563.0" prefHeight="52.0" prefWidth="336.0" />
-                <Button fx:id="join_id" layoutX="478.0" layoutY="628.0" mnemonicParsing="false" onAction="#join_event" prefHeight="62.0" prefWidth="162.0" text="Join">
+                <Button fx:id="join_id" layoutX="403.0" layoutY="625.0" mnemonicParsing="false" onAction="#join_event" prefHeight="62.0" prefWidth="162.0" text="Join">
                     <font>
                         <Font size="30.0" />
                     </font>
+               <effect>
+                  <DropShadow />
+               </effect>
                 </Button>
                 <TableView fx:id="event_detailsTableView" layoutX="20.0" layoutY="241.0" prefHeight="312.0" prefWidth="997.0" styleClass="TableView" visible="false">
                     <columns>
@@ -113,21 +120,58 @@
                         <TableColumn fx:id="durationc" prefWidth="162.0" text="Duration" />
                         <TableColumn fx:id="spotsc" prefWidth="164.0" text="Spots Available" />
                     </columns>
+               <effect>
+                  <DropShadow />
+               </effect>
                 </TableView>
-                <Label layoutX="43.0" layoutY="165.0" text="Search" />
-                <TextField fx:id="search_id" layoutX="42.0" layoutY="185.0" onKeyTyped="#search" promptText="Search For Events" />
-            <Button fx:id="rewards" layoutX="881.0" layoutY="656.0" mnemonicParsing="false" onAction="#go_to_rewards" prefHeight="44.0" prefWidth="136.0" text="Rewards -&gt;" />
-            <ListView fx:id="list_events" layoutX="306.0" layoutY="244.0" prefHeight="312.0" prefWidth="333.0" />
+                <Label layoutX="43.0" layoutY="165.0" text="Search">
+               <font>
+                  <Font name="System Bold" size="21.0" />
+               </font>
+               <textFill>
+                  <LinearGradient endX="1.0" endY="1.0">
+                     <stops>
+                        <Stop>
+                           <color>
+                              <Color red="0.11664717644453049" green="0.3055698573589325" blue="0.9263157844543457" />
+                           </color>
+                        </Stop>
+                        <Stop offset="1.0">
+                           <color>
+                              <Color red="0.6315789222717285" green="0.42339181900024414" blue="0.42339181900024414" />
+                           </color>
+                        </Stop>
+                     </stops>
+                  </LinearGradient>
+               </textFill></Label>
+                <TextField fx:id="search_id" layoutX="42.0" layoutY="194.0" onKeyTyped="#search" promptText="Search For Events">
+               <effect>
+                  <DropShadow />
+               </effect></TextField>
+            <Button fx:id="rewards" layoutX="881.0" layoutY="656.0" mnemonicParsing="false" onAction="#go_to_rewards" prefHeight="44.0" prefWidth="136.0" text="Rewards -&gt;">
+               <effect>
+                  <DropShadow />
+               </effect></Button>
+            <ListView fx:id="list_events" layoutX="306.0" layoutY="244.0" prefHeight="312.0" prefWidth="333.0">
+               <effect>
+                  <DropShadow />
+               </effect></ListView>
             <CheckBox fx:id="check_table" layoutX="372.0" layoutY="210.0" mnemonicParsing="false" onAction="#switch_to_table" text="Table" />
             <ImageView fx:id="image_cover_event" fitHeight="190.0" fitWidth="1174.0" layoutX="-73.0" layoutY="-58.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../assets/images/eventsclient.png" />
                </image>
+               <effect>
+                  <DropShadow />
+               </effect>
             </ImageView>
                 <Label fx:id="points_label" layoutX="831.0" layoutY="156.0" prefHeight="36.0" prefWidth="187.0" textFill="#f2f2f2">
                <font>
                   <Font size="27.0" />
                </font>
+               <effect>
+                  <DropShadow />
+               </effect>
             </Label>
             <CheckBox fx:id="myevents" layoutX="612.0" layoutY="210.0" mnemonicParsing="false" onAction="#switchtomyevents" text="my events" />
             </children>

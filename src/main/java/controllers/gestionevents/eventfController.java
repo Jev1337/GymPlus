@@ -168,6 +168,21 @@ public class eventfController {
             typec.setCellValueFactory(new PropertyValueFactory<>("type"));
             datec.setCellValueFactory(new PropertyValueFactory<>("event_date"));
             durationc.setCellValueFactory(new PropertyValueFactory<>("duree"));
+            durationc.setCellFactory(column -> {
+                return new TableCell<Event_details, String>() {
+                    @Override
+                    protected void updateItem(String item, boolean empty) {
+
+                        super.updateItem(item, empty);
+
+                        if (item == null || empty) {
+                            setText(null);
+                        } else {
+                            setText(item + " minutes");
+                        }
+                    }
+                };
+            });
             spotsc.setCellValueFactory(new PropertyValueFactory<>("nb_places"));
             spotsc.setCellFactory(column -> {
                 return new TableCell<Event_details, Integer>() {

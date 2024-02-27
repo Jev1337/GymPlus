@@ -118,6 +118,16 @@
             <artifactId>twilio</artifactId>
             <version>10.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-swing</artifactId>
+            <version>11</version>
+        </dependency>
+        <dependency>
+            <groupId>de.micromata.paypal</groupId>
+            <artifactId>paypal-core</artifactId>
+            <version>0.2</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>

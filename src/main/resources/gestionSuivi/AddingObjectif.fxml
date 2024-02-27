@@ -4,33 +4,34 @@
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.effect.BoxBlur?>
+<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.effect.Glow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="525.0" prefWidth="429.0" stylesheets="@../assets/images/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionsuivi.AddObjectifController">
+<AnchorPane prefHeight="528.0" prefWidth="429.0" stylesheets="@../assets/images/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionsuivi.AddObjectifController">
    <children>
-      <Pane layoutX="21.0" layoutY="18.0" prefHeight="512.0" prefWidth="387.0" stylesheets="@../assets/images/style.css">
+      <Pane layoutX="21.0" layoutY="12.0" prefHeight="504.0" prefWidth="387.0" stylesheets="@../assets/images/style.css">
          <children>
             <ImageView disable="true" fitHeight="481.0" fitWidth="366.0" layoutX="12.0" layoutY="24.0" opacity="0.95" pickOnBounds="true" preserveRatio="true" styleClass="border-table">
                <image>
                   <Image url="@../assets/images/cover2.jpg" />
                </image>
                <effect>
-                  <BoxBlur />
+                  <Glow />
                </effect>
             </ImageView>
-            <ImageView fitHeight="59.0" fitWidth="68.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="59.0" fitWidth="68.0" layoutY="-5.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../assets/images/equip.png" />
                </image>
@@ -67,8 +68,6 @@
                </effect></TextArea>
             <Text fill="WHITE" layoutX="51.0" layoutY="389.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Type d'objectf" />
             <Text fill="WHITE" layoutX="54.0" layoutY="322.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Coach Name" />
-            <VBox fx:id="VboxModify" layoutX="248.0" layoutY="311.0" prefHeight="53.0" prefWidth="130.0" />
-            <VBox fx:id="vboxTest" fillWidth="false" layoutX="241.0" layoutY="381.0" prefHeight="59.0" prefWidth="130.0" />
             <ChoiceBox fx:id="lsTypeObjectif" layoutX="47.0" layoutY="404.0" prefWidth="150.0">
                <effect>
                   <DropShadow />
@@ -77,7 +76,10 @@
                <effect>
                   <DropShadow />
                </effect></ChoiceBox>
-            <HBox fx:id="HboxAddNotif" layoutX="8.0" layoutY="434.0" prefHeight="70.0" prefWidth="387.0" />
+            <ToggleButton fx:id="ToogleModif" layoutX="253.0" layoutY="422.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="104.0" text="Update Plan" visible="false" />
+            <ProgressBar fx:id="ProgrssBarModif" layoutX="241.0" layoutY="405.0" prefHeight="17.0" prefWidth="130.0" progress="0.0" visible="false" />
+            <ToggleButton fx:id="ToogleAdd" layoutX="255.0" layoutY="417.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="104.0" text="Add plan" visible="false" />
+            <ProgressBar fx:id="ProgrssBarAdd" layoutX="243.0" layoutY="400.0" prefHeight="17.0" prefWidth="130.0" progress="0.0" visible="false" />
          </children>
          <effect>
             <DropShadow />
@@ -87,6 +89,7 @@
             <String fx:value="degrade-diagonal" />
          </styleClass>
       </Pane>
+      <HBox fx:id="HboxAddNotif" layoutX="13.0" layoutY="462.0" prefHeight="59.0" prefWidth="395.0" />
    </children>
    <styleClass>
       <String fx:value="border-table" />

@@ -295,6 +295,8 @@ public class StaffDashboardController {
     private VideoCapture capture;
     private Mat frame;
 
+    @FXML
+    private Pane PlanningPan;
 
     @FXML
     private void opencam_btn_act(ActionEvent event){
@@ -1112,6 +1114,9 @@ public class StaffDashboardController {
             subpane.getChildren().add(warning);
         }
         try {
+            Pane pane_planning= FXMLLoader.load(getClass().getResource("/gestionSuivi/Planning.fxml"));
+            PlanningPan.getChildren().setAll(pane_planning);
+
             Pane pane= FXMLLoader.load(getClass().getResource("/gestionevents/eventstaffadmin.fxml"));
             affichage_events_adstaff.getChildren().setAll(pane);
             Pane pane_event= FXMLLoader.load(getClass().getResource("/gestionequipement/equipement.fxml"));

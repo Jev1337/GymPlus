@@ -14,6 +14,10 @@ public class ObjectifTestingFX extends Application {
 
     private static ObjectifTestingFX instance;
  //   private static Scene scene;
+
+
+
+
     private ObjectifController oController = new ObjectifController();
 
 

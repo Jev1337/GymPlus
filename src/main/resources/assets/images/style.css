@@ -20,7 +20,9 @@
      -fx-background-color: #007bff;
      -fx-text-fill: #ffffff;
 }
-
+.blue_forMediaBackground {
+     -fx-background-color: #1F75FE;
+}
 .blue-button:hover {
      -fx-background-color: #0069d9;
 }

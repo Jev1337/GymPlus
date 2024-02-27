@@ -8,6 +8,7 @@ import controllers.gestionuser.GlobalVar;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import entities.gestionSuivi.Objectif;
+import entities.gestionSuivi.Planning;
 import javafx.animation.KeyFrame;
 import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
@@ -26,6 +27,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
@@ -41,6 +43,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -75,8 +78,7 @@ public class AddObjectifController implements Initializable {
     @FXML
     private TextField tfPoidsObjectif;
 
-    @FXML
-    private VBox vboxTest;
+
 
     int taille;
 
@@ -95,8 +97,7 @@ public class AddObjectifController implements Initializable {
     private Label TtileLabel;
 
 
-    @FXML
-    private VBox VboxModify;
+
 
     private static Stage stage ;
     private Objectif obj;
@@ -111,25 +112,56 @@ public class AddObjectifController implements Initializable {
     }
 
 
-    public void modifNotif() throws IOException {
 
-        var success = new Message(
-                "Success", Faker.instance().expression("Gym Plus vous informe que la modification est faite avec succées"),
-                new FontAwesomeIconView(FontAwesomeIcon.CHECK)
-        );
-        HboxAddNotif.getChildren().clear();
-        success.getStyleClass().add(Styles.ACCENT);
-        HboxAddNotif.getChildren().add(success);
-
-        // Schedule a task to clear the warning after 4 seconds
-        Duration duration = Duration.seconds(3);
-        KeyFrame keyFrame = new KeyFrame(duration, event -> HboxAddNotif.getChildren().clear());
-        Timeline timeline = new Timeline(keyFrame);
-        timeline.play();
-    }
 
     @FXML
 void updateObjectif(ActionEvent event) {
+
+
+
+
+        String poidsObjectifText = tfPoidsObjectif.getText();
+
+        try {
+            float poidsObjectiff = Float.parseFloat(poidsObjectifText);
+            if (poidsObjectiff < 30 || poidsObjectiff > 180) {
+                showAlert();
+                return;
+            }
+        } catch (NumberFormatException e) {
+            showAlert();
+            return;
+        }
+
+        String poidsObjectifText2 = tfPoidsActuelle.getText();
+
+        try {
+            float poidsObjectifAct = Float.parseFloat(poidsObjectifText2);
+            if (poidsObjectifAct < 30 || poidsObjectifAct > 180) {
+                showAlert();
+                return;
+            }
+        } catch (NumberFormatException e) {
+            showAlert();
+            return;
+        }
+       /* double tailleValue = slTaille.getValue();
+        if (tailleValue < 1 || tailleValue > 2.5) {
+            showAlertHeight();
+            return;
+        }*/
+
+        LocalDate currentDatee = LocalDate.now();
+        LocalDate selectedDate = dpDureeObjectif.getValue();
+        if (selectedDate == null) {
+            showAlertDate();
+            return;
+        }
+        if (selectedDate.isBefore(currentDatee.plusDays(30))) {
+            showAlertDate();
+            return;
+        }
+
     //tawa bech nconverti el date
     float poidsObjectif = Float.parseFloat(tfPoidsObjectif.getText());
     LocalDate currentDate = LocalDate.now();
@@ -171,7 +203,7 @@ void updateObjectif(ActionEvent event) {
                 try {
                     System.out.printf("passed the try");
                     querry.update(obj2);
-                    modifNotif();
+                    updatedNotif();
                     if (objectifController != null) {
                         objectifController.refreshNodesListeItems();
                     } else {
@@ -195,7 +227,7 @@ void updateObjectif(ActionEvent event) {
 public void addingNotif() throws IOException {
 
         var success = new Message(
-                "Success", Faker.instance().expression("Gym Plus vous informe que l'ajout est fait avec succées"),
+                "Info", Faker.instance().expression("Gym Plus vous informe que l'ajout est fait avec succées"),
                 new FontAwesomeIconView(FontAwesomeIcon.CHECK)
         );
     HboxAddNotif.getChildren().clear();
@@ -208,14 +240,117 @@ public void addingNotif() throws IOException {
     Timeline timeline = new Timeline(keyFrame);
     timeline.play();
 }
-
+    public void  showAlertHeight(){
+        var danger = new Message(
+                "Danger", Faker.instance().expression(" Please Check that the height must be between 100 and 250 metre  "),
+                new FontAwesomeIconView(FontAwesomeIcon.WARNING)
+        );
+        danger.getStyleClass().add(Styles.DANGER);
+        HboxAddNotif.getChildren().add(danger);
+        Duration duration = Duration.seconds(3);
+        KeyFrame keyFrame = new KeyFrame(duration, event -> HboxAddNotif.getChildren().clear());
+        Timeline timeline = new Timeline(keyFrame);
+        timeline.play();
+    }
 
    private  static  ObjectifController objectifController;
     public void setObjectifController(ObjectifController objectifController) {
         AddObjectifController.objectifController = objectifController;
     }
+
+
+public void danger(){
+    var danger = new Message(
+            "Danger", Faker.instance().expression(" Please Check All fields must be Filled with data ,no empty fields "),
+            new FontAwesomeIconView(FontAwesomeIcon.WARNING)
+    );
+    danger.getStyleClass().add(Styles.DANGER);
+    HboxAddNotif.getChildren().add(danger);
+    Duration duration = Duration.seconds(3);
+    KeyFrame keyFrame = new KeyFrame(duration, event -> HboxAddNotif.getChildren().clear());
+    Timeline timeline = new Timeline(keyFrame);
+    timeline.play();
+}
+    public void showAlert(){
+        var danger = new Message(
+                "Danger", Faker.instance().expression("Weight got to between 30kg and 180kg and check the type "),
+                new FontAwesomeIconView(FontAwesomeIcon.WARNING)
+        );
+        danger.getStyleClass().add(Styles.DANGER);
+        HboxAddNotif.getChildren().add(danger);
+        Duration duration = Duration.seconds(3);
+        KeyFrame keyFrame = new KeyFrame(duration, event -> HboxAddNotif.getChildren().clear());
+        Timeline timeline = new Timeline(keyFrame);
+        timeline.play();
+    }
+
+    public void showAlertDate(){
+        var danger = new Message(
+                "Danger", Faker.instance().expression("Date Warning , make sure the Date you picked is more than 1 month"),
+                new FontAwesomeIconView(FontAwesomeIcon.WARNING)
+        );
+        danger.getStyleClass().add(Styles.DANGER);
+        HboxAddNotif.getChildren().add(danger);
+        Duration duration = Duration.seconds(3);
+        KeyFrame keyFrame = new KeyFrame(duration, event -> HboxAddNotif.getChildren().clear());
+        Timeline timeline = new Timeline(keyFrame);
+        timeline.play();
+    }
+
+
+
     @FXML
     void addObjectif(ActionEvent event) throws SQLException {
+
+        if (tfPoidsObjectif.getText().isEmpty() || tfPoidsActuelle.getText().isEmpty()
+                ||  taAlergie.getText().isEmpty() ||  lsTypeObjectif.getSelectionModel().isEmpty()
+                || lsCoachName.getSelectionModel().isEmpty()) {
+            danger();
+            return;
+        }
+
+
+        String poidsObjectifText = tfPoidsObjectif.getText();
+
+        try {
+            float poidsObjectiff = Float.parseFloat(poidsObjectifText);
+            if (poidsObjectiff < 30 || poidsObjectiff > 180) {
+                showAlert();
+                return;
+            }
+        } catch (NumberFormatException e) {
+            showAlert();
+            return;
+        }
+
+        String poidsObjectifText2 = tfPoidsActuelle.getText();
+
+        try {
+            float poidsObjectifAct = Float.parseFloat(poidsObjectifText2);
+            if (poidsObjectifAct < 30 || poidsObjectifAct > 180) {
+                showAlert();
+                return;
+            }
+        } catch (NumberFormatException e) {
+            showAlert();
+            return;
+        }
+      /*  double tailleValue = slTaille.getValue();
+        if (tailleValue < 1 || tailleValue > 2.5) {
+            showAlertHeight();
+            return;
+        }*/
+
+        LocalDate currentDatee = LocalDate.now();
+        LocalDate selectedDate = dpDureeObjectif.getValue();
+        if (selectedDate == null) {
+            showAlertDate();
+            return;
+        }
+        if (selectedDate.isBefore(currentDatee.plusDays(30))) {
+            showAlertDate();
+            return;
+        }
         //tawa bech nconverti el date
         float poidsObjectif = Float.parseFloat(tfPoidsObjectif.getText());
         LocalDate currentDate = LocalDate.now();
@@ -227,6 +362,8 @@ public void addingNotif() throws IOException {
         String alergie = taAlergie.getText();
         String typeObj = lsTypeObjectif.getSelectionModel().getSelectedItem();
         String name_coach_selected =  lsCoachName.getSelectionModel().getSelectedItem();
+
+
         //*********************************************Confirmation Pannel************************//
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setTitle("Add Confirmation");
@@ -246,7 +383,6 @@ public void addingNotif() throws IOException {
             result.ifPresent(buttonType -> {
                 if (buttonType == okButton) {
                     int userid= GlobalVar.getUser().getId();
-
                     ObjectifService querry = new ObjectifService();
                     int coachId = querry.getCoachIdByName(name_coach_selected); // Retrieve the coach's ID
                     Objectif obj = new Objectif(userid,poidsObjectif,sqlDureeObjectifValue,poidsActuel,taille1,alergie,typeObj,coachId) ;
@@ -300,91 +436,32 @@ public void addingNotif() throws IOException {
 
 
 
-    public void loadingButton(){
 
-        var indicatorToggle = new ToggleButton("Modify");
-        indicatorToggle.textProperty().bind(Bindings.createStringBinding(
-                () -> indicatorToggle.isSelected() ? "Stop" : "Modify",
-                indicatorToggle.selectedProperty()
-        ));
-        var indicator = new ProgressIndicator(0);
-        indicator.setMinSize(10, 10);
-        indicator.progressProperty().bind(Bindings.createDoubleBinding(
-                () -> indicatorToggle.isSelected() ? -1d : 0d,
-                indicatorToggle.selectedProperty()
-        ));
-        indicatorToggle.setOnAction(event -> {
-            if (indicatorToggle.isSelected()) {
-                System.out.println("fel loading function  ");
-                System.out.println(obj.getId_objectif());
-                //id_objectif_Stored = obj.getId_objectif();
+    @FXML
+    private ProgressBar ProgrssBarModif;
 
-                PauseTransition pause = new PauseTransition(Duration.seconds(4));
-                pause.setOnFinished(e -> {
-                    updateObjectif(new ActionEvent());
-                    indicatorToggle.setSelected(false);
-                });
-                pause.play();
-            }
-        });
-
-        VboxModify.getChildren().addAll(indicatorToggle,indicator);
-
-    }
+    @FXML
+    private ToggleButton ToogleModif;
 
 
 
-    public  void loadButtons(){
 
-        var barToggle = new ToggleButton("Modifier");
-        barToggle.textProperty().bind(Bindings.createStringBinding(
-                () -> barToggle.isSelected() ? "Stop" : "Modifier",
-                barToggle.selectedProperty()
-        ));
-        var bar = new ProgressBar(0);
-        bar.progressProperty().bind(Bindings.createDoubleBinding(
-                () -> barToggle.isSelected() ? -1d : 0d,
-                barToggle.selectedProperty()
-        ));
-        barToggle.setOnAction(event -> {
-            if (barToggle.isSelected()) {
-                PauseTransition pause = new PauseTransition(Duration.seconds(4));
-                pause.setOnFinished(e -> {
-                    try {
-                        addObjectif(new ActionEvent());
-                        barToggle.setSelected(false);
-
-                    } catch (SQLException ex) {
-                        ex.printStackTrace();
-                    }
-
-                });
-                pause.play();
-            }
-        });
-
-        VboxModify.getChildren().addAll(barToggle,bar);
-    }
 
      void sendingDataToForm(Objectif obj) {
-
          try {
-             // VboxModify.setVisible(true);
-
+             ProgrssBarAdd.setVisible(false);
+             ToogleAdd.setVisible(false);
+             ProgrssBarModif.setVisible(true);
+             ToogleModif.setVisible(true);
              TtileLabel.setText("Modification Objectif");
-
              int id_obj=obj.getId_objectif();
              int id_user = obj.getId_user();
              System.out.printf("fel sendingDataForm function ");
              System.out.println(id_obj);
              System.out.println(id_user);
-
-
-
              String coachName = obj.getCoachName();
              obj = new Objectif(obj.getId_objectif(),obj.getId_user(),obj.getPoids_Obj(),obj.getDateF(),obj.getPoids_Act(),obj.getTaille(),obj.getAlergie(),obj.getTypeObj(),obj.getCoachId());
              this.obj = obj;
-
              tfPoidsObjectif.setText(String.valueOf(obj.getPoids_Obj()));
              java.sql.Date dateF = obj.getDateF();
              LocalDate localDateF = dateF.toLocalDate();
@@ -396,16 +473,55 @@ public void addingNotif() throws IOException {
              lsTypeObjectif.getSelectionModel().select(typeObj);
              lsCoachName.getSelectionModel().select(coachName);
 
-
-             loadingButton();
-
-
-
-
          }catch (Exception e){
              e.printStackTrace();
          }
      }
+
+
+    public void updatedNotif (){
+
+        var success = new Message(
+                "Info",
+                "well done you've modified the plan successfully for the client",
+                new FontAwesomeIconView(FontAwesomeIcon.CHECK)
+        );
+        success.getStyleClass().add(Styles.ACCENT);
+        HboxAddNotif.getChildren().add(success);
+        Duration duration = Duration.seconds(3);
+        KeyFrame keyFrame = new KeyFrame(duration, event -> HboxAddNotif.getChildren().clear());
+        Timeline timeline = new Timeline(keyFrame);
+        timeline.play();
+    }
+
+    public void success (){
+
+        var success = new Message(
+                "Info",
+                "well done you've added the plan successfully for the client",
+                new FontAwesomeIconView(FontAwesomeIcon.CHECK)
+        );
+        success.getStyleClass().add(Styles.ACCENT);
+        HboxAddNotif.getChildren().add(success);
+        Duration duration = Duration.seconds(3);
+        KeyFrame keyFrame = new KeyFrame(duration, event -> HboxAddNotif.getChildren().clear());
+        Timeline timeline = new Timeline(keyFrame);
+        timeline.play();
+    }
+
+    @FXML
+    private ProgressBar ProgrssBarAdd;
+
+    @FXML
+    private ToggleButton ToogleAdd;
+
+
+    void setToogleAddVisible(){
+        ProgrssBarAdd.setVisible(true);
+        ToogleAdd.setVisible(true);
+        ProgrssBarModif.setVisible(false);
+        ToogleModif.setVisible(false);
+    }
 
 
 
@@ -415,35 +531,69 @@ public void addingNotif() throws IOException {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
+        dpDureeObjectif.getEditor().setDisable(true);
+        //Adding Toogle
+        ToogleAdd.textProperty().bind(Bindings.createStringBinding(
+                () -> ToogleAdd.isSelected() ? "Adding..." : "Adding Objectif",
+                ToogleAdd.selectedProperty()
+        ));
 
-        var barToggle = new ToggleButton("Valider");
-        barToggle.textProperty().bind(Bindings.createStringBinding(
-                () -> barToggle.isSelected() ? "Stop" : "Valider",
-                barToggle.selectedProperty()
+
+        ProgrssBarAdd.progressProperty().bind(Bindings.createDoubleBinding(
+                () -> ToogleAdd.isSelected() ? -1d : 0d,
+                ToogleAdd.selectedProperty()
         ));
-        var bar = new ProgressBar(0);
-        bar.progressProperty().bind(Bindings.createDoubleBinding(
-                () -> barToggle.isSelected() ? -1d : 0d,
-                barToggle.selectedProperty()
-        ));
-        barToggle.setOnAction(event -> {
-            if (barToggle.isSelected()) {
-                PauseTransition pause = new PauseTransition(Duration.seconds(4));
+        ToogleAdd.setOnAction(event -> {
+            if (ToogleAdd.isSelected()) {
+                PauseTransition pause = new PauseTransition(Duration.seconds(3));
                 pause.setOnFinished(e -> {
+
                     try {
                         addObjectif(new ActionEvent());
-                        barToggle.setSelected(false);
+                        ToogleAdd.setSelected(false);
 
                     } catch (SQLException ex) {
-                        ex.printStackTrace();
+                        throw new RuntimeException(ex);
                     }
+
 
                 });
                 pause.play();
+
             }
+
         });
 
-        vboxTest.getChildren().addAll(barToggle,bar);
+
+
+
+        //Modiff ToogleButton
+        ToogleModif.textProperty().bind(Bindings.createStringBinding(
+                () -> ToogleModif.isSelected() ? "Updating..." : "Update Planning",
+                ToogleModif.selectedProperty()
+        ));
+
+
+        ProgrssBarModif.progressProperty().bind(Bindings.createDoubleBinding(
+                () -> ToogleModif.isSelected() ? -1d : 0d,
+                ToogleModif.selectedProperty()
+        ));
+        ToogleModif.setOnAction(event -> {
+            if (ToogleModif.isSelected()) {
+                PauseTransition pause = new PauseTransition(Duration.seconds(3));
+                pause.setOnFinished(e -> {
+
+                    updateObjectif(new ActionEvent());
+                    ToogleModif.setSelected(false);
+
+                });
+                pause.play();
+
+            }
+
+        });
+
+
         displayCoachNamefromCoachTable();
         lsTypeObjectif.getItems().addAll(type);
         slTaille.valueProperty().addListener(new ChangeListener<Number>() {
@@ -453,11 +603,6 @@ public void addingNotif() throws IOException {
                 labelTaille.setText("Taille : "+Integer.toString(taille)+"cm");
             }
         });
-
-
-
-
-
     }
 
 

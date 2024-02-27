@@ -2,133 +2,50 @@
 
 <?import java.lang.String?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="5018.0" prefWidth="1157.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionsuivi.ObjectifController">
+<AnchorPane prefHeight="4758.0" prefWidth="1171.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionsuivi.ObjectifController">
    <children>
       <ImageView fitHeight="326.0" fitWidth="1187.0" layoutY="1476.0" opacity="0.98" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../assets/images/cover.jpg" />
          </image>
       </ImageView>
-      <ImageView fitHeight="326.0" fitWidth="1244.0" opacity="0.98" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../assets/images/cover.jpg" />
-         </image>
-      </ImageView>
-      <ImageView fitHeight="326.0" fitWidth="1186.0" layoutY="326.0" opacity="0.98" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../assets/images/cover.jpg" />
-         </image>
-      </ImageView>
-      <ImageView fitHeight="326.0" fitWidth="1193.0" layoutY="622.0" opacity="0.98" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../assets/images/cover.jpg" />
-         </image>
-      </ImageView>
-      <ImageView fitHeight="326.0" fitWidth="1172.0" layoutY="1259.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../assets/images/cover.jpg" />
-         </image>
-      </ImageView>
-      <ImageView fitHeight="326.0" fitWidth="1170.0" layoutY="933.0" opacity="0.98" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../assets/images/cover.jpg" />
-         </image>
-      </ImageView>
-      <ImageView fitHeight="326.0" fitWidth="1188.0" layoutY="1714.0" opacity="0.98" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../assets/images/cover.jpg" />
-         </image>
-      </ImageView>
-      <ImageView fitHeight="326.0" fitWidth="1188.0" layoutY="2037.0" opacity="0.98" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../assets/images/cover.jpg" />
-         </image>
-      </ImageView>
-      <ImageView fitHeight="326.0" fitWidth="1188.0" layoutY="2284.0" opacity="0.98" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../assets/images/cover.jpg" />
-         </image>
-      </ImageView>
-      <ImageView fitHeight="326.0" fitWidth="1188.0" layoutY="2610.0" opacity="0.98" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../assets/images/cover.jpg" />
-         </image>
-      </ImageView>
-      <ImageView fitHeight="326.0" fitWidth="1188.0" layoutY="2936.0" opacity="0.98" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../assets/images/cover.jpg" />
-         </image>
-      </ImageView>
-      <ImageView fitHeight="326.0" fitWidth="1188.0" layoutY="3065.0" opacity="0.98" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../assets/images/cover.jpg" />
-         </image>
-      </ImageView>
-      <ImageView fitHeight="326.0" fitWidth="1188.0" layoutY="3391.0" opacity="0.98" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../assets/images/cover.jpg" />
-         </image>
-      </ImageView>
-      <ImageView fitHeight="326.0" fitWidth="1188.0" layoutY="3717.0" opacity="0.98" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../assets/images/cover.jpg" />
-         </image>
-      </ImageView>
-      <ImageView fitHeight="326.0" fitWidth="1188.0" layoutY="4042.0" opacity="0.98" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../assets/images/cover.jpg" />
-         </image>
-      </ImageView>
-      <ImageView fitHeight="326.0" fitWidth="1188.0" layoutY="4368.0" opacity="0.98" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../assets/images/cover.jpg" />
-         </image>
-      </ImageView>
-      <ImageView fitHeight="326.0" fitWidth="1188.0" layoutY="4694.0" opacity="0.98" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../assets/images/cover.jpg" />
-         </image>
-      </ImageView>
-      <Separator layoutX="475.0" layoutY="163.0" orientation="VERTICAL" prefHeight="1001.0" prefWidth="11.0" />
-
-      <!-- ScrollPane 1 -->
-      <ScrollPane layoutX="30.0" layoutY="141.0" prefHeight="525.0" prefWidth="429.0" styleClass="border-table" stylesheets="@../assets/images/style.css">
-         <content>
-            <VBox fx:id="pnl_scroll1" prefHeight="514.0" prefWidth="429.0" stylesheets="@../assets/images/style.css">
-               <styleClass>
-                  <String fx:value="border-table" />
-                  <String fx:value="transparent" />
-               </styleClass></VBox>
-         </content>
-      </ScrollPane>
+      <Separator layoutX="475.0" layoutY="333.0" orientation="VERTICAL" prefHeight="485.0" prefWidth="15.0">
+         <effect>
+            <DropShadow />
+         </effect></Separator>
+      <Pane fx:id="Pane1" layoutX="23.0" layoutY="341.0" prefHeight="527.0" prefWidth="429.0" visible="false" />
 
             <!-- ScrollPane 2 -->
-      <ScrollPane centerShape="false" layoutX="500.0" layoutY="112.0" prefHeight="1138.0" prefWidth="625.0" scaleShape="false" stylesheets="@../assets/images/style.css">
+      <ScrollPane centerShape="false" layoutX="505.0" layoutY="316.0" prefHeight="527.0" prefWidth="627.0" scaleShape="false" stylesheets="@../assets/images/style.css">
          <styleClass>
             <String fx:value="border-table" />
-            <String fx:value="degrade-diagonal2" />
+            <String fx:value="degrade-diagonal" />
          </styleClass>
          <content>
-            <VBox fx:id="pnl_scroll2" alignment="CENTER" fillWidth="false" prefHeight="1095.0" prefWidth="591.0" style="-fx-alignment: center; -fx-translate-y: 15; -fx-translate-x: 15;" stylesheets="@../assets/images/style.css">
+            <VBox fx:id="pnl_scroll2" alignment="CENTER" prefHeight="526.0" prefWidth="590.0" style="-fx-alignment: center; -fx-translate-y: 9; -fx-translate-x: 15;" stylesheets="@../assets/images/style.css">
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
             </VBox>
          </content>
-      </ScrollPane>
-
-      <!-- ScrollPane 3 -->
-      <ScrollPane layoutX="29.0" layoutY="734.0" prefHeight="512.0" prefWidth="431.0">
-         <content>
-            <VBox fx:id="pnl_scorllChatBot" prefHeight="511.0" prefWidth="429.0" />
-         </content>
+         <effect>
+            <DropShadow />
+         </effect>
       </ScrollPane>
       <ScrollPane layoutX="43.0" layoutY="1350.0" prefHeight="1161.0" prefWidth="1077.0">
          <content>
@@ -152,5 +69,177 @@
             <VBox fx:id="CaloriesRequirmentVbox" prefHeight="550.0" prefWidth="1022.0" />
          </content>
       </ScrollPane>
+      <Pane layoutX="8.0" layoutY="132.0" prefHeight="53.0" prefWidth="1149.0" styleClass="degrade-diagonal2" stylesheets="@../assets/images/style.css">
+         <effect>
+            <DropShadow />
+         </effect>
+         <children>
+            <Button fx:id="ButtonAdd" layoutX="122.0" layoutY="14.0" mnemonicParsing="false" onAction="#SendSignalToAddfucntion" text="Add Objectif" />
+            <Button fx:id="ButtonAssistaant" layoutX="228.0" layoutY="14.0" mnemonicParsing="false" text="Get Assistant" />
+            <Button fx:id="DietPlanButton" layoutX="339.0" layoutY="14.0" mnemonicParsing="false" text="Get your Diet" />
+            <Button fx:id="GetMacrosButton" layoutX="451.0" layoutY="14.0" mnemonicParsing="false" text="Get Macros" />
+            <Button fx:id="GetBmiButton" layoutX="553.0" layoutY="14.0" mnemonicParsing="false" text="Get BMI" />
+            <Button fx:id="GetStaticsCalories" layoutX="636.0" layoutY="14.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="153.0" text="Get Statistics Calories" />
+            <Button fx:id="GetExercicesButton" layoutX="804.0" layoutY="13.0" mnemonicParsing="false" text="Get Exercices" />
+            <Button fx:id="RealTimeTrackerButton" layoutX="915.0" layoutY="13.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="118.0" text="Real Time Tracker" />
+            <ImageView fitHeight="63.0" fitWidth="60.0" layoutX="7.0" layoutY="-1.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../assets/images/Barbeeell.png" />
+               </image>
+            </ImageView>
+            <Button fx:id="burnedCalsButton" layoutX="1044.0" layoutY="13.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="96.0" text="Burned Cals" />
+         </children>
+      </Pane>
+      <ImageView fitHeight="132.0" fitWidth="1157.0" layoutX="5.0" layoutY="7.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../assets/images/Capture%20(1).png" />
+         </image>
+         <effect>
+            <DropShadow />
+         </effect>
+      </ImageView>
+      <Pane layoutY="925.0" prefHeight="25.0" prefWidth="1171.0" styleClass="degrade-diagonal" stylesheets="@../assets/images/style.css" translateZ="-1.0">
+         <effect>
+            <DropShadow />
+         </effect></Pane>
+      <Pane fx:id="ResearchPan" layoutX="505.0" layoutY="286.0" prefHeight="25.0" prefWidth="288.0" visible="false">
+         <children>
+            <Text fill="#3a1c9d" layoutY="-12.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Research" wrappingWidth="58.7001953125" x="2.0" y="30.0">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Text>
+            <TextField layoutX="61.0" prefHeight="25.0" prefWidth="227.0" />
+         </children>
+      </Pane>
+      <HBox fx:id="rechercheHbox" layoutX="1120.0" layoutY="195.0" prefHeight="25.0" prefWidth="37.0" />
+      <HBox fx:id="ScrollPageHbox" layoutX="396.0" layoutY="857.0" prefHeight="53.0" prefWidth="314.0" />
+      <Pane layoutX="23.0" layoutY="205.0" prefHeight="106.0" prefWidth="399.0" stylesheets="@../assets/images/style.css">
+         <children>
+            <Text fill="#504df2" layoutX="7.0" layoutY="24.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Get you membership with us and enjoy our New Features">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Text>
+            <Button fx:id="JoinButton" layoutX="267.0" layoutY="64.0" mnemonicParsing="false" text="Cick here to join" />
+            <ImageView fitHeight="25.0" fitWidth="26.0" layoutX="363.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../assets/images/About.png" />
+               </image>
+            </ImageView>
+            <Text fill="#3a1c9d" layoutX="187.0" layoutY="84.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Limited spots" underline="true" />
+            <Text layoutX="41.0" layoutY="50.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Exercices genated for your goals">
+               <font>
+                  <Font size="11.0" />
+               </font>
+            </Text>
+            <Text layoutX="41.0" layoutY="67.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Diet generated for your goals">
+               <font>
+                  <Font size="11.0" />
+               </font>
+            </Text>
+            <Text layoutX="41.0" layoutY="84.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Real Time Tracker ">
+               <font>
+                  <Font size="11.0" />
+               </font>
+            </Text>
+         </children>
+         <effect>
+            <DropShadow />
+         </effect>
+         <styleClass>
+            <String fx:value="degrade-diagonal2" />
+            <String fx:value="border-table" />
+         </styleClass>
+      </Pane>
+      <Pane fx:id="PaneObjectif" layoutX="455.0" layoutY="200.0" prefHeight="79.0" prefWidth="199.0" stylesheets="@../assets/images/style.css">
+         <children>
+            <Text fill="#3a1c9d" layoutX="97.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Objectifs">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Text>
+            <Circle fill="#4066a8" layoutX="50.0" layoutY="40.0" radius="31.0" stroke="#4066a8" strokeType="INSIDE">
+               <effect>
+                  <DropShadow />
+               </effect>
+            </Circle>
+            <ImageView fitHeight="45.0" fitWidth="50.0" layoutX="29.0" layoutY="19.0" pickOnBounds="true" preserveRatio="true" rotate="-35.0">
+               <image>
+                  <Image url="@../assets/images/Barbeeell.png" />
+               </image>
+            </ImageView>
+         </children>
+         <effect>
+            <DropShadow />
+         </effect>
+         <styleClass>
+            <String fx:value="degrade-diagonal2" />
+            <String fx:value="border-table" />
+         </styleClass>
+      </Pane>
+      <Pane fx:id="PaneRealTimerProgress" layoutX="670.0" layoutY="200.0" prefHeight="79.0" prefWidth="212.0" stylesheets="@../assets/images/style.css">
+         <children>
+            <Text fill="#3a1c9d" layoutX="85.0" layoutY="30.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Real Timer Progress">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Text>
+            <Circle fill="#4066a8" layoutX="45.0" layoutY="38.0" radius="31.0" stroke="#4066a8" strokeType="INSIDE">
+               <effect>
+                  <DropShadow />
+               </effect>
+            </Circle>
+            <ImageView fitHeight="37.0" fitWidth="50.0" layoutX="25.0" layoutY="18.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../assets/images/Muscle.png" />
+               </image>
+            </ImageView>
+         </children>
+         <effect>
+            <DropShadow />
+         </effect>
+         <styleClass>
+            <String fx:value="degrade-diagonal2" />
+            <String fx:value="border-table" />
+         </styleClass>
+      </Pane>
+      <HBox fx:id="rechercheHbox2" layoutX="1120.0" layoutY="223.0" prefHeight="25.0" prefWidth="37.0" />
+      <Pane fx:id="PaneChatBot" layoutX="26.0" layoutY="343.0" prefHeight="520.0" prefWidth="429.0" visible="false">
+         <effect>
+            <DropShadow />
+         </effect>
+      </Pane>
+      <Pane fx:id="DietPane" layoutX="899.0" layoutY="201.0" prefHeight="79.0" prefWidth="199.0" stylesheets="@../assets/images/style.css">
+         <children>
+            <Text fill="#3a1c9d" layoutX="85.0" layoutY="30.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Get you Diet">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Text>
+            <Circle fill="#4066a8" layoutX="45.0" layoutY="38.0" radius="31.0" stroke="#4066a8" strokeType="INSIDE">
+               <effect>
+                  <DropShadow />
+               </effect>
+            </Circle>
+            <ImageView fitHeight="45.0" fitWidth="50.0" layoutX="23.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../assets/images/Food%20Bar.png" />
+               </image>
+            </ImageView>
+         </children>
+         <effect>
+            <DropShadow />
+         </effect>
+         <styleClass>
+            <String fx:value="degrade-diagonal2" />
+            <String fx:value="border-table" />
+         </styleClass>
+      </Pane>
+      <Pane fx:id="PaneMiediaPlayer" layoutX="11.0" layoutY="342.0" prefHeight="342.0" prefWidth="455.0" visible="false">
+         <effect>
+            <DropShadow />
+         </effect>
+      </Pane>
    </children>
 </AnchorPane>

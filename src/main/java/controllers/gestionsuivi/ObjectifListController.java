@@ -46,7 +46,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-public class ObjectifListController  {
+public class ObjectifListController implements Initializable  {
 
 
     @FXML
@@ -68,20 +68,9 @@ public class ObjectifListController  {
     private Label TypeObjField;
     @FXML
     private ImageView CoachPic;
-
-
-    @FXML
-    private Button blueButton;
-
-
     @FXML
     private VBox VboxToBlue;
-
     MyDatabase c = new MyDatabase();
-
-
-
-
 
     public int getCoachIdByName(String name_coach_selected) {
         String query = "SELECT id  FROM user WHERE FirstName = ? AND Role='staff'";
@@ -91,11 +80,9 @@ public class ObjectifListController  {
             PreparedStatement ps = c.getConnection().prepareStatement(query);
             ps.setString(1, name_coach_selected);
             ResultSet rs = ps.executeQuery();
-
             if (rs.next()) {
                 coachId = rs.getInt("id");
             }
-
             rs.close();
             ps.close();
         } catch (SQLException e) {
@@ -104,23 +91,6 @@ public class ObjectifListController  {
 
         return coachId;
     }
-
-
-
-
-    public  void buton(){
-        VboxToBlue.getChildren().clear();
-
-        blueButton.getStyleClass().addAll(
-                Styles.BUTTON_OUTLINED, Styles.ACCENT
-        );
-        blueButton.setMnemonicParsing(true);
-        VboxToBlue.getChildren().add(blueButton);
-    }
-
-
-
-
 
     public void buttonPanel(){
         var accentBtn = new Button(null, new FontAwesomeIconView(FontAwesomeIcon.LIST));
@@ -133,9 +103,7 @@ public class ObjectifListController  {
 
     @FXML
     private VBox deleteVbox;
-
     private static  Scene scene;
-
     public Scene getScene() {
         return scene;
     }
@@ -143,19 +111,10 @@ public class ObjectifListController  {
 
         ObjectifListController.scene = scene;
     }
-
     private static Stage stage ;
-
     public static Stage getStage() {
         return stage;
     }
-
-
-
-    @FXML
-    private VBox TESTINGvBOX;
-
-
 
     @FXML
     private VBox WarningVbox2;
@@ -176,7 +135,6 @@ public class ObjectifListController  {
         timeline.play();
 
     }
-
     private  static  ObjectifController objectifController ;
     public void setObjectifController(ObjectifController objectifController) {
         ObjectifListController.objectifController = objectifController;
@@ -357,14 +315,17 @@ public class ObjectifListController  {
 
             }
         } else {
-            System.out.printf("tititiiti");
             CoachPic.setImage(null);
         }
 
         }
 
 
-
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        VboxToBlue.setOnMouseEntered(event -> VboxToBlue.setStyle("-fx-background-color: lightblue;"));
+        VboxToBlue.setOnMouseExited(event -> VboxToBlue.setStyle("-fx-background-color: lightgray;"));
+    }
 }
 
 

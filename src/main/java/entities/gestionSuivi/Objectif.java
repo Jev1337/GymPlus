@@ -15,8 +15,14 @@ public class Objectif {
     private String coachName;
     private String firstName;
     private String coachPhoto;
+    private  Date dateNaissance;
 
     private int coachId ;
+
+    private int Id_planning ;
+
+    private int NumbersPlansDone;
+    private int NumberPlansInProgressive;
 
     public  Objectif (){
 
@@ -179,5 +185,36 @@ public class Objectif {
     }
 
 
+    public Date getDateNaissance() {
+        return dateNaissance;
+    }
+
+    public void setDateNaissance(Date dateNaissance) {
+        this.dateNaissance = dateNaissance;
+    }
+
+    public int getId_planning() {
+        return Id_planning;
+    }
+
+    public void setId_planning(int id_planning) {
+        Id_planning = id_planning;
+    }
+
+    public int getNumbersPlansDone() {
+        return NumbersPlansDone;
+    }
+
+    public void setNumbersPlansDone(int numbersPlansDone) {
+        NumbersPlansDone = numbersPlansDone;
+    }
+
+    public int getNumberPlansInProgressive() {
+        return NumberPlansInProgressive;
+    }
+
+    public void setNumberPlansInProgressive(int numberPlansInProgressive) {
+        NumberPlansInProgressive = numberPlansInProgressive;
+    }
 }
 

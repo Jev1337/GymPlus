@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.effect.BoxBlur?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.effect.Glow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="446.0" prefWidth="373.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionsuivi.ObjectifDisplayOnRightController">
+   <children>
+      <Pane layoutX="1.0" prefHeight="446.0" prefWidth="372.0" styleClass="degrade-diagonal2" stylesheets="@../assets/images/style.css">
+         <children>
+            <Text layoutX="55.0" layoutY="28.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Objectif Inofs" wrappingWidth="141.13671875">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Text>
+            <Separator layoutX="49.0" layoutY="80.0" prefHeight="3.0" prefWidth="205.0" />
+            <ImageView fitHeight="35.0" fitWidth="41.0" layoutX="9.0" layoutY="112.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../assets/images/Barbeeell.png" />
+               </image>
+            </ImageView>
+            <Text fill="#504df2" layoutX="51.0" layoutY="73.96728515625" strokeType="OUTSIDE" strokeWidth="0.0" text="Description">
+               <font>
+                  <Font name="Arial Unicode MS" size="12.0" />
+               </font>
+            </Text>
+            <ImageView fx:id="ImageUser" fitHeight="79.0" fitWidth="113.0" layoutX="259.0" pickOnBounds="true" preserveRatio="true" />
+            <Separator layoutX="45.0" layoutY="140.0" prefHeight="3.0" prefWidth="215.0" />
+            <Label fx:id="NameLabel" layoutX="163.0" layoutY="153.0" text="Nom" />
+            <Label fx:id="PoidsObjLabel" layoutX="163.0" layoutY="180.0" text="Poids Objectif" />
+            <Label fx:id="PoidsActLabel" layoutX="162.0" layoutY="202.0" text="Poids Actuelle" />
+            <Label fx:id="TailleLabel" layoutX="162.0" layoutY="228.0" text="Taille" />
+            <Separator layoutX="36.0" layoutY="257.0" prefHeight="3.0" prefWidth="215.0" />
+            <Label fx:id="descriptionLbale" layoutX="47.0" layoutY="85.0" prefHeight="21.0" prefWidth="222.0" text="Label" />
+            <ImageView fitHeight="35.0" fitWidth="35.0" layoutX="17.0" layoutY="264.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../assets/images/Calendar.png" />
+               </image>
+            </ImageView>
+            <Text fill="#504df2" layoutX="69.0" layoutY="282.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Début" />
+            <Separator layoutX="141.0" layoutY="270.0" orientation="VERTICAL" prefHeight="73.0" prefWidth="16.0" />
+            <Text fill="#504df2" layoutX="188.0" layoutY="282.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Fin" />
+            <Label fx:id="DateDLabel" layoutX="54.0" layoutY="306.0" text="20/20/2023" />
+            <Label fx:id="DateFinLabel" layoutX="160.0" layoutY="306.0" text="20/20/2023" />
+            <Text fill="#504df2" layoutX="53.0" layoutY="168.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nom" />
+            <Text fill="#504df2" layoutX="53.0" layoutY="194.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Poids Objectif" />
+            <Text fill="#504df2" layoutX="53.0" layoutY="217.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Poids Actuelle" />
+            <Text fill="#504df2" layoutX="55.0" layoutY="242.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Taille" />
+            <ImageView fitHeight="43.0" fitWidth="47.0" layoutX="1.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../assets/images/Bookmarkk.png" />
+               </image>
+               <effect>
+                  <Glow />
+               </effect>
+            </ImageView>
+            <ImageView fitHeight="89.0" fitWidth="373.0" layoutY="357.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../assets/images/backgroundw.jpg" />
+               </image>
+               <effect>
+                  <BoxBlur />
+               </effect>
+            </ImageView>
+            <Button fx:id="AddPlanningButton" layoutX="274.0" layoutY="250.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="87.0" text="Add" />
+            <ImageView fitHeight="35.0" fitWidth="41.0" layoutX="11.0" layoutY="52.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../assets/images/Barbeeell.png" />
+               </image>
+            </ImageView>
+            <Button fx:id="UpdatePlan" layoutX="273.0" layoutY="251.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="87.0" text="Update" />
+            <Text fill="#504df2" layoutX="52.0" layoutY="134.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Infos">
+               <font>
+                  <Font name="Arial Unicode MS" size="12.0" />
+               </font>
+            </Text>
+            <Button fx:id="DeletePlan" layoutX="272.0" layoutY="292.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="87.0" text="Delete" />
+            <HBox fx:id="HboxComeBack" layoutX="305.0" layoutY="94.0" prefHeight="30.0" prefWidth="60.0" />
+         </children>
+         <effect>
+            <DropShadow />
+         </effect>
+      </Pane>
+   </children>
+   <effect>
+      <DropShadow />
+   </effect>
+</AnchorPane>

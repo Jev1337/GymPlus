@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="480.0" prefWidth="626.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionsuivi.ObjectifAddPlanningOnLeft">
+   <children>
+      <Pane fx:id="AddingPan" layoutX="-4.0" layoutY="-2.0" prefHeight="482.0" prefWidth="632.0" styleClass="degrade-diagonal2" stylesheets="@../assets/images/style.css">
+         <children>
+            <Text fill="#3a1c9d" layoutX="225.0" layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Add Planning">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Text>
+            <ImageView fitHeight="480.0" fitWidth="200.0" layoutX="2.0" layoutY="2.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../assets/images/backAddForm.jpeg" />
+               </image>
+               <effect>
+                  <DropShadow />
+               </effect>
+            </ImageView>
+            <Separator layoutX="223.0" layoutY="64.0" prefWidth="200.0" />
+            <ImageView fitHeight="33.0" fitWidth="32.0" layoutX="377.0" layoutY="15.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../assets/images/Verified Badge.png" />
+               </image>
+            </ImageView>
+            <Text layoutX="209.0" layoutY="103.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Exercices Pdf Dowload :" wrappingWidth="149.13671875" />
+            <TextArea fx:id="exerciceLabel" layoutX="361.0" layoutY="90.0" prefHeight="56.0" prefWidth="263.0" promptText="ExerciceUrl" />
+            <Text layoutX="219.0" layoutY="177.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Diet Pdf Dowload :" wrappingWidth="124.13671875" />
+            <TextArea fx:id="DietLabel" layoutX="361.0" layoutY="162.0" prefHeight="56.0" prefWidth="263.0" promptText="DietUrl" />
+            <Button fx:id="loadPdfExercice" layoutX="249.0" layoutY="118.0" mnemonicParsing="false" onAction="#loadPdfExercice" text="Click" />
+            <Button fx:id="loadPdfDiet" layoutX="249.0" layoutY="190.0" mnemonicParsing="false" onAction="#loadPdfDiet" text="Click" />
+            <Text fill="#3a1c9d" layoutX="242.0" layoutY="273.05078125" strokeType="OUTSIDE" strokeWidth="0.0" text="Bmi Calculator" underline="true">
+               <font>
+                  <Font size="13.0" />
+               </font>
+            </Text>
+            <BarChart fx:id="CahrtBmi" layoutX="238.0" layoutY="293.0" prefHeight="175.0" prefWidth="386.0">
+              <xAxis>
+                <CategoryAxis side="BOTTOM" />
+              </xAxis>
+              <yAxis>
+                <NumberAxis side="LEFT" />
+              </yAxis>
+            </BarChart>
+            <Separator layoutX="230.0" layoutY="282.0" prefHeight="3.0" prefWidth="200.0" />
+            <HBox fx:id="goBackHbix" layoutX="577.0" layoutY="9.0" prefHeight="24.0" prefWidth="47.0" />
+            <ProgressBar fx:id="progrssBar" layoutX="445.0" layoutY="240.0" prefHeight="18.0" prefWidth="161.0" progress="0.0" />
+            <ToggleButton fx:id="ToogleButton" layoutX="473.0" layoutY="263.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="115.0" text="Add Planning" />
+            <HBox fx:id="WarningHbox" layoutX="202.0" layoutY="381.0" prefHeight="100.0" prefWidth="430.0" />
+            <ToggleButton fx:id="ToogleUpdate" layoutX="471.0" layoutY="264.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="124.0" text="Update Planning" visible="false" />
+            <ProgressBar fx:id="progrssBar2" layoutX="447.0" layoutY="240.0" prefHeight="18.0" prefWidth="141.0" progress="0.0" visible="false" />
+            <ImageView fitHeight="24.0" fitWidth="32.0" layoutX="328.0" layoutY="254.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../assets/images/BMIi.png" />
+               </image>
+            </ImageView>
+         </children>
+         <effect>
+            <DropShadow />
+         </effect>
+      </Pane>
+   </children>
+</AnchorPane>

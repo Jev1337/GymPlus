@@ -10,12 +10,14 @@ import java.util.List;
 public class ClientService implements IService<Client> {
 
     public Connection connection;
+
     public ClientService() {
         connection = MyDatabase.getInstance().getConnection();
     }
+
     @Override
     public void add(Client client) throws SQLException {
-        String query = "INSERT INTO user (id, username, firstname, lastname, date_naiss, password, email, num_tel, adresse, photo, role, faceid, faceid_ts) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        String query = "INSERT INTO user (id, username, firstname, lastname, date_naiss, password, email, num_tel, adresse, photo, role, faceid, faceid_ts,event_points) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,0)";
         PreparedStatement pst = connection.prepareStatement(query);
         pst.setInt(1, client.getId());
         pst.setString(2, client.getUsername());
@@ -162,7 +164,22 @@ public class ClientService implements IService<Client> {
         return null;
     }
 
-    public List<Client> getNonSubscribedUserList() throws SQLException {
+    public int getEventPoints(int id) {
+        try {
+            String query = "SELECT event_points FROM user WHERE id = ?";
+            PreparedStatement pst = connection.prepareStatement(query);
+            pst.setInt(1, id);
+            ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("event_points");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return 0;}
+
+        public List<Client> getNonSubscribedUserList() throws SQLException {
         List<Client> clients = new ArrayList<>();
         String query = "SELECT * FROM user WHERE role = 'client' AND id NOT IN (SELECT user_id FROM abonnement WHERE dateFinAb > NOW())";
         Statement st = connection.createStatement();
@@ -187,6 +204,30 @@ public class ClientService implements IService<Client> {
         return clients;
     }
 
+    public Client getUserByPhone(String phone) throws SQLException {
+        String query = "SELECT * FROM user WHERE num_tel = ?";
+        PreparedStatement pst = connection.prepareStatement(query);
+        pst.setString(1, phone);
+        ResultSet rs = pst.executeQuery();
+        if (rs.next()) {
+            Client client = new Client();
+            client.setId(rs.getInt("id"));
+            client.setUsername(rs.getString("username"));
+            client.setFirstname(rs.getString("firstname"));
+            client.setLastname(rs.getString("lastname"));
+            client.setDate_naiss(rs.getString("date_naiss"));
+            client.setPassword(rs.getString("password"));
+            client.setEmail(rs.getString("email"));
+            client.setNum_tel(rs.getString("num_tel"));
+            client.setAdresse(rs.getString("adresse"));
+            client.setPhoto(rs.getString("photo"));
+            client.setRole(rs.getString("role"));
+            client.setFaceid(rs.getString("faceid"));
+            client.setFaceid_ts(rs.getString("faceid_ts"));
+            return client;
+        }
+        return null;
+    }
     public void updatePassword(int id, String password) throws SQLException {
         String query = "UPDATE user SET password = ? WHERE id = ?";
         PreparedStatement pst = connection.prepareStatement(query);

@@ -90,4 +90,5 @@ public class Event_participantsService implements IService<Event_participants> {
         ps.executeUpdate();
 
     }
+
 }

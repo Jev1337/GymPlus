@@ -163,6 +163,31 @@ public class AdminService implements IService<Admin> {
         }
         return null;
     }
+
+    public Admin getUserByPhone(String num_tel) throws SQLException {
+        Admin admin = new Admin();
+        String query = "SELECT * FROM user WHERE num_tel = ?";
+        PreparedStatement pst = connection.prepareStatement(query);
+        pst.setString(1, num_tel);
+        ResultSet rs = pst.executeQuery();
+        while (rs.next()) {
+            admin.setId(rs.getInt("id"));
+            admin.setUsername(rs.getString("username"));
+            admin.setFirstname(rs.getString("firstname"));
+            admin.setLastname(rs.getString("lastname"));
+            admin.setDate_naiss(rs.getString("date_naiss"));
+            admin.setPassword(rs.getString("password"));
+            admin.setEmail(rs.getString("email"));
+            admin.setNum_tel(rs.getString("num_tel"));
+            admin.setAdresse(rs.getString("adresse"));
+            admin.setPhoto(rs.getString("photo"));
+            admin.setFaceid(rs.getString("faceid"));
+            admin.setFaceid_ts(rs.getString("faceid_ts"));
+            admin.setRole(rs.getString("role"));
+            return admin;
+        }
+        return null;
+    }
     public void updatePassword(int id, String password) throws SQLException {
         String query = "UPDATE user SET password = ? WHERE id = ?";
         PreparedStatement pst = connection.prepareStatement(query);

@@ -529,16 +529,16 @@
                         </ScrollPane>
                         <ScrollPane fx:id="AdminSubscriptionPane" prefHeight="646.0" prefWidth="1155.0" visible="false">
                            <content>
-                              <Pane fx:id="subpane" prefHeight="1462.0" prefWidth="1156.0">
+                              <Pane fx:id="subpane" prefHeight="1559.0" prefWidth="1156.0">
                                  <children>
                                     <Label layoutX="39.0" layoutY="14.0" style="-fx-text-fill: linear-gradient(to right, #00aaff, #00688b);" text="Admin / Subscriptions">
                                        <font>
                                           <Font name="Open Sans Regular" size="16.0" />
                                        </font>
                                     </Label>
-                                    <Pane layoutX="45.0" layoutY="156.0" prefHeight="430.0" prefWidth="483.0" style="-fx-background-color: white; -fx-border-radius: 30px; -fx-background-radius: 30px;">
+                                    <Pane layoutX="32.0" layoutY="207.0" prefHeight="430.0" prefWidth="483.0" style="-fx-background-color: white; -fx-border-radius: 30px; -fx-background-radius: 30px;">
                                        <children>
-                                          <TableView fx:id="userlistsub_tableview" layoutX="18.0" layoutY="97.0" prefHeight="262.0" prefWidth="447.0" style="-fx-background-color: #e8ecfc;">
+                                          <TableView fx:id="userlistsub_tableview" layoutX="18.0" layoutY="97.0" prefHeight="262.0" prefWidth="447.0" style="-fx-background-color: #e8ecfc;" visible="false">
                                              <columns>
                                                 <TableColumn fx:id="cincoladdsub" prefWidth="133.0" text="CIN" />
                                                 <TableColumn fx:id="emailcoladdsub" minWidth="2.0" prefWidth="148.0" text="Email" />
@@ -557,12 +557,17 @@
                                           </Label>
                                           <TextField fx:id="searchbarusersub_tf" layoutX="318.0" layoutY="47.0" onKeyTyped="#searchbarusersub_tf_textchanged" prefHeight="36.0" prefWidth="147.0" promptText="Search" />
                                           <ComboBox fx:id="subtypeadd_cb" layoutX="19.0" layoutY="380.0" prefHeight="36.0" prefWidth="297.0" promptText="Subscription Type" />
-                                          <CheckBox disable="true" layoutX="242.0" layoutY="54.0" mnemonicParsing="false" selected="true" text="Legacy" />
+                                          <CheckBox fx:id="legacyuserlist_cb" layoutX="242.0" layoutY="54.0" mnemonicParsing="false" onAction="#legacyuserlist_cb_act" text="Legacy" />
+                                          <ScrollPane fx:id="smalluserlist_sp" layoutX="18.0" layoutY="97.0" prefHeight="263.0" prefWidth="447.0">
+                                             <content>
+                                                <VBox fx:id="userlistsub_vbox" prefHeight="263.0" prefWidth="447.0" />
+                                             </content>
+                                          </ScrollPane>
                                        </children>
                                     </Pane>
-                                    <Pane layoutX="552.0" layoutY="156.0" prefHeight="432.0" prefWidth="579.0" style="-fx-background-color: white; -fx-border-radius: 30px; -fx-background-radius: 30px;">
+                                    <Pane layoutX="539.0" layoutY="207.0" prefHeight="432.0" prefWidth="579.0" style="-fx-background-color: white; -fx-border-radius: 30px; -fx-background-radius: 30px;">
                                        <children>
-                                          <TableView fx:id="subscriptionslist_tableview" layoutX="21.0" layoutY="97.0" prefHeight="264.0" prefWidth="538.0" style="-fx-background-color: #e8ecfc;">
+                                          <TableView fx:id="subscriptionslist_tableview" layoutX="21.0" layoutY="97.0" prefHeight="264.0" prefWidth="538.0" style="-fx-background-color: #e8ecfc;" visible="false">
                                              <columns>
                                                 <TableColumn fx:id="subid_col" prefWidth="42.0" text="ID" />
                                                 <TableColumn fx:id="cinsubcol" minWidth="2.0" prefWidth="176.0" text="CIN" />
@@ -588,10 +593,15 @@
                                                 <Cursor fx:constant="HAND" />
                                              </cursor>
                                           </Button>
-                                          <CheckBox disable="true" layoutX="125.0" layoutY="54.0" mnemonicParsing="false" selected="true" text="Legacy" />
+                                          <CheckBox fx:id="legacysubbedlist_cb" layoutX="125.0" layoutY="54.0" mnemonicParsing="false" onAction="#legacysubbedlist_cb_act" text="Legacy" />
+                                          <ScrollPane fx:id="subbedlist_sp" layoutX="21.0" layoutY="98.0" prefHeight="263.0" prefWidth="538.0">
+                                             <content>
+                                                <VBox fx:id="subbed_vbox" prefHeight="263.0" prefWidth="538.0" />
+                                             </content>
+                                          </ScrollPane>
                                        </children>
                                     </Pane>
-                                    <Pane fx:id="qr_pane" layoutX="45.0" layoutY="621.0" prefHeight="503.0" prefWidth="1082.0" style="-fx-background-color: white; -fx-border-radius: 30px; -fx-background-radius: 30px;">
+                                    <Pane fx:id="qr_pane" layoutX="32.0" layoutY="690.0" prefHeight="503.0" prefWidth="1082.0" style="-fx-background-color: white; -fx-border-radius: 30px; -fx-background-radius: 30px;">
                                        <children>
                                           <ImageView fx:id="camerafeed_imageview" fitHeight="341.0" fitWidth="613.0" layoutX="33.0" layoutY="82.0" pickOnBounds="true">
                                              <image>
@@ -685,7 +695,7 @@
                                           </FontAwesomeIconView>
                                        </children>
                                     </Pane>
-                                    <Pane fx:id="qr_pane1" layoutX="618.0" layoutY="1151.0" prefHeight="271.0" prefWidth="250.0" style="-fx-background-color: white; -fx-border-radius: 30px; -fx-background-radius: 30px;">
+                                    <Pane fx:id="qr_pane1" layoutX="618.0" layoutY="1220.0" prefHeight="271.0" prefWidth="250.0" style="-fx-background-color: white; -fx-border-radius: 30px; -fx-background-radius: 30px;">
                                        <children>
                                           <Pane fx:id="hidepane1" layoutX="30.0" layoutY="438.0" prefHeight="40.0" prefWidth="120.0" style="-fx-background-color: white;" visible="false" />
                                           <FontAwesomeIconView fx:id="nonverified_icon1" glyphName="TIMES" layoutX="863.0" layoutY="392.0" size="50" visible="false">
@@ -721,7 +731,7 @@
                                           </Button>
                                        </children>
                                     </Pane>
-                                    <Pane fx:id="packagelist" layoutX="251.0" layoutY="1151.0" prefHeight="271.0" prefWidth="356.0" style="-fx-background-color: white; -fx-border-radius: 30px; -fx-background-radius: 30px;">
+                                    <Pane fx:id="packagelist" layoutX="251.0" layoutY="1220.0" prefHeight="271.0" prefWidth="356.0" style="-fx-background-color: white; -fx-border-radius: 30px; -fx-background-radius: 30px;">
                                        <children>
                                           <Pane fx:id="hidepane11" layoutX="30.0" layoutY="438.0" prefHeight="40.0" prefWidth="120.0" style="-fx-background-color: white;" visible="false" />
                                           <FontAwesomeIconView fx:id="nonverified_icon11" glyphName="TIMES" layoutX="863.0" layoutY="392.0" size="50" visible="false">
@@ -803,14 +813,14 @@
                         </ScrollPane>
                         <ScrollPane fx:id="AdminUserManagementPane" prefHeight="646.0" prefWidth="1155.0" visible="false">
                            <content>
-                              <Pane fx:id="usermgmt_pane" prefHeight="1130.0" prefWidth="1147.0">
+                              <Pane fx:id="usermgmt_pane" prefHeight="1189.0" prefWidth="1147.0">
                                  <children>
                                     <Label layoutX="39.0" layoutY="14.0" style="-fx-text-fill: linear-gradient(to right, #00aaff, #00688b);" text="Admin / User Management">
                                        <font>
                                           <Font name="Open Sans Regular" size="16.0" />
                                        </font>
                                     </Label>
-                                    <Pane layoutX="35.0" layoutY="143.0" prefHeight="448.0" prefWidth="1079.0" style="-fx-background-color: white; -fx-border-radius: 30px; -fx-background-radius: 30px;">
+                                    <Pane layoutX="35.0" layoutY="206.0" prefHeight="448.0" prefWidth="1079.0" style="-fx-background-color: white; -fx-border-radius: 30px; -fx-background-radius: 30px;">
                                        <children>
                                           <Label layoutX="22.0" layoutY="22.0" text="Add User to Database">
                                              <font>
@@ -856,7 +866,7 @@
                                           </Button>
                                        </children>
                                     </Pane>
-                                    <Pane layoutX="34.0" layoutY="616.0" prefHeight="448.0" prefWidth="1069.0" style="-fx-background-color: white; -fx-border-radius: 30px; -fx-background-radius: 30px;">
+                                    <Pane layoutX="34.0" layoutY="679.0" prefHeight="448.0" prefWidth="1069.0" style="-fx-background-color: white; -fx-border-radius: 30px; -fx-background-radius: 30px;">
                                        <children>
                                           <TableView fx:id="userlist_tableview" layoutX="16.0" layoutY="111.0" prefHeight="274.0" prefWidth="1039.0" style="-fx-background-color: #e8ecfc;" visible="false">
                                             <columns>

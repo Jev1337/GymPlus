@@ -243,6 +243,15 @@ CREATE TABLE `user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
+-- Dumping data for table `abonnement_details`
+--
+
+INSERT INTO `user` (`id`, `username`, `firstname`, `lastname`, `date_naiss`, `password`, `email`, `role`, `num_tel`, `adresse`, `photo`, `event_points`, `faceid`, `faceid_ts`) VALUES
+(12345632, 'aaaa', 'aaaa', 'aaaa', '2024-02-09', '$2b$10$gSdsptgM8hfCuK0Fc8g8Ye2rzZHUJtO0QJAwkIIJcjaWrxGJLTyJy', 'aa@aa.aa', 'admin', '22335566', 'aaaa', 'USERIMG12345632.jpg', 600, '', '2024-02-24');
+
+-- --------------------------------------------------------
+
+--
 -- Indexes for dumped tables
 --
 
@@ -395,6 +404,14 @@ ALTER TABLE `abonnement`
   ADD CONSTRAINT `abonnement_ibfk_2` FOREIGN KEY (`type`) REFERENCES `abonnement_details` (`name`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
+-- Constraints for table `post`
+--
+ALTER TABLE `post`
+  ADD CONSTRAINT `post_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `post`
+  MODIFY `id_post` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+
+--
 -- Constraints for table `commentaire`
 --
 ALTER TABLE `commentaire`
@@ -450,9 +467,8 @@ ALTER TABLE `planning`
 ALTER TABLE `post`
   ADD CONSTRAINT `post_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
-ALTER TABLE `post`
-  MODIFY `id_post` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */; 

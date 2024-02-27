@@ -1072,6 +1072,7 @@ public class AuthController {
     }
 
     public void initialize() {
+        GlobalVar.setUser(null);
         fadeInLeftAnimation.setNode(signin_pane);
         fadeInLeftAnimation.play();
         fadeInRightAnimation.setNode(signup_switch_pane);

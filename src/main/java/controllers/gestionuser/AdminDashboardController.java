@@ -379,6 +379,7 @@ public class AdminDashboardController {
 
     @FXML
     private ImageView faceid_change;
+
     @FXML
     private FontAwesomeIconView verified_icon;
 
@@ -872,11 +873,15 @@ public class AdminDashboardController {
     @FXML
     void subscription_btn_act(ActionEvent event) {
         switchToPane(AdminSubscriptionPane);
+        initSubList(subtype_cb.getValue(), searchbarsub_tf.getText());
+        initNonSubbedUserList(subtypeadd_cb.getValue());
     }
 
     @FXML
     void subscription_btn_clicked(MouseEvent event) {
         switchToPane(AdminSubscriptionPane);
+        initSubList(subtype_cb.getValue(), searchbarsub_tf.getText());
+        initNonSubbedUserList(searchbarusersub_tf.getText());
     }
 
     @FXML
@@ -887,11 +892,13 @@ public class AdminDashboardController {
 
     @FXML
     void users_btn_click(ActionEvent event) {
+        initUserList();
         switchToPane(AdminUserManagementPane);
     }
 
     @FXML
     void users_btn_clicked(MouseEvent event) {
+        initUserList();
         switchToPane(AdminUserManagementPane);
     }
     @FXML

@@ -642,7 +642,7 @@ public class AuthController {
             if (clientService.getUserByUsername(username_tf.getText()) != null) {
                 errorAlert("Client with this username already exists!", "Client with this username already exists!", "Client with this username already exists! Please try another one.");
                 return;
-            } else if (clientService.getUserByEmail(username_tf.getText()) != null) {
+            } else if (clientService.getUserByEmail(email_tf.getText()) != null) {
                 errorAlert("Client with this email already exists!", "Client with this email already exists!", "Client with this email already exists! Please try another one.");
                 return;
             }

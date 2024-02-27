@@ -802,11 +802,13 @@ public class StaffDashboardController {
     @FXML
     void subscription_btn_act(ActionEvent event) {
         switchToPane(StaffSubscriptionPane);
+        initSubList(subtype_cb.getValue(), searchbarsub_tf.getText());
     }
 
     @FXML
     void subscription_btn_clicked(MouseEvent event) {
         switchToPane(StaffSubscriptionPane);
+        initSubList(subtype_cb.getValue(), searchbarsub_tf.getText());
     }
     @FXML
     public void objective_btn_act(ActionEvent actionEvent) {

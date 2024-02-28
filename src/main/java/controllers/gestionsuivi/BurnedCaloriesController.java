@@ -2,6 +2,7 @@ package controllers.gestionsuivi;
 
 import atlantafx.base.controls.ModalPane;
 import atlantafx.base.controls.RingProgressIndicator;
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.animation.PauseTransition;
@@ -93,6 +94,19 @@ public void BurnedCaloriesFromActivity(int age,double weight, double height) thr
 
     }
 }
+    @FXML
+    private Pane Pane2MacrosCalculator;
+    @FXML
+    private Pane Pane1Bmi;
+void  changePanel2(){
+    Pane1Bmi.setVisible(false);
+    Pane2MacrosCalculator.setVisible(true);
+}
+    void  changePanel1(){
+        Pane1Bmi.setVisible(true);
+        Pane2MacrosCalculator.setVisible(false);
+    }
+
 
 
     @FXML
@@ -109,11 +123,100 @@ public  void MacrosAmout(int age,String gender,double height,double weight,int l
             .header("X-RapidAPI-Key", "18ae9b5d60msh7e6247128682805p139e5djsna435480ded7c")
             .header("X-RapidAPI-Host", "fitness-calculator.p.rapidapi.com")
             .method("GET", HttpRequest.BodyPublishers.noBody())
-            .build();
-    HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
-    System.out.println(response.body());
+                .build();
+
+
+         try {
+             HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+             System.out.println(response.body());
+             ObjectMapper objectMapper = new ObjectMapper();
+             JsonNode root = objectMapper.readTree(response.body());
+             JsonNode item2 = root;
+             System.out.println("Item: " + item2);
+
+             JsonNode item =item2.get("data");
+             if (item.has("balanced")) {
+                 JsonNode balancedNode = item.get("balanced");
+                 System.out.println("balancedNode: " + balancedNode);
+                 double balancedProtein = balancedNode.get("protein").asDouble();
+                 double balancedFat = balancedNode.get("fat").asDouble();
+                 double balancedCarbs = balancedNode.get("carbs").asDouble();
+                 setBalancedPie(balancedProtein, balancedFat, balancedCarbs);
+             }
+
+             if (item.has("lowfat")) {
+                 JsonNode lowfatNode = item.get("lowfat");
+                 System.out.println("lowfatNode: " + lowfatNode);
+                 double lowfatProtein = lowfatNode.get("protein").asDouble();
+                 double lowfatFat = lowfatNode.get("fat").asDouble();
+                 double lowfatCarbs = lowfatNode.get("carbs").asDouble();
+                 setLowFatePie(lowfatProtein, lowfatFat, lowfatCarbs);
+             }
+
+             if (item.has("lowcarbs")) {
+                 JsonNode lowcarbsNode = item.get("lowcarbs");
+                 System.out.println("lowcarbsNode: " + lowcarbsNode);
+                 double lowcarbsProtein = lowcarbsNode.get("protein").asDouble();
+                 double lowcarbsFat = lowcarbsNode.get("fat").asDouble();
+                 double lowcarbsCarbs = lowcarbsNode.get("carbs").asDouble();
+                 setlowcarbs(lowcarbsProtein, lowcarbsFat, lowcarbsCarbs);
+             }
+
+             if (item.has("highprotein")) {
+                 JsonNode highproteinNode = item.get("highprotein");
+                 System.out.println("highproteinNode: " + highproteinNode);
+                 double highproteinProtein = highproteinNode.get("protein").asDouble();
+                 double highproteinFat = highproteinNode.get("fat").asDouble();
+                 double highproteinCarbs = highproteinNode.get("carbs").asDouble();
+                 sethighprotein(highproteinProtein, highproteinFat, highproteinCarbs);
+             }
+         }catch (Exception e) {
+             System.out.println("Error: " + e.getMessage());
+
+         }
 }
 
+   void setBalancedPie(double balancedProtein,double balancedFat,double balancedCarbs){
+       ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList(
+               new PieChart.Data("Protein", balancedProtein),
+               new PieChart.Data("Fat", balancedFat),
+               new PieChart.Data("Carbs", balancedCarbs)
+       );
+       BalancedPie.setData(pieChartData);
+
+   }
+
+    void setLowFatePie(double lowFatProtein,double lowFatFat,double lowFatCarbs){
+        // Create the PieChart data
+
+        ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList(
+                new PieChart.Data("Protein", lowFatProtein),
+                new PieChart.Data("Fat", lowFatFat),
+                new PieChart.Data("Carbs", lowFatCarbs)
+        );
+        LowFatPie.setData(pieChartData);
+    }
+    void setlowcarbs(double lowCarbsProtein,double lowCarbsFat,double lowCarbsCarbs){
+        // Create the PieChart data
+
+        ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList(
+                new PieChart.Data("Protein", lowCarbsProtein),
+                new PieChart.Data("Fat", lowCarbsFat),
+                new PieChart.Data("Carbs", lowCarbsCarbs)
+        );
+        LowCarPie.setData(pieChartData);
+
+    }
+    void sethighprotein(double highProteinProtein,double highProteinFat,double highProteinCarbs){
+        // Create the PieChart data
+
+        ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList(
+                new PieChart.Data("Protein", highProteinProtein),
+                new PieChart.Data("Fat", highProteinFat),
+                new PieChart.Data("Carbs", highProteinCarbs)
+        );
+        HightProteinPie.setData(pieChartData);
+    }
 
 
 
@@ -129,8 +232,16 @@ private VBox LeftVbox;
     }
 */
 
+    @FXML
+    private PieChart HightProteinPie;
+    @FXML
+    private PieChart LowFatPie;
 
+    @FXML
+    private PieChart LowCarPie;
 
+    @FXML
+    private PieChart BalancedPie;
 
 private   String goal ;
 private String gender;
@@ -196,7 +307,6 @@ private String gender;
         GoalCHoice.getItems().add("Extreme weight gain");
         GoalCHoice.getItems().add("Extreme weight gain");
         GoalCHoice.setValue("maintain weight");
-
         ActivityLevl.getItems().add("BMR");
         ActivityLevl.getItems().add("little or no exercise");
         ActivityLevl.getItems().add("Exercise 1-3 times/week");

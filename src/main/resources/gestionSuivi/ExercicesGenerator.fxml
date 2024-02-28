@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="1514.0" prefWidth="1071.0" stylesheets="@../assets/images/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionsuivi.ExerciceGenController">
+<AnchorPane prefHeight="1489.0" prefWidth="1052.0" styleClass="degrade-diagonal2" stylesheets="@../assets/images/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionsuivi.ExerciceGenController">
    <children>
       <Pane layoutX="59.0" layoutY="21.0" onMouseClicked="#TrapeziusPan" prefHeight="159.0" prefWidth="185.0">
          <children>
@@ -61,7 +61,7 @@
             <DropShadow />
          </effect>
       </Pane>
-      <Pane layoutX="796.0" layoutY="22.0" onMouseClicked="#AbdoPan" prefHeight="159.0" prefWidth="185.0">
+      <Pane layoutX="796.0" layoutY="21.0" onMouseClicked="#AbdoPan" prefHeight="159.0" prefWidth="185.0">
          <children>
             <ImageView fitHeight="159.0" fitWidth="185.0" opacity="0.94" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -107,7 +107,7 @@
             <DropShadow />
          </effect>
       </Pane>
-      <ScrollPane layoutX="29.0" layoutY="935.0" prefHeight="561.0" prefWidth="1012.0">
+      <ScrollPane layoutX="30.0" layoutY="882.0" prefHeight="561.0" prefWidth="1012.0">
          <content>
             <VBox fx:id="ExercicesVbox" prefHeight="554.0" prefWidth="1008.0">
                <children>
@@ -119,10 +119,11 @@
                         <BoxBlur height="2.0" iterations="2" />
                      </effect>
                   </ImageView>
-               </children></VBox>
+               </children>
+            </VBox>
          </content>
       </ScrollPane>
-      <Pane layoutX="59.0" layoutY="242.0" onMouseClicked="#CalvesPan" prefHeight="159.0" prefWidth="185.0">
+      <Pane layoutX="59.0" layoutY="228.0" onMouseClicked="#CalvesPan" prefHeight="159.0" prefWidth="185.0">
          <children>
             <ImageView fitHeight="159.0" fitWidth="185.0" layoutX="3.0" opacity="0.94" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -145,7 +146,7 @@
             <DropShadow />
          </effect>
       </Pane>
-      <Pane layoutX="536.0" layoutY="242.0" onMouseClicked="#ShouldersPan" prefHeight="159.0" prefWidth="185.0">
+      <Pane layoutX="536.0" layoutY="228.0" onMouseClicked="#ShouldersPan" prefHeight="159.0" prefWidth="185.0">
          <children>
             <ImageView fitHeight="159.0" fitWidth="185.0" layoutX="3.0" opacity="0.94" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -168,7 +169,7 @@
             <DropShadow />
          </effect>
       </Pane>
-      <Pane layoutX="796.0" layoutY="242.0" onMouseClicked="#LatsPan" prefHeight="159.0" prefWidth="185.0">
+      <Pane layoutX="796.0" layoutY="228.0" onMouseClicked="#LatsPan" prefHeight="159.0" prefWidth="185.0">
          <children>
             <ImageView fitHeight="159.0" fitWidth="185.0" layoutX="3.0" opacity="0.94" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -191,7 +192,7 @@
             <DropShadow />
          </effect>
       </Pane>
-      <Pane layoutX="305.0" layoutY="242.0" onMouseClicked="#TricepsPan" prefHeight="159.0" prefWidth="185.0">
+      <Pane layoutX="305.0" layoutY="228.0" onMouseClicked="#TricepsPan" prefHeight="159.0" prefWidth="185.0">
          <children>
             <ImageView fitHeight="159.0" fitWidth="185.0" layoutX="3.0" opacity="0.94" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -214,7 +215,7 @@
             <DropShadow />
          </effect>
       </Pane>
-      <Pane layoutX="59.0" layoutY="450.0" onMouseClicked="#QuadsPan" prefHeight="159.0" prefWidth="185.0">
+      <Pane layoutX="60.0" layoutY="432.0" onMouseClicked="#QuadsPan" prefHeight="159.0" prefWidth="185.0">
          <children>
             <ImageView fitHeight="159.0" fitWidth="185.0" layoutX="3.0" opacity="0.94" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -237,7 +238,7 @@
             <DropShadow />
          </effect>
       </Pane>
-      <Pane layoutX="311.0" layoutY="450.0" onMouseClicked="#HamstringPan" prefHeight="159.0" prefWidth="185.0" styleClass="border-table" stylesheets="@../assets/images/style.css">
+      <Pane layoutX="305.0" layoutY="432.0" onMouseClicked="#HamstringPan" prefHeight="159.0" prefWidth="185.0" styleClass="border-table" stylesheets="@../assets/images/style.css">
          <children>
             <ImageView fitHeight="159.0" fitWidth="185.0" layoutX="3.0" opacity="0.94" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -260,7 +261,7 @@
             <DropShadow />
          </effect>
       </Pane>
-      <Pane layoutX="536.0" layoutY="450.0" onMouseClicked="#GlutesPan" prefHeight="159.0" prefWidth="185.0">
+      <Pane layoutX="536.0" layoutY="432.0" onMouseClicked="#GlutesPan" prefHeight="159.0" prefWidth="185.0">
          <children>
             <ImageView fitHeight="159.0" fitWidth="185.0" layoutX="3.0" opacity="0.94" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -283,7 +284,7 @@
             <DropShadow />
          </effect>
       </Pane>
-      <Pane layoutX="796.0" layoutY="450.0" onMouseClicked="#BackPan" prefHeight="159.0" prefWidth="185.0">
+      <Pane layoutX="796.0" layoutY="432.0" onMouseClicked="#BackPan" prefHeight="159.0" prefWidth="185.0">
          <children>
             <ImageView fitHeight="159.0" fitWidth="185.0" layoutX="3.0" opacity="0.94" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -318,16 +319,16 @@
             <Font name="System Bold Italic" size="12.0" />
          </font>
       </Label>
-      <Label layoutX="117.0" layoutY="409.0" prefHeight="20.0" prefWidth="54.0" text="Calves" />
-      <Label layoutX="371.0" layoutY="409.0" prefHeight="20.0" prefWidth="54.0" text="Triceps" />
-      <Label layoutX="602.0" layoutY="409.0" prefHeight="20.0" prefWidth="88.0" text="Shoulders" />
-      <Label layoutX="866.0" layoutY="409.0" prefHeight="20.0" prefWidth="54.0" text="Lats" />
-      <Label layoutX="125.0" layoutY="621.0" prefHeight="20.0" prefWidth="104.0" text="Quadriceps" />
-      <Label layoutX="362.0" layoutY="621.0" prefHeight="20.0" prefWidth="104.0" text="Hamstrings" />
-      <Label layoutX="602.0" layoutY="621.0" prefHeight="20.0" prefWidth="104.0" text="Glutes" />
-      <Label layoutX="868.0" layoutY="621.0" prefHeight="20.0" prefWidth="104.0" text="Back" />
-      <Separator layoutX="138.0" layoutY="681.0" prefHeight="0.0" prefWidth="807.0" />
-      <Pane layoutX="15.0" layoutY="701.0" prefHeight="200.0" prefWidth="1035.0" stylesheets="@../assets/images/style.css">
+      <Label layoutX="125.0" layoutY="396.0" prefHeight="20.0" prefWidth="54.0" text="Calves" />
+      <Label layoutX="377.0" layoutY="396.0" prefHeight="20.0" prefWidth="54.0" text="Triceps" />
+      <Label layoutX="602.0" layoutY="396.0" prefHeight="20.0" prefWidth="88.0" text="Shoulders" />
+      <Label layoutX="866.0" layoutY="396.0" prefHeight="20.0" prefWidth="54.0" text="Lats" />
+      <Label layoutX="117.0" layoutY="605.0" prefHeight="20.0" prefWidth="70.0" text="Quadriceps" />
+      <Label layoutX="361.0" layoutY="605.0" prefHeight="20.0" prefWidth="74.0" text="Hamstrings" />
+      <Label layoutX="599.0" layoutY="605.0" prefHeight="20.0" prefWidth="59.0" text="Glutes" />
+      <Label layoutX="868.0" layoutY="605.0" prefHeight="20.0" prefWidth="35.0" text="Back" />
+      <Separator layoutX="153.0" layoutY="644.0" prefHeight="0.0" prefWidth="807.0" />
+      <Pane layoutX="22.0" layoutY="675.0" prefHeight="185.0" prefWidth="1020.0" stylesheets="@../assets/images/style.css">
          <styleClass>
             <String fx:value="border-table" />
             <String fx:value="degrade-diagonal" />
@@ -337,92 +338,85 @@
             <DropShadow height="59.1" radius="28.317500000000003" spread="0.37" width="56.17" />
          </effect>
          <children>
-            <Label layoutX="41.0" layoutY="158.0" prefHeight="20.0" prefWidth="70.0" text="Barbell" />
-            <Label layoutX="230.0" layoutY="158.0" prefHeight="20.0" prefWidth="70.0" text="EZ-bar" />
-            <Label layoutX="406.0" layoutY="158.0" prefHeight="20.0" prefWidth="70.0" text="Dumbbells" />
-            <Label layoutX="597.0" layoutY="158.0" prefHeight="20.0" prefWidth="70.0" text="Chest press machine" />
-            <Label layoutX="784.0" layoutY="158.0" prefHeight="20.0" prefWidth="70.0" text="Bench" />
-            <Label layoutX="924.0" layoutY="158.0" prefHeight="20.0" prefWidth="70.0" text="kettlebell" />
-         </children>
-      </Pane>
-      <Pane layoutX="39.0" layoutY="718.0" onMouseClicked="#BarbelPane" prefHeight="125.0" prefWidth="172.0">
-         <children>
-            <ImageView fitHeight="105.0" fitWidth="159.0" layoutX="-20.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../assets/images/barbeel-removebg-preview.png" />
-               </image>
-               <effect>
-                  <DropShadow height="59.1" radius="39.19" spread="0.3" width="99.66" />
-               </effect>
-            </ImageView>
-         </children>
-      </Pane>
-      <Pane layoutX="211.0" layoutY="718.0" onMouseClicked="#EzBarPane" prefHeight="125.0" prefWidth="172.0">
-         <children>
-            <ImageView fitHeight="132.0" fitWidth="139.0" layoutX="14.0" layoutY="-6.0" pickOnBounds="true" preserveRatio="true" rotate="-11.3">
-               <image>
-                  <Image url="@../assets/images/EZ-bar-removebg-preview.png" />
-               </image>
-               <effect>
-                  <DropShadow height="59.1" radius="39.19" spread="0.3" width="99.66" />
-               </effect>
-            </ImageView>
-         </children>
-      </Pane>
-      <Pane layoutX="394.0" layoutY="718.0" onMouseClicked="#DumbellsPan" prefHeight="125.0" prefWidth="145.0">
-         <children>
-            <ImageView fitHeight="112.0" fitWidth="113.0" layoutX="14.0" layoutY="7.0" pickOnBounds="true" preserveRatio="true" rotate="-31.6">
-               <image>
-                  <Image url="@../assets/images/Dumbbells-removebg-preview.png" />
-               </image>
-               <effect>
-                  <DropShadow height="79.38" radius="44.26" spread="0.22" width="99.66" />
-               </effect>
-            </ImageView>
-         </children>
-      </Pane>
-      <Pane layoutX="567.0" layoutY="718.0" onMouseClicked="#PressPan" prefHeight="125.0" prefWidth="159.0">
-         <children>
-            <ImageView fitHeight="139.0" fitWidth="139.0" layoutY="-2.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../assets/images/Chest_press_machine-removebg-preview.png" />
-               </image>
-               <effect>
-                  <DropShadow height="59.1" radius="39.19" spread="0.3" width="99.66" />
-               </effect>
-            </ImageView>
-         </children>
-      </Pane>
-      <Pane layoutX="733.0" layoutY="718.0" onMouseClicked="#BenchPanel" prefHeight="125.0" prefWidth="172.0">
-         <children>
-            <ImageView fitHeight="120.0" fitWidth="201.0" layoutY="-2.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../assets/images/Bench-removebg-preview.png" />
-               </image>
-               <effect>
-                  <DropShadow height="59.1" radius="39.19" spread="0.3" width="99.66" />
-               </effect>
-            </ImageView>
-         </children>
-      </Pane>
-      <Pane layoutX="879.0" layoutY="718.0" onMouseClicked="#kettlebellPan" prefHeight="125.0" prefWidth="172.0">
-         <children>
-            <ImageView fitHeight="104.0" fitWidth="130.0" layoutX="21.0" layoutY="26.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../assets/images/kettlebell-removebg-preview.png" />
-               </image>
-               <effect>
-                  <DropShadow height="59.1" radius="39.19" spread="0.3" width="99.66" />
-               </effect>
-            </ImageView>
+            <Label layoutX="54.0" layoutY="137.0" prefHeight="20.0" prefWidth="70.0" text="Barbell" />
+            <Label layoutX="229.0" layoutY="137.0" prefHeight="20.0" prefWidth="70.0" text="EZ-bar" />
+            <Label layoutX="407.0" layoutY="137.0" prefHeight="20.0" prefWidth="70.0" text="Dumbbells" />
+            <Label layoutX="766.0" layoutY="138.0" prefHeight="20.0" prefWidth="70.0" text="Bench" />
+            <Label layoutX="923.0" layoutY="137.0" prefHeight="20.0" prefWidth="70.0" text="kettlebell" />
+            <Pane layoutX="25.0" layoutY="22.0" onMouseClicked="#BarbelPane" prefHeight="125.0" prefWidth="172.0">
+               <children>
+                  <ImageView fitHeight="105.0" fitWidth="159.0" layoutX="-20.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../assets/images/barbeel-removebg-preview.png" />
+                     </image>
+                     <effect>
+                        <DropShadow height="59.1" radius="39.19" spread="0.3" width="99.66" />
+                     </effect>
+                  </ImageView>
+               </children>
+            </Pane>
+            <Pane layoutX="190.0" layoutY="13.0" onMouseClicked="#EzBarPane" prefHeight="125.0" prefWidth="172.0">
+               <children>
+                  <ImageView fitHeight="132.0" fitWidth="139.0" layoutX="14.0" layoutY="-6.0" pickOnBounds="true" preserveRatio="true" rotate="-11.3">
+                     <image>
+                        <Image url="@../assets/images/EZ-bar-removebg-preview.png" />
+                     </image>
+                     <effect>
+                        <DropShadow height="59.1" radius="39.19" spread="0.3" width="99.66" />
+                     </effect>
+                  </ImageView>
+               </children>
+            </Pane>
+            <Pane layoutX="369.0" layoutY="13.0" onMouseClicked="#DumbellsPan" prefHeight="125.0" prefWidth="145.0">
+               <children>
+                  <ImageView fitHeight="112.0" fitWidth="113.0" layoutX="14.0" layoutY="7.0" pickOnBounds="true" preserveRatio="true" rotate="-31.6">
+                     <image>
+                        <Image url="@../assets/images/Dumbbells-removebg-preview.png" />
+                     </image>
+                     <effect>
+                        <DropShadow height="79.38" radius="44.26" spread="0.22" width="99.66" />
+                     </effect>
+                  </ImageView>
+               </children>
+            </Pane>
+            <Pane layoutX="552.0" layoutY="10.0" onMouseClicked="#PressPan" prefHeight="125.0" prefWidth="159.0">
+               <children>
+                  <ImageView fitHeight="139.0" fitWidth="139.0" layoutY="-2.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../assets/images/Chest_press_machine-removebg-preview.png" />
+                     </image>
+                     <effect>
+                        <DropShadow height="59.1" radius="39.19" spread="0.3" width="99.66" />
+                     </effect>
+                  </ImageView>
+                  <Label layoutX="6.0" layoutY="129.0" prefHeight="20.0" prefWidth="130.0" text="Chest press machine" />
+               </children>
+            </Pane>
+            <Pane layoutX="709.0" layoutY="23.0" onMouseClicked="#BenchPanel" prefHeight="125.0" prefWidth="172.0">
+               <children>
+                  <ImageView fitHeight="120.0" fitWidth="201.0" layoutY="-2.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../assets/images/Bench-removebg-preview.png" />
+                     </image>
+                     <effect>
+                        <DropShadow height="59.1" radius="39.19" spread="0.3" width="99.66" />
+                     </effect>
+                  </ImageView>
+               </children>
+            </Pane>
+            <Pane layoutX="872.0" layoutY="16.0" onMouseClicked="#kettlebellPan" prefHeight="125.0" prefWidth="159.0">
+               <children>
+                  <ImageView fitHeight="104.0" fitWidth="130.0" layoutX="21.0" layoutY="26.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../assets/images/kettlebell-removebg-preview.png" />
+                     </image>
+                     <effect>
+                        <DropShadow height="59.1" radius="39.19" spread="0.3" width="99.66" />
+                     </effect>
+                  </ImageView>
+               </children>
+            </Pane>
          </children>
       </Pane>
    </children>
-   <styleClass>
-      <String fx:value="degrade-diagonal2" />
-      <String fx:value="border-table" />
-   </styleClass>
-   <effect>
-      <DropShadow height="44.45" radius="18.060000000000002" spread="0.23" width="29.79" />
-   </effect>
 </AnchorPane>

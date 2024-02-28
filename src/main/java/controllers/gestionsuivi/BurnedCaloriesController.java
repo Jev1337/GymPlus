@@ -2,6 +2,7 @@ package controllers.gestionsuivi;
 
 import atlantafx.base.controls.ModalPane;
 import atlantafx.base.controls.RingProgressIndicator;
+import atlantafx.base.theme.Styles;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,6 +11,7 @@ import javafx.animation.TranslateTransition;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -20,6 +22,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 import java.io.IOException;
@@ -28,13 +31,49 @@ import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 import java.util.stream.IntStream;
 
 public class BurnedCaloriesController implements Initializable {
 
+    @FXML
+    private Text CarbText1;
 
+    @FXML
+    private Text CarbText2;
 
+    @FXML
+    private Text CarbText3;
+
+    @FXML
+    private Text CarbText4;
+
+    @FXML
+    private Text FatText1;
+
+    @FXML
+    private Text FatText2;
+
+    @FXML
+    private Text FatText3;
+
+    @FXML
+    private Text FatText4;
+    @FXML
+    private Text Proteintext1;
+
+    @FXML
+    private Text Proteintext2;
+
+    @FXML
+    private Text Proteintext3;
+
+    @FXML
+    private Text Proteintext4;
+
+    @FXML
+    private Text CalsRequiredText;
     @FXML
     private PieChart PieChartBurnedCals;
 
@@ -98,6 +137,18 @@ public void BurnedCaloriesFromActivity(int age,double weight, double height) thr
     private Pane Pane2MacrosCalculator;
     @FXML
     private Pane Pane1Bmi;
+
+    @FXML
+    private Pane Pane1;
+    @FXML
+    private Pane Pane2;
+    @FXML
+    private Pane Pane3;
+    @FXML
+    private Pane Pane4;
+
+    @FXML
+    private Pane PaaneForm;
 void  changePanel2(){
     Pane1Bmi.setVisible(false);
     Pane2MacrosCalculator.setVisible(true);
@@ -107,14 +158,14 @@ void  changePanel2(){
         Pane2MacrosCalculator.setVisible(false);
     }
 
-
+@FXML
+private  Pane CalsPanel;
 
     @FXML
     private ChoiceBox<String> ActivityLevl;
 
     @FXML
     private ChoiceBox<String> GoalCHoice;
-
 
 public  void MacrosAmout(int age,String gender,double height,double weight,int lvl,String goal) throws IOException, InterruptedException {
 
@@ -135,6 +186,13 @@ public  void MacrosAmout(int age,String gender,double height,double weight,int l
              System.out.println("Item: " + item2);
 
              JsonNode item =item2.get("data");
+             double cals = item.get("calorie").asDouble();
+             CalsRequiredText.setText(String.format("%.2f",cals));
+             CalsPanel.setTranslateX(-CalsPanel.getWidth());
+             CalsPanel.setVisible(true);
+             TranslateTransition transition = new TranslateTransition(Duration.seconds(0.5), CalsPanel);
+             transition.setToX(0);
+             transition.play();
              if (item.has("balanced")) {
                  JsonNode balancedNode = item.get("balanced");
                  System.out.println("balancedNode: " + balancedNode);
@@ -182,6 +240,10 @@ public  void MacrosAmout(int age,String gender,double height,double weight,int l
                new PieChart.Data("Fat", balancedFat),
                new PieChart.Data("Carbs", balancedCarbs)
        );
+
+       Proteintext1.setText(String.format("%.2f", balancedProtein));
+       FatText1.setText(String.format("%.2f", balancedFat));
+       CarbText1.setText(String.format("%.2f", balancedCarbs));
        BalancedPie.setData(pieChartData);
 
    }
@@ -194,6 +256,9 @@ public  void MacrosAmout(int age,String gender,double height,double weight,int l
                 new PieChart.Data("Fat", lowFatFat),
                 new PieChart.Data("Carbs", lowFatCarbs)
         );
+        Proteintext2.setText(String.format("%.2f", lowFatProtein));
+        FatText2.setText(String.format("%.2f", lowFatFat));
+        CarbText2.setText(String.format("%.2f", lowFatCarbs));
         LowFatPie.setData(pieChartData);
     }
     void setlowcarbs(double lowCarbsProtein,double lowCarbsFat,double lowCarbsCarbs){
@@ -204,6 +269,10 @@ public  void MacrosAmout(int age,String gender,double height,double weight,int l
                 new PieChart.Data("Fat", lowCarbsFat),
                 new PieChart.Data("Carbs", lowCarbsCarbs)
         );
+
+        Proteintext3.setText(String.format("%.2f", lowCarbsProtein));
+        FatText3.setText(String.format("%.2f", lowCarbsFat));
+        CarbText3.setText(String.format("%.2f", lowCarbsCarbs));
         LowCarPie.setData(pieChartData);
 
     }
@@ -215,6 +284,9 @@ public  void MacrosAmout(int age,String gender,double height,double weight,int l
                 new PieChart.Data("Fat", highProteinFat),
                 new PieChart.Data("Carbs", highProteinCarbs)
         );
+        Proteintext4.setText(String.format("%.2f", highProteinProtein));
+        FatText4.setText(String.format("%.2f", highProteinFat));
+        CarbText4.setText(String.format("%.2f", highProteinCarbs));
         HightProteinPie.setData(pieChartData);
     }
 
@@ -258,8 +330,113 @@ private String gender;
     private TextField weightField2;
     @FXML
     private TextField heightField2;
+    @FXML
+private Button GetMacrosButton;
+
+
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        Pane1.setOnMouseEntered(event -> Pane1.setStyle("-fx-background-color: lightgreen;"));
+        Pane1.setOnMouseExited(event -> Pane1.setStyle("-fx-background-color: lightgray;"));
+        Pane2.setOnMouseEntered(event -> Pane2.setStyle("-fx-background-color: lightgreen;"));
+        Pane2.setOnMouseExited(event -> Pane2.setStyle("-fx-background-color: lightgray;"));
+        Pane3.setOnMouseEntered(event -> Pane3.setStyle("-fx-background-color: lightgreen;"));
+        Pane3.setOnMouseExited(event -> Pane3.setStyle("-fx-background-color: lightgray;"));
+        Pane4.setOnMouseEntered(event -> Pane4.setStyle("-fx-background-color: lightgreen;"));
+        Pane4.setOnMouseExited(event -> Pane4.setStyle("-fx-background-color: lightgray;"));
+        CalsPanel.setOnMouseEntered(event -> CalsPanel.setStyle("-fx-background-color: lightgreen;"));
+        CalsPanel.setOnMouseExited(event -> CalsPanel.setStyle("-fx-background-color: lightgray;"));
+        PaaneForm.setOnMouseEntered(event -> PaaneForm.setStyle("-fx-background-color: lightgreen;"));
+        PaaneForm.setOnMouseExited(event -> PaaneForm.setStyle("-fx-background-color: lightgray;"));
+        GetMacrosButton.getStyleClass().addAll(
+                Styles.BUTTON_OUTLINED, Styles.SUCCESS
+        );
+        GetMacrosButton.setMnemonicParsing(true);
+
+
+        GetMacrosButton.setOnAction(event -> {
+                        if (FemaleRadioButton.isSelected()) {
+                            gender ="female";
+                        }
+                        if (MaleRadioButton.isSelected()) {
+                            gender ="male";
+                        }
+
+
+                        int activiteLevel = 1;
+                        int age = Integer.parseInt(ageField2.getText());
+                        double weight = Double.parseDouble(weightField2.getText());
+                        double height = Double.parseDouble(heightField2.getText());
+                        if (ActivityLevl.getSelectionModel().getSelectedItem().equals("BMR")) {
+                            activiteLevel = 1;
+                        }
+
+                        if (ActivityLevl.getSelectionModel().getSelectedItem().equals("little or no exercise")) {
+                            activiteLevel  = 2 ;
+                        }
+                        if (ActivityLevl.getSelectionModel().getSelectedItem().equals("Exercise 1-3 times/week")) {
+                            activiteLevel  = 3 ;
+                        }
+
+                        if (ActivityLevl.getSelectionModel().getSelectedItem().equals("Exercise 4-5 times/week")) {
+
+                            activiteLevel  = 4 ;
+                        }
+                        if (ActivityLevl.getSelectionModel().getSelectedItem().equals("Daily exercise or intense exercise 3-4 times/week")) {
+
+                            activiteLevel  = 5 ;
+                        }
+                        if (ActivityLevl.getSelectionModel().getSelectedItem().equals("Intense exercise 6-7 times/week")) {
+                            activiteLevel  = 6 ;
+                        }
+                        if (ActivityLevl.getSelectionModel().getSelectedItem().equals("IVery intense exercise daily, or physical job")) {
+                            activiteLevel  = 7 ;
+                        }
+
+
+                        if (GoalCHoice.getSelectionModel().getSelectedItem().equals("maintain weight")) {
+                            goal = "maintain";
+                        }
+                        if (GoalCHoice.getSelectionModel().getSelectedItem().equals("Mild weight loss")) {
+                            goal = "mildlose";
+                        }
+
+                        if (GoalCHoice.getSelectionModel().getSelectedItem().equals("Weight loss")) {
+                            goal = "weightlose";
+                        }
+                        if (GoalCHoice.getSelectionModel().getSelectedItem().equals("Extreme weight loss")) {
+                            goal = "extremelose";
+                        }
+                        if (GoalCHoice.getSelectionModel().getSelectedItem().equals("Mild weight gain")) {
+                            goal = "mildgain";
+                        }
+                        if (GoalCHoice.getSelectionModel().getSelectedItem().equals("Weight gain")) {
+                            goal = "weightgain";
+                        }
+                        if (GoalCHoice.getSelectionModel().getSelectedItem().equals("Extreme weight gain")) {
+                            goal = "extremegain";
+                        }
+
+                        try {
+                            System.out.println(age);
+                            System.out.println(gender);
+                            System.out.println(height);
+                            System.out.println(weight);
+                            System.out.println(activiteLevel);
+                            System.out.println(goal);
+
+                            MacrosAmout(age,gender,height,weight,activiteLevel,goal);
+
+                        } catch (IOException | InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
+
+                    } );
+
+
+
+
 
         var indicatorToggle = new ToggleButton("Start");
         indicatorToggle.textProperty().bind(Bindings.createStringBinding(
@@ -315,114 +492,6 @@ private String gender;
         ActivityLevl.getItems().add("Intense exercise 6-7 times/week");
         ActivityLevl.getItems().add("Very intense exercise daily, or physical job");
         ActivityLevl.setValue("BMR");
-
-
-
-
-        var indicatorToggle2 = new ToggleButton("Start");
-        indicatorToggle2.textProperty().bind(Bindings.createStringBinding(
-                () -> indicatorToggle2.isSelected() ? "Stop" : "Start",
-                indicatorToggle2.selectedProperty()
-        ));
-        var indicator2 = new ProgressIndicator(0);
-        indicator2.setMinSize(40, 40);
-        indicator2.progressProperty().bind(Bindings.createDoubleBinding(
-                () -> indicatorToggle2.isSelected() ? -1d : 0d,
-                indicatorToggle2.selectedProperty()
-        ));
-        indicatorToggle2.setOnAction(eventt -> {
-            if (indicatorToggle2.isSelected()) {
-
-
-                if (FemaleRadioButton.isSelected()) {
-                  gender ="female";
-                }
-                    if (MaleRadioButton.isSelected()) {
-                         gender ="male";
-                    }
-
-
-                    int activiteLevel = 1;
-                int age = Integer.parseInt(ageField2.getText());
-                double weight = Double.parseDouble(weightField2.getText());
-                double height = Double.parseDouble(heightField2.getText());
-                if (ActivityLevl.getSelectionModel().getSelectedItem().equals("BMR")) {
-                    activiteLevel = 1;
-                }
-
-                    if (ActivityLevl.getSelectionModel().getSelectedItem().equals("little or no exercise")) {
-                    activiteLevel  = 2 ;
-                }
-                 if (ActivityLevl.getSelectionModel().getSelectedItem().equals("Exercise 1-3 times/week")) {
-                    activiteLevel  = 3 ;
-                }
-
-                 if (ActivityLevl.getSelectionModel().getSelectedItem().equals("Exercise 4-5 times/week")) {
-
-                    activiteLevel  = 4 ;
-                }
-                 if (ActivityLevl.getSelectionModel().getSelectedItem().equals("Daily exercise or intense exercise 3-4 times/week")) {
-
-                    activiteLevel  = 5 ;
-                }
-                 if (ActivityLevl.getSelectionModel().getSelectedItem().equals("Intense exercise 6-7 times/week")) {
-                    activiteLevel  = 6 ;
-                }
-                 if (ActivityLevl.getSelectionModel().getSelectedItem().equals("IVery intense exercise daily, or physical job")) {
-                    activiteLevel  = 7 ;
-                }
-
-
-                if (GoalCHoice.getSelectionModel().getSelectedItem().equals("maintain weight")) {
-                    goal = "maintain";
-                }
-                 if (GoalCHoice.getSelectionModel().getSelectedItem().equals("Mild weight loss")) {
-                    goal = "mildlose";
-                }
-
-                if (GoalCHoice.getSelectionModel().getSelectedItem().equals("Weight loss")) {
-                    goal = "weightlose";
-                }
-                if (GoalCHoice.getSelectionModel().getSelectedItem().equals("Extreme weight loss")) {
-                    goal = "extremelose";
-                }
-                if (GoalCHoice.getSelectionModel().getSelectedItem().equals("Mild weight gain")) {
-                    goal = "mildgain";
-                }
-                if (GoalCHoice.getSelectionModel().getSelectedItem().equals("Weight gain")) {
-                    goal = "weightgain";
-                }
-                if (GoalCHoice.getSelectionModel().getSelectedItem().equals("Extreme weight gain")) {
-                    goal = "extremegain";
-                }
-
-
-
-
-                try {
-                    System.out.println(age);
-                    System.out.println(gender);
-                    System.out.println(height);
-                    System.out.println(weight);
-                    System.out.println(activiteLevel);
-                    System.out.println(goal);
-
-                    MacrosAmout(age,gender,height,weight,activiteLevel,goal);
-
-                } catch (IOException | InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-                PauseTransition delay = new PauseTransition(Duration.seconds(3));
-                delay.setOnFinished(e -> indicatorToggle2.setSelected(false));
-                delay.play();
-
-            } else {
-                System.out.println("no slected");
-            }
-        });
-
-        MacrosToogleVbox.getChildren().addAll(indicatorToggle2,indicator2);
-
 
     }
 }

@@ -772,7 +772,7 @@ public class AuthController {
     }
 
 
-    private void compare(String token1, String token2){
+    private void compare(){
         OkHttpClient client = new OkHttpClient().newBuilder()
                 .build();
         RequestBody body = new MultipartBody.Builder().setType(MultipartBody.FORM)
@@ -799,7 +799,7 @@ public class AuthController {
             }
         }
         catch (Exception e) {
-            e.printStackTrace();
+            stackTraceAlert(e);
         }
     }
 
@@ -908,7 +908,7 @@ public class AuthController {
                                                     enableAllSU(true);
                                                 }
                                                 else {
-                                                    compare(faceId, GlobalVar.getUser().getFaceid());
+                                                    compare();
                                                 }
                                             }catch (Exception e) {
                                                 stackTraceAlert(e);

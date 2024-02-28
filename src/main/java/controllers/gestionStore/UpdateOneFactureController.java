@@ -44,14 +44,7 @@ public class UpdateOneFactureController implements Initializable
 
             String idFactureStr = idfacture.getText();
 
-            int idFacture = 0; // Valeur par défaut en cas d'échec de la conversion
-
-            try {
-                idFacture = Integer.parseInt(idFactureStr);
-            } catch (NumberFormatException e) {
-                // Gérer le cas où la chaîne n'est pas un nombre valide
-                e.printStackTrace(); // ou autre traitement approprié
-            }
+            int idFacture = Integer.parseInt(idFactureStr);
 
             //int idFacture = Integer.parseInt(idfacture.getText());
             String methodePaiement = comboPaiement.getValue();
@@ -95,7 +88,7 @@ public class UpdateOneFactureController implements Initializable
     }
 
      */
-    private final DetailFactureService dfS = new DetailFactureService();
+    //private final DetailFactureService dfS = new DetailFactureService();
 
     public void setFacture(facture selectedFacture)
     {

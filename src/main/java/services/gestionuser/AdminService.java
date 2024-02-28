@@ -195,15 +195,4 @@ public class AdminService implements IService<Admin> {
         pst.setInt(2, id);
         pst.executeUpdate();
     }
-
-    public List<String> getAllAdminsEmails() throws SQLException {
-        List<String> emails = new ArrayList<>();
-        String query = "SELECT email FROM user WHERE role = 'admin'";
-        PreparedStatement pst = connection.prepareStatement(query);
-        ResultSet rs = pst.executeQuery();
-        while (rs.next()) {
-            emails.add(rs.getString("email"));
-        }
-        return emails;
-    }
 }

@@ -60,15 +60,4 @@ public class EquipementService implements IService<Equipements_details>{
         return equipements;
 
     }
-
-    public Equipements_details getEquipementById(int id) throws SQLException {
-        String sql = "select * from equipements_details where id=?";
-        PreparedStatement ps = connection.prepareStatement(sql);
-        ps.setInt(1, id);
-        ResultSet rs = ps.executeQuery();
-        if (rs.next()) {
-            return new Equipements_details(rs.getInt("id"),rs.getString("name"),rs.getString("description"),rs.getString("duree_de_vie"),rs.getString("etat"));
-        }
-        return null;
-    }
 }

@@ -17,9 +17,9 @@
 <?import javafx.scene.paint.Stop?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="1180.0" prefWidth="1069.0" stylesheets="@../assets/images/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionsuivi.CaloriesGeneratorController">
+<AnchorPane prefHeight="1155.0" prefWidth="1002.0" styleClass="degrade-diagonal2" stylesheets="@../assets/images/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionsuivi.CaloriesGeneratorController">
    <children>
-      <Pane layoutX="71.0" layoutY="33.0" prefHeight="570.0" prefWidth="894.0" styleClass="degrade-diagonal" stylesheets="@../assets/images/style.css">
+      <Pane layoutX="55.0" layoutY="34.0" prefHeight="570.0" prefWidth="894.0" styleClass="degrade-diagonal" stylesheets="@../assets/images/style.css">
          <children>
             <Pane layoutX="38.0" layoutY="95.0" prefHeight="454.0" prefWidth="825.0" styleClass="border-table" stylesheets="@../assets/images/style.css">
                <children>
@@ -79,7 +79,7 @@
             <DropShadow />
          </effect>
       </Pane>
-      <Pane layoutX="71.0" layoutY="632.0" prefHeight="513.0" prefWidth="451.0" styleClass="degrade-diagonal" stylesheets="@../assets/images/style.css">
+      <Pane layoutX="71.0" layoutY="642.0" prefHeight="513.0" prefWidth="451.0" styleClass="degrade-diagonal" stylesheets="@../assets/images/style.css">
          <children>
             <Button layoutX="370.0" layoutY="49.0" mnemonicParsing="false" onAction="#generateCalories" prefHeight="17.0" prefWidth="52.0" text="Ok" />
             <TextField fx:id="CaloriesField" layoutX="28.0" layoutY="49.0" prefHeight="39.0" prefWidth="316.0" promptText="Enter food" />
@@ -132,7 +132,7 @@
             <DropShadow />
          </effect>
       </Pane>
-      <Pane layoutX="619.0" layoutY="648.0" prefHeight="198.0" prefWidth="316.0" styleClass="degrade-diagonal" stylesheets="@../assets/images/style.css">
+      <Pane layoutX="619.0" layoutY="672.0" prefHeight="198.0" prefWidth="316.0" styleClass="degrade-diagonal" stylesheets="@../assets/images/style.css">
          <children>
             <ImageView fitHeight="235.0" fitWidth="316.0" layoutY="-22.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -144,9 +144,9 @@
             </ImageView>
          </children>
       </Pane>
-      <Pane layoutX="619.0" layoutY="889.0" prefHeight="235.0" prefWidth="316.0" styleClass="degrade-diagonal" stylesheets="@../assets/images/style.css">
+      <Pane layoutX="619.0" layoutY="913.0" prefHeight="235.0" prefWidth="316.0" styleClass="degrade-diagonal" stylesheets="@../assets/images/style.css">
          <children>
-            <ImageView fitHeight="235.0" fitWidth="316.0" layoutY="2.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="235.0" fitWidth="316.0" layoutX="2.0" layoutY="-2.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../assets/images/Citron2.jpg" />
                </image>
@@ -157,11 +157,4 @@
          </children>
       </Pane>
    </children>
-   <styleClass>
-      <String fx:value="border-table" />
-      <String fx:value="degrade-diagonal2" />
-   </styleClass>
-   <effect>
-      <DropShadow height="79.63" radius="41.5125" spread="0.52" width="88.42" />
-   </effect>
 </AnchorPane>

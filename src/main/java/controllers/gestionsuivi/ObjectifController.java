@@ -18,6 +18,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Pagination;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -100,7 +101,8 @@ public class ObjectifController  implements Initializable {
     */
 
 
-
+    @FXML
+    private ScrollPane ScrollPanelExerciceGen;
 
     public void refreshNodeCaloriesFx() throws IOException {
         caloriesPrompted.getChildren().clear();
@@ -115,10 +117,10 @@ public class ObjectifController  implements Initializable {
     }
 
     public  void refreshNodeExercicesGenerator() throws IOException {
-        ExerciceCalorieVbox.getChildren().clear();
+
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/gestionSuivi/ExercicesGenerator.fxml"));
         Node node = loader.load();
-        ExerciceCalorieVbox.getChildren().add(node);
+        ScrollPanelExerciceGen.setContent(node);
 
     }
 
@@ -126,9 +128,21 @@ public class ObjectifController  implements Initializable {
         CaloriesRequirmentVbox.getChildren().clear();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/gestionSuivi/CaloriesRequirment.fxml"));
         Node node = loader.load();
+        BurnedCaloriesController ChangePannels = loader.getController();
+        ChangePannels.changePanel1();
         CaloriesRequirmentVbox.getChildren().add(node);
 
     }
+    public  void refreshBurnedCaloriesControllerPan2() throws IOException {
+        CaloriesRequirmentVbox.getChildren().clear();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/gestionSuivi/CaloriesRequirment.fxml"));
+        Node node = loader.load();
+        BurnedCaloriesController ChangePannels = loader.getController();
+        ChangePannels.changePanel2();
+        CaloriesRequirmentVbox.getChildren().add(node);
+
+    }
+
     @FXML
     private Pane Pane1;
 
@@ -141,7 +155,17 @@ public class ObjectifController  implements Initializable {
 
     @FXML
     void SendSignalToAddfucntion(ActionEvent event) throws IOException {
+        ScrollBmi_MacrosCal.setVisible(false);
+        ScrollPanelExerciceGen.setVisible(false);
         PaneChatBot.setVisible(false);
+        Pane1.setVisible(true);
+
+        PanePage1.setTranslateX(PanePage1.getWidth());
+        PanePage1.setVisible(true);
+        TranslateTransition transition3 = new TranslateTransition(Duration.seconds(0.5), PanePage1);
+        transition3.setToX(0);
+        transition3.play();
+
         Animations.wobble(ButtonAdd).playFromStart();
         FXMLLoader loader3 = new FXMLLoader(getClass().getResource("/gestionSuivi/AddingObjectif.fxml"));
         Node node3 = loader3.load();
@@ -280,15 +304,28 @@ public class ObjectifController  implements Initializable {
 
     @FXML
     private Button GetExercicesButton;
-    @FXML
-    private Button GetMacrosButton;
+
 
     @FXML
     private Button GetStaticsCalories;
+
+    @FXML
+    private Button GetMacros;
+
+
     @FXML
     private Button RealTimeTrackerButton;
 @FXML
     private Pane DietPane;
+
+@FXML
+private Pane PanePage1;
+
+    @FXML
+    private ScrollPane ScrollPannelFood;
+
+    @FXML
+    private ScrollPane ScrollBmi_MacrosCal;
 
     public void refreshNodeMediaPlayer() throws IOException {
         PaneMiediaPlayer.getChildren().clear();
@@ -348,11 +385,11 @@ public class ObjectifController  implements Initializable {
         );
         GetExercicesButton.setMnemonicParsing(true);
 
-
-        GetMacrosButton.getStyleClass().addAll(
+        GetMacros.getStyleClass().addAll(
                 Styles.BUTTON_OUTLINED, Styles.ACCENT
         );
-        GetMacrosButton.setMnemonicParsing(true);
+        GetMacros.setMnemonicParsing(true);
+
 
         GetStaticsCalories.getStyleClass().addAll(
                 Styles.BUTTON_OUTLINED, Styles.ACCENT
@@ -416,14 +453,21 @@ public class ObjectifController  implements Initializable {
         ButtonAssistaant.setOnAction((E) -> {
             Animations.wobble(ButtonAssistaant).playFromStart();
             try {
+                ScrollBmi_MacrosCal.setVisible(false);
+                ScrollPannelFood.setVisible(false);
+                ScrollPanelExerciceGen.setVisible(false);
                 PaneMiediaPlayer.setVisible(false);
+                PanePage1.setTranslateX(PanePage1.getWidth());
+                PanePage1.setVisible(true);
+                TranslateTransition transition3 = new TranslateTransition(Duration.seconds(0.5), PanePage1);
+                transition3.setToX(0);
+                transition3.play();
                 Pane1.setTranslateX(-Pane1.getWidth());
                 Pane1.setVisible(false);
                 TranslateTransition transition = new TranslateTransition(Duration.seconds(0.5), Pane1);
                 transition.setToX(0);
                 transition.play();
-
-               refreshNodesChatBot();
+                refreshNodesChatBot();
 
 
             } catch (IOException e) {
@@ -431,6 +475,94 @@ public class ObjectifController  implements Initializable {
             }
         });
 
+
+        //Action on Get Exercices GENERATOR
+
+        GetExercicesButton.setOnAction((E) -> {
+            Animations.wobble(GetExercicesButton).playFromStart();
+            try {
+                ScrollBmi_MacrosCal.setVisible(false);
+                ScrollPannelFood.setVisible(false);
+                PanePage1.setVisible(false);
+                Pane1.setVisible(false);
+                ScrollPannelFood.setVisible(false);
+
+                ScrollPanelExerciceGen.setTranslateX(-ScrollPanelExerciceGen.getWidth());
+                ScrollPanelExerciceGen.setVisible(true);
+                TranslateTransition transition = new TranslateTransition(Duration.seconds(0.5), ScrollPanelExerciceGen);
+                transition.setToX(0);
+                transition.play();
+                refreshNodeExercicesGenerator();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+
+        //Action lel BMI W MACROS CALCULATOR
+        GetBmiButton.setOnAction((E) -> {
+            Animations.wobble(GetBmiButton).playFromStart();
+            try {
+                ScrollPannelFood.setVisible(false);
+                PanePage1.setVisible(false);
+                Pane1.setVisible(false);
+                ScrollPannelFood.setVisible(false);
+                ScrollPanelExerciceGen.setVisible(false);
+
+                ScrollBmi_MacrosCal.setTranslateX(-ScrollBmi_MacrosCal.getWidth());
+                ScrollBmi_MacrosCal.setVisible(true);
+                TranslateTransition transition = new TranslateTransition(Duration.seconds(0.5), ScrollBmi_MacrosCal);
+                transition.setToX(0);
+                transition.play();
+                refreshBurnedCaloriesController();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        });
+
+//Macros Action Button
+        GetMacros.setOnAction((E) -> {
+            Animations.wobble(GetMacros).playFromStart();
+            try {
+                ScrollPannelFood.setVisible(false);
+                PanePage1.setVisible(false);
+                Pane1.setVisible(false);
+                ScrollPannelFood.setVisible(false);
+                ScrollPanelExerciceGen.setVisible(false);
+                ScrollBmi_MacrosCal.setTranslateX(-ScrollBmi_MacrosCal.getWidth());
+                ScrollBmi_MacrosCal.setVisible(true);
+                TranslateTransition transition = new TranslateTransition(Duration.seconds(0.5), ScrollBmi_MacrosCal);
+                transition.setToX(0);
+                transition.play();
+                refreshBurnedCaloriesControllerPan2();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        });
+
+//ACTION ON MEALS GENERATOR
+        DietPlanButton.setOnAction((E) -> {
+            Animations.wobble(DietPlanButton).playFromStart();
+            try {
+                ScrollBmi_MacrosCal.setVisible(false);
+                PanePage1.setVisible(false);
+                Pane1.setVisible(false);
+                ScrollPanelExerciceGen.setVisible(false);
+
+                ScrollPannelFood.setTranslateX(-ScrollPannelFood.getWidth());
+                ScrollPannelFood.setVisible(true);
+                TranslateTransition transition = new TranslateTransition(Duration.seconds(0.5), ScrollPannelFood);
+                transition.setToX(0);
+                transition.play();
+                refreshNodeCaloriesFx();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
 
         //**************//
 

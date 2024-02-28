@@ -39,7 +39,7 @@
                   <Font name="Open Sans Regular" size="12.0" />
                </font></Label>
             <PasswordField fx:id="pwd_pf" layoutX="49.0" layoutY="191.0" prefHeight="41.0" prefWidth="202.0" promptText="Password" />
-            <ImageView fx:id="faceid_btn" fitHeight="22.0" fitWidth="23.0" layoutX="121.0" layoutY="350.0" onMouseClicked="#faceid_btn_clicked" pickOnBounds="true">
+            <ImageView fx:id="faceid_btn" fitHeight="22.0" fitWidth="23.0" layoutX="139.0" layoutY="350.0" onMouseClicked="#faceid_btn_clicked" pickOnBounds="true">
                <image>
                   <Image url="@../assets/images/Face_ID_logo.svg.png" />
                </image>
@@ -47,11 +47,6 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </ImageView>
-            <FontAwesomeIconView fx:id="google_btn" glyphName="GOOGLE" layoutX="158.0" layoutY="370.0" onMouseClicked="#google_btn_clicked" size="24">
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-            </FontAwesomeIconView>
             <Line endX="19.64599609375" layoutX="191.0" layoutY="334.0" startX="-100.0" stroke="#00aaff" />
             <FontAwesomeIconView glyphName="ENVELOPE" layoutX="226.0" layoutY="165.0" text="" />
             <FontAwesomeIconView glyphName="LOCK" layoutX="229.0" layoutY="217.0" />

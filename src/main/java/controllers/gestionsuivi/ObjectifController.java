@@ -157,7 +157,6 @@ public class ObjectifController  implements Initializable {
     void SendSignalToAddfucntion(ActionEvent event) throws IOException {
         ScrollBmi_MacrosCal.setVisible(false);
         ScrollPanelExerciceGen.setVisible(false);
-        scrollpanWeb.setVisible(false);
         PaneChatBot.setVisible(false);
         Pane1.setVisible(true);
 
@@ -260,7 +259,7 @@ public class ObjectifController  implements Initializable {
     @FXML
     private Pane PaneObjectif;
     @FXML
-    private Pane PaneGetYourExercices;
+    private Pane PaneRealTimerProgress;
     @FXML
     private Pane PaneMiediaPlayer;
 
@@ -308,7 +307,7 @@ public class ObjectifController  implements Initializable {
 
 
     @FXML
-    private Button GetSocialMediaButon;
+    private Button GetStaticsCalories;
 
     @FXML
     private Button GetMacros;
@@ -317,20 +316,14 @@ public class ObjectifController  implements Initializable {
     @FXML
     private Button RealTimeTrackerButton;
 @FXML
-    private Pane StatPane;
+    private Pane DietPane;
 
 @FXML
 private Pane PanePage1;
 
     @FXML
-    private Pane FoodPanel;
-
-
-    @FXML
     private ScrollPane ScrollPannelFood;
 
-    @FXML
-    private ScrollPane scrollpanWeb;
     @FXML
     private ScrollPane ScrollBmi_MacrosCal;
 
@@ -345,28 +338,6 @@ private Pane PanePage1;
         transition2.setToX(0);
         transition2.play();
     }
-
-
-    @FXML
-    void ShakeButtonExercices(MouseEvent event) {
-        Animations.wobble(GetExercicesButton).playFromStart();
-
-        Animations.wobble(RealTimeTrackerButton).playFromStart();
-
-    }
-
-    @FXML
-    void SahkerObjectifButtonss(MouseEvent event) {
-        Animations.wobble(ButtonAdd).playFromStart();
-        Animations.wobble(ButtonAssistaant).playFromStart();
-    }
-
-    @FXML
-    void ShakeFoodButton(MouseEvent event) {
-
-        Animations.wobble(DietPlanButton).playFromStart();
-
-    }
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
@@ -375,15 +346,12 @@ private Pane PanePage1;
             throw new RuntimeException(e);
         }
         //Styling add button
-
         PaneObjectif.setOnMouseEntered(event -> PaneObjectif.setStyle("-fx-background-color: lightblue;"));
         PaneObjectif.setOnMouseExited(event -> PaneObjectif.setStyle("-fx-background-color: lightgray;"));
-        PaneGetYourExercices.setOnMouseEntered(event -> PaneGetYourExercices.setStyle("-fx-background-color: lightblue;"));
-        PaneGetYourExercices.setOnMouseExited(event -> PaneGetYourExercices.setStyle("-fx-background-color: lightgray;"));
-        StatPane.setOnMouseEntered(event -> StatPane.setStyle("-fx-background-color: lightblue;"));
-        StatPane.setOnMouseExited(event -> StatPane.setStyle("-fx-background-color: lightgray;"));
-        FoodPanel.setOnMouseEntered(event -> FoodPanel.setStyle("-fx-background-color: lightblue;"));
-        FoodPanel.setOnMouseExited(event -> FoodPanel.setStyle("-fx-background-color: lightgray;"));
+        PaneRealTimerProgress.setOnMouseEntered(event -> PaneRealTimerProgress.setStyle("-fx-background-color: lightblue;"));
+        PaneRealTimerProgress.setOnMouseExited(event -> PaneRealTimerProgress.setStyle("-fx-background-color: lightgray;"));
+        DietPane.setOnMouseEntered(event -> DietPane.setStyle("-fx-background-color: lightblue;"));
+        DietPane.setOnMouseExited(event -> DietPane.setStyle("-fx-background-color: lightgray;"));
 
 
         burnedCalsButton.getStyleClass().addAll(
@@ -423,10 +391,10 @@ private Pane PanePage1;
         GetMacros.setMnemonicParsing(true);
 
 
-        GetSocialMediaButon.getStyleClass().addAll(
+        GetStaticsCalories.getStyleClass().addAll(
                 Styles.BUTTON_OUTLINED, Styles.ACCENT
         );
-        GetSocialMediaButon.setMnemonicParsing(true);
+        GetStaticsCalories.setMnemonicParsing(true);
 
         RealTimeTrackerButton.getStyleClass().addAll(
                 Styles.BUTTON_OUTLINED, Styles.ACCENT
@@ -513,7 +481,6 @@ private Pane PanePage1;
         GetExercicesButton.setOnAction((E) -> {
             Animations.wobble(GetExercicesButton).playFromStart();
             try {
-                scrollpanWeb.setVisible(false);
                 ScrollBmi_MacrosCal.setVisible(false);
                 ScrollPannelFood.setVisible(false);
                 PanePage1.setVisible(false);
@@ -532,34 +499,10 @@ private Pane PanePage1;
             }
         });
 
-
-        //Action on page google
-        GetSocialMediaButon.setOnAction((E) -> {
-            Animations.wobble(GetSocialMediaButon).playFromStart();
-            try {
-                ScrollBmi_MacrosCal.setVisible(false);
-                ScrollPannelFood.setVisible(false);
-                PanePage1.setVisible(false);
-                Pane1.setVisible(false);
-                ScrollPannelFood.setVisible(false);
-                ScrollPanelExerciceGen.setVisible(false);
-
-                scrollpanWeb.setTranslateX(-scrollpanWeb.getWidth());
-                scrollpanWeb.setVisible(true);
-                TranslateTransition transition = new TranslateTransition(Duration.seconds(0.5), scrollpanWeb);
-                transition.setToX(0);
-                transition.play();
-                refreshNodeExercicesGenerator();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
         //Action lel BMI W MACROS CALCULATOR
         GetBmiButton.setOnAction((E) -> {
             Animations.wobble(GetBmiButton).playFromStart();
             try {
-                scrollpanWeb.setVisible(false);
                 ScrollPannelFood.setVisible(false);
                 PanePage1.setVisible(false);
                 Pane1.setVisible(false);
@@ -583,8 +526,6 @@ private Pane PanePage1;
         GetMacros.setOnAction((E) -> {
             Animations.wobble(GetMacros).playFromStart();
             try {
-                scrollpanWeb.setVisible(false);
-
                 ScrollPannelFood.setVisible(false);
                 PanePage1.setVisible(false);
                 Pane1.setVisible(false);
@@ -607,8 +548,6 @@ private Pane PanePage1;
         DietPlanButton.setOnAction((E) -> {
             Animations.wobble(DietPlanButton).playFromStart();
             try {
-                scrollpanWeb.setVisible(false);
-
                 ScrollBmi_MacrosCal.setVisible(false);
                 PanePage1.setVisible(false);
                 Pane1.setVisible(false);
@@ -660,15 +599,6 @@ private Pane PanePage1;
 
 
     }
-
-
-    @FXML
-    void ShakeStatbuttons(MouseEvent event) {
-        Animations.wobble(GetBmiButton).playFromStart();
-        Animations.wobble(GetMacros).playFromStart();
-
-    }
-
 
 
 }

@@ -5,7 +5,6 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.effect.BoxBlur?>
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.image.Image?>
@@ -18,7 +17,7 @@
 <?import javafx.scene.paint.Stop?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="1155.0" prefWidth="1002.0" stylesheets="@../assets/images/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionsuivi.CaloriesGeneratorController">
+<AnchorPane prefHeight="1155.0" prefWidth="1002.0" styleClass="degrade-diagonal2" stylesheets="@../assets/images/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionsuivi.CaloriesGeneratorController">
    <children>
       <Pane layoutX="55.0" layoutY="34.0" prefHeight="570.0" prefWidth="894.0" styleClass="degrade-diagonal" stylesheets="@../assets/images/style.css">
          <children>
@@ -47,7 +46,7 @@
                </effect>
             </ImageView>
             <TextField fx:id="ReciepeField" layoutX="41.0" layoutY="41.0" prefHeight="39.0" prefWidth="157.0" promptText="Reciepe" />
-            <Button layoutX="296.0" layoutY="48.0" mnemonicParsing="false" onAction="#ReciepePromptingButton" prefHeight="30.0" prefWidth="52.0" text="Ok" />
+            <Button layoutX="321.0" layoutY="47.0" mnemonicParsing="false" onAction="#ReciepePromptingButton" prefHeight="30.0" prefWidth="52.0" text="Ok" />
             <Label fx:id="LabelRecipe" layoutX="41.0" layoutY="14.0" text="Get your reciepe just by prompting">
                <font>
                   <Font name="System Bold" size="18.0" />
@@ -75,7 +74,6 @@
                </image>
             </ImageView>
             <VBox fx:id="translateVbox" layoutX="212.0" layoutY="42.0" prefHeight="39.0" prefWidth="91.0" />
-            <ToggleButton fx:id="Tooglefr" layoutX="451.0" layoutY="48.0" mnemonicParsing="false" text="ToggleButton" />
          </children>
          <effect>
             <DropShadow />
@@ -159,8 +157,4 @@
          </children>
       </Pane>
    </children>
-   <styleClass>
-      <String fx:value="degrade-diagonal2" />
-      <String fx:value="border-table" />
-   </styleClass>
 </AnchorPane>

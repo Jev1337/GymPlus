@@ -3,7 +3,6 @@ package controllers.gestionsuivi;
 
 import atlantafx.base.controls.ToggleSwitch;
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.animation.*;
@@ -17,7 +16,6 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleButton;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -36,7 +34,6 @@ import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.nio.charset.StandardCharsets;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 
@@ -53,7 +50,7 @@ public class CaloriesGeneratorController implements Initializable {
     public CaloriesGeneratorController() throws UnsupportedEncodingException {
     }
 
-    private    int testVariable =0 ;
+    private  static  int testVariable ;
 
 
     @FXML
@@ -71,41 +68,6 @@ public class CaloriesGeneratorController implements Initializable {
 
     @FXML
     private ImageView image2;
-
-
-
-    @FXML
-    private VBox translateVbox;
-
-    @FXML
-    private ToggleButton Tooglefr;
-
-
-    public String translationApi(String query) throws IOException, InterruptedException {
-
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("https://translate281.p.rapidapi.com/"))
-                .header("content-type", "application/x-www-form-urlencoded")
-                .header("X-RapidAPI-Key", "5d8f909459mshfb1291f1ed93992p10402ajsn75655f4af883")
-                .header("X-RapidAPI-Host", "translate281.p.rapidapi.com")
-                .method("POST", HttpRequest.BodyPublishers.ofString("text=" + query + "&from=auto&to=fr"))
-                .build();
-        HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
-        // Extract the translated response from the JSON data
-        String jsonResponse = response.body();
-        ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode jsonNode = objectMapper.readTree(jsonResponse);
-      /*   System.out.println("Fel translate function");
-        return jsonNode.asText();/*/
-
-        String translatedText = jsonNode.get("Ingredients").asText(); // Replace "translatedText" with the actual field name
-        byte[] decodedBytes = translatedText.getBytes(StandardCharsets.ISO_8859_1);
-        String correctEncodingString = new String(decodedBytes, StandardCharsets.UTF_8);
-        System.out.println("In translate function");
-        return correctEncodingString;
-    }
-
-
     @FXML
     void ReciepePromptingButton(ActionEvent event) throws IOException, InterruptedException {
         String query = ReciepeField.getText();
@@ -127,12 +89,7 @@ public class CaloriesGeneratorController implements Initializable {
             JsonNode jsonNode = objectMapper.readTree(responseBody);
             JsonNode dataArray = jsonNode.get("d");
             ReciepeVbox.getChildren().clear();
-            int conter = 0;
             for (JsonNode item : dataArray) {
-
-                if (conter >=12){
-                    break;
-                }
                 String Title = item.get("Title").asText();
                 JsonNode Ingredients = item.get("Ingredients");
                 String Instructions = item.get("Instructions").asText();
@@ -141,10 +98,9 @@ public class CaloriesGeneratorController implements Initializable {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/gestionSuivi/recette.fxml"));
                 Node node = loader.load();
                 RecetteController recetteController = loader.getController();
-                    recetteController.fiellFields(Title, Ingredients, Instructions, Image);
+                recetteController.fiellFields(Title, Ingredients, Instructions, Image);
                 ReciepeVbox.getChildren().add(node);
 
-                conter++;
             }
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
@@ -152,6 +108,12 @@ public class CaloriesGeneratorController implements Initializable {
         }
 
     }
+
+
+
+
+
+
 
 
 
@@ -213,6 +175,24 @@ public class CaloriesGeneratorController implements Initializable {
 
 
 
+    @FXML
+    private VBox translateVbox;
+    public String translationApi(String query) throws IOException, InterruptedException {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("https://translate281.p.rapidapi.com/"))
+                .header("content-type", "application/x-www-form-urlencoded")
+                .header("X-RapidAPI-Key", "18ae9b5d60msh7e6247128682805p139e5djsna435480ded7c")
+                .header("X-RapidAPI-Host", "translate281.p.rapidapi.com")
+                .method("POST", HttpRequest.BodyPublishers.ofString("text=" + query + "&from=auto&to=fr"))
+                .build();
+        HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+        // Extract the translated response from the JSON data
+        String jsonResponse = response.body();
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode jsonNode = objectMapper.readTree(jsonResponse);
+        String translatedResponse = jsonNode.get("response").asText();
+        return translatedResponse;
+    }
 
 
 
@@ -223,15 +203,12 @@ public class CaloriesGeneratorController implements Initializable {
         toggle2.selectedProperty().addListener((obs, old, val) -> {
             toggle2.setText(val ? "en cours" : "French");
             if (val) {
-           testVariable =1 ;
-             }
-
+                testVariable = 1;
+            }
             else{
-                testVariable = 0;
-                System.out.println("Toggle switch is NOT selected");
+            System.out.println("Toggle switch is NOT selected");
 
         }
-
             });
 
         toggle2.setLabelPosition(HorizontalDirection.RIGHT);
@@ -242,7 +219,6 @@ public class CaloriesGeneratorController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
         translateVbox.getChildren().clear();
 translateButton();
 

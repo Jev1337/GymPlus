@@ -1,18 +1,11 @@
 package controllers.gestionsuivi;
 
-import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
-import javafx.util.Duration;
-
-import java.io.IOException;
 
 public class ExericesController {
     @FXML
@@ -38,19 +31,8 @@ public class ExericesController {
 
 
     private String url ;
-
-   ;
-
     @FXML
-    void goToYoutubeViaLink(MouseEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/gestionSuivi/WebView.fxml"));
-        Node node = loader.load();
-        ScrollPane webPanel = (ScrollPane) node.lookup("#scrollpanWeb");
-        webPanel.setTranslateX(-webPanel.getWidth());
-        webPanel.setVisible(true);
-        TranslateTransition transition2 = new TranslateTransition(Duration.seconds(0.5), webPanel);
-        transition2.setToX(0);
-        transition2.play();
+    void goToYoutubeViaLink(MouseEvent event) {
        WebViewController webViewController = new WebViewController();
        webViewController.loadPageExercices(url);
     }

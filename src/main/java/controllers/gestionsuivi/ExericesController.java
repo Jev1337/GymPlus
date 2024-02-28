@@ -39,20 +39,25 @@ public class ExericesController {
 
     private String url ;
 
-   ;
+    private  static  ObjectifController objectifController;
+    public void setExerciceControler(ObjectifController objectifController) {
+        ExericesController.objectifController = objectifController;
+    }
 
     @FXML
     void goToYoutubeViaLink(MouseEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/gestionSuivi/WebView.fxml"));
         Node node = loader.load();
         ScrollPane webPanel = (ScrollPane) node.lookup("#scrollpanWeb");
+
+        objectifController.getWebViewTrue();
         webPanel.setTranslateX(-webPanel.getWidth());
         webPanel.setVisible(true);
         TranslateTransition transition2 = new TranslateTransition(Duration.seconds(0.5), webPanel);
         transition2.setToX(0);
         transition2.play();
-       WebViewController webViewController = new WebViewController();
-       webViewController.loadPageExercices(url);
+        WebViewController webViewController = new WebViewController();
+        webViewController.loadPageExercices(url);
     }
 
     public  void FillFields(String workout,String Equipment,String intensityLevel,String IntermediateLevel,String ExpertLevel,String Explaination,String Video){

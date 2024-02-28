@@ -274,21 +274,23 @@ public class ObjectifController  implements Initializable {
     {
         vboxWeb.getChildren().clear();
 
-        Node[] nodes = new Node[1];
-
-        for(int i = 0; i<1; i++)
-        {
             try {
-                nodes[i] = (Node) FXMLLoader.load(getClass().getResource("/gestionSuivi/WebView.fxml"));
-                vboxWeb.getChildren().add(nodes[i]);
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/gestionSuivi/WebView.fxml"));
+                Node node = loader.load();
+                ExericesController itemController = loader.getController();
+                itemController.setExerciceControler(this);
+                vboxWeb.getChildren().add(node);
 
             } catch (IOException ex) {
                 Logger.getLogger(ObjectifController.class.getName()).log(Level.SEVERE, null, ex);
             }
 
-        }
-    }
 
+    }
+    void getWebViewTrue (){
+        ScrollPanelExerciceGen.setVisible(false);
+        scrollpanWeb.setVisible(true);
+    }
 
 
 
@@ -641,7 +643,7 @@ private Pane PanePage1;
             throw new RuntimeException(e);
         }*/
 
-        refreshNodesWeb();
+           refreshNodesWeb();
             refreshNodes();
 
         try {

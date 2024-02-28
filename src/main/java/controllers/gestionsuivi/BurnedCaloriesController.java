@@ -143,9 +143,9 @@ public void BurnedCaloriesFromActivity(int age,double weight, double height) thr
     @FXML
     private Pane Pane2;
     @FXML
-    private Pane Pane3;
+    private Pane Pane33;
     @FXML
-    private Pane Pane4;
+    private Pane Pane44;
 
     @FXML
     private Pane PaaneForm;
@@ -341,10 +341,10 @@ private Button GetMacrosButton;
         Pane1.setOnMouseExited(event -> Pane1.setStyle("-fx-background-color: lightgray;"));
         Pane2.setOnMouseEntered(event -> Pane2.setStyle("-fx-background-color: lightgreen;"));
         Pane2.setOnMouseExited(event -> Pane2.setStyle("-fx-background-color: lightgray;"));
-        Pane3.setOnMouseEntered(event -> Pane3.setStyle("-fx-background-color: lightgreen;"));
-        Pane3.setOnMouseExited(event -> Pane3.setStyle("-fx-background-color: lightgray;"));
-        Pane4.setOnMouseEntered(event -> Pane4.setStyle("-fx-background-color: lightgreen;"));
-        Pane4.setOnMouseExited(event -> Pane4.setStyle("-fx-background-color: lightgray;"));
+        Pane33.setOnMouseEntered(event -> Pane33.setStyle("-fx-background-color: lightgreen;"));
+        Pane33.setOnMouseExited(event -> Pane33.setStyle("-fx-background-color: lightgray;"));
+        Pane44.setOnMouseEntered(event -> Pane44.setStyle("-fx-background-color: lightgreen;"));
+        Pane44.setOnMouseExited(event -> Pane44.setStyle("-fx-background-color: lightgray;"));
         CalsPanel.setOnMouseEntered(event -> CalsPanel.setStyle("-fx-background-color: lightgreen;"));
         CalsPanel.setOnMouseExited(event -> CalsPanel.setStyle("-fx-background-color: lightgray;"));
         PaaneForm.setOnMouseEntered(event -> PaaneForm.setStyle("-fx-background-color: lightgreen;"));

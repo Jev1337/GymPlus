@@ -18,18 +18,19 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="808.0" prefWidth="1156.0" stylesheets="@event.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionevents.eventbController">
+<AnchorPane prefHeight="808.0" prefWidth="1156.0" style="-fx-background-color: linear-gradient(to bottom right, lightgray, floralwhite);" stylesheets="@event.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionevents.eventbController">
    <children>
       <Pane fx:id="affichage_events_adstaff" prefHeight="827.0" prefWidth="1180.0" style="-fx-background-color: linear-gradient(to bottom right, lightgray, floralwhite);;">
          <children>
-            <TableView fx:id="tableevents_id" layoutX="346.0" layoutY="138.0" prefHeight="303.0" prefWidth="766.0" style="-fx-background-color: lightgray;" visible="false">
+            <TableView fx:id="tableevents_id" layoutX="346.0" layoutY="138.0" prefHeight="303.0" prefWidth="823.0" style="-fx-background-color: lightgray;">
               <columns>
                 <TableColumn fx:id="event_idcol" prefWidth="110.93331909179688" text="Event_id" />
                 <TableColumn fx:id="event_namecol" prefWidth="133.06668090820312" text="Event_Name" />
                   <TableColumn fx:id="event_typecol" prefWidth="135.7332763671875" text="Event Type" />
                   <TableColumn fx:id="event_datecol" prefWidth="152.2667236328125" text="Event Date" />
-                  <TableColumn fx:id="event_durationcol" prefWidth="141.33343505859375" text="Event Duration" />
-                  <TableColumn fx:id="event_spotscol" prefWidth="86.0" text="Spots" />
+                  <TableColumn fx:id="event_durationcol" prefWidth="127.7332763671875" text="Event Duration" />
+                  <TableColumn fx:id="event_spotscol" prefWidth="84.80010986328125" text="Spots" />
+                  <TableColumn fx:id="event_ratecol" prefWidth="76.0" text="Rate" />
               </columns>
                <effect>
                   <DropShadow />
@@ -65,7 +66,7 @@
             </TableView>
             <ScrollPane layoutX="540.0" layoutY="134.0" prefWidth="326.0">
                <content>
-                  <ListView fx:id="eventList" prefHeight="303.0" prefWidth="308.0" style="-fx-background-color: lightgray; -fx-background-radius: 20; -fx-border-color: white;">
+                  <ListView fx:id="eventList" prefHeight="303.0" prefWidth="308.0" style="-fx-background-color: lightgray; -fx-background-radius: 20; -fx-border-color: white;" visible="false">
                      <effect>
                         <DropShadow />
                      </effect></ListView>
@@ -141,6 +142,26 @@
                   </Text>
                </children>
             </Pane>
+            <Button fx:id="finished_events_btn" layoutX="46.0" layoutY="776.0" mnemonicParsing="false" onAction="#go_to_finished" text="Finished events" />
+         </children>
+      </Pane>
+      <Pane fx:id="finished_events" prefHeight="826.0" prefWidth="1179.0" visible="false">
+         <children>
+            <TableView fx:id="tableevents_id1" layoutX="200.0" layoutY="127.0" prefHeight="543.0" prefWidth="823.0" style="-fx-background-color: lightgray;">
+               <columns>
+                  <TableColumn fx:id="event_idcol1" prefWidth="110.93331909179688" text="Event_id" />
+                  <TableColumn fx:id="event_namecol1" prefWidth="133.06668090820312" text="Event_Name" />
+                  <TableColumn fx:id="event_typecol1" prefWidth="135.7332763671875" text="Event Type" />
+                  <TableColumn fx:id="event_datecol1" prefWidth="152.2667236328125" text="Event Date" />
+                  <TableColumn fx:id="event_durationcol1" prefWidth="127.7332763671875" text="Event Duration" />
+                  <TableColumn fx:id="event_spotscol1" prefWidth="84.80010986328125" text="Spots" />
+                  <TableColumn fx:id="event_ratecol1" prefWidth="76.0" text="Rate" />
+               </columns>
+               <effect>
+                  <DropShadow />
+               </effect>
+            </TableView>
+            <Button fx:id="back_toeve" layoutX="1040.0" layoutY="53.0" mnemonicParsing="false" onAction="#gobackto_eve" text="Back" />
          </children>
       </Pane>
    </children>

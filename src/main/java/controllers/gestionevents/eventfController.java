@@ -8,15 +8,12 @@ import atlantafx.base.util.Animations;
 import controllers.gestionuser.GlobalVar;
 import entities.gestionevents.Event_details;
 import entities.gestionevents.Event_participants;
-import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
-import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -42,10 +39,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+
 
 
 public class eventfController {
@@ -61,6 +58,7 @@ public class eventfController {
 
     @FXML
     private TableColumn<Event_details, String> durationc;
+
 
     @FXML
     private TextField search_id;
@@ -120,8 +118,12 @@ public class eventfController {
     private CheckBox myevents;
     @FXML
     private ImageView image_cover_event;
-
-
+    @FXML
+    private Button history_btn;
+    @FXML
+    private Pane history;
+    @FXML
+    private ListView<Event_details> list_events1;
 
 
     public eventfController() {
@@ -148,12 +150,14 @@ public class eventfController {
             System.out.println("Points: " + GlobalVar.getUser().getEvent_points());
             afficher();
             afficher1();
+            afficher_history();
             points_label.setText("Points: " + GlobalVar.getUser().getEvent_points());
         } catch (SQLException e) {
             e.printStackTrace();
         }
         startCountdown();
     }
+
     @FXML
     public void switchtomyevents(ActionEvent actionEvent) {
         if (myevents.isSelected()) {
@@ -187,6 +191,7 @@ public class eventfController {
             spotsc.setCellFactory(column -> {
                 return new TableCell<Event_details, Integer>() {
                     private ProgressBar bar = new ProgressBar();
+
                     {
                         bar.setPrefWidth(100);
 
@@ -226,7 +231,7 @@ public class eventfController {
                     super.updateItem(item, empty);
                     if (empty || item == null || item.getName() == null) {
                         setText(null);
-                    } else{
+                    } else {
                         // Create a custom layout for each item
                         VBox vbox = new VBox();
                         Label nameLabel = new Label("Name: " + item.getName());
@@ -261,6 +266,7 @@ public class eventfController {
             }
         }
     }
+
     void afficher() throws SQLException {
         List<Event_details> events = eventDetailsService.getAll();
         event_details.clear();
@@ -290,6 +296,7 @@ public class eventfController {
         spotsc.setCellFactory(column -> {
             return new TableCell<Event_details, Integer>() {
                 private ProgressBar bar = new ProgressBar();
+
                 {
                     bar.setPrefWidth(100);
 
@@ -321,8 +328,9 @@ public class eventfController {
         });
 
     }
+
     public void afficher1() throws SQLException {
-       //afficher les events dans une list view list_events
+        //afficher les events dans une list view list_events
         List<Event_details> events = eventDetailsService.getAll();
         ObservableList<Event_details> event_details = FXCollections.observableArrayList(events);
         ScrollPane scrollPane = new ScrollPane();
@@ -334,13 +342,13 @@ public class eventfController {
                 super.updateItem(item, empty);
                 if (empty || item == null || item.getName() == null) {
                     setText(null);
-                } else{
+                } else {
                     // Create a custom layout for each item
                     VBox vbox = new VBox();
                     Label nameLabel = new Label("Name: " + item.getName());
                     Label typeLabel = new Label("Type: " + item.getType());
                     Label dateLabel = new Label("Date: " + item.getEvent_date());
-                    Label durationLabel = new Label("Duration: " + item.getDuree()+" minutes");
+                    Label durationLabel = new Label("Duration: " + item.getDuree() + " minutes");
                     //add the progress bar to the list view
                     ProgressBar bar = new ProgressBar();
                     bar.setPrefWidth(100);
@@ -355,11 +363,12 @@ public class eventfController {
                     setGraphic(vbox);
                 }
 
-                }
+            }
 
         });
 
     }
+
     @FXML
     void switch_to_table(ActionEvent event) {
         if (check_table.isSelected()) {
@@ -389,7 +398,7 @@ public class eventfController {
         incrementSpotsStatement.executeUpdate();
     }
 
-    public void delete_passed_events(List<Event_details> events) {
+    /*public void delete_passed_events(List<Event_details> events) {
         try {
             for (Event_details event : events) {
                 LocalDateTime eventDateTime = LocalDateTime.parse(event.getEvent_date(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
@@ -400,15 +409,15 @@ public class eventfController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
+    }*/
     @FXML
     public void join_event(ActionEvent actionEvent) throws SQLException {
 
 
-
         Event_details selectedEvent = event_detailsTableView.getSelectionModel().getSelectedItem();
-        if(selectedEvent==null)
-        {selectedEvent=list_events.getSelectionModel().getSelectedItem();}
+        if (selectedEvent == null) {
+            selectedEvent = list_events.getSelectionModel().getSelectedItem();
+        }
 
         int id = 0;
         Date nextEventDate = getNextEventDate(0);
@@ -417,7 +426,7 @@ public class eventfController {
         if (selectedEvent != null) {
             //check the date must be greater than the current date +1 hour
             if (check_event_date_and_time_passed(selectedEvent.getId())) {
-                delete_passed_events(event_details);
+                //delete_passed_events(event_details);
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error");
                 alert.setHeaderText("Event date and time has passed");
@@ -609,7 +618,7 @@ public class eventfController {
                 super.updateItem(item, empty);
                 if (empty || item == null || item.getName() == null) {
                     setText(null);
-                } else{
+                } else {
                     // Create a custom layout for each item
                     VBox vbox = new VBox();
                     Label nameLabel = new Label("Name: " + item.getName());
@@ -890,10 +899,97 @@ public class eventfController {
         }
     }
 
+    @FXML
+    void go_to_history(ActionEvent event) {
+        if (history.isVisible()) {
+            history.setVisible(false);
+        } else {
+            history.setVisible(true);
+        }
+    }
+
+    public void afficher_history() throws SQLException {
+        //show the events that the user participated in the past using getPastEventsByUserId
+        List<Event_details> events = eventDetailsService.getPastEventsByUserId(GlobalVar.getUser().getId());
+        ObservableList<Event_details> event_details = FXCollections.observableArrayList(events);
+        list_events1.setItems(event_details);
+        list_events1.setCellFactory(param -> new ListCell<Event_details>() {
+            @Override
+            protected void updateItem(Event_details item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null || item.getName() == null) {
+                    setText(null);
+                } else {
+                    // Create a custom layout for each item
+                    VBox vbox = new VBox();
+                    Label nameLabel = new Label("Name: " + item.getName());
+                    Label typeLabel = new Label("Type: " + item.getType());
+                    Label dateLabel = new Label("Date: " + item.getEvent_date());
+                    Label durationLabel = new Label("Duration: " + item.getDuree());
+                    vbox.getChildren().addAll(nameLabel, typeLabel, dateLabel, durationLabel);
+                    setGraphic(vbox);
+                }
+
+            }
+
+        });
+    }
+    public void rate_event(ActionEvent actionEvent) {
+        Event_details selectedEvent = list_events1.getSelectionModel().getSelectedItem();
+        if (selectedEvent != null) {
+            TextInputDialog dialog = new TextInputDialog();
+            dialog.setTitle("Rate Event");
+            dialog.setHeaderText("Rate " + selectedEvent.getName());
+            dialog.setContentText("Enter a rating between 1 and 5:");
+            Optional<String> result = dialog.showAndWait();
+            if (result.isPresent()) {
+                try {
+                    int rating = Integer.parseInt(result.get());
+                    if (rating < 1 || rating > 5) {
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("Error");
+                        alert.setHeaderText("Invalid rating");
+                        alert.setContentText("Please enter a rating between 1 and 5");
+                        alert.showAndWait();
+                    } else {
+                        Event_participantsService eventParticipantsService = new Event_participantsService();
+                        Event_participants eventParticipants = eventParticipantsService.getByEventIdAndUserId(selectedEvent.getId(), GlobalVar.getUser().getId());
+                        eventParticipants.setRate(rating);
+                        eventParticipantsService.update(eventParticipants);
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setTitle("Success");
+                        alert.setHeaderText("Rating submitted");
+                        alert.setContentText("Thank you for rating " + selectedEvent.getName());
+                        alert.showAndWait();
+                    }
+                } catch (NumberFormatException e) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Error");
+                    alert.setHeaderText("Invalid rating");
+                    alert.setContentText("Please enter a valid number");
+                    alert.showAndWait();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("No event selected");
+            alert.setContentText("Please select an event to rate");
+            alert.showAndWait();
 
 
+        }
+    }
 
 }
+
+
+
+
+
+
 
 
 

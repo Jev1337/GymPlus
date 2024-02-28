@@ -1,6 +1,8 @@
 package services.gestionevents;
 
 import entities.gestionevents.Event_participants;
+import services.IService;
+import utils.MyDatabase;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -8,9 +10,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
-import services.IService;
-import utils.MyDatabase;
 
 public class Event_participantsService implements IService<Event_participants> {
     private Connection connection;
@@ -22,7 +21,7 @@ public class Event_participantsService implements IService<Event_participants> {
 
     @Override
     public void add(Event_participants eventParticipants) throws SQLException {
-        String query = "INSERT INTO event_participants (event_details_id, user_id) VALUES (?,?)";
+        String query = "INSERT INTO event_participants (event_details_id, user_id,rate) VALUES (?,?,0)";
         PreparedStatement ps = connection.prepareStatement(query);
         ps.setInt(1, eventParticipants.getEvent_id());
         ps.setInt(2, eventParticipants.getParticipant_id());
@@ -41,11 +40,13 @@ public class Event_participantsService implements IService<Event_participants> {
 
     @Override
     public void update(Event_participants eventParticipants) throws SQLException {
-        String query = "UPDATE event_participants SET event_details_id=?, user_id=? WHERE id=?";
+        String query = "UPDATE event_participants SET rate = ? WHERE event_details_id=? and user_id=?";
         PreparedStatement ps = connection.prepareStatement(query);
-        ps.setInt(1, eventParticipants.getEvent_id());
-        ps.setInt(2, eventParticipants.getParticipant_id());
-        ps.setInt(3, eventParticipants.getId());
+        ps.setInt(1, eventParticipants.getRate());
+        ps.setInt(2, eventParticipants.getEvent_id());
+        ps.setInt(3, eventParticipants.getParticipant_id());
+
+
         ps.executeUpdate();
 
     }
@@ -58,7 +59,7 @@ public class Event_participantsService implements IService<Event_participants> {
         ResultSet rs = ps.executeQuery();
         while (rs.next()) {
             Event_participants eventParticipants = new Event_participants(rs.getInt("event_details_id"), rs.getInt("user_id"));
-            eventParticipants.setId(rs.getInt("id"));
+
             eventParticipantsList.add(eventParticipants);
         }
 
@@ -91,4 +92,21 @@ public class Event_participantsService implements IService<Event_participants> {
 
     }
 
+    public Event_participants getByEventIdAndUserId(int id, int id1) {
+        Event_participants eventParticipants = null;
+        try {
+            String query = "SELECT * FROM event_participants WHERE event_details_id=? and user_id=?";
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setInt(1, id);
+            ps.setInt(2, id1);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                eventParticipants = new Event_participants(rs.getInt("event_details_id"), rs.getInt("user_id"));
+                eventParticipants.setRate(rs.getInt("rate"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return eventParticipants;
+    }
 }

@@ -18,6 +18,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.web.WebView?>
 
 <AnchorPane prefHeight="757.0" prefWidth="1153.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionStore.InterfaceStoreController">
    <children>
@@ -172,7 +173,7 @@
                </font>
             </Label>
          </children></Pane>
-      <Pane fx:id="Panier" prefHeight="757.0" prefWidth="1153.0" styleClass="white-Background" stylesheets="@store.css" visible="false">
+      <Pane fx:id="Panier" layoutX="14.0" layoutY="5.0" prefHeight="757.0" prefWidth="1153.0" styleClass="white-Background" stylesheets="@store.css" visible="false">
          <children>
             <VBox prefHeight="757.0" prefWidth="220.0" styleClass="white-Background" stylesheets="@store.css">
                <children>
@@ -202,7 +203,7 @@
                      </font></Button>
                </children>
             </VBox>
-            <ScrollPane layoutX="307.0" layoutY="57.0" prefHeight="594.0" prefWidth="423.0" styleClass="white-Background" stylesheets="@store.css">
+            <ScrollPane layoutX="260.0" layoutY="212.0" prefHeight="416.0" prefWidth="423.0" styleClass="white-Background" stylesheets="@store.css">
                <content>
                   <GridPane fx:id="GridPanier" alignment="CENTER" hgap="10" vgap="10">
                      <padding>
@@ -214,37 +215,40 @@
                   </GridPane>
                </content>
             </ScrollPane>
-            <Label fx:id="TotalPanierFX" layoutX="976.0" layoutY="486.0" prefHeight="17.0" prefWidth="102.0" text="Total Panier">
+            <Label fx:id="TotalPanierFX" layoutX="949.0" layoutY="49.0" prefHeight="17.0" prefWidth="102.0" text="Total Panier">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
-            <Label layoutX="828.0" layoutY="486.0" prefHeight="27.0" prefWidth="116.0" text="Total Cart :">
+            <Label layoutX="801.0" layoutY="49.0" prefHeight="27.0" prefWidth="116.0" text="Total Cart :">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
-            <Label layoutX="828.0" layoutY="180.0" prefHeight="17.0" prefWidth="116.0" text="Number of Items :">
+            <Label layoutX="260.0" layoutY="112.0" prefHeight="17.0" prefWidth="116.0" text="Number of Items :">
                <font>
                   <Font size="13.0" />
                </font></Label>
-            <Label fx:id="nbArticleFX" layoutX="996.0" layoutY="180.0" prefHeight="17.0" prefWidth="62.0" text="nb">
+            <Label fx:id="nbArticleFX" layoutX="428.0" layoutY="112.0" prefHeight="17.0" prefWidth="62.0" text="nb">
                <font>
                   <Font size="13.0" />
                </font></Label>
-            <Label layoutX="832.0" layoutY="121.0" prefHeight="17.0" prefWidth="116.0" text="Name Client :">
+            <Label layoutX="260.0" layoutY="53.0" prefHeight="17.0" prefWidth="116.0" text="Name Client :">
                <font>
                   <Font size="13.0" />
                </font></Label>
-            <Label fx:id="nomClientFX" layoutX="996.0" layoutY="121.0" prefHeight="17.0" prefWidth="84.0" text="nom C">
+            <Label fx:id="nomClientFX" layoutX="428.0" layoutY="53.0" prefHeight="17.0" prefWidth="84.0" text="nom C">
                <font>
                   <Font size="13.0" />
                </font></Label>
-            <Label layoutX="832.0" layoutY="240.0" text="Payment Method :">
+            <Label layoutX="260.0" layoutY="171.0" text="Payment Method :">
                <font>
                   <Font size="13.0" />
                </font></Label>
-            <ComboBox fx:id="comboPaiement" layoutX="996.0" layoutY="236.0" onAction="#selectPaiement" prefHeight="25.0" prefWidth="116.0" styleClass="bleu-Background" stylesheets="@store.css" />
+            <ComboBox fx:id="comboPaiement" layoutX="428.0" layoutY="168.0" onAction="#selectPaiement" prefHeight="25.0" prefWidth="116.0" styleClass="bleu-Background" stylesheets="@store.css" />
+            <WebView fx:id="WebViewMap" layoutX="691.0" layoutY="213.0" onMouseClicked="#selectville" prefHeight="416.0" prefWidth="455.0" />
+            <Label fx:id="textMap" layoutX="809.0" layoutY="651.0" prefHeight="43.0" prefWidth="191.0" text="Lieu" />
+            <Label fx:id="villeLabel" layoutX="606.0" layoutY="165.0" prefHeight="31.0" prefWidth="541.0" text="Lieu choisi" />
          </children></Pane>
       <Pane fx:id="GetAllFacture" layoutX="5.0" layoutY="-22.0" prefHeight="757.0" prefWidth="1153.0" styleClass="white-Background" stylesheets="@store.css" visible="false">
          <children>
@@ -282,7 +286,7 @@
                   <TableColumn fx:id="MethodeP" prefWidth="122.0" text="Payment Method" />
                </columns>
             </TableView>
-            <Button layoutX="565.0" layoutY="624.0" mnemonicParsing="false" onAction="#RefreshTable" prefHeight="30.0" prefWidth="205.0" styleClass="bleu-Background" stylesheets="@store.css" text="refresh" visible="false" />
+            <Button layoutX="565.0" layoutY="624.0" mnemonicParsing="false" onAction="#RefreshTable" prefHeight="30.0" prefWidth="205.0" styleClass="bleu-Background" stylesheets="@store.css" text="refresh" />
          </children></Pane>
       <Pane fx:id="GetOneFacture" prefHeight="757.0" prefWidth="1153.0" styleClass="white-Background" stylesheets="@store.css" visible="false">
          <children>

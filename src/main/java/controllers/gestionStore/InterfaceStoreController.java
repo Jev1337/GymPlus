@@ -6,9 +6,12 @@ import entities.gestionStore.facture;
 import entities.gestionStore.produit;
 import javafx.animation.Interpolator;
 import javafx.animation.ScaleTransition;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Worker;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -16,17 +19,6 @@ import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.sql.SQLException;
-import java.util.Date;
-import java.util.List;
-import java.util.ResourceBundle;
-
-
-import javafx.event.ActionEvent;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -36,17 +28,31 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 import javafx.stage.*;
 import javafx.util.Duration;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.json.JSONException;
+import org.json.JSONObject;
 import services.gestionStore.DetailFactureService;
 import services.gestionStore.FactureService;
 import services.gestionStore.PanierService;
 import services.gestionStore.ProduitService;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.sql.SQLException;
+import java.util.Date;
+import java.util.List;
+import java.util.ResourceBundle;
 
 public class InterfaceStoreController implements Initializable {
 
@@ -165,6 +171,7 @@ public class InterfaceStoreController implements Initializable {
     private Label nomClientFX;
     @FXML
     private ComboBox<String> comboPaiement;
+
 
     //*****GetAllFacture
     @FXML
@@ -589,32 +596,7 @@ public class InterfaceStoreController implements Initializable {
         UpdateProduit.setVisible(true);
         ChargerProductDetails();
     }
-/*
-    private void loadFXML(String s , int productId)
-    {
-        try
-        {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(s));
-            Parent root = fxmlLoader.load();
 
-            // Accéder au contrôleur du fichier FXML chargé
-            OneproduitPanierController controller = fxmlLoader.getController();
-            controller.setProductId(productId);
-            System.out.println("loadFXML get 1 produit controller " + productId);
-
-            // Passer l'ID du produit au contrôleur
-            //controller.setIdProduit(productId);
-            controller.loadProductDetails();
-
-            NameFX.getScene().setRoot(root);
-
-        } catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-    }
-
- */
 
     //*****Update Produit
     @FXML
@@ -707,7 +689,6 @@ public class InterfaceStoreController implements Initializable {
         Panier.setVisible(false);
         GetAllProduit.setVisible(true);
     }
-
     @FXML
     void ValiderPanier(ActionEvent event)
     {
@@ -731,11 +712,115 @@ public class InterfaceStoreController implements Initializable {
         }
     }
 
+    @FXML
+    private WebView WebViewMap;
+    @FXML
+    private Label villeLabel;
+
+    private static String getCityName(double latitude, double longitude) {
+        String cityName = "Unknown";
+
+        try {
+            String urlStr = "https://nominatim.openstreetmap.org/reverse?lat=" + latitude + "&lon=" + longitude + "&format=json";
+            URL url = new URL(urlStr);
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("GET");
+
+            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            StringBuilder response = new StringBuilder();
+
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            in.close();
+
+            JSONObject jsonResponse = new JSONObject(response.toString());
+            if (jsonResponse.has("address")) {
+                JSONObject addressObject = jsonResponse.getJSONObject("address");
+                if (addressObject.has("city")) {
+                    cityName = addressObject.getString("city");
+                } else if (addressObject.has("town")) {
+                    cityName = addressObject.getString("town");
+                } else if (addressObject.has("village")) {
+                    cityName = addressObject.getString("village");
+                }
+            }
+        } catch (IOException | JSONException e) {
+            e.printStackTrace();
+        }
+
+        return cityName;
+    }
+
+
+    public void chargerMap()
+    {
+        WebEngine webEngine = WebViewMap.getEngine();
+        webEngine.loadContent("<html><head>"
+                + "<meta charset=\"UTF-8\">"
+                + "<title>Map</title>"
+                + "<link rel=\"stylesheet\" href=\"https://unpkg.com/leaflet/dist/leaflet.css\"/>"
+                + "<style>#map { height: 100%; width: 100%; } body, html { height: 100%; margin: 0; padding: 0; }</style>"
+                + "</head>"
+                + "<body>"
+                + "<div id=\"map\"></div>"
+                + "<script src=\"https://unpkg.com/leaflet/dist/leaflet.js\"></script>"
+                + "<script> var map = L.map('map').setView([51.505, -0.09], 13);"
+                + "L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors' }).addTo(map);"
+                + "var marker; map.on('click', function (e) { if (marker) { map.removeLayer(marker); } marker = L.marker(e.latlng).addTo(map); "
+                + "document.getElementById('latitude').value = e.latlng.lat;"
+                + "document.getElementById('longitude').value = e.latlng.lng;});"
+                + "</script>"
+                + "</body></html>");
+    }
+
+    @FXML
+    void selectville(MouseEvent event) {
+        // Récupérez les coordonnées du clic de la souris
+        double x = event.getX();
+        double y = event.getY();
+
+        // Convertissez les coordonnées de la souris en latitude et longitude (vous devrez adapter cela en fonction de votre carte)
+        double latitude = convertirXenLatitude(x , 456);
+        double longitude = convertirYenLongitude(y , 416);
+
+        // Faites ce que vous voulez avec les coordonnées (par exemple, affichez-les dans une étiquette)
+        //System.out.println("Latitude: " + latitude + ", Longitude: " + longitude);
+
+        //villeLabel.setText("Latitude: " + latitude + ", Longitude: " + longitude);
+        String a = getCityName(latitude , longitude);
+        //System.out.println("a : " + a );
+        villeLabel.setText("Latitude: " + latitude + ", Longitude: " + longitude + "lieu :" + a);
+
+    }
+
+    // Méthode pour convertir les coordonnées X en latitude
+    private double convertirXenLatitude(double x, int mapHeight) {
+        // Adapter la latitude en fonction de la taille de la carte en pixels
+        // Utilisez une conversion inverse pour une meilleure précision
+        double lat = ((x / mapHeight) * 180.0) - 90.0;
+        return lat;
+    }
+
+    // Méthode pour convertir les coordonnées Y en longitude
+    private double convertirYenLongitude(double y, int mapWidth) {
+        // Adapter la longitude en fonction de la taille de la carte en pixels
+        double lon = ((y / mapWidth) * 360.0) - 180.0;
+        return lon;
+    }
+
+
+
+
     public void chargerContenuPanier()
     {
         nbArticleFX.setText(String.valueOf( MonPanier.getMonPanier().ListeDetails.size()));
         nomClientFX.setText(String.valueOf(MonPanier.getMonPanier().getId()));
         TotalPanierFX.setText(String.valueOf(MonPanier.getMonPanier().calculerPrixTotalFacture()));
+
+        chargerMap();
+
         try {
 
             //rafrechirrr Gridpane

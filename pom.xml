@@ -78,6 +78,18 @@
             <version>2.0.24</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-web</artifactId>
+            <version>21.0.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20210307</version> <!-- Remplacez la version par la dernière version disponible -->
+        </dependency>
+
 
     </dependencies>
     <build>

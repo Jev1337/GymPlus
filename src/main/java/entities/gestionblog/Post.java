@@ -11,15 +11,16 @@ public class Post {
     private Date date;
     private String photo;
     private int likes;
+    private int nbComnts;
 
-    public Post( int user_id, String mode, String content, Date date, String photo, int likes) {
-        //this.id_post = id_post;
+    public Post( int user_id, String mode, String content, Date date, String photo, int likes, int nbComnts) {
         this.user_id = user_id;
         this.mode = mode;
         this.content = content;
         this.date = date;
         this.photo = photo;
         this.likes = likes;
+        this.nbComnts = nbComnts;
     }
 
     public Post() {
@@ -81,6 +82,14 @@ public class Post {
         this.likes = likes;
     }
 
+    public int getNbComnts() {
+        return nbComnts;
+    }
+
+    public void setNbComnts(int nbComnts) {
+        this.nbComnts = nbComnts;
+    }
+
     @Override
     public String toString() {
         return "Post{" +
@@ -91,6 +100,7 @@ public class Post {
                 ", date='" + date + '\'' +
                 ", photo='" + photo + '\'' +
                 ", likes=" + likes +
+                ", nbComnts=" + nbComnts +
                 '}';
     }
 }

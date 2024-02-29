@@ -3,7 +3,6 @@ package controllers.gestionuser;
 import animatefx.animation.*;
 import com.password4j.Password;
 import com.twilio.Twilio;
-import com.twilio.rest.verify.v2.Service;
 import com.twilio.rest.verify.v2.service.Verification;
 import com.twilio.rest.verify.v2.service.VerificationCheck;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
@@ -27,10 +26,13 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import net.dreamlu.mica.captcha.core.Captcha;
+import net.dreamlu.mica.captcha.enums.CaptchaType;
 import okhttp3.*;
 import org.json.JSONObject;
 import org.opencv.core.*;
@@ -49,6 +51,7 @@ import java.nio.file.Files;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.concurrent.atomic.AtomicReference;
 
 
 public class AuthController {
@@ -474,6 +477,10 @@ public class AuthController {
 
 
         try {
+            if(!showCaptcha()) {
+                errorAlert("Captcha is incorrect!", "Captcha is incorrect!", "Captcha is incorrect! Please try again.");
+                return;
+            }
             if (clientService.getUserById(Integer.parseInt(cin_tf.getText())) != null) {
                 errorAlert("Client with this CIN already exists!", "Client with this CIN already exists!", "Client with this CIN already exists! Please try another one.");
                 return;
@@ -1078,6 +1085,46 @@ public class AuthController {
         fadeInRightAnimation.setNode(signup_switch_pane);
         fadeInRightAnimation.play();
         initDecoratedStage();
+    }
+
+    private boolean showCaptcha(){
+        var dialog = new TextInputDialog();
+        dialog.initStyle(StageStyle.UNDECORATED);
+        dialog.setTitle("Captcha Verification");
+        dialog.setHeaderText("Captcha Verification");
+        dialog.setContentText("Please enter the captcha code:");
+        Captcha captcha = new Captcha(CaptchaType.MATH);
+        final File[] temp = {null};
+        AtomicReference<String> code = new AtomicReference<>(captcha.generate(() -> {
+            try {
+                temp[0] = File.createTempFile("captcha", ".png");
+                return new FileOutputStream(temp[0]);
+            } catch (Exception e) {
+                stackTraceAlert(e);
+            }
+            return null;
+        }));
+        ImageView imageView = new ImageView(new Image(temp[0].toURI().toString()));
+        Button button = new Button("Refresh");
+        button.setOnAction(e -> {
+            code.set(captcha.generate(() -> {
+                try {
+                    temp[0].delete();
+                    temp[0] = File.createTempFile("captcha", ".png");
+                    return new FileOutputStream(temp[0]);
+                } catch (Exception ex) {
+                    stackTraceAlert(ex);
+                }
+                return null;
+            }));
+            imageView.setImage(new Image(temp[0].toURI().toString()));
+        });
+        VBox vBox = new VBox(imageView, button, dialog.getEditor());
+        vBox.spacingProperty().setValue(10);
+        dialog.getDialogPane().setContent(vBox);
+        dialog.showAndWait();
+        temp[0].delete();
+        return captcha.validate(code.get(), dialog.getResult());
     }
 
     private double xOffset = 0;

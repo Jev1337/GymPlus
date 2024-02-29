@@ -97,6 +97,8 @@ public class UserDashboardController {
 
     @FXML
     private Pane subscribed_pane;
+    @FXML
+    private Pane storeId;
 
     @FXML
     private Pane unsubscribed_pane;
@@ -799,6 +801,7 @@ public class UserDashboardController {
 
     private double xOffset = 0;
     private double yOffset = 0;
+
     public void initialize() {
         Media media = new Media(new File(getClass().getResource("/assets/sounds/welcome.mp3").getFile()).toURI().toString());
         MediaPlayer mediaPlayer = new MediaPlayer(media);
@@ -850,6 +853,12 @@ public class UserDashboardController {
             gp3_label.setText(abonnementDetailsService.getPriceByType("GP 3") + "€ / 12 months");
         }catch (Exception e){
             stackTraceAlert(e);
+        }
+        try {
+            Pane pane= FXMLLoader.load(getClass().getResource("/resourcesGestionStore/InterfaceStore.fxml"));
+            storeId.getChildren().setAll(pane);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

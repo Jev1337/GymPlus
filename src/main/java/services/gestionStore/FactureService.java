@@ -58,7 +58,7 @@ public class FactureService implements IService
             { // Check if there are any results
                 int x = resultSetmax.getInt("max") ;
                 //p.setIdFacture(x);
-                System.out.println("max de la colonne idFacture" + x );
+                System.out.println("max de la colonne idFacture : Methode add facture : " + x );
                 p.setIdFacture(x);
             }
         }
@@ -108,6 +108,7 @@ public class FactureService implements IService
             throw new SQLException("L'utilisateur avec l'ID spécifié n'existe pas.");
         }
 
+/*
         // Calculer le prix total de la facture
         float prixTotalPaye = p.calculerPrixTotalFacture();
 
@@ -121,6 +122,19 @@ public class FactureService implements IService
             preparedStatement.executeUpdate();
         }
 
+ */
+
+        String sql = "UPDATE facture SET methodeDePaiement = ? WHERE idFacture = ?";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            //preparedStatement.setFloat(1, prixTotalPaye);
+            preparedStatement.setString(1, p.getMethodeDePaiement());
+            //preparedStatement.setInt(3, p.getId());
+            preparedStatement.setInt(2, p.getIdFacture());
+            preparedStatement.executeUpdate();
+        }
+
+
         // Mettre à jour les détails de la facture
         DetailFactureService dfs = new DetailFactureService();
         for (detailfacture df : p.ListeDetails)
@@ -132,10 +146,55 @@ public class FactureService implements IService
     @Override
     public void delete(int id) throws SQLException
     {
+        // Suppr detail facture
+        //DetailFactureService dfs = new DetailFactureService();
+        //dfs.delete(id);
+
+        /*
+        DetailFactureService dfService = new DetailFactureService();
+        //List<detailfacture> dfS = dfService.getDetailFacture(id);
+        //for (detailfacture df : dfS)
+        facture p = new facture();
+        for (detailfacture df : p.ListeDetails)
+        {
+            dfService.delete(id, df.getIdDetailFacture());
+        }
+
+         */
+
+        // Suppr detail facture
+        /*
+        DetailFactureService dfs = new DetailFactureService();
+        facture p = getOne(id); // Obtenez la facture en fonction de son ID
+        for (detailfacture df : p.ListeDetails) {
+            dfs.delete(df.getIdDetailFacture(), df.getIdFacture());
+        }
+
+        //supp facture
         String sql = "DELETE FROM facture WHERE idFacture = ?";
         PreparedStatement ps = connection.prepareStatement(sql);
         ps.setInt(1, id);
         ps.executeUpdate();
+
+         */
+
+        // Supprimer les détails de la facture liés à la facture spécifiée
+        String sqlDeleteDetail = "DELETE FROM detailfacture WHERE idFacture = ?";
+        try (PreparedStatement psDeleteDetail = connection.prepareStatement(sqlDeleteDetail)) {
+            psDeleteDetail.setInt(1, id);
+            psDeleteDetail.executeUpdate();
+        } catch (SQLException e) {
+            throw new SQLException("Erreur lors de la suppression des détails de la facture.", e);
+        }
+
+        // Supprimer la facture
+        String sqlDeleteFacture = "DELETE FROM facture WHERE idFacture = ?";
+        try (PreparedStatement psDeleteFacture = connection.prepareStatement(sqlDeleteFacture)) {
+            psDeleteFacture.setInt(1, id);
+            psDeleteFacture.executeUpdate();
+        } catch (SQLException e) {
+            throw new SQLException("Erreur lors de la suppression de la facture.", e);
+        }
     }
 
     @Override
@@ -200,5 +259,22 @@ public class FactureService implements IService
     }
 
 
+    public facture getDerniereFacture() throws SQLException
+    {
+        facture derniereFacture = null;
+        String sqlMaxId = "SELECT * FROM facture WHERE idFacture = (SELECT MAX(idFacture) FROM facture)";
+        try (PreparedStatement getMax = connection.prepareStatement(sqlMaxId)) {
+            ResultSet resultSetmax = getMax.executeQuery();
+            if (resultSetmax.next()) {
+                derniereFacture = new facture();
+                derniereFacture.setIdFacture(resultSetmax.getInt("idFacture"));
+                derniereFacture.setDateVente(resultSetmax.getDate("dateVente"));
+                derniereFacture.setPrixtotalPaye(resultSetmax.getFloat("prixTatalPaye"));
+                derniereFacture.setId(resultSetmax.getInt("id"));
+                // Vous pouvez définir d'autres attributs de la facture ici si nécessaire
+            }
+        }
+        return derniereFacture;
 
+    }
 }

@@ -100,6 +100,12 @@ public class facture {
         this.id = id;
     }
 
+    public facture( int idFacture , String methodeDePaiement)
+    {
+        this.methodeDePaiement = methodeDePaiement;
+        this.idFacture = idFacture;
+    }
+
     @Override
     public String toString() {
         return "facture{" +

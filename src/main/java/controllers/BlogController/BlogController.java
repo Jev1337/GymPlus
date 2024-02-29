@@ -2,6 +2,8 @@ package controllers.BlogController;
 
 import controllers.gestionuser.GlobalVar;
 import entities.gestionblog.Post;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -16,6 +18,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import services.gestonblog.PostServices;
 
 import java.io.File;
@@ -47,7 +50,7 @@ public class BlogController implements Initializable {
     List<String> badWords = Arrays.asList("fuck", "suck", "kill", "suicide");
 
     @FXML
-    void browse_btn_act(){
+    void browse_btn_act() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg")
@@ -59,32 +62,35 @@ public class BlogController implements Initializable {
         }
     }
 
-    String verifContent(String c){
+    String verifContent(String c) {
         String contentVerified = c;
-        for (String word : badWords){
-            if (c.toLowerCase().contains(word)){
+        for (String word : badWords) {
+            if (c.toLowerCase().contains(word)) {
                 contentVerified = c.replaceAll(word, "****");
             }
         }
         return contentVerified;
     }
 
+    public void refresh(){
+        getAllFromDB();
+    }
     @FXML
     void addPost(ActionEvent event) {
         String photo = "";
         String content = "";
-        if (!contentTxt.getText().isEmpty()){
+        if (!contentTxt.getText().isEmpty()) {
             content = verifContent(contentTxt.getText());
         }
         File file = new File(photo_tf.getText());
         try {
-            if (!photo_tf.getText().isEmpty()){
+            if (!photo_tf.getText().isEmpty()) {
                 File dest = new File("src/assets/profileuploads/USERIMG" + file.getName().substring(file.getName().lastIndexOf(".")));
                 Files.copy(file.toPath(), dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
                 photo = dest.getName();
             }
             Timestamp timeStamp = new Timestamp(date.getTime());
-            Post p = new Post(GlobalVar.getUser().getId(), "bbb", content, timeStamp, photo, 0);
+            Post p = new Post(GlobalVar.getUser().getId(), "bbb", content, timeStamp, photo, 0, 0);
             ps.add(p);
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Info");
@@ -96,13 +102,14 @@ public class BlogController implements Initializable {
         } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
-            alert.setContentText("add:" +e.getMessage());
+            alert.setContentText("add:" + e.getMessage());
             alert.show();
         }
     }
 
-    public void getAllFromDB (){
-        if (!listPosts.getChildren().isEmpty()){
+    public void getAllFromDB() {
+
+        if (!listPosts.getChildren().isEmpty()) {
             listPosts.getChildren().remove(0, listPosts.getChildren().size());
         }
         try {
@@ -122,13 +129,14 @@ public class BlogController implements Initializable {
             alert.show();
         }
     }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         username.setText(GlobalVar.getUser().getUsername());
         String profilePic = GlobalVar.getUser().getPhoto();
         Image img = new Image(new File("src/assets/profileuploads/" + profilePic).toURI().toString());
         userPic.setImage(img);
-        Circle clip1 = new Circle(userPic.getFitWidth()/2, userPic.getFitHeight()/2, userPic.getFitWidth()/2);
+        Circle clip1 = new Circle(userPic.getFitWidth() / 2, userPic.getFitHeight() / 2, userPic.getFitWidth() / 2);
         userPic.setClip(clip1);
         userPic.setPreserveRatio(false);
         getAllFromDB();

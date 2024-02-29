@@ -47,13 +47,10 @@ public class PostController implements Initializable {
 
     @FXML
     private Label captionTxt;
-
     @FXML
     private ImageView imgPost;
-
     @FXML
     private ImageView imgProfile;
-
     @FXML
     private Label nbComnts;
     @FXML
@@ -83,6 +80,7 @@ public class PostController implements Initializable {
     private final PostServices ps = new PostServices();
     private final CommentaireService cs = new CommentaireService();
     private final ClientService us = new ClientService();
+    private final BlogController blogController = new BlogController();
 
     //*************************************POST HANDLER*************************************
     @FXML
@@ -103,7 +101,6 @@ public class PostController implements Initializable {
             throw new RuntimeException(e);
         }
     }
-
     @FXML
     void showUpdatePost() {
         try {
@@ -131,17 +128,19 @@ public class PostController implements Initializable {
             throw new RuntimeException(e);
         }
     }
-
     @FXML
     void deletePost() {
         try {
             cs.deleteComntsByPostId(post.getId_post());
             ps.delete(post.getId_post());
+            blogController.refresh();
+            Alert a = new Alert(Alert.AlertType.INFORMATION);
+            a.setContentText("post is deleted!");
+            a.showAndWait();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
-
     public PostController() {
     }
 
@@ -149,7 +148,6 @@ public class PostController implements Initializable {
         post = p;
         captionTxt.setText(post.getContent());
         nbLikes.setText(post.getLikes() + " Likes");
-        nbComnts.setText(post.getLikes() + " Comments");
         Image imgP = new Image(new File("src/assets/profileuploads/"+post.getPhoto()).toURI().toString());
         imgPost.setImage(imgP);
         dateTxt.setText(post.getDate().toString());
@@ -158,6 +156,7 @@ public class PostController implements Initializable {
             editPost.setManaged(false);
         }
         try {
+            nbComnts.setText(ps.getNbComntsById(post.getId_post()) + " Comments");
             userNameTxt.setText(us.getUserById(post.getUser_id()).getUsername());
             String profilePic = us.getUserById(p.getUser_id()).getPhoto();
             Image img = new Image(new File("src/assets/profileuploads/" + profilePic).toURI().toString());
@@ -187,12 +186,13 @@ public class PostController implements Initializable {
     public void getAllComments(int idPost) {
         try {
             List<Commentaire> commentaireList = new ArrayList<>(cs.getAllCommentsByPostId(idPost));
+
             for (Commentaire commentaire : commentaireList) {
                 FXMLLoader fxmlLoader = new FXMLLoader();
                 fxmlLoader.setLocation(getClass().getResource("/gestionBlog/commentTemplate.fxml"));
                 VBox vBox = fxmlLoader.load();
                 CommentTemplateController commentTemplateController = fxmlLoader.getController();
-                commentTemplateController.setComment(commentaire);
+                commentTemplateController.setComment(commentaire, post);
                 comntsList.getChildren().add(vBox);
             }
         } catch (Exception e) {
@@ -208,6 +208,8 @@ public class PostController implements Initializable {
         Commentaire commentaire = new Commentaire(GlobalVar.getUser().getId(), post.getId_post(), comntContent.getText(), java.sql.Date.valueOf(date), 0);
         try {
             cs.add(commentaire);
+            ps.addNbComnts(post);
+            setPost(post);
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Info");
             alert.setContentText("post added");

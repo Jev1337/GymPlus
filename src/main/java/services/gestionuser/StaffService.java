@@ -15,7 +15,7 @@ public class StaffService implements IService<Staff> {
     }
     @Override
     public void add(Staff staff) throws SQLException {
-        String query = "INSERT INTO user (id, username, firstname, lastname, date_naiss, password, role, email, num_tel, adresse, photo) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+        String query = "INSERT INTO user (id, username, firstname, lastname, date_naiss, password, role, email, num_tel, adresse, photo, faceid, faceid_ts) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
         PreparedStatement pst = connection.prepareStatement(query);
         pst.setInt(1, staff.getId());
         pst.setString(2, staff.getUsername());
@@ -28,6 +28,8 @@ public class StaffService implements IService<Staff> {
         pst.setString(9, staff.getNum_tel());
         pst.setString(10, staff.getAdresse());
         pst.setString(11, staff.getPhoto());
+        pst.setString(12, staff.getFaceid());
+        pst.setString(13, staff.getFaceid_ts());
         pst.executeUpdate();
     }
 
@@ -41,18 +43,20 @@ public class StaffService implements IService<Staff> {
 
     @Override
     public void update(Staff staff) throws SQLException {
-        String query = "UPDATE user SET username = ?, firstname = ?, lastname = ?, date_naiss = ?, role = ?, email = ?, num_tel = ?, adresse = ?, photo = ? WHERE id = ?";
+        String query = "UPDATE user SET username = ?, firstname = ?, lastname = ?, date_naiss = ?, email = ?, num_tel = ?, adresse = ?, photo = ?, faceid=?, faceid_ts = ? WHERE id = ?";
         PreparedStatement pst = connection.prepareStatement(query);
         pst.setString(1, staff.getUsername());
         pst.setString(2, staff.getFirstname());
         pst.setString(3, staff.getLastname());
         pst.setString(4, staff.getDate_naiss());
-        pst.setString(5, staff.getRole());
-        pst.setString(6, staff.getEmail());
-        pst.setString(7, staff.getNum_tel());
-        pst.setString(8, staff.getAdresse());
-        pst.setString(9, staff.getPhoto());
-        pst.setInt(10, staff.getId());
+        pst.setString(5, staff.getEmail());
+        pst.setString(6, staff.getNum_tel());
+        pst.setString(7, staff.getAdresse());
+        pst.setString(8, staff.getPhoto());
+        pst.setString(9, staff.getFaceid());
+        pst.setString(10, staff.getFaceid_ts());
+        pst.setInt(11, staff.getId());
+
         pst.executeUpdate();
     }
 
@@ -74,6 +78,9 @@ public class StaffService implements IService<Staff> {
             staff.setNum_tel(rs.getString("num_tel"));
             staff.setAdresse(rs.getString("adresse"));
             staff.setPhoto(rs.getString("photo"));
+            staff.setFaceid(rs.getString("faceid"));
+            staff.setFaceid_ts(rs.getString("faceid_ts"));
+            staff.setRole(rs.getString("role"));
             staffs.add(staff);
         }
         return staffs;
@@ -96,6 +103,9 @@ public class StaffService implements IService<Staff> {
             staff.setNum_tel(rs.getString("num_tel"));
             staff.setAdresse(rs.getString("adresse"));
             staff.setPhoto(rs.getString("photo"));
+            staff.setFaceid(rs.getString("faceid"));
+            staff.setFaceid_ts(rs.getString("faceid_ts"));
+            staff.setRole(rs.getString("role"));
             return staff;
         }
         return null;
@@ -118,6 +128,9 @@ public class StaffService implements IService<Staff> {
             staff.setNum_tel(rs.getString("num_tel"));
             staff.setAdresse(rs.getString("adresse"));
             staff.setPhoto(rs.getString("photo"));
+            staff.setFaceid(rs.getString("faceid"));
+            staff.setFaceid_ts(rs.getString("faceid_ts"));
+            staff.setRole(rs.getString("role"));
             return staff;
         }
         return null;
@@ -140,8 +153,44 @@ public class StaffService implements IService<Staff> {
             staff.setNum_tel(rs.getString("num_tel"));
             staff.setAdresse(rs.getString("adresse"));
             staff.setPhoto(rs.getString("photo"));
+            staff.setFaceid(rs.getString("faceid"));
+            staff.setFaceid_ts(rs.getString("faceid_ts"));
+            staff.setRole(rs.getString("role"));
             return staff;
         }
         return null;
+    }
+
+    public Staff getUserByPhone(String num_tel) throws SQLException {
+        String query = "SELECT * FROM user WHERE num_tel = ?";
+        PreparedStatement pst = connection.prepareStatement(query);
+        pst.setString(1, num_tel);
+        ResultSet rs = pst.executeQuery();
+        Staff staff = new Staff();
+        while (rs.next()) {
+            staff.setId(rs.getInt("id"));
+            staff.setUsername(rs.getString("username"));
+            staff.setFirstname(rs.getString("firstname"));
+            staff.setLastname(rs.getString("lastname"));
+            staff.setDate_naiss(rs.getString("date_naiss"));
+            staff.setPassword(rs.getString("password"));
+            staff.setEmail(rs.getString("email"));
+            staff.setNum_tel(rs.getString("num_tel"));
+            staff.setAdresse(rs.getString("adresse"));
+            staff.setPhoto(rs.getString("photo"));
+            staff.setFaceid(rs.getString("faceid"));
+            staff.setFaceid_ts(rs.getString("faceid_ts"));
+            staff.setRole(rs.getString("role"));
+            return staff;
+        }
+        return null;
+    }
+
+    public void updatePassword(int id, String password) throws SQLException {
+        String query = "UPDATE user SET password = ? WHERE id = ?";
+        PreparedStatement pst = connection.prepareStatement(query);
+        pst.setString(1, Password.hash(password).withBcrypt().getResult());
+        pst.setInt(2, id);
+        pst.executeUpdate();
     }
 }

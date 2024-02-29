@@ -26,11 +26,14 @@ public class User {
     private String adresse;
     private String photo;
     private String role;
+    private int event_points;
+    private String faceid;
+    private String faceid_ts;
 
     public User() {
     }
 
-    public User(int id, String username, String firstname, String lastname, String date_naiss, String password, String email, String num_tel, String adresse, String photo, String role) {
+    public User(int id, String username, String firstname, String lastname, String date_naiss, String password, String email, String num_tel, String adresse, String photo, String role, String faceid, String faceid_ts) {
         this.id = id;
         this.username = username;
         this.firstname = firstname;
@@ -42,6 +45,9 @@ public class User {
         this.adresse = adresse;
         this.photo = photo;
         this.role = role;
+        this.event_points = 0;
+        this.faceid = faceid;
+        this.faceid_ts = faceid_ts;
     }
 
     public int getId() {
@@ -132,6 +138,28 @@ public class User {
     public void setRole(String role) {
         this.role = role;
     }
+    public void setEvent_points(int event_points) {
+        this.event_points = event_points;
+    }
+    public int getEvent_points() {
+        return event_points;
+    }
+
+    public String getFaceid() {
+        return faceid;
+    }
+
+    public void setFaceid(String faceid) {
+        this.faceid = faceid;
+    }
+
+    public String getFaceid_ts() {
+        return faceid_ts;
+    }
+
+    public void setFaceid_ts(String faceid_ts) {
+        this.faceid_ts = faceid_ts;
+    }
 
     @Override
     public String toString() {
@@ -146,6 +174,9 @@ public class User {
                 ", adresse='" + adresse + '\'' +
                 ", photo='" + photo + '\'' +
                 ", role='" + role + '\'' +
+                ", event_points='" + event_points + '\'' +
+                ", faceid='" + faceid + '\'' +
+                ", faceid_ts='" + faceid_ts + '\'' +
                 '}';
     }
 }

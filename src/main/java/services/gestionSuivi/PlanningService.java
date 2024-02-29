@@ -18,7 +18,7 @@ public class PlanningService implements IService<Planning> {
     @Override
     public void add(Planning plan) throws SQLException {
         try {
-            java.sql.PreparedStatement ps=connection.prepareStatement("INSERT INTO PLANNING(idObjectif,TrainningProg,FoodProg) VALUES(?,?,?)");
+            java.sql.PreparedStatement ps=connection.prepareStatement("INSERT INTO PLANNING(idObjectif,TrainingProg,FoodProg) VALUES(?,?,?)");
             ps.setInt(1,plan.getIdObjectif());
             ps.setString(2,plan.getTrainingProg());
             ps.setString(3,plan.getFoodProg());
@@ -47,7 +47,7 @@ public class PlanningService implements IService<Planning> {
         try {
             java.sql.PreparedStatement ps = connection.prepareStatement("UPDATE `PLANNING` \n "
                     +"SET  \n "
-                    +"`TrainningProg`=?, \n"
+                    +"`TrainingProg`=?, \n"
                     +"`FoodProg`=? \n"
                     + "WHERE `id_Planning`=?");
             ps.setString(1, plan.getTrainingProg());
@@ -61,6 +61,9 @@ public class PlanningService implements IService<Planning> {
             e.printStackTrace();
         }
     }
+
+
+
 
     @Override
     public List<Planning> getAll() throws SQLException {

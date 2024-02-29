@@ -7,15 +7,23 @@ import atlantafx.base.util.Animations;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
-import com.google.zxing.common.BitMatrix;
-import com.google.zxing.oned.EAN13Writer;
-import com.google.zxing.oned.EAN8Writer;
-import com.google.zxing.oned.MultiFormatOneDReader;
+import com.twilio.Twilio;
+import com.twilio.rest.verify.v2.service.Verification;
+import com.twilio.rest.verify.v2.service.VerificationCheck;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+import de.micromata.paypal.PayPalConfig;
+import de.micromata.paypal.PayPalConnector;
+import de.micromata.paypal.data.Currency;
+import de.micromata.paypal.data.Payment;
+import de.micromata.paypal.data.ShippingPreference;
+import de.micromata.paypal.data.Transaction;
 import entities.gestionuser.Abonnement;
 import entities.gestionuser.Client;
 import javafx.animation.*;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.concurrent.Task;
+import javafx.concurrent.Worker;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -26,43 +34,57 @@ import javafx.scene.chart.BarChart;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.Region;
+import javafx.scene.layout.*;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import net.glxn.qrgen.core.image.ImageType;
 import net.glxn.qrgen.javase.QRCode;
+import okhttp3.*;
+import org.json.JSONObject;
+import org.opencv.core.*;
+import org.opencv.imgcodecs.Imgcodecs;
+import org.opencv.objdetect.CascadeClassifier;
+import org.opencv.objdetect.Objdetect;
+import org.opencv.videoio.VideoCapture;
+import services.gestionuser.AbonnementDetailsService;
 import services.gestionuser.AbonnementService;
 import services.gestionuser.ClientService;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.sql.Date;
+import java.sql.SQLException;
 import java.time.LocalDate;
-
-import java.io.IOException;
 
 public class UserDashboardController {
 
-    private ClientService clientService = new ClientService();
-    private AbonnementService abonnementService = new AbonnementService();
-    private FadeIn[] fadeInAnimation = new FadeIn[8];
+    private final ClientService clientService = new ClientService();
+    private final AbonnementService abonnementService = new AbonnementService();
+    private final AbonnementDetailsService abonnementDetailsService = new AbonnementDetailsService();
+    private final FadeIn[] fadeInAnimation = new FadeIn[8];
 
-    private Notification msg = new Notification();
-    private FadeOutRight fadeOutRightAnimation = new FadeOutRight();
-    private FadeInRight fadeInRightAnimation = new FadeInRight();
+    private final Notification msg = new Notification();
+    private final FadeOutRight fadeOutRightAnimation = new FadeOutRight();
+    private final FadeInRight fadeInRightAnimation = new FadeInRight();
 
     @FXML
     private Pane blogId = new Pane();
@@ -110,12 +132,7 @@ public class UserDashboardController {
             logout_btn.getScene().getWindow().setHeight(400);
             logout_btn.getScene().setRoot(root);
         } catch (Exception e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.initStyle(StageStyle.UNDECORATED);
-            alert.setTitle("Error");
-            alert.setHeaderText("An error has occured");
-            alert.setContentText("An error has occured while trying to logout");
-            alert.showAndWait();
+            stackTraceAlert(e);
         }
     }
     @FXML
@@ -173,7 +190,7 @@ public class UserDashboardController {
         Timeline timeline = new Timeline(
                 new KeyFrame(cycleDuration,
                         new KeyValue(bars_pane.prefWidthProperty(), bars_pane.getPrefWidth() == 200 ? 51 : 200, Interpolator.EASE_BOTH)
-        ));
+                ));
         timeline.play();
         timeline.setOnFinished(e -> bars_btn.setDisable(false));
 
@@ -287,6 +304,7 @@ public class UserDashboardController {
     private Pane ObjectifPan;
 
 
+
     @FXML
     private ImageView user_imageview;
 
@@ -295,6 +313,177 @@ public class UserDashboardController {
 
     @FXML
     private ImageView userprofile_imageview;
+
+    @FXML
+    private ImageView faceid_change;
+    @FXML
+    void faceid_change_clicked(){
+        setFaceID();
+    }
+    String faceId = "";
+    public void setFaceID(){
+        faceid_change.setDisable(true);
+        Dialog<String> alert = new Dialog<>();
+        alert.initStyle(StageStyle.UNDECORATED);
+        alert.setTitle("FaceID Verification");
+        alert.setHeaderText("FaceID Verification");
+        ButtonType okButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+        alert.getDialogPane().getButtonTypes().add(okButton);
+        Label label = new Label("Waiting for camera to initialize...");
+        label.setLayoutX(0);
+        label.setLayoutY(39);
+        label.setPrefWidth(461);
+        label.alignmentProperty().setValue(javafx.geometry.Pos.CENTER);
+        ProgressBar progressBar = new ProgressBar();
+        progressBar.setProgress(ProgressBar.INDETERMINATE_PROGRESS);
+        progressBar.setLayoutX(27);
+        progressBar.setLayoutY(75);
+        progressBar.setPrefWidth(407);
+        progressBar.setPrefHeight(20);
+        alert.getDialogPane().setContent(new Pane(label, progressBar));
+        alert.initOwner(UserHomePane.getScene().getWindow());
+        alert.show();
+
+
+        Task<Void> cameraTask = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                int i = 0;
+                VideoCapture capture = new VideoCapture(0);
+                Mat frame = new Mat();
+                if (capture.isOpened()) {
+                    while (!isCancelled()) {
+                        if (capture.read(frame)) {
+                            if (!frame.empty()) {
+                                if (i == 5)
+                                    break;
+                                i++;
+                                System.out.println("Camera Initialized!");
+                                Platform.runLater(()-> label.setText("Camera Initialized!"));
+                                Thread.sleep(1000);
+                                System.out.println("Capturing Frame...");
+                                Platform.runLater(()-> label.setText("Capturing Frame..."));
+                                Thread.sleep(1000);
+                                MatOfRect facesDetected = new MatOfRect();
+                                CascadeClassifier cascadeClassifier = new CascadeClassifier();
+                                int minFaceSize = Math.round(frame.rows() * 0.1f);
+                                cascadeClassifier.load(getClass().getResource("/assets/haarcascade_frontalface_alt.xml").toURI().getPath().toString().substring(1));
+                                cascadeClassifier.detectMultiScale(frame,
+                                        facesDetected,
+                                        1.1,
+                                        3,
+                                        Objdetect.CASCADE_SCALE_IMAGE,
+                                        new Size(minFaceSize, minFaceSize),
+                                        new Size()
+                                );
+                                Rect[] facesArray = facesDetected.toArray();
+                                if (facesArray.length > 0) {
+                                    System.out.println("Face Found!");
+                                    Platform.runLater(() -> label.setText("Face Found! Verifying..."));
+                                    Platform.runLater(() -> progressBar.setProgress(1));
+
+                                    MatOfByte matOfByte = new MatOfByte();
+                                    Imgcodecs.imencode(".jpg", frame, matOfByte);
+                                    byte[] byteArray = matOfByte.toArray();
+                                    InputStream in = new ByteArrayInputStream(byteArray);
+                                    BufferedImage img = null;
+                                    try {
+                                        img = ImageIO.read(in);
+                                    }catch (Exception e) {
+                                        stackTraceAlert(e);
+                                    }
+                                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                                    try {
+                                        ImageIO.write(img, "png", bos);
+                                    }catch (Exception e) {
+                                        stackTraceAlert(e);
+                                    }
+
+                                    byte[] imgBytes = bos.toByteArray();
+
+                                    OkHttpClient client = new OkHttpClient().newBuilder()
+                                            .build();
+                                    MediaType mediaType = MediaType.parse("image/png");
+                                    RequestBody body = new MultipartBody.Builder().setType(MultipartBody.FORM)
+                                            .addFormDataPart("image_file","image.png",
+                                                    RequestBody.create(imgBytes, mediaType))
+                                            .addFormDataPart("api_key","oVAqEDbCYmaILayXJdKAsuYbFcJ0LBP6")
+                                            .addFormDataPart("api_secret","e76obC1xsr-zSMynWZoQCt62vWDgtZ6O")
+                                            .addFormDataPart("return_attributes","emotion")
+                                            .build();
+                                    Request request = new Request.Builder()
+                                            .url("https://api-us.faceplusplus.com/facepp/v3/detect")
+                                            .method("POST", body)
+                                            .build();
+                                    try{
+                                        Response response = client.newCall(request).execute();
+                                        Platform.runLater(() -> {
+                                            try {
+                                                JSONObject jsonObject = new JSONObject(response.body().string());
+                                                faceId = jsonObject.getJSONArray("faces").getJSONObject(0).getString("face_token");
+                                                updateFaceId(faceId);
+                                            }catch (Exception e) {
+                                                stackTraceAlert(e);
+                                            }
+
+                                        });
+                                    }catch (Exception e) {
+                                        stackTraceAlert(e);
+                                    }
+                                    break;
+                                }
+                                else {
+                                    System.out.println("Face not found ");
+                                    Platform.runLater(() -> label.setText("Face not found! Trying Again..."));
+                                    Thread.sleep(2000);
+                                }
+                            }
+                        }
+                    }
+                }
+                capture.release();
+
+                if(faceId == null || faceId.isEmpty()){
+                    Platform.runLater(() -> {
+                        Alert alert = new Alert(Alert.AlertType.WARNING);
+                        alert.initStyle(StageStyle.UNDECORATED);
+                        alert.setTitle("Warning");
+                        alert.setHeaderText("Warning");
+                        alert.initOwner(UserHomePane.getScene().getWindow());
+                        if (!isCancelled())
+                            alert.setContentText("No face detected! Please try again.");
+                        else
+                            alert.setContentText("Faceid Cancelled!");
+                        alert.show();
+                    });
+                }
+                Platform.runLater(() -> faceid_change.setDisable(false));
+                Platform.runLater(alert::close);
+                return null;
+            }
+
+        };
+
+        Thread cameraThread = new Thread(cameraTask);
+        alert.setOnCloseRequest(e -> {
+            cameraTask.cancel(false);
+        });
+        cameraThread.start();
+
+
+    }
+
+    private void updateFaceId(String faceId) {
+        try {
+            Client client = new Client(GlobalVar.getUser().getId(), GlobalVar.getUser().getUsername(), GlobalVar.getUser().getFirstname(), GlobalVar.getUser().getLastname(), GlobalVar.getUser().getDate_naiss(), GlobalVar.getUser().getPassword(), GlobalVar.getUser().getEmail(), GlobalVar.getUser().getNum_tel(), GlobalVar.getUser().getAdresse(), GlobalVar.getUser().getPhoto(), faceId, new Date(System.currentTimeMillis()).toString());
+            clientService.update(client);
+            GlobalVar.setUser(client);
+            initProfile();
+            notify("FaceID has been updated successfully!");
+        } catch (Exception e) {
+            stackTraceAlert(e);
+        }
+    }
 
     @FXML
     void browse_btn_act(ActionEvent event) {
@@ -321,13 +510,33 @@ public class UserDashboardController {
 
     @FXML
     void event_btn_act(ActionEvent event) {
+        //if user not subscribed it redirects him to the siubscription pane
+        try {
+            if (!abonnementService.isUserSubscribed(GlobalVar.getUser().getId())) {
+                switchToPane(UserSubscriptionPane);
+                return;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         switchToPane(UserEventPane);
     }
 
 
     @FXML
     void event_btn_clicked(MouseEvent event) {
-        switchToPane(UserEventPane);
+        {
+            //if user not subscribed it redirects him to the siubscription pane
+            try {
+                if (!abonnementService.isUserSubscribed(GlobalVar.getUser().getId())) {
+                    switchToPane(UserSubscriptionPane);
+                    return;
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            switchToPane(UserEventPane);
+        }
     }
 
     @FXML
@@ -354,21 +563,11 @@ public class UserDashboardController {
     void saveacc_btn_act(ActionEvent event) {
 
         if (firstname_tf.getText().isEmpty() || lastname_tf.getText().isEmpty() || username_tf.getText().isEmpty() || email_tf.getText().isEmpty() || phone_tf.getText().isEmpty() || address_ta.getText().isEmpty()) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.initStyle(StageStyle.UNDECORATED);
-            alert.setTitle("Error");
-            alert.setHeaderText("Empty fields");
-            alert.setContentText("Please fill all the fields");
-            alert.showAndWait();
+            errorAlert("Error", "Empty Fields", "Please fill in all the fields");
             return;
         }
         if (dateofbirth_tf.getValue() == null) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.initStyle(StageStyle.UNDECORATED);
-            alert.setTitle("Error");
-            alert.setHeaderText("Date of birth is empty");
-            alert.setContentText("Please choose a date of birth");
-            alert.showAndWait();
+            errorAlert("Error", "Invalid Date", "Please choose a valid date of birth");
             return;
         }
         if (!validateEmail(email_tf.getText()))
@@ -376,47 +575,54 @@ public class UserDashboardController {
         if (!validateText(username_tf.getText()))
             return;
         try {
+            if (!phone_tf.getText().equals(GlobalVar.getUser().getNum_tel())){
+                if (clientService.getUserByPhone(phone_tf.getText()) != null) {
+                    errorAlert("Error", "Phone Number Already in Use", "The phone number you have entered is already in use");
+                    return;
+                }
+
+                sendSms(phone_tf.getText());
+
+                TextInputDialog dialog = new TextInputDialog();
+                dialog.initStyle(StageStyle.UNDECORATED);
+                dialog.setTitle("Phone Verification");
+                dialog.initOwner(UserHomePane.getScene().getWindow());
+                dialog.setHeaderText("Phone Verification");
+                dialog.setContentText("Please enter the verification code sent to your phone:");
+                dialog.showAndWait();
+                if (dialog.getResult() == null || dialog.getResult().isEmpty()){
+                    errorAlert("Verification code cannot be empty!", "Verification code cannot be empty!", "Verification Failed due to empty code! Please try again.");
+                    return;
+                }
+                if (!checkSms(phone_tf.getText(), dialog.getResult())) {
+                    errorAlert("Verification code is incorrect!", "Verification code is incorrect!", "Verification code is incorrect! Please try again.");
+                    return;
+                }
+            }
             if (profilepic_pf.getText().isEmpty()) {
-                Client client = new Client(GlobalVar.getUser().getId(), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), dateofbirth_tf.getValue().toString(), GlobalVar.getUser().getPassword(), email_tf.getText(), phone_tf.getText(), address_ta.getText(), GlobalVar.getUser().getPhoto());
+                Client client = new Client(GlobalVar.getUser().getId(), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), dateofbirth_tf.getValue().toString(), GlobalVar.getUser().getPassword(), email_tf.getText(), phone_tf.getText(), address_ta.getText(), GlobalVar.getUser().getPhoto(), GlobalVar.getUser().getFaceid(), GlobalVar.getUser().getFaceid_ts());
                 clientService.update(client);
                 GlobalVar.setUser(client);
                 initProfile();
             }else{
                 File file = new File(profilepic_pf.getText());
                 if (!file.exists()) {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.initStyle(StageStyle.UNDECORATED);
-                    alert.setTitle("Error");
-                    alert.setHeaderText("Profile picture not found");
-                    alert.setContentText("Please choose a valid profile picture");
-                    alert.showAndWait();
+                    errorAlert("Error", "Invalid File", "The file you have chosen does not exist");
                     return;
                 }
                 userprofile_imageview.setImage(null);
                 user_imageview.setImage(null);
                 File oldFile = new File("src/assets/profileuploads/" +GlobalVar.getUser().getPhoto());
                 oldFile.delete();
-                Files.copy(file.toPath(), new File("src/assets/profileuploads/USERIMG"+ GlobalVar.getUser().getId() + file.getName().substring(file.getName().lastIndexOf("."))).toPath());
-                Client client = new Client(GlobalVar.getUser().getId(), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), dateofbirth_tf.getValue().toString(), GlobalVar.getUser().getPassword(), email_tf.getText(), phone_tf.getText(), address_ta.getText(), "USERIMG"+ GlobalVar.getUser().getId() + file.getName().substring(file.getName().lastIndexOf(".")));
+                Files.copy(file.toPath(), new File("src/assets/profileuploads/USERIMG"+ GlobalVar.getUser().getId() + file.getName().substring(file.getName().lastIndexOf("."))).toPath(), StandardCopyOption.REPLACE_EXISTING);
+                Client client = new Client(GlobalVar.getUser().getId(), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), dateofbirth_tf.getValue().toString(), GlobalVar.getUser().getPassword(), email_tf.getText(), phone_tf.getText(), address_ta.getText(), "USERIMG"+ GlobalVar.getUser().getId() + file.getName().substring(file.getName().lastIndexOf(".")), GlobalVar.getUser().getFaceid(), GlobalVar.getUser().getFaceid_ts());
                 clientService.update(client);
                 GlobalVar.setUser(client);
                 initProfile();
             }
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.initStyle(StageStyle.UNDECORATED);
-            alert.setTitle("Success");
-            alert.setHeaderText("Profile picture updated");
-            alert.setContentText("Your profile info has been updated successfully");
-            alert.showAndWait();
+            notify("Account has been updated successfully!");
         }catch (Exception e){
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.initStyle(StageStyle.UNDECORATED);
-            alert.setTitle("Error");
-            alert.setHeaderText("An error has occured");
-            alert.setContentText("An error has occured while trying to update your account");
-            alert.showAndWait();
-            e.printStackTrace();
-            return;
+            stackTraceAlert(e);
         }
     }
 
@@ -427,6 +633,7 @@ public class UserDashboardController {
         alert.setTitle("Confirmation");
         alert.setHeaderText("Are you sure you want to delete your account?");
         alert.setContentText("This action is irreversible");
+        alert.initOwner(UserHomePane.getScene().getWindow());
         alert.showAndWait();
         if (alert.getResult() == ButtonType.OK) {
             try {
@@ -436,13 +643,7 @@ public class UserDashboardController {
                 file.delete();
                 clientService.delete(GlobalVar.getUser().getId());
             }catch (Exception e){
-                alert = new Alert(Alert.AlertType.ERROR);
-                alert.initStyle(StageStyle.UNDECORATED);
-                alert.setTitle("Error");
-                alert.setHeaderText("An error has occured");
-                alert.setContentText("An error has occured while trying to delete your account");
-                alert.showAndWait();
-                e.printStackTrace();
+                stackTraceAlert(e);
                 return;
 
             }
@@ -468,14 +669,19 @@ public class UserDashboardController {
             });
             fadeOutRightAnimation.play();
         }catch (Exception e){
-            e.printStackTrace();
+            stackTraceAlert(e);
         }
     }
 
-
-    public void buy1_btn_act(ActionEvent actionEvent) {
+    private void buy(int pkg){
         try {
-            abonnementService.add(new Abonnement(GlobalVar.getUser().getId(), Date.valueOf(LocalDate.now().plusMonths(3)).toString(), "GP 1"));
+            if (pkg == 1) {
+                abonnementService.add(new Abonnement(GlobalVar.getUser().getId(), Date.valueOf(LocalDate.now().plusMonths(3)).toString(), "GP 1"));
+            }else if (pkg == 2) {
+                abonnementService.add(new Abonnement(GlobalVar.getUser().getId(), Date.valueOf(LocalDate.now().plusMonths(6)).toString(), "GP 2"));
+            }else if (pkg == 3) {
+                abonnementService.add(new Abonnement(GlobalVar.getUser().getId(), Date.valueOf(LocalDate.now().plusMonths(12)).toString(), "GP 3"));
+            }
             Date date = Date.valueOf(abonnementService.getCurrentSubscription(GlobalVar.getUser().getId()).getDuree_abon());
             long diff = date.getTime() - System.currentTimeMillis();
             long days = diff / (24 * 60 * 60 * 1000);
@@ -499,69 +705,98 @@ public class UserDashboardController {
             });
             fadeOutRightAnimation.play();
         } catch (Exception e) {
-            e.printStackTrace();
+            stackTraceAlert(e);
+        }
+    }
+
+    public boolean setupBuy(double price){
+        PayPalConfig paypalConfig = new PayPalConfig()
+                .setClientId("Af9N6m41ryO-aKuZO3cwgGr1PZeBsbxLTeSYVJ7iUr71UO3tA8Uc0p50NeEMbewLzmq00go8MoXAzXPC").setClientSecret("EBfq6ayRpNgVeWdALsblGLrMKUspTHt5GzfuH5MOM1FN7gqsoR6y5TCOTTYlm4R3adGWPgKoWYOI46Xz")
+                .setReturnUrl("http://localhost/gymplus/checkout/success/").setCancelUrl("http://localhost/gymplus/checkout/cancel/")
+                .setMode(PayPalConfig.Mode.SANDBOX);
+        Transaction transaction = new Transaction(Currency.EUR); // Every price in EUR
+        transaction.addItem("Gym Plus Membership", price);  // Item to sell for 29.99 plus optional tax.
+        transaction.setInoviceNumber(String.valueOf(GlobalVar.getUser().getId() + Date.valueOf(LocalDate.now()).toString()));
+        Payment payment = new Payment(transaction);              // A payment has transaction(s).
+        payment.setNoteToPayer("Please contact ...");            // Note to payer for important messages.
+        payment.setShipping(ShippingPreference.NO_SHIPPING);     // Don't prompt the user for a shipping address.
+        try {
+            Payment paymentCreated = PayPalConnector.createPayment(paypalConfig, payment);
+            //database.save(paymentCreated.getOriginalPayPalResponse()); // optional but recommended.
+            if (paymentCreated != null) {
+                String redirectUrl = paymentCreated.getPayPalApprovalUrl();
+                // create new window that has webview to show the redirectUrl
+                Dialog<String> alert = new Dialog<>();
+                alert.initStyle(StageStyle.UNDECORATED);
+                alert.setTitle("PayPal Payment");
+                alert.setHeaderText("PayPal Payment");
+                ButtonType okButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+                alert.getDialogPane().getButtonTypes().add(okButton);
+                WebView webView = new WebView();
+                webView.getEngine().load(redirectUrl);
+                alert.getDialogPane().setContent(webView);
+                Worker<Void> worker = webView.getEngine().getLoadWorker();
+                worker.stateProperty().addListener(e->{
+                    if (worker.getState() == Worker.State.SUCCEEDED) {
+                        if (webView.getEngine().getLocation().contains("success")) {
+                            alert.close();
+                        }else if (webView.getEngine().getLocation().contains("cancel")) {
+                            alert.close();
+                        }
+                    }
+                });
+                alert.showAndWait();
+                if (webView.getEngine().getLocation().contains("success")) {
+                    alert.close();
+                    return true;
+                }else {
+                    alert.close();
+                    return false;
+                }
+            }
+        }catch (Exception e){
+            stackTraceAlert(e);
+        }
+        return false;
+    }
+
+    public void buy1_btn_act(ActionEvent actionEvent) {
+        try {
+            if (setupBuy(abonnementDetailsService.getPriceByType("GP 1"))) {
+                buy(1);
+                notify("Payment was successful!");
+            } else
+                notify("Payment was cancelled!");
+        }catch (Exception e){
+           stackTraceAlert(e);
         }
     }
 
     public void buy2_btn_act(ActionEvent actionEvent) {
         try {
-            abonnementService.add(new Abonnement(GlobalVar.getUser().getId(), Date.valueOf(LocalDate.now().plusMonths(6)).toString(), "GP 2"));
-            Date date = Date.valueOf(abonnementService.getCurrentSubscription(GlobalVar.getUser().getId()).getDuree_abon());
-            long diff = date.getTime() - System.currentTimeMillis();
-            long days = diff / (24 * 60 * 60 * 1000);
-            daysremain_label.setText(days + " days");
-            packname_label.setText(abonnementService.getCurrentSubscription(GlobalVar.getUser().getId()).getType());
-            ByteArrayOutputStream out = QRCode.from(String.valueOf(GlobalVar.getUser().getId())).to(ImageType.PNG).withSize(168, 149).stream();
-            ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
-            QR_imageview.setImage(new Image(in));
-            MultiFormatWriter ean8Writer = new MultiFormatWriter();
-            ByteArrayOutputStream out2 = new ByteArrayOutputStream();
-            MatrixToImageWriter.writeToStream(ean8Writer.encode(String.valueOf(GlobalVar.getUser().getId()), BarcodeFormat.CODE_128, 280,73), "png", out2);
-            ByteArrayInputStream in2 = new ByteArrayInputStream(out2.toByteArray());
-            barcode_imageview.setImage(new Image(in2));
-            fadeOutRightAnimation.setNode(unsubscribed_pane);
-            fadeOutRightAnimation.setOnFinished(e -> {
-                unsubscribed_pane.setVisible(false);
-                subscribed_pane.setOpacity(0);
-                subscribed_pane.setVisible(true);
-                fadeInRightAnimation.setNode(subscribed_pane);
-                fadeInRightAnimation.play();
-            });
-            fadeOutRightAnimation.play();
-        } catch (Exception e) {
-            e.printStackTrace();
+            if (setupBuy(abonnementDetailsService.getPriceByType("GP 2"))) {
+                buy(2);
+                notify("Payment was successful!");
+            } else
+                notify("Payment was cancelled!");
+        }catch (Exception e){
+            stackTraceAlert(e);
         }
     }
 
     public void buy3_btn_act(ActionEvent actionEvent) {
         try {
-            abonnementService.add(new Abonnement(GlobalVar.getUser().getId(), Date.valueOf(LocalDate.now().plusMonths(12)).toString(), "GP 3"));
-            Date date = Date.valueOf(abonnementService.getCurrentSubscription(GlobalVar.getUser().getId()).getDuree_abon());
-            long diff = date.getTime() - System.currentTimeMillis();
-            long days = diff / (24 * 60 * 60 * 1000);
-            daysremain_label.setText(days + " days");
-            packname_label.setText(abonnementService.getCurrentSubscription(GlobalVar.getUser().getId()).getType());
-            ByteArrayOutputStream out = QRCode.from(String.valueOf(GlobalVar.getUser().getId())).to(ImageType.PNG).withSize(168, 149).stream();
-            ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
-            QR_imageview.setImage(new Image(in));
-            MultiFormatWriter ean8Writer = new MultiFormatWriter();
-            ByteArrayOutputStream out2 = new ByteArrayOutputStream();
-            MatrixToImageWriter.writeToStream(ean8Writer.encode(String.valueOf(GlobalVar.getUser().getId()), BarcodeFormat.CODE_128, 280,73), "png", out2);
-            ByteArrayInputStream in2 = new ByteArrayInputStream(out2.toByteArray());
-            barcode_imageview.setImage(new Image(in2));
-            fadeOutRightAnimation.setNode(unsubscribed_pane);
-            fadeOutRightAnimation.setOnFinished(e -> {
-                unsubscribed_pane.setVisible(false);
-                subscribed_pane.setOpacity(0);
-                subscribed_pane.setVisible(true);
-                fadeInRightAnimation.setNode(subscribed_pane);
-                fadeInRightAnimation.play();
-            });
-            fadeOutRightAnimation.play();
-        } catch (Exception e) {
-            e.printStackTrace();
+            if (setupBuy(abonnementDetailsService.getPriceByType("GP 3"))) {
+                buy(3);
+                notify("Payment was successful!");
+            } else
+                notify("Payment was cancelled!");
+        }catch (Exception e){
+            stackTraceAlert(e);
         }
     }
+
+
     private double xOffset = 0;
     private double yOffset = 0;
     public void initialize() {
@@ -578,17 +813,43 @@ public class UserDashboardController {
         initDecoratedStage();
         notify("Successfully Logged In as " + GlobalVar.getUser().getUsername() + "!");
         initSubsciption();
+        initGPPrices();
         try {
             Pane pane= FXMLLoader.load(getClass().getResource("/gestionBlog/Blog.fxml"));
             blogId.getChildren().setAll(pane);
         } catch (IOException e) {
-            e.printStackTrace();
+            stackTraceAlert(e);
         }
         try {
             Pane pane_event= FXMLLoader.load(getClass().getResource("/gestionevents/event.fxml"));
             usereventpane_id.getChildren().setAll(pane_event);
         } catch (IOException e) {
-            e.printStackTrace();
+            stackTraceAlert(e);
+        }
+        try {
+            Pane pane_Objectif= FXMLLoader.load(getClass().getResource("/gestionSuivi/objectif1.fxml"));
+            ObjectifPan.getChildren().setAll(pane_Objectif);
+        } catch (IOException e) {
+            stackTraceAlert(e);
+        }
+
+
+    }
+
+    @FXML
+    private Label gp1_label;
+    @FXML
+    private Label gp2_label;
+    @FXML
+    private Label gp3_label;
+
+    private void initGPPrices(){
+        try {
+            gp1_label.setText(abonnementDetailsService.getPriceByType("GP 1") + "€ / 3 months");
+            gp2_label.setText(abonnementDetailsService.getPriceByType("GP 2") + "€ / 6 months");
+            gp3_label.setText(abonnementDetailsService.getPriceByType("GP 3") + "€ / 12 months");
+        }catch (Exception e){
+            stackTraceAlert(e);
         }
     }
 
@@ -616,7 +877,7 @@ public class UserDashboardController {
                 unsubscribed_pane.setVisible(true);
             }
         }catch (Exception e){
-            e.printStackTrace();
+            stackTraceAlert(e);
         }
     }
 
@@ -665,6 +926,7 @@ public class UserDashboardController {
         if(!email.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")){
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.initStyle(StageStyle.UNDECORATED);
+            alert.initOwner(UserHomePane.getScene().getWindow());
             alert.setTitle("Warning");
             alert.setHeaderText("Warning");
             alert.setContentText("Invalid email format! Please try again.");
@@ -678,6 +940,7 @@ public class UserDashboardController {
         if (username.length() < 4 && username.length() > 20){
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.initStyle(StageStyle.UNDECORATED);
+            alert.initOwner(UserHomePane.getScene().getWindow());
             alert.setTitle("Warning");
             alert.setHeaderText("Warning");
             alert.setContentText("Username must be between 4 and 20 characters long! Please try again.");
@@ -687,7 +950,6 @@ public class UserDashboardController {
         return true;
     }
     private void initProfile(){
-
         String photoname = GlobalVar.getUser().getPhoto();
         user_imageview.setImage(new Image(new File("src/assets/profileuploads/" +photoname).toURI().toString()));
         Circle clip1 = new Circle(user_imageview.getFitWidth()/2, user_imageview.getFitHeight()/2, user_imageview.getFitWidth()/2);
@@ -834,4 +1096,96 @@ public class UserDashboardController {
         stat_barchart.getData().add(series2);
     }
 
+    private void errorAlert(String title, String header, String message){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.initStyle(StageStyle.UNDECORATED);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(message);
+        alert.initOwner(UserHomePane.getScene().getWindow());
+        alert.showAndWait();
+    }
+
+    private void successAlert(String title, String header, String message){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.initStyle(StageStyle.UNDECORATED);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(message);
+        alert.initOwner(UserHomePane.getScene().getWindow());
+        alert.showAndWait();
+    }
+
+    private void infoAlert(String title, String header, String message){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.initStyle(StageStyle.UNDECORATED);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(message);
+        alert.initOwner(UserHomePane.getScene().getWindow());
+        alert.showAndWait();
+    }
+
+    private void stackTraceAlert(Exception exception){
+        var alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Exception Dialog");
+        alert.setHeaderText("An exception occurred");
+        alert.setContentText("An exception occurred, please check the stacktrace below");
+
+        var stringWriter = new StringWriter();
+        var printWriter = new PrintWriter(stringWriter);
+        exception.printStackTrace(printWriter);
+
+        var textArea = new TextArea(stringWriter.toString());
+        textArea.setEditable(false);
+        textArea.setWrapText(false);
+        textArea.setMaxWidth(Double.MAX_VALUE);
+        textArea.setMaxHeight(Double.MAX_VALUE);
+        GridPane.setVgrow(textArea, Priority.ALWAYS);
+        GridPane.setHgrow(textArea, Priority.ALWAYS);
+
+        var content = new GridPane();
+        content.setMaxWidth(Double.MAX_VALUE);
+        content.add(new Label("Full stacktrace:"), 0, 0);
+        content.add(textArea, 0, 1);
+
+        alert.getDialogPane().setExpandableContent(content);
+        alert.initOwner(UserHomePane.getScene().getWindow());
+        alert.showAndWait();
+    }
+    private void sendSms(String phone) {
+        try {
+            String account_sid = "ACa0a9c02e124f285821fe62b736260421";
+            String auth_token = "e8cd361a90ce0dbcd5485d5719f935fb";
+            String verify_sid = "VA10dd8bfd053741ce7361fd967c83a1e6";
+
+            Twilio.init(account_sid, auth_token);
+            Verification verification = Verification.creator(
+                            verify_sid,
+                            "+216"+phone,
+                            "whatsapp")
+                    .create();
+            System.out.println(verification.getStatus());
+        } catch (Exception e) {
+            stackTraceAlert(e);
+        }
+    }
+
+    private Boolean checkSms(String phone, String code){
+        try {
+            String account_sid = "ACa0a9c02e124f285821fe62b736260421";
+            String auth_token = "e8cd361a90ce0dbcd5485d5719f935fb";
+            String verify_sid = "VA10dd8bfd053741ce7361fd967c83a1e6";
+            Twilio.init(account_sid, auth_token);
+            VerificationCheck verificationCheck = VerificationCheck.creator(
+                            verify_sid)
+                    .setTo("+216" + phone)
+                    .setCode(code)
+                    .create();
+            return verificationCheck.getStatus().equals("approved");
+        }catch (Exception e) {
+            stackTraceAlert(e);
+        }
+        return false;
+    }
 }

@@ -58,6 +58,22 @@ public class AbonnementService implements IService<Abonnement> {
         }
         return abonnements;
     }
+
+    public List<Abonnement> getAllCurrent() throws SQLException {
+        List<Abonnement> abonnements = new ArrayList<>();
+        String query = "SELECT * FROM abonnement WHERE dateFinAb > NOW()";
+        Statement st = connection.createStatement();
+        ResultSet rs = st.executeQuery(query);
+        while (rs.next()) {
+            Abonnement abonnement = new Abonnement();
+            abonnement.setId(rs.getInt("id"));
+            abonnement.setUser_id(rs.getInt("user_id"));
+            abonnement.setDuree_abon(rs.getString("dateFinAb"));
+            abonnement.setType(rs.getString("type"));
+            abonnements.add(abonnement);
+        }
+        return abonnements;
+    }
     public boolean isUserSubscribed(int user_id) throws SQLException {
         String query = "SELECT * FROM abonnement WHERE user_id = ? AND dateFinAb > NOW()";
         PreparedStatement pst = connection.prepareStatement(query);
@@ -84,7 +100,23 @@ public class AbonnementService implements IService<Abonnement> {
 
     public List<Abonnement> getAbonnementByType(String type) throws SQLException {
         List<Abonnement> abonnements = new ArrayList<>();
-        String query = "SELECT * FROM abonnement WHERE type = ?";
+        String query = "SELECT * FROM abonnement WHERE type = ? ";
+        PreparedStatement pst = connection.prepareStatement(query);
+        pst.setString(1, type);
+        ResultSet rs = pst.executeQuery();
+        while (rs.next()) {
+            Abonnement abonnement = new Abonnement();
+            abonnement.setId(rs.getInt("id"));
+            abonnement.setUser_id(rs.getInt("user_id"));
+            abonnement.setDuree_abon(rs.getString("dateFinAb"));
+            abonnement.setType(rs.getString("type"));
+            abonnements.add(abonnement);
+        }
+        return abonnements;
+    }
+    public List<Abonnement> getAbonnementByTypeCurrent(String type) throws SQLException {
+        List<Abonnement> abonnements = new ArrayList<>();
+        String query = "SELECT * FROM abonnement WHERE type = ? AND dateFinAb > NOW()";
         PreparedStatement pst = connection.prepareStatement(query);
         pst.setString(1, type);
         ResultSet rs = pst.executeQuery();

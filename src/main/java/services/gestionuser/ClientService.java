@@ -10,12 +10,14 @@ import java.util.List;
 public class ClientService implements IService<Client> {
 
     public Connection connection;
+
     public ClientService() {
         connection = MyDatabase.getInstance().getConnection();
     }
+
     @Override
     public void add(Client client) throws SQLException {
-        String query = "INSERT INTO user (id, username, firstname, lastname, date_naiss, password, email, num_tel, adresse, photo, role) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+        String query = "INSERT INTO user (id, username, firstname, lastname, date_naiss, password, email, num_tel, adresse, photo, role, faceid, faceid_ts,event_points) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,0)";
         PreparedStatement pst = connection.prepareStatement(query);
         pst.setInt(1, client.getId());
         pst.setString(2, client.getUsername());
@@ -28,6 +30,8 @@ public class ClientService implements IService<Client> {
         pst.setString(9, client.getAdresse());
         pst.setString(10, client.getPhoto());
         pst.setString(11, client.getRole());
+        pst.setString(12, client.getFaceid());
+        pst.setString(13, client.getFaceid_ts());
         pst.executeUpdate();
     }
 
@@ -41,7 +45,7 @@ public class ClientService implements IService<Client> {
 
     @Override
     public void update(Client client) throws SQLException {
-        String query = "UPDATE user SET username = ?, firstname = ?, lastname = ?, date_naiss = ?, email = ?, num_tel = ?, adresse = ?, photo = ? WHERE id = ?";
+        String query = "UPDATE user SET username = ?, firstname = ?, lastname = ?, date_naiss = ?, email = ?, num_tel = ?, adresse = ?, photo = ?, faceid = ? , faceid_ts = ? WHERE id = ?";
         PreparedStatement pst = connection.prepareStatement(query);
         pst.setString(1, client.getUsername());
         pst.setString(2, client.getFirstname());
@@ -51,7 +55,10 @@ public class ClientService implements IService<Client> {
         pst.setString(6, client.getNum_tel());
         pst.setString(7, client.getAdresse());
         pst.setString(8, client.getPhoto());
-        pst.setInt(9, client.getId());
+        pst.setString(9, client.getFaceid());
+        pst.setString(10, client.getFaceid_ts());
+        pst.setInt(11, client.getId());
+
         pst.executeUpdate();
     }
 
@@ -74,6 +81,8 @@ public class ClientService implements IService<Client> {
             client.setAdresse(rs.getString("adresse"));
             client.setPhoto(rs.getString("photo"));
             client.setRole(rs.getString("role"));
+            client.setFaceid(rs.getString("faceid"));
+            client.setFaceid_ts(rs.getString("faceid_ts"));
             clients.add(client);
         }
         return clients;
@@ -97,6 +106,9 @@ public class ClientService implements IService<Client> {
             client.setAdresse(rs.getString("adresse"));
             client.setPhoto(rs.getString("photo"));
             client.setRole(rs.getString("role"));
+            client.setFaceid(rs.getString("faceid"));
+            client.setFaceid_ts(rs.getString("faceid_ts"));
+
             return client;
         }
         return null;
@@ -120,6 +132,8 @@ public class ClientService implements IService<Client> {
             client.setAdresse(rs.getString("adresse"));
             client.setPhoto(rs.getString("photo"));
             client.setRole(rs.getString("role"));
+            client.setFaceid(rs.getString("faceid"));
+            client.setFaceid_ts(rs.getString("faceid_ts"));
             return client;
         }
         return null;
@@ -143,12 +157,29 @@ public class ClientService implements IService<Client> {
             client.setAdresse(rs.getString("adresse"));
             client.setPhoto(rs.getString("photo"));
             client.setRole(rs.getString("role"));
+            client.setFaceid(rs.getString("faceid"));
+            client.setFaceid_ts(rs.getString("faceid_ts"));
             return client;
         }
         return null;
     }
 
-    public List<Client> getNonSubscribedUserList() throws SQLException {
+    public int getEventPoints(int id) {
+        try {
+            String query = "SELECT event_points FROM user WHERE id = ?";
+            PreparedStatement pst = connection.prepareStatement(query);
+            pst.setInt(1, id);
+            ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("event_points");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return 0;}
+
+        public List<Client> getNonSubscribedUserList() throws SQLException {
         List<Client> clients = new ArrayList<>();
         String query = "SELECT * FROM user WHERE role = 'client' AND id NOT IN (SELECT user_id FROM abonnement WHERE dateFinAb > NOW())";
         Statement st = connection.createStatement();
@@ -166,8 +197,42 @@ public class ClientService implements IService<Client> {
             client.setAdresse(rs.getString("adresse"));
             client.setPhoto(rs.getString("photo"));
             client.setRole(rs.getString("role"));
+            client.setFaceid(rs.getString("faceid"));
+            client.setFaceid_ts(rs.getString("faceid_ts"));
             clients.add(client);
         }
         return clients;
+    }
+
+    public Client getUserByPhone(String phone) throws SQLException {
+        String query = "SELECT * FROM user WHERE num_tel = ?";
+        PreparedStatement pst = connection.prepareStatement(query);
+        pst.setString(1, phone);
+        ResultSet rs = pst.executeQuery();
+        if (rs.next()) {
+            Client client = new Client();
+            client.setId(rs.getInt("id"));
+            client.setUsername(rs.getString("username"));
+            client.setFirstname(rs.getString("firstname"));
+            client.setLastname(rs.getString("lastname"));
+            client.setDate_naiss(rs.getString("date_naiss"));
+            client.setPassword(rs.getString("password"));
+            client.setEmail(rs.getString("email"));
+            client.setNum_tel(rs.getString("num_tel"));
+            client.setAdresse(rs.getString("adresse"));
+            client.setPhoto(rs.getString("photo"));
+            client.setRole(rs.getString("role"));
+            client.setFaceid(rs.getString("faceid"));
+            client.setFaceid_ts(rs.getString("faceid_ts"));
+            return client;
+        }
+        return null;
+    }
+    public void updatePassword(int id, String password) throws SQLException {
+        String query = "UPDATE user SET password = ? WHERE id = ?";
+        PreparedStatement pst = connection.prepareStatement(query);
+        pst.setString(1, Password.hash(password).withBcrypt().getResult());
+        pst.setInt(2, id);
+        pst.executeUpdate();
     }
 }

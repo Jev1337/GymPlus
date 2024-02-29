@@ -5,6 +5,7 @@ import animatefx.animation.FadeInRight;
 import animatefx.animation.FadeOutRight;
 import atlantafx.base.controls.Message;
 import atlantafx.base.controls.Notification;
+import atlantafx.base.controls.RingProgressIndicator;
 import atlantafx.base.theme.Styles;
 import atlantafx.base.util.Animations;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
@@ -13,14 +14,17 @@ import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.chart.BarChart;
@@ -32,42 +36,73 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
-import org.w3c.dom.Text;
-import services.gestionuser.AbonnementService;
-import services.gestionuser.AdminService;
-import services.gestionuser.ClientService;
-import services.gestionuser.StaffService;
+import okhttp3.*;
+import org.json.JSONObject;
+import org.opencv.core.*;
+import org.opencv.imgcodecs.Imgcodecs;
+import org.opencv.imgproc.Imgproc;
+import org.opencv.objdetect.CascadeClassifier;
+import org.opencv.objdetect.Objdetect;
+import org.opencv.objdetect.QRCodeDetector;
+import org.opencv.videoio.VideoCapture;
+import services.gestionuser.*;
 
-import java.io.File;
-import java.io.IOException;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.lang.management.ManagementFactory;
+import java.lang.management.MemoryMXBean;
+import java.lang.management.MemoryUsage;
 import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.sql.Date;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.List;
 
 public class AdminDashboardController {
+
+    private User managedSelectedUser;
 
     private final AdminService adminService = new AdminService();
     final Notification msg = new Notification();
     private final StaffService staffService = new StaffService();
     private final ClientService clientService = new ClientService();
     private final AbonnementService abonnementService = new AbonnementService();
-    private FadeIn[] fadeInAnimation = new FadeIn[9];
-    private FadeOutRight fadeOutRightAnimation = new FadeOutRight();
-    private FadeInRight fadeInRightAnimation = new FadeInRight();
+    private final AbonnementDetailsService abonnementDetailsService = new AbonnementDetailsService();
+    private final FadeIn[] fadeInAnimation = new FadeIn[9];
+    private final FadeOutRight fadeOutRightAnimation = new FadeOutRight();
+    private final FadeInRight fadeInRightAnimation = new FadeInRight();
 
+
+    @FXML
+    private Label gp1_label;
+
+    @FXML
+    private Label gp2_label;
+
+    @FXML
+    private Label gp3_label;
+
+    @FXML
+    private ScrollPane userlist_scrollpane;
+
+    @FXML
+    private CheckBox legacycheck;
+
+    @FXML
+    private Pane usermgmt_pane;
 
     @FXML
     private ScrollPane AdminBlogPane;
@@ -343,6 +378,208 @@ public class AdminDashboardController {
     private Pane subpane;
 
     @FXML
+    private ImageView faceid_change;
+
+    @FXML
+    private FontAwesomeIconView verified_icon;
+
+    @FXML
+    private FontAwesomeIconView nonverified_icon;
+
+    @FXML
+    private Label namesub_label;
+
+    @FXML
+    private Label subexpire;
+
+    @FXML
+    private Label subtype;
+
+    @FXML
+    private Label id_label;
+
+    @FXML
+    private Label dobsub_label;
+
+    @FXML
+    private ImageView scanneduser_imageview;
+
+    @FXML
+    private ImageView camerafeed_imageview;
+
+    @FXML
+    private ToggleButton opencam_btn;
+
+    @FXML
+    private Pane qr_pane;
+
+    @FXML
+    private Pane hidepane;
+
+    @FXML
+    private VBox userlist_vbox;
+
+    @FXML
+    private Label percentactivemem_label;
+
+    @FXML
+    private Label registeredusers_label;
+
+    @FXML
+    private Label activememclients_label;
+
+    @FXML
+    private ProgressBar percentactivemem_prog;
+
+    @FXML
+    private TextField gp1edit_tf;
+
+    @FXML
+    private TextField gp2edit_tf;
+
+    @FXML
+    private TextField gp3edit_tf;
+
+    @FXML
+    private ScrollPane smalluserlist_sp;
+
+    @FXML
+    private ScrollPane subbedlist_sp;
+
+    @FXML
+    private VBox subbed_vbox;
+
+    @FXML
+    private VBox userlistsub_vbox;
+
+    @FXML
+    private CheckBox legacysubbedlist_cb;
+
+    @FXML
+    private CheckBox legacyuserlist_cb;
+
+    private Abonnement selectedAbonnement;
+    private Client selectedClient;
+
+
+    @FXML
+    private void savegp_btn_act(ActionEvent event) {
+        if (gp1edit_tf.getText().isEmpty() || gp2edit_tf.getText().isEmpty() || gp3edit_tf.getText().isEmpty()) {
+            errorAlert("Empty fields", "Empty fields", "Please fill all the fields");
+            return;
+        }
+        if (!gp1edit_tf.getText().matches("^\\d+(\\.\\d+)?$") || !gp2edit_tf.getText().matches("^\\d+(\\.\\d+)?$") || !gp3edit_tf.getText().matches("^\\d+(\\.\\d+)?$")) {
+            errorAlert("Invalid input", "Invalid input", "Please enter a valid number");
+            return;
+        }
+        try {
+            abonnementDetailsService.update(new AbonnementDetails("GP 1", Double.parseDouble(gp1edit_tf.getText())));
+            abonnementDetailsService.update(new AbonnementDetails("GP 2", Double.parseDouble(gp2edit_tf.getText())));
+            abonnementDetailsService.update(new AbonnementDetails("GP 3", Double.parseDouble(gp3edit_tf.getText())));
+            initGPPrices();
+        }catch (Exception e){
+            stackTraceAlert(e);
+            return;
+        }
+    }
+
+    private VideoCapture capture;
+    private Mat frame;
+
+    @FXML
+    private void opencam_btn_act(ActionEvent event){
+        Task<Void> cameraTask = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                capture = new VideoCapture(0);
+                frame = new Mat();
+                if (capture.isOpened()) {
+                    hidepane.setVisible(false);
+                    Mat gray = new Mat();
+                    Mat points = new Mat();
+                    while (opencam_btn.isSelected() && !isCancelled() && getCurrentPane() == AdminSubscriptionPane){
+                        if (capture.read(frame)) {
+                            if (!frame.empty()) {
+                                Imgproc.cvtColor(frame, gray, Imgproc.COLOR_BGR2GRAY);
+                                Imgproc.GaussianBlur(gray, gray, new Size(5, 5), 0);
+                                QRCodeDetector qrCodeDetector = new QRCodeDetector();
+                                String data = qrCodeDetector.detectAndDecode(gray, points);
+                                if (!points.empty() && !data.isEmpty()) {
+                                    //check if data is an int
+                                    if (data.matches("^\\d+$")) {
+                                        Client c = clientService.getUserById(Integer.parseInt(data));
+                                        if (c != null)
+                                            Platform.runLater(() -> {
+                                                namesub_label.setText(c.getLastname() + " " + c.getFirstname());
+                                                id_label.setText(String.valueOf(c.getId()));
+                                                dobsub_label.setText(c.getDate_naiss());
+                                                scanneduser_imageview.setImage(new Image(new File("src/assets/profileuploads/" + c.getPhoto()).toURI().toString()));
+                                                Circle clip = new Circle(scanneduser_imageview.getFitWidth()/2, scanneduser_imageview.getFitHeight()/2, scanneduser_imageview.getFitWidth()/2);
+                                                scanneduser_imageview.setClip(clip);
+                                                scanneduser_imageview.setPreserveRatio(false);
+                                                try {
+                                                    if (abonnementService.isUserSubscribed(c.getId())) {
+                                                        Abonnement abonnement = abonnementService.getCurrentSubscription(c.getId());
+                                                        subexpire.setText(abonnement.getDuree_abon());
+                                                        subtype.setText(abonnement.getType());
+                                                        verified_icon.setVisible(true);
+                                                        nonverified_icon.setVisible(false);
+                                                    }else {
+                                                        subexpire.setText("Not Subscribed");
+                                                        subtype.setText("Not Subscribed");
+                                                        nonverified_icon.setVisible(true);
+                                                        verified_icon.setVisible(false);
+                                                    }
+                                                } catch (SQLException e) {
+                                                    throw new RuntimeException(e);
+                                                }
+                                            });
+
+                                    }
+                                    for (int i = 0; i < points.cols(); i++) {
+                                        Point pt1 = new Point(points.get(0, i));
+                                        Point pt2 = new Point(points.get(0, (i + 1) % 4));
+                                        Imgproc.line(frame, pt1, pt2, new Scalar(255, 0, 0), 3);
+                                    }
+                                }
+                                MatOfByte bytes = new MatOfByte();
+                                Imgcodecs.imencode(".png", frame, bytes);
+                                InputStream inputStream = new ByteArrayInputStream(bytes.toArray());
+                                camerafeed_imageview.setImage(new Image(inputStream));
+                            }
+                        }
+                    }
+                }
+                capture.release();
+                Platform.runLater(() -> {
+                    camerafeed_imageview.setImage(new Image(getClass().getResource("/assets/images/offlinemedia.png").toString()));
+                    if (getCurrentPane() != AdminSubscriptionPane){
+                        opencam_btn.setSelected(false);
+                        opencam_btn.setText("Open Camera");
+                        opencam_btn.setStyle("-color-button-bg: -color-success-4;");
+                    }
+                });
+                return null;
+            }
+        };
+
+        if (opencam_btn.isSelected()){
+            opencam_btn.setText("Close Camera");
+            opencam_btn.setStyle("-color-button-bg: -color-danger-4;");
+            hidepane.setVisible(true);
+            Thread cameraThread = new Thread(cameraTask);
+            cameraThread.setDaemon(true);
+            cameraThread.start();
+        }else {
+            opencam_btn.setText("Open Camera");
+            opencam_btn.setStyle("-color-button-bg: -color-success-4;");
+
+        }
+
+
+
+    }
+    @FXML
     void bars_btn_clicked(MouseEvent event) {
         bars_btn.setDisable(true);
         System.out.println(bars_pane.getPrefWidth());
@@ -405,6 +642,195 @@ public class AdminDashboardController {
         switchToPane(AdminHomePane);
     }
 
+
+    @FXML
+    void faceid_change_clicked(){
+        setFaceID();
+    }
+    String faceId = "";
+    public void setFaceID(){
+        faceid_change.setDisable(true);
+        Dialog<String> alert = new Dialog<>();
+        alert.initStyle(StageStyle.UNDECORATED);
+        alert.setTitle("FaceID Verification");
+        alert.setHeaderText("FaceID Verification");
+        ButtonType okButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+        alert.getDialogPane().getButtonTypes().add(okButton);
+        Label label = new Label("Waiting for camera to initialize...");
+        label.setLayoutX(0);
+        label.setLayoutY(39);
+        label.setPrefWidth(461);
+        label.alignmentProperty().setValue(javafx.geometry.Pos.CENTER);
+        ProgressBar progressBar = new ProgressBar();
+        progressBar.setProgress(ProgressBar.INDETERMINATE_PROGRESS);
+        progressBar.setLayoutX(27);
+        progressBar.setLayoutY(75);
+        progressBar.setPrefWidth(407);
+        progressBar.setPrefHeight(20);
+        alert.getDialogPane().setContent(new Pane(label, progressBar));
+        alert.initOwner(AdminHomePane.getScene().getWindow());
+        alert.show();
+
+
+        Task<Void> cameraTask = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                int i = 0;
+                VideoCapture capture = new VideoCapture(0);
+                Mat frame = new Mat();
+                if (capture.isOpened()) {
+                    while (!isCancelled()) {
+                        if (capture.read(frame)) {
+                            if (!frame.empty()) {
+                                if (i == 5)
+                                    break;
+                                i++;
+                                System.out.println("Camera Initialized!");
+                                Platform.runLater(()-> label.setText("Camera Initialized!"));
+                                Thread.sleep(1000);
+                                System.out.println("Capturing Frame...");
+                                Platform.runLater(()-> label.setText("Capturing Frame..."));
+                                Thread.sleep(1000);
+                                MatOfRect facesDetected = new MatOfRect();
+                                CascadeClassifier cascadeClassifier = new CascadeClassifier();
+                                int minFaceSize = Math.round(frame.rows() * 0.1f);
+                                cascadeClassifier.load(getClass().getResource("/assets/haarcascade_frontalface_alt.xml").toURI().getPath().toString().substring(1));
+                                cascadeClassifier.detectMultiScale(frame,
+                                        facesDetected,
+                                        1.1,
+                                        3,
+                                        Objdetect.CASCADE_SCALE_IMAGE,
+                                        new Size(minFaceSize, minFaceSize),
+                                        new Size()
+                                );
+                                Rect[] facesArray = facesDetected.toArray();
+                                if (facesArray.length > 0) {
+                                    System.out.println("Face Found!");
+                                    Platform.runLater(() -> label.setText("Face Found! Verifying..."));
+                                    Platform.runLater(() -> progressBar.setProgress(1));
+
+                                    MatOfByte matOfByte = new MatOfByte();
+                                    Imgcodecs.imencode(".jpg", frame, matOfByte);
+                                    byte[] byteArray = matOfByte.toArray();
+                                    InputStream in = new ByteArrayInputStream(byteArray);
+                                    BufferedImage img = null;
+                                    try {
+                                        img = ImageIO.read(in);
+                                    }catch (Exception e) {
+                                        stackTraceAlert(e);
+                                    }
+                                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                                    try {
+                                        assert img != null;
+                                        ImageIO.write(img, "png", bos);
+                                    }catch (Exception e) {
+                                        stackTraceAlert(e);
+                                    }
+
+                                    byte[] imgBytes = bos.toByteArray();
+
+                                    OkHttpClient client = new OkHttpClient().newBuilder()
+                                            .build();
+                                    MediaType mediaType = MediaType.parse("image/png");
+                                    RequestBody body = new MultipartBody.Builder().setType(MultipartBody.FORM)
+                                            .addFormDataPart("image_file","image.png",
+                                                    RequestBody.create(imgBytes, mediaType))
+                                            .addFormDataPart("api_key","oVAqEDbCYmaILayXJdKAsuYbFcJ0LBP6")
+                                            .addFormDataPart("api_secret","e76obC1xsr-zSMynWZoQCt62vWDgtZ6O")
+                                            .addFormDataPart("return_attributes","emotion")
+                                            .build();
+                                    Request request = new Request.Builder()
+                                            .url("https://api-us.faceplusplus.com/facepp/v3/detect")
+                                            .method("POST", body)
+                                            .build();
+                                    try{
+                                        Response response = client.newCall(request).execute();
+                                        Platform.runLater(() -> {
+                                            try {
+                                                assert response.body() != null;
+                                                JSONObject jsonObject = new JSONObject(response.body().string());
+                                                faceId = jsonObject.getJSONArray("faces").getJSONObject(0).getString("face_token");
+                                                updateFaceId(faceId);
+                                            }catch (Exception e) {
+                                                stackTraceAlert(e);
+                                            }
+
+                                        });
+                                    }catch (Exception e) {
+                                        stackTraceAlert(e);
+                                    }
+                                    break;
+                                }
+                                else {
+                                    System.out.println("Face not found ");
+                                    Platform.runLater(() -> label.setText("Face not found! Trying Again..."));
+                                    Thread.sleep(2000);
+                                }
+                            }
+                        }
+                    }
+                }
+                capture.release();
+
+                if(faceId == null || faceId.isEmpty()){
+                    Platform.runLater(() -> {
+                        Alert alert = new Alert(Alert.AlertType.WARNING);
+                        alert.initStyle(StageStyle.UNDECORATED);
+                        alert.setTitle("Warning");
+                        alert.setHeaderText("Warning");
+                        alert.initOwner(AdminInfoPane.getScene().getWindow());
+                        if (!isCancelled())
+                            alert.setContentText("No face detected! Please try again.");
+                        else
+                            alert.setContentText("Faceid Cancelled!");
+                        alert.show();
+                    });
+                }
+                Platform.runLater(() -> faceid_change.setDisable(false));
+                Platform.runLater(alert::close);
+                return null;
+            }
+
+        };
+
+        Thread cameraThread = new Thread(cameraTask);
+        alert.setOnCloseRequest(e -> {
+            cameraTask.cancel(false);
+        });
+        cameraThread.start();
+    }
+
+    private void updateFaceId(String faceId) {
+        try {
+            if(managedSelectedUser == null) {
+                GlobalVar.getUser().setFaceid(faceId);
+                GlobalVar.getUser().setFaceid_ts(new Date(System.currentTimeMillis()).toString());
+                adminService.update((Admin)GlobalVar.getUser());
+                initProfile();
+            }
+            else {
+                managedSelectedUser.setFaceid(faceId);
+                managedSelectedUser.setFaceid_ts(new Date(System.currentTimeMillis()).toString());
+                switch (managedSelectedUser.getRole()) {
+                    case "client" -> {
+                        Client client = (Client) managedSelectedUser;
+                        clientService.update(client);
+                    }
+                    case "staff" -> {
+                        Staff staff = (Staff) managedSelectedUser;
+                        staffService.update(staff);
+                    }
+                    case "admin" -> {
+                        Admin admin = (Admin) managedSelectedUser;
+                        adminService.update(admin);
+                    }
+                }
+            }
+            notify("FaceID has been updated successfully!");
+        } catch (Exception e) {
+            stackTraceAlert(e);
+        }
+    }
     @FXML
     void logout_btn_act(ActionEvent event) {
         try {
@@ -414,7 +840,7 @@ public class AdminDashboardController {
             logout_btn.getScene().getWindow().setHeight(400);
             logout_btn.getScene().setRoot(root);
         } catch (Exception e) {
-            e.printStackTrace();
+            stackTraceAlert(e);
         }
     }
 
@@ -447,11 +873,15 @@ public class AdminDashboardController {
     @FXML
     void subscription_btn_act(ActionEvent event) {
         switchToPane(AdminSubscriptionPane);
+        initSubList(subtype_cb.getValue(), searchbarsub_tf.getText());
+        initNonSubbedUserList(subtypeadd_cb.getValue());
     }
 
     @FXML
     void subscription_btn_clicked(MouseEvent event) {
         switchToPane(AdminSubscriptionPane);
+        initSubList(subtype_cb.getValue(), searchbarsub_tf.getText());
+        initNonSubbedUserList(searchbarusersub_tf.getText());
     }
 
     @FXML
@@ -462,11 +892,13 @@ public class AdminDashboardController {
 
     @FXML
     void users_btn_click(ActionEvent event) {
+        initUserList();
         switchToPane(AdminUserManagementPane);
     }
 
     @FXML
     void users_btn_clicked(MouseEvent event) {
+        initUserList();
         switchToPane(AdminUserManagementPane);
     }
     @FXML
@@ -495,21 +927,11 @@ public class AdminDashboardController {
     void saveacc_btn_act(ActionEvent event) {
 
         if (firstname_tf.getText().isEmpty() || lastname_tf.getText().isEmpty() || username_tf.getText().isEmpty() || email_tf.getText().isEmpty() || phone_tf.getText().isEmpty() || address_ta.getText().isEmpty()) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.initStyle(StageStyle.UNDECORATED);
-            alert.setTitle("Error");
-            alert.setHeaderText("Empty fields");
-            alert.setContentText("Please fill all the fields");
-            alert.showAndWait();
+            errorAlert("Empty fields", "Empty fields", "Please fill all the fields");
             return;
         }
         if (dateofbirth_tf.getValue() == null) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.initStyle(StageStyle.UNDECORATED);
-            alert.setTitle("Error");
-            alert.setHeaderText("Date of birth is empty");
-            alert.setContentText("Please choose a date of birth");
-            alert.showAndWait();
+            errorAlert("Empty fields", "Empty fields", "Please fill all the fields");
             return;
         }
         if (!validateEmail(email_tf.getText()))
@@ -517,47 +939,38 @@ public class AdminDashboardController {
         if (!validateText(username_tf.getText()))
             return;
         try {
+            if (!phone_tf.getText().equals(GlobalVar.getUser().getNum_tel())) {
+                if (adminService.getUserByPhone(phone_tf.getText()) != null) {
+                    errorAlert("Error", "Phone Number Already in Use", "The phone number you have entered is already in use");
+                    return;
+                }
+            }
             if (profilepic_pf.getText().isEmpty()) {
-                Admin admin= new Admin(GlobalVar.getUser().getId(), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), dateofbirth_tf.getValue().toString(), GlobalVar.getUser().getPassword(), email_tf.getText(), phone_tf.getText(), address_ta.getText(), GlobalVar.getUser().getPhoto());
+                Admin admin= new Admin(GlobalVar.getUser().getId(), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), dateofbirth_tf.getValue().toString(), GlobalVar.getUser().getPassword(), email_tf.getText(), phone_tf.getText(), address_ta.getText(), GlobalVar.getUser().getPhoto(), GlobalVar.getUser().getFaceid(), GlobalVar.getUser().getFaceid_ts());
                 adminService.update(admin);
                 GlobalVar.setUser(admin);
                 initProfile();
+                initUserList();
             }else{
                 File file = new File(profilepic_pf.getText());
                 if (!file.exists()) {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.initStyle(StageStyle.UNDECORATED);
-                    alert.setTitle("Error");
-                    alert.setHeaderText("Profile picture not found");
-                    alert.setContentText("Please choose a valid profile picture");
-                    alert.showAndWait();
+                    errorAlert("Profile picture not found", "Profile picture not found", "Please choose a valid profile picture");
                     return;
                 }
                 userprofile_imageview.setImage(null);
                 user_imageview.setImage(null);
                 File oldFile = new File("src/assets/profileuploads/" +GlobalVar.getUser().getPhoto());
                 oldFile.delete();
-                Files.copy(file.toPath(), new File("src/assets/profileuploads/USERIMG"+ GlobalVar.getUser().getId() + file.getName().substring(file.getName().lastIndexOf("."))).toPath());
-                Admin admin = new Admin(GlobalVar.getUser().getId(), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), dateofbirth_tf.getValue().toString(), GlobalVar.getUser().getPassword(), email_tf.getText(), phone_tf.getText(), address_ta.getText(), "USERIMG"+ GlobalVar.getUser().getId() + file.getName().substring(file.getName().lastIndexOf(".")));
+                Files.copy(file.toPath(), new File("src/assets/profileuploads/USERIMG"+ GlobalVar.getUser().getId() + file.getName().substring(file.getName().lastIndexOf("."))).toPath(), StandardCopyOption.REPLACE_EXISTING);
+                Admin admin = new Admin(GlobalVar.getUser().getId(), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), dateofbirth_tf.getValue().toString(), GlobalVar.getUser().getPassword(), email_tf.getText(), phone_tf.getText(), address_ta.getText(), "USERIMG"+ GlobalVar.getUser().getId() + file.getName().substring(file.getName().lastIndexOf(".")), GlobalVar.getUser().getFaceid(), GlobalVar.getUser().getFaceid_ts());
                 adminService.update(admin);
                 GlobalVar.setUser(admin);
                 initProfile();
+                initUserList();
             }
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.initStyle(StageStyle.UNDECORATED);
-            alert.setTitle("Success");
-            alert.setHeaderText("Profile picture updated");
-            alert.setContentText("Your profile info has been updated successfully");
-            alert.showAndWait();
+            notify("Profile has been updated successfully!");
         }catch (Exception e){
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.initStyle(StageStyle.UNDECORATED);
-            alert.setTitle("Error");
-            alert.setHeaderText("An error has occured");
-            alert.setContentText("An error has occured while trying to update your account");
-            alert.showAndWait();
-            e.printStackTrace();
-            return;
+            stackTraceAlert(e);
         }
     }
 
@@ -577,12 +990,7 @@ public class AdminDashboardController {
                 || phonemanage_tf.getText().isEmpty() || addressmanage_ta.getText().isEmpty()
                 || photomanage_tf.getText().isEmpty() || pwdmanage_pf.getText().isEmpty()
                 || dobmanage_dp.getValue() == null || acctypemanage_cb.getValue() == null) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.initStyle(StageStyle.UNDECORATED);
-            alert.setTitle("Error");
-            alert.setHeaderText("Empty fields");
-            alert.setContentText("Please fill all the fields");
-            alert.showAndWait();
+            errorAlert("Empty fields", "Empty fields", "Please fill all the fields");
             return;
         }
         if (!validateEmail(emailmanage_tf.getText()))
@@ -611,48 +1019,32 @@ public class AdminDashboardController {
                 || clientService.getUserByUsername(usernamemanage_tf.getText()) != null
                     || staffService.getUserByUsername(usernamemanage_tf.getText()) != null
                     || adminService.getUserByUsername(usernamemanage_tf.getText()) != null){
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.initStyle(StageStyle.UNDECORATED);
-                alert.setTitle("Error");
-                alert.setHeaderText("Some fields are already used");
-                alert.setContentText("Please choose another username, email or CIN");
-                alert.showAndWait();
+                errorAlert("Duplicate entry", "Duplicate entry", "A user with the same username, email or CIN already exists");
+                return;
+            }
+            if (adminService.getUserByPhone(phonemanage_tf.getText()) != null
+                    || staffService.getUserByPhone(phonemanage_tf.getText()) != null
+                    || clientService.getUserByPhone(phonemanage_tf.getText()) != null){
+                errorAlert("Duplicate entry", "Duplicate entry", "A user with the same phone number already exists");
                 return;
             }
             File file = new File(photomanage_tf.getText());
             if (!file.exists()) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.initStyle(StageStyle.UNDECORATED);
-                alert.setTitle("Error");
-                alert.setHeaderText("Profile picture not found");
-                alert.setContentText("Please choose a valid profile picture");
-                alert.showAndWait();
+                errorAlert("Profile picture not found", "Profile picture not found", "Please choose a valid profile picture");
                 return;
             }
             if (acctypemanage_cb.getValue().equals("Admin")) {
-                adminService.add(new Admin(Integer.parseInt(cinmanage_tf.getText()), usernamemanage_tf.getText(), firstnamemanage_tf.getText(), lastnamemanage_tf.getText(), dobmanage_dp.getValue().toString(), pwdmanage_pf.getText(), emailmanage_tf.getText(), phonemanage_tf.getText(), addressmanage_ta.getText(), "USERIMG"+ cinmanage_tf.getText() + file.getName().substring(file.getName().lastIndexOf("."))));
+                adminService.add(new Admin(Integer.parseInt(cinmanage_tf.getText()), usernamemanage_tf.getText(), firstnamemanage_tf.getText(), lastnamemanage_tf.getText(), dobmanage_dp.getValue().toString(), pwdmanage_pf.getText(), emailmanage_tf.getText(), phonemanage_tf.getText(), addressmanage_ta.getText(), "USERIMG"+ cinmanage_tf.getText() + file.getName().substring(file.getName().lastIndexOf(".")),"",new SimpleDateFormat("yyyy-MM-dd").format(new Date(System.currentTimeMillis()))));
             }else if (acctypemanage_cb.getValue().equals("Staff")) {
-                staffService.add(new Staff(Integer.parseInt(cinmanage_tf.getText()), usernamemanage_tf.getText(), firstnamemanage_tf.getText(), lastnamemanage_tf.getText(), dobmanage_dp.getValue().toString(), pwdmanage_pf.getText(), emailmanage_tf.getText(), phonemanage_tf.getText(), addressmanage_ta.getText(), "USERIMG"+ cinmanage_tf.getText() +  file.getName().substring(file.getName().lastIndexOf("."))));
+                staffService.add(new Staff(Integer.parseInt(cinmanage_tf.getText()), usernamemanage_tf.getText(), firstnamemanage_tf.getText(), lastnamemanage_tf.getText(), dobmanage_dp.getValue().toString(), pwdmanage_pf.getText(), emailmanage_tf.getText(), phonemanage_tf.getText(), addressmanage_ta.getText(), "USERIMG"+ cinmanage_tf.getText() +  file.getName().substring(file.getName().lastIndexOf(".")),"",new SimpleDateFormat("yyyy-MM-dd").format(new Date(System.currentTimeMillis()))));
             }else if (acctypemanage_cb.getValue().equals("Client")) {
-                clientService.add(new Client(Integer.parseInt(cinmanage_tf.getText()), usernamemanage_tf.getText(), firstnamemanage_tf.getText(), lastnamemanage_tf.getText(), dobmanage_dp.getValue().toString(), pwdmanage_pf.getText(), emailmanage_tf.getText(), phonemanage_tf.getText(), addressmanage_ta.getText(), "USERIMG"+ cinmanage_tf.getText() +  file.getName().substring(file.getName().lastIndexOf("."))));
+                clientService.add(new Client(Integer.parseInt(cinmanage_tf.getText()), usernamemanage_tf.getText(), firstnamemanage_tf.getText(), lastnamemanage_tf.getText(), dobmanage_dp.getValue().toString(), pwdmanage_pf.getText(), emailmanage_tf.getText(), phonemanage_tf.getText(), addressmanage_ta.getText(), "USERIMG"+ cinmanage_tf.getText() +  file.getName().substring(file.getName().lastIndexOf(".")),"",new SimpleDateFormat("yyyy-MM-dd").format(new Date(System.currentTimeMillis()))));
             }
-            Files.copy(file.toPath(), new File("src/assets/profileuploads/USERIMG"+ cinmanage_tf.getText() + file.getName().substring(file.getName().lastIndexOf("."))).toPath());
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.initStyle(StageStyle.UNDECORATED);
-            alert.setTitle("Success");
-            alert.setHeaderText("Account created");
-            alert.setContentText("The account has been created successfully");
-            alert.showAndWait();
-            initUserList(-1, "");
+            Files.copy(file.toPath(), new File("src/assets/profileuploads/USERIMG"+ cinmanage_tf.getText() + file.getName().substring(file.getName().lastIndexOf("."))).toPath(), StandardCopyOption.REPLACE_EXISTING);
+            notify("Account has been created successfully!");
+            initUserList();
         }catch (Exception e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.initStyle(StageStyle.UNDECORATED);
-            alert.setTitle("Error");
-            alert.setHeaderText("An error has occured");
-            alert.setContentText("An error has occured while trying to create the account");
-            alert.showAndWait();
-            e.printStackTrace();
-            return;
+            stackTraceAlert(e);
         }
 
     }
@@ -663,6 +1055,7 @@ public class AdminDashboardController {
         alert.setTitle("Confirmation");
         alert.setHeaderText("Are you sure you want to delete this account?");
         alert.setContentText("This action is irreversible");
+        alert.initOwner(AdminInfoPane.getScene().getWindow());
         alert.showAndWait();
         if (alert.getResult() == ButtonType.OK) {
             try {
@@ -674,13 +1067,7 @@ public class AdminDashboardController {
                 file.delete();
                 adminService.delete(user.getId());
             }catch (Exception e){
-                alert = new Alert(Alert.AlertType.ERROR);
-                alert.initStyle(StageStyle.UNDECORATED);
-                alert.setTitle("Error");
-                alert.setHeaderText("An error has occured");
-                alert.setContentText("An error has occured while trying to delete your account");
-                alert.showAndWait();
-                e.printStackTrace();
+                stackTraceAlert(e);
                 return false;
             }
         }
@@ -688,27 +1075,17 @@ public class AdminDashboardController {
     }
 
     public void deleteaccmanage_btn(ActionEvent actionEvent) {
-        deleteAcc(userlist_tableview.getSelectionModel().getSelectedItem());
+        deleteAcc(managedSelectedUser);
         switchToPane(AdminUserManagementPane);
     }
 
     public void saveaccmanage_btn_act(ActionEvent actionEvent) {
         if (firstname_tf.getText().isEmpty() || lastname_tf.getText().isEmpty() || username_tf.getText().isEmpty() || email_tf.getText().isEmpty() || phone_tf.getText().isEmpty() || address_ta.getText().isEmpty()) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.initStyle(StageStyle.UNDECORATED);
-            alert.setTitle("Error");
-            alert.setHeaderText("Empty fields");
-            alert.setContentText("Please fill all the fields");
-            alert.showAndWait();
+            errorAlert("Empty fields", "Empty fields", "Please fill all the fields");
             return;
         }
         if (dateofbirth_tf.getValue() == null) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.initStyle(StageStyle.UNDECORATED);
-            alert.setTitle("Error");
-            alert.setHeaderText("Date of birth is empty");
-            alert.setContentText("Please choose a date of birth");
-            alert.showAndWait();
+            errorAlert("Empty fields", "Empty fields", "Please fill all the fields");
             return;
         }
         if (!validateEmail(email_tf.getText()))
@@ -716,84 +1093,76 @@ public class AdminDashboardController {
         if (!validateText(username_tf.getText()))
             return;
         try {
-            User user = userlist_tableview.getSelectionModel().getSelectedItem();
-            if (profilepic_pf.getText().isEmpty()) {
-                if (user.getRole().equals("client")){
-                    clientService.update(new Client(user.getId(), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), dateofbirth_tf.getValue().toString(), user.getPassword(), email_tf.getText(), phone_tf.getText(), address_ta.getText(), user.getPhoto()));
-                }else if (user.getRole().equals("staff")) {
-                    staffService.update(new Staff(user.getId(), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), dateofbirth_tf.getValue().toString(), user.getPassword(), email_tf.getText(), phone_tf.getText(), address_ta.getText(), user.getPhoto()));
-                }else if (user.getRole().equals("admin")) {
-                    adminService.update(new Admin(user.getId(), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), dateofbirth_tf.getValue().toString(), user.getPassword(), email_tf.getText(), phone_tf.getText(), address_ta.getText(), user.getPhoto()));
+            if (!phone_tf.getText().equals(managedSelectedUser.getNum_tel())) {
+                if (clientService.getUserByPhone(phone_tf.getText()) != null) {
+                    errorAlert("Error", "Phone Number Already in Use", "The phone number you have entered is already in use");
+                    return;
                 }
-                user.setUsername(username_tf.getText());
-                user.setFirstname(firstname_tf.getText());
-                user.setLastname(lastname_tf.getText());
-                user.setDate_naiss(dateofbirth_tf.getValue().toString());
-                user.setEmail(email_tf.getText());
-                user.setNum_tel(phone_tf.getText());
-                user.setAdresse(address_ta.getText());
-                initProfileTemp(user);
+                if (staffService.getUserByPhone(phone_tf.getText()) != null) {
+                    errorAlert("Error", "Phone Number Already in Use", "The phone number you have entered is already in use");
+                    return;
+                }
+                if (adminService.getUserByPhone(phone_tf.getText()) != null) {
+                    errorAlert("Error", "Phone Number Already in Use", "The phone number you have entered is already in use");
+                    return;
+                }
+            }
+            if (profilepic_pf.getText().isEmpty()) {
+                if (managedSelectedUser.getRole().equals("client")){
+                    clientService.update(new Client(managedSelectedUser.getId(), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), dateofbirth_tf.getValue().toString(), managedSelectedUser.getPassword(), email_tf.getText(), phone_tf.getText(), address_ta.getText(), managedSelectedUser.getPhoto(),managedSelectedUser.getFaceid(), managedSelectedUser.getFaceid_ts()));
+                }else if (managedSelectedUser.getRole().equals("staff")) {
+                    staffService.update(new Staff(managedSelectedUser.getId(), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), dateofbirth_tf.getValue().toString(), managedSelectedUser.getPassword(), email_tf.getText(), phone_tf.getText(), address_ta.getText(), managedSelectedUser.getPhoto(), managedSelectedUser.getFaceid(), managedSelectedUser.getFaceid_ts()));
+                }else if (managedSelectedUser.getRole().equals("admin")) {
+                    adminService.update(new Admin(managedSelectedUser.getId(), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), dateofbirth_tf.getValue().toString(), managedSelectedUser.getPassword(), email_tf.getText(), phone_tf.getText(), address_ta.getText(), managedSelectedUser.getPhoto(), managedSelectedUser.getFaceid(), managedSelectedUser.getFaceid_ts()));
+                }
+                managedSelectedUser.setUsername(username_tf.getText());
+                managedSelectedUser.setFirstname(firstname_tf.getText());
+                managedSelectedUser.setLastname(lastname_tf.getText());
+                managedSelectedUser.setDate_naiss(dateofbirth_tf.getValue().toString());
+                managedSelectedUser.setEmail(email_tf.getText());
+                managedSelectedUser.setNum_tel(phone_tf.getText());
+                managedSelectedUser.setAdresse(address_ta.getText());
+                initProfileTemp(managedSelectedUser);
+                initUserList();
 
             }else{
                 File file = new File(profilepic_pf.getText());
                 if (!file.exists()) {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.initStyle(StageStyle.UNDECORATED);
-                    alert.setTitle("Error");
-                    alert.setHeaderText("Profile picture not found");
-                    alert.setContentText("Please choose a valid profile picture");
-                    alert.showAndWait();
+                    errorAlert("Profile picture not found", "Profile picture not found", "Please choose a valid profile picture");
                     return;
                 }
                 userprofile_imageview.setImage(null);
-                File oldFile = new File("src/assets/profileuploads/" +user.getPhoto());
+                File oldFile = new File("src/assets/profileuploads/" +managedSelectedUser.getPhoto());
                 oldFile.delete();
-                Files.copy(file.toPath(), new File("src/assets/profileuploads/USERIMG"+ user.getId() + file.getName().substring(file.getName().lastIndexOf("."))).toPath());
-                if (acctypecol.getCellData(userlist_tableview.getSelectionModel().getSelectedIndex()) == null){
-                    clientService.update(new Client(user.getId(), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), dateofbirth_tf.getValue().toString(), user.getPassword(), email_tf.getText(), phone_tf.getText(), address_ta.getText(), user.getPhoto()));
-                }else if (acctypecol.getCellData(userlist_tableview.getSelectionModel().getSelectedIndex()).equals("staff")) {
-                    staffService.update(new Staff(user.getId(), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), dateofbirth_tf.getValue().toString(), user.getPassword(), email_tf.getText(), phone_tf.getText(), address_ta.getText(), user.getPhoto()));
-                }else if (acctypecol.getCellData(userlist_tableview.getSelectionModel().getSelectedIndex()).equals("admin")) {
-                    adminService.update(new Admin(user.getId(), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), dateofbirth_tf.getValue().toString(), user.getPassword(), email_tf.getText(), phone_tf.getText(), address_ta.getText(), user.getPhoto()));
+                Files.copy(file.toPath(), new File("src/assets/profileuploads/USERIMG"+ managedSelectedUser.getId() + file.getName().substring(file.getName().lastIndexOf("."))).toPath(), StandardCopyOption.REPLACE_EXISTING);
+                if (managedSelectedUser.getRole().equals("client")){
+                    clientService.update(new Client(managedSelectedUser.getId(), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), dateofbirth_tf.getValue().toString(), managedSelectedUser.getPassword(), email_tf.getText(), phone_tf.getText(), address_ta.getText(), managedSelectedUser.getPhoto(),managedSelectedUser.getFaceid(), managedSelectedUser.getFaceid_ts()));
+                }else if (managedSelectedUser.getRole().equals("staff")) {
+                    staffService.update(new Staff(managedSelectedUser.getId(), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), dateofbirth_tf.getValue().toString(), managedSelectedUser.getPassword(), email_tf.getText(), phone_tf.getText(), address_ta.getText(), managedSelectedUser.getPhoto(), managedSelectedUser.getFaceid(), managedSelectedUser.getFaceid_ts()));
+                }else if (managedSelectedUser.getRole().equals("admin")) {
+                    adminService.update(new Admin(managedSelectedUser.getId(), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), dateofbirth_tf.getValue().toString(), managedSelectedUser.getPassword(), email_tf.getText(), phone_tf.getText(), address_ta.getText(), managedSelectedUser.getPhoto(), managedSelectedUser.getFaceid(), managedSelectedUser.getFaceid_ts()));
                 }
-                user.setUsername(username_tf.getText());
-                user.setFirstname(firstname_tf.getText());
-                user.setLastname(lastname_tf.getText());
-                user.setDate_naiss(dateofbirth_tf.getValue().toString());
-                user.setEmail(email_tf.getText());
-                user.setNum_tel(phone_tf.getText());
-                user.setAdresse(address_ta.getText());
-                user.setPhoto("USERIMG"+ user.getId() + file.getName().substring(file.getName().lastIndexOf(".")));
-                initProfileTemp(user);
-
+                managedSelectedUser.setUsername(username_tf.getText());
+                managedSelectedUser.setFirstname(firstname_tf.getText());
+                managedSelectedUser.setLastname(lastname_tf.getText());
+                managedSelectedUser.setDate_naiss(dateofbirth_tf.getValue().toString());
+                managedSelectedUser.setEmail(email_tf.getText());
+                managedSelectedUser.setNum_tel(phone_tf.getText());
+                managedSelectedUser.setAdresse(address_ta.getText());
+                managedSelectedUser.setPhoto("USERIMG"+ managedSelectedUser.getId() + file.getName().substring(file.getName().lastIndexOf(".")));
+                initProfileTemp(managedSelectedUser);
+                initUserList();
             }
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.initStyle(StageStyle.UNDECORATED);
-            alert.setTitle("Success");
-            alert.setHeaderText("Profile picture updated");
-            alert.setContentText("Profile info has been updated successfully");
-            alert.showAndWait();
-            switchToPane(AdminUserManagementPane);
+            notify("Profile has been updated successfully!");
         }catch (Exception e){
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.initStyle(StageStyle.UNDECORATED);
-            alert.setTitle("Error");
-            alert.setHeaderText("An error has occured");
-            alert.setContentText("An error has occured while trying to update your account");
-            alert.showAndWait();
-            e.printStackTrace();
+            stackTraceAlert(e);
             return;
         }
     }
 
     public void manageacc_btn_act(ActionEvent actionEvent) {
         if(userlist_tableview.getSelectionModel().getSelectedItem() == null){
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.initStyle(StageStyle.UNDECORATED);
-            alert.setTitle("Error");
-            alert.setHeaderText("No user selected");
-            alert.setContentText("Please select a user to manage");
-            alert.showAndWait();
+            errorAlert("No user selected", "No user selected", "Please select a user to manage");
             return;
         }
         User user = userlist_tableview.getSelectionModel().getSelectedItem();
@@ -804,6 +1173,7 @@ public class AdminDashboardController {
             alert.setTitle("Confirmation");
             alert.setHeaderText("This is your own account");
             alert.setContentText("Would you like to go to your own profile instead?");
+            alert.initOwner(AdminInfoPane.getScene().getWindow());
             alert.showAndWait();
             if (alert.getResult() == ButtonType.OK) {
                 initProfile();
@@ -822,25 +1192,11 @@ public class AdminDashboardController {
 
 
     public void type_cb_act(ActionEvent actionEvent) {
-        if (type_cb.getValue().equals("All"))
-            initUserList(-1 , searchbar_tf.getText());
-        else if (type_cb.getValue().equals("Admin"))
-            initUserList(0, searchbar_tf.getText());
-        else if (type_cb.getValue().equals("Staff"))
-            initUserList(1, searchbar_tf.getText());
-        else if (type_cb.getValue().equals("Client"))
-            initUserList(2, searchbar_tf.getText());
+        initUserList();
     }
 
     public void searchbar_tf_textchanged(KeyEvent keyEvent) {
-        if (type_cb.getValue() == null || type_cb.getValue().equals("All"))
-            initUserList(-1 , searchbar_tf.getText());
-        else if (type_cb.getValue().equals("Admin"))
-            initUserList(0, searchbar_tf.getText());
-        else if (type_cb.getValue().equals("Staff"))
-            initUserList(1, searchbar_tf.getText());
-        else if (type_cb.getValue().equals("Client"))
-            initUserList(2, searchbar_tf.getText());
+        initUserList();
     }
 
     public void browsemanage_btn_act(ActionEvent actionEvent) {
@@ -865,21 +1221,19 @@ public class AdminDashboardController {
     }
 
     public void deletesub_btn_act(ActionEvent actionEvent) {
-        if (subscriptionslist_tableview.getSelectionModel().getSelectedItem() == null){
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.initStyle(StageStyle.UNDECORATED);
-            alert.setTitle("Error");
-            alert.setHeaderText("No subscription selected");
-            alert.setContentText("Please select a subscription to delete");
-            alert.showAndWait();
+        if (selectedAbonnement == null)
+            selectedAbonnement = subscriptionslist_tableview.getSelectionModel().getSelectedItem();
+        if (selectedAbonnement == null){
+            errorAlert("No subscription selected", "No subscription selected", "Please select a subscription to delete");
             return;
         }
-        Abonnement abonnement = subscriptionslist_tableview.getSelectionModel().getSelectedItem();
+        Abonnement abonnement = selectedAbonnement;
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.initStyle(StageStyle.UNDECORATED);
         alert.setTitle("Confirmation");
         alert.setHeaderText("Are you sure you want to delete this subscription?");
         alert.setContentText("This action is irreversible");
+        alert.initOwner(AdminInfoPane.getScene().getWindow());
         alert.showAndWait();
         if (alert.getResult() == ButtonType.OK) {
             try {
@@ -888,44 +1242,30 @@ public class AdminDashboardController {
                 initNonSubbedUserList(searchbarusersub_tf.getText());
                 notify("Successfully deleted the subscription!");
             }catch (Exception e){
-                alert = new Alert(Alert.AlertType.ERROR);
-                alert.initStyle(StageStyle.UNDECORATED);
-                alert.setTitle("Error");
-                alert.setHeaderText("An error has occured");
-                alert.setContentText("An error has occured while trying to delete the subscription");
-                alert.showAndWait();
-                e.printStackTrace();
-                return;
+                stackTraceAlert(e);
             }
         }
     }
 
     public void savesub_btn_act(ActionEvent actionEvent) {
-        if (subscriptionslist_tableview.getSelectionModel().getSelectedItem() == null){
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.initStyle(StageStyle.UNDECORATED);
-            alert.setTitle("Error");
-            alert.setHeaderText("No user selected");
-            alert.setContentText("Please select a user to subscribe");
-            alert.showAndWait();
+        if (selectedAbonnement == null){
+            selectedAbonnement = subscriptionslist_tableview.getSelectionModel().getSelectedItem();
+        }
+        if (selectedAbonnement == null){
+            errorAlert("No subscription selected", "No subscription selected", "Please select a subscription to edit");
             return;
         }
         if (subtypeedit_cb.getValue() == null){
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.initStyle(StageStyle.UNDECORATED);
-            alert.setTitle("Error");
-            alert.setHeaderText("No subscription type selected");
-            alert.setContentText("Please select a subscription type");
-            alert.showAndWait();
+            errorAlert("No subscription type selected", "No subscription type selected", "Please select a subscription type");
             return;
         }
-        Abonnement abonnement = subscriptionslist_tableview.getSelectionModel().getSelectedItem();
+        Abonnement abonnement = selectedAbonnement;
         Date date = null;
-        if (subtypeedit_cb.getValue().equals("GP1"))
+        if (subtypeedit_cb.getValue().equals("GP 1"))
             date = Date.valueOf(LocalDate.now().plusMonths(3));
-        else if (subtypeedit_cb.getValue().equals("GP2"))
+        else if (subtypeedit_cb.getValue().equals("GP 2"))
             date = Date.valueOf(LocalDate.now().plusMonths(6));
-        else if (subtypeedit_cb.getValue().equals("GP3"))
+        else if (subtypeedit_cb.getValue().equals("GP 3"))
             date = Date.valueOf(LocalDate.now().plusMonths(12));
         assert date != null;
         abonnement.setDuree_abon(date.toString());
@@ -936,14 +1276,7 @@ public class AdminDashboardController {
             initNonSubbedUserList(searchbarusersub_tf.getText());
             notify("Successfully updated the subscription!");
         }catch (Exception e){
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.initStyle(StageStyle.UNDECORATED);
-            alert.setTitle("Error");
-            alert.setHeaderText("An error has occured");
-            alert.setContentText("An error has occured while trying to subscribe the user");
-            alert.showAndWait();
-            e.printStackTrace();
-            return;
+            stackTraceAlert(e);
         }
     }
 
@@ -952,32 +1285,26 @@ public class AdminDashboardController {
     }
 
     public void addsub_btn_act(ActionEvent actionEvent) {
-        if (userlistsub_tableview.getSelectionModel().getSelectedItem() == null){
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.initStyle(StageStyle.UNDECORATED);
-            alert.setTitle("Error");
-            alert.setHeaderText("No user selected");
-            alert.setContentText("Please select a user to subscribe");
-            alert.showAndWait();
+
+        if (selectedClient == null)
+            selectedClient = (Client)userlistsub_tableview.getSelectionModel().getSelectedItem();
+
+        if (selectedClient == null){
+            errorAlert("No user selected", "No user selected", "Please select a user to subscribe");
             return;
         }
         if (subtypeadd_cb.getValue() == null){
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.initStyle(StageStyle.UNDECORATED);
-            alert.setTitle("Error");
-            alert.setHeaderText("No subscription type selected");
-            alert.setContentText("Please select a subscription type");
-            alert.showAndWait();
+            errorAlert("No subscription type selected", "No subscription type selected", "Please select a subscription type");
             return;
         }
         Abonnement abonnement = new Abonnement();
-        abonnement.setUser_id(userlistsub_tableview.getSelectionModel().getSelectedItem().getId());
+        abonnement.setUser_id(selectedClient.getId());
         Date date = null;
-        if (subtypeadd_cb.getValue().equals("GP1"))
+        if (subtypeadd_cb.getValue().equals("GP 1"))
             date = Date.valueOf(LocalDate.now().plusMonths(3));
-        else if (subtypeadd_cb.getValue().equals("GP2"))
+        else if (subtypeadd_cb.getValue().equals("GP 2"))
             date = Date.valueOf(LocalDate.now().plusMonths(6));
-        else if (subtypeadd_cb.getValue().equals("GP3"))
+        else if (subtypeadd_cb.getValue().equals("GP 3"))
             date = Date.valueOf(LocalDate.now().plusMonths(12));
         assert date != null;
         abonnement.setDuree_abon(date.toString());
@@ -988,14 +1315,43 @@ public class AdminDashboardController {
             initNonSubbedUserList(searchbarusersub_tf.getText());
             notify("Successfully subscribed user!");
         }catch (Exception e){
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.initStyle(StageStyle.UNDECORATED);
-            alert.setTitle("Error");
-            alert.setHeaderText("An error has occured");
-            alert.setContentText("An error has occured while trying to subscribe the user");
-            alert.showAndWait();
-            e.printStackTrace();
-            return;
+            stackTraceAlert(e);
+        }
+    }
+    @FXML
+    private void legacycheck_act(ActionEvent actionEvent) {
+        if (legacycheck.isSelected()) {
+            userlist_tableview.setVisible(true);
+            manageacc_btn.setVisible(true);
+            userlist_scrollpane.setVisible(false);
+        }else {
+            userlist_tableview.setVisible(false);
+            manageacc_btn.setVisible(false);
+            userlist_scrollpane.setVisible(true);
+        }
+    }
+
+    @FXML
+    private void legacysubbedlist_cb_act(ActionEvent actionEvent) {
+        initSubList(subtype_cb.getValue(), searchbarsub_tf.getText());
+        if (legacysubbedlist_cb.isSelected()) {
+            subbedlist_sp.setVisible(false);
+            subscriptionslist_tableview.setVisible(true);
+        }else {
+            subbedlist_sp.setVisible(true);
+            subscriptionslist_tableview.setVisible(false);
+        }
+    }
+
+    @FXML
+    private void legacyuserlist_cb_act(ActionEvent actionEvent) {
+        initNonSubbedUserList(searchbarusersub_tf.getText());
+        if (legacyuserlist_cb.isSelected()) {
+            smalluserlist_sp.setVisible(false);
+            userlistsub_tableview.setVisible(true);
+        }else {
+            smalluserlist_sp.setVisible(true);
+            userlistsub_tableview.setVisible(false);
         }
     }
     private double xOffset = 0;
@@ -1018,43 +1374,65 @@ public class AdminDashboardController {
         initAnimations();
         initDecoratedStage();
         notify("Successfully Logged In as " + GlobalVar.getUser().getUsername() + "!");
-        initUserList(-1, "");
+        initUserList();
         initSubList("All", "");
         initNonSubbedUserList("");
+        initWarning(subpane);
+        initWarning(usermgmt_pane);
+        initGPPrices();
 
-        var warning = new Message("Warning!", "Be careful with the actions you take, they are irreversible! Proceed with caution.");
+        RingProgressIndicator progressIndicator = new RingProgressIndicator();
+        progressIndicator.setProgress(ProgressIndicator.INDETERMINATE_PROGRESS);
+        progressIndicator.setLayoutX(hidepane.getPrefWidth()/2 - progressIndicator.getPrefWidth()/2 - 12);
+        progressIndicator.setLayoutY(hidepane.getPrefHeight()/2 - progressIndicator.getPrefHeight()/2 - 12);
+        progressIndicator.setPrefWidth(24);
+        progressIndicator.setPrefHeight(24);
+        hidepane.getChildren().add(progressIndicator);
+
+        try {
+            Pane event_pane= FXMLLoader.load(getClass().getResource("/gestionevents/eventstaffadmin.fxml"));
+            affichage_events_adstaff.getChildren().setAll(event_pane);
+            Pane pane_equi= FXMLLoader.load(getClass().getResource("/gestionequipement/equipement.fxml"));
+            EquipmentIdAdminStaff.getChildren().setAll(pane_equi);
+
+        } catch (IOException e) {
+            stackTraceAlert(e);
+        }
+
+    }
+
+
+    private void initGPPrices(){
+        try {
+            gp1_label.setText(String.valueOf(abonnementDetailsService.getPriceByType("GP 1")));
+            gp2_label.setText(String.valueOf(abonnementDetailsService.getPriceByType("GP 2")));
+            gp3_label.setText(String.valueOf(abonnementDetailsService.getPriceByType("GP 3")));
+        }catch (Exception e){
+            stackTraceAlert(e);
+        }
+    }
+    private void initWarning(Pane pane){
+        var warning = new Message("Warning!", "Please note that as an Admin you have the ability bypass multiple security measures such as bypassing phone verification when editing a user's profile. As such, please be careful when editing a users information or deleting a user. Please make sure to verify the user's identity before making any changes to their account.");
         warning.getStyleClass().addAll(
                 Styles.WARNING
         );
         warning.setLayoutX(50);
         warning.setLayoutY(50);
-        warning.setPrefWidth(1075);
-        if (!subpane.getChildren().contains(warning)) {
-            subpane.getChildren().add(warning);
-        }
-
-        try {
-            Pane pane= FXMLLoader.load(getClass().getResource("/gestionevents/eventstaffadmin.fxml"));
-            affichage_events_adstaff.getChildren().setAll(pane);
-            Pane pane_event= FXMLLoader.load(getClass().getResource("/gestionequipement/equipement.fxml"));
-            EquipmentIdAdminStaff.getChildren().setAll(pane_event);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+        warning.setPrefWidth(1045);
+        pane.getChildren().add(warning);
     }
-
     private void initSubList(String type, String search){
+        selectedAbonnement = null;
         List<Abonnement> list = null;
         try {
             if (type == null || type.equals("All"))
-                list = abonnementService.getAll();
+                list = abonnementService.getAllCurrent();
             else
-                list = abonnementService.getAbonnementByType(type);
+                list = abonnementService.getAbonnementByTypeCurrent(type);
             ObservableList<Abonnement> observableList = FXCollections.observableArrayList(list);
             if(search != null && !search.isEmpty()) {
                 for (int i = 0; i < observableList.size(); i++) {
-                    if (!(String.valueOf(observableList.get(i).getUser_id()).equals(search))) {
+                    if (!String.valueOf(observableList.get(i).getUser_id()).contains(search) && !observableList.get(i).getType().contains(search) && !observableList.get(i).getDuree_abon().contains(search) && !String.valueOf(observableList.get(i).getId()).contains(search)) {
                         observableList.remove(i);
                         i--;
                     }
@@ -1066,9 +1444,79 @@ public class AdminDashboardController {
             enddatesubcol.setCellValueFactory(new PropertyValueFactory<>("duree_abon"));
             subtypecol.setCellValueFactory(new PropertyValueFactory<>("type"));
 
+            subbed_vbox.getChildren().clear();
+
+
+            for (Abonnement abonnement : list) {
+                Client client = clientService.getUserById(abonnement.getUser_id());
+                if (!client.getUsername().contains(search) && !String.valueOf(abonnement.getUser_id()).contains(search) && !abonnement.getType().contains(search) && !abonnement.getDuree_abon().contains(search) && !String.valueOf(abonnement.getId()).contains(search))
+                    continue;
+
+                HBox hBox = new HBox();
+                hBox.setCursor(Cursor.HAND);
+                hBox.setSpacing(10);
+                hBox.setPadding(new Insets(10));
+
+                hBox.setStyle("-fx-background-color: #f4f4f4");
+                ImageView imageView = new ImageView();
+                imageView.setFitWidth(50);
+                imageView.setFitHeight(50);
+                imageView.setImage(new Image(new File("src/assets/profileuploads/" + client.getPhoto()).toURI().toString()));
+
+                hBox.getChildren().add(imageView);
+
+                VBox vbox1 = new VBox();
+                vbox1.setSpacing(10);
+                vbox1.getChildren().add(new Label("ID"));
+                vbox1.getChildren().add(new Label(String.valueOf(abonnement.getId())));
+                VBox vbox2 = new VBox();
+                vbox2.setSpacing(10);
+                vbox2.getChildren().add(new Label("Username"));
+                vbox2.getChildren().add(new Label(client.getUsername()));
+                VBox vbox3 = new VBox();
+                vbox3.setSpacing(10);
+                vbox3.getChildren().add(new Label("CIN"));
+                vbox3.getChildren().add(new Label(String.valueOf(abonnement.getUser_id())));
+                VBox vbox4 = new VBox();
+                vbox4.setSpacing(10);
+                vbox4.getChildren().add(new Label("End Date"));
+                vbox4.getChildren().add(new Label(abonnement.getDuree_abon()));
+                VBox vbox5 = new VBox();
+                vbox5.setSpacing(10);
+                vbox5.getChildren().add(new Label("Type"));
+                vbox5.getChildren().add(new Label(abonnement.getType()));
+                hBox.getChildren().addAll(vbox1, vbox2, vbox3, vbox4, vbox5);
+
+                subbed_vbox.getChildren().add(hBox);
+
+                hBox.setOnMouseEntered(e -> {
+                    if (selectedAbonnement != null && selectedAbonnement.getId() == abonnement.getId())
+                        hBox.setStyle("-fx-background-color: #2196f3");
+                    else
+                        hBox.setStyle("-fx-background-color: #e0e0e0");
+                });
+                hBox.setOnMouseExited(e -> {
+                    if (selectedAbonnement != null && selectedAbonnement.getId() == abonnement.getId())
+                        hBox.setStyle("-fx-background-color: #2196f3");
+                    else
+                        hBox.setStyle("-fx-background-color: #f4f4f4");
+                });
+                hBox.setOnMouseClicked(e -> {
+                    selectedAbonnement = abonnement;
+                    for (Node node : subbed_vbox.getChildren()) {
+                        if (node instanceof HBox && node != hBox) {
+                            node.setStyle("-fx-background-color: #f4f4f4");
+                        }
+                    }
+                    hBox.setStyle("-fx-background-color: #2196f3");
+                });
+
+            }
+
         }catch (Exception e){
-            e.printStackTrace();
+            stackTraceAlert(e);
         }
+
 
 
     }
@@ -1125,6 +1573,7 @@ public class AdminDashboardController {
         AdminStorePane.setFitToWidth(true);
         AdminSettingsPane.setFitToWidth(true);
         AdminUserManagementPane.setFitToWidth(true);
+        userlist_scrollpane.setFitToWidth(true);
     }
     private ScrollPane getCurrentPane(){
         if(AdminHomePane.isVisible())
@@ -1209,7 +1658,30 @@ public class AdminDashboardController {
     }
 
 
+
     private void initCharts(){
+        int count1 = 0;
+        try {
+            count1 = clientService.getAll().size();
+        }catch (Exception e){
+            stackTraceAlert(e);
+        }
+        registeredusers_label.setText(String.valueOf(count1));
+
+        int count2 = 0;
+        try {
+            count2 = abonnementService.getAllCurrent().size();
+        }catch (Exception e){
+            stackTraceAlert(e);
+        }
+        activememclients_label.setText(String.valueOf(count2));
+        if (count1 == 0)
+            percentactivemem_label.setText("0%");
+        else {
+            percentactivemem_label.setText((count2 * 100) / count1 + "%");
+            percentactivemem_prog.setProgress((double) (count2 * 100) / count1 / 100);
+        }
+
         XYChart.Series<String,Number> series = new XYChart.Series<>();
         series.getData().add(new XYChart.Data<>("Jan", 100));
         series.getData().add(new XYChart.Data<>("Feb", 200));
@@ -1227,34 +1699,38 @@ public class AdminDashboardController {
         stat_linechart.getData().add(series);
 
         XYChart.Series<String,Number> series2 = new XYChart.Series<>();
-        series2.getData().add(new XYChart.Data<>("Jan", 100));
-        series2.getData().add(new XYChart.Data<>("Feb", 200));
-        series2.getData().add(new XYChart.Data<>("Mar", 50));
-        series2.getData().add(new XYChart.Data<>("Apr", 75));
-        series2.getData().add(new XYChart.Data<>("May", 110));
-        series2.getData().add(new XYChart.Data<>("Jun", 300));
-        series2.getData().add(new XYChart.Data<>("Jul", 111));
-        series2.getData().add(new XYChart.Data<>("Aug", 30));
-        series2.getData().add(new XYChart.Data<>("Sep", 75));
-        series2.getData().add(new XYChart.Data<>("Oct", 55));
-        series2.getData().add(new XYChart.Data<>("Nov", 225));
-        series2.getData().add(new XYChart.Data<>("Dec", 99));
-        series2.setName("Ipsum");
+        int gp1 = 0, gp2 = 0, gp3 = 0;
+        try {
+            List<Abonnement> list = abonnementService.getAllCurrent();
+            //clients with different subscription types
+
+            for (Abonnement abonnement : list) {
+                if (abonnement.getType().equals("GP 1"))
+                    gp1++;
+                else if (abonnement.getType().equals("GP 2"))
+                    gp2++;
+                else if (abonnement.getType().equals("GP 3"))
+                    gp3++;
+            }
+        }catch (Exception e){
+            stackTraceAlert(e);
+        }
+        series2.getData().add(new XYChart.Data<>("GP 1", gp1));
+        series2.getData().add(new XYChart.Data<>("GP 2", gp2));
+        series2.getData().add(new XYChart.Data<>("GP 3", gp3));
+
+        series2.setName("GP Subscriptions");
         stat_barchart.getData().add(series2);
     }
     private boolean validateEmail(String email){
         if(!email.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")){
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.initStyle(StageStyle.UNDECORATED);
-            alert.setTitle("Warning");
-            alert.setHeaderText("Warning");
-            alert.setContentText("Invalid email format! Please try again.");
-            alert.showAndWait();
+            errorAlert("Invalid Email", "Invalid Email", "Please enter a valid email address");
             return false;
         }
         return true;
     }
     private void initProfile(){
+        managedSelectedUser = null;
         goback_btn.setVisible(false);
         deleteacc_btn.setVisible(true);
         saveacc_btn.setVisible(true);
@@ -1288,6 +1764,7 @@ public class AdminDashboardController {
     }
 
     private void initProfileTemp(User user){
+        managedSelectedUser = user;
         goback_btn.setVisible(true);
         deleteacc_btn.setVisible(false);
         saveacc_btn.setVisible(false);
@@ -1317,67 +1794,56 @@ public class AdminDashboardController {
 
     private boolean validateText(String username){
         if (username.length() < 4 && username.length() > 20){
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.initStyle(StageStyle.UNDECORATED);
-            alert.setTitle("Warning");
-            alert.setHeaderText("Warning");
-            alert.setContentText("Username must be between 4 and 20 characters long! Please try again.");
-            alert.showAndWait();
+            errorAlert("Invalid Username", "Invalid Username", "Username must be between 4 and 20 characters");
             return false;
         }
         return true;
     }
     private boolean validateNumber(String number){
         if (!number.matches("^[0-9]{8}$")){
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.initStyle(StageStyle.UNDECORATED);
-            alert.setTitle("Warning");
-            alert.setHeaderText("Warning");
-            alert.setContentText("Invalid phone number format! Please try again.");
-            alert.showAndWait();
+            errorAlert("Invalid Phone Number", "Invalid Phone Number", "Phone number must be 8 digits");
             return false;
         }
         return true;
     }
 
-    private void initUserList(int type, String condition){
+    private void initUserList(){
         List<User> users = null;
-        if (type == 0){
-            try {
-                users = (List<User>)(List<?>)adminService.getAll();
-            }catch (Exception e) {
-                e.printStackTrace();
-            }
-
-        }else if (type == 1){
-            try {
-                users = (List<User>)(List<?>)staffService.getAll();
-
-
-            }catch (Exception e) {
-                e.printStackTrace();
-            }
-        }else if (type == 2){
-            try {
-                users = (List<User>)(List<?>)clientService.getAll();
-            }catch (Exception e) {
-                e.printStackTrace();
-            }
-
-        }else if (type == -1){
+        if (type_cb.getValue() == null || type_cb.getValue().equals("All")){
             try {
                 users = (List<User>)(List<?>)adminService.getAll();
                 users.addAll((List<User>)(List<?>)staffService.getAll());
                 users.addAll((List<User>)(List<?>)clientService.getAll());
             }catch (Exception e) {
-                e.printStackTrace();
+                stackTraceAlert(e);
             }
-
         }
+
+        else if (type_cb.getValue().equals("Admin")) {
+            try {
+                users = (List<User>) (List<?>) adminService.getAll();
+            } catch (Exception e) {
+                stackTraceAlert(e);
+            }
+        }else if (type_cb.getValue().equals("Staff")){
+            try {
+                users = (List<User>)(List<?>)staffService.getAll();
+            }catch (Exception e) {
+                stackTraceAlert(e);
+            }
+        }
+        else if (type_cb.getValue().equals("Client")){
+            try {
+                users = (List<User>)(List<?>)clientService.getAll();
+            }catch (Exception e) {
+                stackTraceAlert(e);
+            }
+        }
+        String condition = searchbar_tf.getText();
         ObservableList<User> obs = FXCollections.observableArrayList(users);
         if (condition != null && !condition.isEmpty()) {
             for (int i = 0; i < obs.size(); i++) {
-                if (!obs.get(i).getUsername().contains(condition)) {
+                if (!String.valueOf(obs.get(i).getId()).contains(condition) && !obs.get(i).getUsername().contains(condition) && !obs.get(i).getFirstname().contains(condition) && !obs.get(i).getLastname().contains(condition) && !obs.get(i).getEmail().contains(condition) && !obs.get(i).getAdresse().contains(condition) && !obs.get(i).getNum_tel().contains(condition) && !obs.get(i).getRole().contains(condition) && !obs.get(i).getDate_naiss().contains(condition)){
                     obs.remove(i);
                     i--;
                 }
@@ -1393,15 +1859,115 @@ public class AdminDashboardController {
         addresscol.setCellValueFactory(new PropertyValueFactory<>("adresse"));
         acctypecol.setCellValueFactory(new PropertyValueFactory<>("role"));
         phonenumbercol.setCellValueFactory(new PropertyValueFactory<>("num_tel"));
+
+
+        userlist_vbox.getChildren().clear();
+
+
+        for (User user : users) {
+            // apply condition
+            if (condition != null && !condition.isEmpty()) {
+                if (!String.valueOf(user.getId()).contains(condition) && !user.getUsername().contains(condition) && !user.getFirstname().contains(condition) && !user.getLastname().contains(condition) && !user.getEmail().contains(condition) && !user.getAdresse().contains(condition) && !user.getNum_tel().contains(condition) && !user.getRole().contains(condition) && !user.getDate_naiss().contains(condition)) {
+                    continue;
+                }
+            }
+            HBox hBox = new HBox();
+            hBox.setSpacing(10);
+            hBox.setPadding(new Insets(10, 10, 10, 10));
+            hBox.setStyle("-fx-background-color: #f4f4f4; -fx-border-radius: 10px; -fx-background-radius: 10px;");
+            hBox.setAlignment(Pos.CENTER_LEFT);
+            hBox.setPrefHeight(100);
+            hBox.setCursor(Cursor.HAND);
+            hBox.setOnMouseEntered(e -> {
+                hBox.setStyle("-fx-background-color: #e4e4e4; -fx-border-radius: 10px; -fx-background-radius: 10px;");
+            });
+            hBox.setOnMouseExited(e -> {
+                hBox.setStyle("-fx-background-color: #f4f4f4; -fx-border-radius: 10px; -fx-background-radius: 10px;");
+            });
+            hBox.setOnMouseClicked(e -> {
+                if (user.getId() == GlobalVar.getUser().getId()){
+                    //This is your own account, would you like to go to your own profile instead?
+                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                    alert.initStyle(StageStyle.UNDECORATED);
+                    alert.setTitle("Confirmation");
+                    alert.setHeaderText("This is your own account");
+                    alert.setContentText("Would you like to go to your own profile instead?");
+                    alert.initOwner(AdminInfoPane.getScene().getWindow());
+                    alert.showAndWait();
+                    if (alert.getResult() == ButtonType.OK) {
+                        initProfile();
+                        switchToPane(AdminInfoPane);
+                    }
+                }else {
+                    initProfileTemp(user);
+                    switchToPane(AdminInfoPane);
+                }
+            });
+            ImageView imageView = new ImageView(new Image(new File("src/assets/profileuploads/" + user.getPhoto()).toURI().toString()));
+            imageView.setFitWidth(80);
+            imageView.setFitHeight(80);
+            imageView.setPreserveRatio(false);
+            imageView.setClip(new Circle(imageView.getFitWidth()/2, imageView.getFitHeight()/2, imageView.getFitWidth()/2));
+            hBox.getChildren().add(imageView);
+            //vbox
+            VBox vBox1 = new VBox();
+            vBox1.setSpacing(5);
+            vBox1.setPadding(new Insets(5, 5, 5, 5));
+            vBox1.setAlignment(Pos.CENTER_LEFT);
+            vBox1.setPrefWidth(375);
+            vBox1.setPrefHeight(100);
+            //we have to fill the vbox with the user's info
+            Label username = new Label(user.getUsername());
+            username.setFont(new Font("System", 20));
+            Label role = new Label(user.getRole());
+            role.setFont(new Font("System", 15));
+            Label email = new Label(user.getEmail());
+            email.setFont(new Font("System", 15));
+            vBox1.getChildren().addAll(username, role, email);
+            hBox.getChildren().add(vBox1);
+
+            VBox vBox2 = new VBox();
+            vBox2.setSpacing(5);
+            vBox2.setPadding(new Insets(5, 5, 5, 5));
+            vBox2.setAlignment(Pos.CENTER_LEFT);
+            vBox2.setPrefWidth(375);
+            vBox2.setPrefHeight(100);
+            //we have to fill the vbox with the user's info
+            Label id = new Label("CIN: " +String.valueOf(user.getId()));
+            id.setFont(new Font("System", 20));
+            Label name = new Label("Name: " + user.getFirstname() + " " + user.getLastname());
+            name.setFont(new Font("System", 15));
+            Label dob = new Label("Date of birth: " + user.getDate_naiss());
+            dob.setFont(new Font("System", 15));
+            vBox2.getChildren().addAll(id, name, dob);
+            hBox.getChildren().add(vBox2);
+
+            VBox vBox3 = new VBox();
+            vBox3.setSpacing(5);
+            vBox3.setPadding(new Insets(5, 5, 5, 5));
+            vBox3.setAlignment(Pos.CENTER_LEFT);
+            vBox3.setPrefWidth(375);
+            vBox3.setPrefHeight(100);
+            //we have to fill the vbox with the user's info
+            Label phone = new Label("Phone: " + user.getNum_tel());
+            phone.setFont(new Font("System", 15));
+            Label address = new Label("Address: " + user.getAdresse());
+            address.setFont(new Font("System", 15));
+            vBox3.getChildren().addAll(phone, address);
+            hBox.getChildren().add(vBox3);
+
+            userlist_vbox.getChildren().add(hBox);
+        }
     }
 
     private void initNonSubbedUserList(String condition) {
+        selectedClient = null;
         try {
             List<User> users = (List<User>)(List<?>)clientService.getNonSubscribedUserList();
             ObservableList<User> obs = FXCollections.observableArrayList(users);
             if (condition != null && !condition.isEmpty()) {
                 for (int i = 0; i < obs.size(); i++) {
-                    if (!obs.get(i).getUsername().contains(condition)) {
+                    if (!obs.get(i).getUsername().contains(condition) && !obs.get(i).getEmail().contains(condition) && !String.valueOf(obs.get(i).getId()).contains(condition)){
                         obs.remove(i);
                         i--;
                     }
@@ -1411,9 +1977,135 @@ public class AdminDashboardController {
             cincoladdsub.setCellValueFactory(new PropertyValueFactory<>("id"));
             emailcoladdsub.setCellValueFactory(new PropertyValueFactory<>("email"));
             usernamecoladdsub.setCellValueFactory(new PropertyValueFactory<>("username"));
-    }catch(Exception e){
-        e.printStackTrace();
-    }
-}
 
+            //clear the vbox
+            userlistsub_vbox.getChildren().clear();
+
+            for (User user : users) {
+                // apply condition
+                if (condition != null && !condition.isEmpty()) {
+                    if (!user.getUsername().contains(condition) && !user.getEmail().contains(condition) && !String.valueOf(user.getId()).contains(condition)){
+                        continue;
+                    }
+                }
+                HBox hBox = new HBox();
+                hBox.setSpacing(10);
+                hBox.setPadding(new Insets(10, 10, 10, 10));
+                hBox.setStyle("-fx-background-color: #f4f4f4;");
+                hBox.setAlignment(Pos.CENTER_LEFT);
+                hBox.setCursor(Cursor.HAND);
+                hBox.setOnMouseEntered(e -> {
+                    if (selectedClient != null && selectedClient.getId() == user.getId())
+                        hBox.setStyle("-fx-background-color: #2196f3");
+                    else
+                        hBox.setStyle("-fx-background-color: #e4e4e4;");
+                });
+                hBox.setOnMouseExited(e -> {
+                    if (selectedClient != null && selectedClient.getId() == user.getId())
+                        hBox.setStyle("-fx-background-color: #2196f3");
+                    else
+                        hBox.setStyle("-fx-background-color: #f4f4f4");
+                });
+                hBox.setOnMouseClicked(e -> {
+                    selectedClient = (Client) user;
+                    for (Node node : userlistsub_vbox.getChildren()) {
+                        if (node instanceof HBox && node != hBox) {
+                            node.setStyle("-fx-background-color: #f4f4f4");
+                        }
+                    }
+                    hBox.setStyle("-fx-background-color: #2196f3");
+                });
+                ImageView imageView = new ImageView(new Image(new File("src/assets/profileuploads/" + user.getPhoto()).toURI().toString()));
+                imageView.setFitWidth(50);
+                imageView.setFitHeight(50);
+                imageView.setPreserveRatio(false);
+                hBox.getChildren().add(imageView);
+                VBox vbox1 = new VBox();
+                vbox1.setSpacing(10);
+                vbox1.getChildren().add(new Label("CIN"));
+                vbox1.getChildren().add(new Label(String.valueOf(user.getId())));
+                VBox vbox2 = new VBox();
+                vbox2.setSpacing(10);
+                vbox2.getChildren().add(new Label("Username"));
+                vbox2.getChildren().add(new Label(user.getUsername()));
+                VBox vbox3 = new VBox();
+                vbox3.setSpacing(10);
+                vbox3.getChildren().add(new Label("Email"));
+                vbox3.getChildren().add(new Label(user.getEmail()));
+                hBox.getChildren().addAll(vbox1, vbox2, vbox3);
+                userlistsub_vbox.getChildren().add(hBox);
+            }
+        }catch(Exception e){
+            stackTraceAlert(e);
+        }
+    }
+
+    private void warningAlert(String title, String header, String message){
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.initStyle(StageStyle.UNDECORATED);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(message);
+        alert.initOwner(AdminInfoPane.getScene().getWindow());
+        alert.showAndWait();
+
+    }
+
+    private void errorAlert(String title, String header, String message){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.initStyle(StageStyle.UNDECORATED);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(message);
+        alert.initOwner(AdminInfoPane.getScene().getWindow());
+        alert.showAndWait();
+    }
+
+    private void successAlert(String title, String header, String message){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.initStyle(StageStyle.UNDECORATED);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(message);
+        alert.initOwner(AdminInfoPane.getScene().getWindow());
+        alert.showAndWait();
+    }
+
+    private void infoAlert(String title, String header, String message){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.initStyle(StageStyle.UNDECORATED);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(message);
+        alert.initOwner(AdminInfoPane.getScene().getWindow());
+        alert.showAndWait();
+    }
+
+    private void stackTraceAlert(Exception exception){
+            var alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Exception Dialog");
+            alert.setHeaderText("An exception occurred");
+            alert.setContentText("An exception occurred, please check the stacktrace below");
+
+            var stringWriter = new StringWriter();
+            var printWriter = new PrintWriter(stringWriter);
+            exception.printStackTrace(printWriter);
+
+            var textArea = new TextArea(stringWriter.toString());
+            textArea.setEditable(false);
+            textArea.setWrapText(false);
+            textArea.setMaxWidth(Double.MAX_VALUE);
+            textArea.setMaxHeight(Double.MAX_VALUE);
+            GridPane.setVgrow(textArea, Priority.ALWAYS);
+            GridPane.setHgrow(textArea, Priority.ALWAYS);
+
+            var content = new GridPane();
+            content.setMaxWidth(Double.MAX_VALUE);
+            content.add(new Label("Full stacktrace:"), 0, 0);
+            content.add(textArea, 0, 1);
+
+            alert.initOwner(AdminInfoPane.getScene().getWindow());
+            alert.getDialogPane().setExpandableContent(content);
+            alert.showAndWait();
+    }
 }

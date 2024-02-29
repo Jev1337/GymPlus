@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="loadUpdate" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="565.0" spacing="10.0" styleClass="postBackground" stylesheets="@../../css/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.BlogController.PostController">
+<VBox fx:id="loadUpdate" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="565.0" spacing="10.0" styleClass="postBackground" stylesheets="@../assets/css/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.BlogController.PostController">
    <children>
       <HBox alignment="CENTER_LEFT" prefHeight="60.0" spacing="10.0">
          <children>
@@ -33,7 +33,7 @@
                </children>
             </VBox>
             <Pane prefHeight="60.0" prefWidth="91.0" />
-            <HBox alignment="CENTER" prefHeight="60.0" spacing="20.0">
+            <HBox fx:id="editPost" alignment="CENTER" prefHeight="60.0" spacing="20.0">
                <children>
                   <FontAwesomeIconView fill="#616770" glyphName="EDIT" onMouseClicked="#showUpdatePost" size="20" strokeLineCap="ROUND" strokeLineJoin="ROUND" wrappingWidth="8.799986839294434">
                      <cursor>
@@ -145,7 +145,7 @@
                   <Pane prefHeight="1.0" prefWidth="200.0" style="-fx-background-color: #F0F2F5;" />
                   <HBox alignment="CENTER" prefHeight="62.0" spacing="20.0">
                      <children>
-                        <TextField fx:id="comntContent" prefHeight="34.0" prefWidth="416.0" promptText="write your comment..." styleClass="textField" stylesheets="@../../css/style.css">
+                        <TextField fx:id="comntContent" prefHeight="34.0" prefWidth="416.0" promptText="write your comment..." styleClass="textField" stylesheets="@../assets/css/style.css">
                            <opaqueInsets>
                               <Insets />
                            </opaqueInsets>
@@ -153,7 +153,7 @@
                               <Font name="Segoe UI Historic" size="15.0" />
                            </font>
                         </TextField>
-                        <Button mnemonicParsing="false" onAction="#addComnt" prefHeight="31.0" prefWidth="74.0" styleClass="simpleButton" stylesheets="@../../css/style.css" text="POST">
+                        <Button mnemonicParsing="false" onAction="#addComnt" prefHeight="31.0" prefWidth="74.0" styleClass="simpleButton" stylesheets="@../assets/css/style.css" text="POST">
                            <font>
                               <Font size="15.0" />
                            </font>

@@ -1,24 +1,59 @@
 package controllers.gestionsuivi;
 
+import atlantafx.base.controls.Message;
+import atlantafx.base.controls.ToggleSwitch;
+import atlantafx.base.theme.Styles;
+import com.github.javafaker.Faker;
+import com.github.javafaker.service.FakeValues;
+import com.github.javafaker.service.FakeValuesInterface;
+import controllers.gestionuser.GlobalVar;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import entities.gestionSuivi.Objectif;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.geometry.HorizontalDirection;
+import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
+import javafx.stage.Stage;
+import javafx.util.Duration;
+import services.gestionSuivi.ObjectifService;
+import test.ObjectifTestingFX;
 import utils.MyDatabase;
 
+import java.awt.*;
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.ResourceBundle;
 
-public class ObjectifListController {
+public class ObjectifListController implements Initializable  {
+
+
+    @FXML
+    private Pane PaneItem;
+    @FXML
+    private VBox pannelbuttonVbox;
+
 
     @FXML
     private Label DateDebutField;
@@ -33,24 +68,21 @@ public class ObjectifListController {
     private Label TypeObjField;
     @FXML
     private ImageView CoachPic;
-
+    @FXML
+    private VBox VboxToBlue;
     MyDatabase c = new MyDatabase();
-    private Objectif objectif;
-
 
     public int getCoachIdByName(String name_coach_selected) {
-        String query = "SELECT id  FROM user WHERE FirstName = ? AND Role='Coach'";
+        String query = "SELECT id  FROM user WHERE FirstName = ? AND Role='staff'";
         int coachId = -1;
 
         try {
             PreparedStatement ps = c.getConnection().prepareStatement(query);
             ps.setString(1, name_coach_selected);
             ResultSet rs = ps.executeQuery();
-
             if (rs.next()) {
                 coachId = rs.getInt("id");
             }
-
             rs.close();
             ps.close();
         } catch (SQLException e) {
@@ -60,17 +92,130 @@ public class ObjectifListController {
         return coachId;
     }
 
+    public void buttonPanel(){
+        var accentBtn = new Button(null, new FontAwesomeIconView(FontAwesomeIcon.LIST));
+        accentBtn.getStyleClass().addAll(
+                Styles.BUTTON_ICON, Styles.ACCENT
+        );
+        pannelbuttonVbox.getChildren().add(accentBtn);
+
+    }
+
+    @FXML
+    private VBox deleteVbox;
+    private static  Scene scene;
+    public Scene getScene() {
+        return scene;
+    }
+    public void setScene(Scene scene) {
+
+        ObjectifListController.scene = scene;
+    }
+    private static Stage stage ;
+    public static Stage getStage() {
+        return stage;
+    }
+
+    @FXML
+    private VBox WarningVbox2;
+    public void warning () {
+        var warning = new Message(
+                "Warning",
+                Faker.instance().expression("Suppression Annulée ,veuillez entrer oui si vous voullez supprimer"),
+                new FontAwesomeIconView(FontAwesomeIcon.WARNING)
+
+        );
+        WarningVbox2.getChildren().clear();
+        warning.getStyleClass().add(Styles.WARNING);
+        WarningVbox2.getChildren().addAll(warning);
+
+        Duration duration = Duration.seconds(3);
+        KeyFrame keyFrame = new KeyFrame(duration, event -> WarningVbox2.getChildren().clear());
+        Timeline timeline = new Timeline(keyFrame);
+        timeline.play();
+
+    }
+    private  static  ObjectifController objectifController ;
+    public void setObjectifController(ObjectifController objectifController) {
+        ObjectifListController.objectifController = objectifController;
+    }
+
+    public void scrollButton (Objectif obj)
+    {
+        var toggle2 = new ToggleSwitch("Supprimer");
+        toggle2.selectedProperty().addListener((obs, old, val) -> {
+                toggle2.setText(val ? "en cours" : "Supprimer");
+                // Perform the desired action when the toggle switch is clicked
+                if (val) {
+
+
+                var dialog = new TextInputDialog();
+                dialog.setTitle("Text Input Dialog");
+                Button buttonType = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
+                buttonType.setDisable(false);
+
+                dialog.setHeaderText(Faker.instance().expression("Supression Confirmation"));
+                dialog.setContentText("Tapez Oui:");
+                dialog.initOwner(getStage());
+                Optional<String> result = dialog.showAndWait();
+
+                if (result.isPresent() && result.get().equalsIgnoreCase("oui")) {
+                    System.out.println("fi wost el try");
+                    ObjectifService querry = new ObjectifService();
+
+                    try {
+                        querry.delete(obj.getId_objectif());
+                        if (objectifController != null) {
+                            objectifController.refreshNodesListeItems();
+                        } else {
+                            System.out.println("objectifController is null");
+                        }
+
+                    } catch (SQLException | IOException e) {
+                        throw new RuntimeException(e);
+                    }
+
+                } else {
+                  warning();
+                    toggle2.setLabelPosition(HorizontalDirection.RIGHT);
+                    toggle2.setSelected(false);
+
+                }
+
+            } else {
+                // Action to perform when toggle switch is deselected
+                System.out.println("Toggle switch is NOT selected");
+                // Add your code here to handle the action
+            }
+        });
+      //  toggle2.setLabelPosition(HorizontalDirection.RIGHT);
+        //toggle2.setSelected(false);
+        deleteVbox.getChildren().add(toggle2);
+
+    }
+
+   /* public void enterYesFunction (){
+        var button = new Button("Click", new FontIcon(Feather.EDIT_2));
+        button.setOnAction(e -> {
+            var dialog = new TextInputDialog();
+            dialog.setTitle("Text Input Dialog");
+            dialog.setHeaderText(FAKER.chuckNorris().fact());
+            dialog.setContentText("Enter your name:");
+            dialog.initOwner(getScene().getWindow());
+            show(dialog);
+        });
+    }*/
 
     public ObservableList<Objectif> getObjectifStatusList() {
 
         ObservableList<Objectif> objectifList = FXCollections.observableArrayList();
         try {
-            int userId = 2;
+            int userId = GlobalVar.getUser().getId();
 
-            String query = "SELECT o.idObjectif , o.poidsObj, o.DateD, o.DateF, o.PoidsAct, o.Taille, o.Alergie, o.TypeObj, u.photo, u.username AS username " +
+            String query = "SELECT o.idObjectif , o.userId, o.poidsObj, o.DateD, o.DateF, o.PoidsAct, o.Taille, o.Alergie, o.TypeObj, u.photo, u.username AS username " +
                     "FROM objectif o " +
                     "JOIN user u ON o.CoachId = u.id " +
-                    "WHERE o.userId = ?  AND u.role='Coach' ";
+                    "WHERE o.userId = ?  AND u.role='staff' ";
 
 
             PreparedStatement ps = c.getConnection().prepareStatement(query);
@@ -80,6 +225,7 @@ public class ObjectifListController {
             while (rs.next()) {
                 Objectif objectifs = new Objectif();
                 objectifs.setId_objectif(rs.getInt("idObjectif"));
+                objectifs.setId_user(rs.getInt("userId"));
                 objectifs.setPoids_Obj(rs.getFloat("poidsObj"));
                 objectifs.setDateD(rs.getDate("DateD"));
                 objectifs.setDateF(rs.getDate("DateF"));
@@ -102,6 +248,16 @@ public class ObjectifListController {
         return objectifList;
     }
 
+
+
+
+   /* public void handleButtonClick(Objectif obj) {
+        System.out.println("Button clicked for objectif: " + obj);
+        AddObjectifController addController = new AddObjectifController();
+        addController.sendingDataToForm(obj);
+
+     }*/
+
     public void setObjectif(Objectif objectif) throws MalformedURLException {
         NameField.setText(objectif.getCoachName());
         TypeObjField.setText(objectif.getTypeObj());
@@ -119,8 +275,8 @@ public class ObjectifListController {
         DateDebutField.setText(dateString);
         DateFinField.setText(dateString2);
 
-        String coachPhotoPath = objectif.getCoachPhoto();
-      //  System.out.println(coachPhotoPath);
+        String coachPhotoPath =  "src/assets/profileuploads/"+ objectif.getCoachPhoto();
+        System.out.println(coachPhotoPath);
         if (coachPhotoPath != null && !coachPhotoPath.isEmpty()) {
             File file = new File(coachPhotoPath);
             if (file.exists()) {
@@ -159,12 +315,18 @@ public class ObjectifListController {
 
             }
         } else {
-            System.out.printf("tititiiti");
             CoachPic.setImage(null);
         }
 
         }
-        }
+
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        VboxToBlue.setOnMouseEntered(event -> VboxToBlue.setStyle("-fx-background-color: lightblue;"));
+        VboxToBlue.setOnMouseExited(event -> VboxToBlue.setStyle("-fx-background-color: lightgray;"));
+    }
+}
 
 
 

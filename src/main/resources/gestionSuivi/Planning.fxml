@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.effect.Glow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="808.0" prefWidth="1155.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionsuivi.PlanningController">
+   <children>
+      <Text layoutX="42.0" layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Planning Planner" />
+      <ImageView fitHeight="32.0" fitWidth="32.0" layoutX="7.0" layoutY="-1.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../assets/images/Dumbbell.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="131.0" fitWidth="1175.0" layoutX="3.0" layoutY="33.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../assets/images/Capture (1).png" />
+         </image>
+         <effect>
+            <DropShadow height="29.79" radius="13.6625" spread="0.11" width="26.86" />
+         </effect>
+      </ImageView>
+      <ScrollPane layoutX="410.0" layoutY="319.0" prefHeight="424.0" prefWidth="724.0" stylesheets="@../assets/images/style.css">
+         <content>
+            <VBox fx:id="ListeObjectifVbox" fillWidth="false" prefHeight="394.0" prefWidth="702.0" style="-fx-translate-x: 8; -fx-translate-y: 8;" />
+         </content>
+         <effect>
+            <DropShadow />
+         </effect>
+      </ScrollPane>
+      <Pane layoutX="24.0" layoutY="201.0" prefHeight="349.0" prefWidth="355.0">
+         <children>
+            <VBox fx:id="CalendarVbox" layoutX="18.0" layoutY="47.0" prefHeight="282.0" prefWidth="309.0">
+               <effect>
+                  <DropShadow />
+               </effect></VBox>
+            <Separator layoutX="14.0" layoutY="19.0" prefHeight="5.0" prefWidth="202.0" />
+            <Text fill="#122b7c" layoutX="4.0" layoutY="4.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Today Time" underline="true" wrappingWidth="89.126953125">
+               <font>
+                  <Font size="13.0" />
+               </font></Text>
+         </children>
+      </Pane>
+      <Pane fx:id="PaneRight" layoutY="296.0" prefHeight="459.0" prefWidth="327.0" />
+      <Pane fx:id="PaneAjouterPlanning" layoutX="517.0" layoutY="312.0" prefHeight="459.0" prefWidth="637.0" visible="false" />
+      <HBox fx:id="RefreshHbox" layoutX="313.0" layoutY="184.0" prefHeight="32.0" prefWidth="143.0" />
+      <Pane fx:id="PanePlansDone" layoutX="493.0" layoutY="203.0" onMouseClicked="#VboxPlansDone" prefHeight="92.0" prefWidth="271.0" stylesheets="@../assets/images/style.css">
+         <children>
+            <Circle layoutX="54.0" layoutY="48.0" radius="40.0" stroke="WHITE" strokeType="INSIDE">
+               <fill>
+                  <LinearGradient endX="1.0" endY="1.0" startX="0.23696682464454977">
+                     <stops>
+                        <Stop>
+                           <color>
+                              <Color red="0.23759999871253967" green="0.6719847321510315" blue="0.8799999952316284" />
+                           </color>
+                        </Stop>
+                        <Stop offset="0.006711409395973154">
+                           <color>
+                              <Color red="0.23759999871253967" green="0.6719847321510315" blue="0.8799999952316284" />
+                           </color>
+                        </Stop>
+                        <Stop offset="0.4847560975609756">
+                           <color>
+                              <Color red="0.10080000013113022" green="0.21252000331878662" blue="0.41999998688697815" />
+                           </color>
+                        </Stop>
+                        <Stop offset="1.0">
+                           <color>
+                              <Color red="0.250980406999588" green="0.4000000059604645" blue="0.658823549747467" />
+                           </color>
+                        </Stop>
+                     </stops>
+                  </LinearGradient>
+               </fill>
+            </Circle>
+            <Text fill="#575757" layoutX="120.0" layoutY="39.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Plans done" wrappingWidth="80.0" />
+            <ImageView fitHeight="40.0" fitWidth="40.0" layoutX="34.0" layoutY="26.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../assets/images/Done.png" />
+               </image>
+               <effect>
+                  <Glow />
+               </effect>
+            </ImageView>
+            <Text fx:id="labelDone" layoutX="125.0" layoutY="69.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="32.0">
+               <font>
+                  <Font name="System Bold" size="22.0" />
+               </font>
+            </Text>
+            <Text fill="#362f2f" layoutX="160.0" layoutY="67.0" strokeType="OUTSIDE" strokeWidth="0.0" text="plans" wrappingWidth="48.0">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Text>
+         </children>
+         <styleClass>
+            <String fx:value="border-table" />
+            <String fx:value="degrade-diagonal2" />
+         </styleClass>
+         <effect>
+            <DropShadow radius="7.8025" width="12.21" />
+         </effect>
+      </Pane>
+      <Pane fx:id="PaneInProgress" layoutX="836.0" layoutY="203.0" onMouseClicked="#VboxPlansInProgress" prefHeight="92.0" prefWidth="271.0" stylesheets="@../assets/images/style.css">
+         <children>
+            <Circle layoutX="47.0" layoutY="46.0" radius="40.0" stroke="WHITE" strokeType="INSIDE">
+               <fill>
+                  <LinearGradient endX="1.0" endY="1.0">
+                     <stops>
+                        <Stop>
+                           <color>
+                              <Color red="0.03533138334751129" green="0.1622888296842575" blue="0.3815789520740509" />
+                           </color>
+                        </Stop>
+                        <Stop offset="0.49390243902439024">
+                           <color>
+                              <Color red="0.250980406999588" green="0.4000000059604645" blue="0.658823549747467" />
+                           </color>
+                        </Stop>
+                        <Stop offset="1.0">
+                           <color>
+                              <Color red="0.1535087674856186" green="0.3143274784088135" blue="0.5921052694320679" />
+                           </color>
+                        </Stop>
+                     </stops>
+                  </LinearGradient>
+               </fill>
+            </Circle>
+            <Text fx:id="labelInProgress" layoutX="120.0" layoutY="69.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="32.0">
+               <font>
+                  <Font name="System Bold" size="22.0" />
+               </font>
+            </Text>
+            <Text fill="#362f2f" layoutX="148.0" layoutY="67.0" strokeType="OUTSIDE" strokeWidth="0.0" text="plans" wrappingWidth="48.0">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Text>
+            <Text fill="#575757" layoutX="104.0" layoutY="38.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Plans in progress" wrappingWidth="96.0" />
+            <ImageView fitHeight="40.0" fitWidth="48.0" layoutX="28.0" layoutY="25.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../assets/images/Progress%20Indicator.png" />
+               </image>
+               <effect>
+                  <DropShadow />
+               </effect>
+            </ImageView>
+         </children>
+         <styleClass>
+            <String fx:value="border-table" />
+            <String fx:value="degrade-diagonal2" />
+         </styleClass>
+         <effect>
+            <DropShadow radius="7.8025" width="12.21" />
+         </effect>
+      </Pane>
+      <Separator layoutX="789.0" layoutY="184.0" orientation="VERTICAL" prefHeight="131.0" prefWidth="18.0" />
+      <Pane layoutY="768.0" prefHeight="40.0" prefWidth="1163.0" styleClass="degrade-diagonal" stylesheets="@../assets/images/style.css" />
+      <HBox fx:id="ToogleSwitchHbix" layoutX="126.0" layoutY="185.0" prefHeight="32.0" prefWidth="181.0" />
+      <HBox fx:id="MessagetHbox" layoutX="696.0" layoutY="84.0" prefHeight="100.0" prefWidth="466.0" />
+   </children>
+</AnchorPane>

@@ -7,18 +7,23 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import services.gestonblog.PostServices;
 
 import java.io.File;
 import java.net.URL;
-import java.sql.SQLException;
-import java.time.LocalDate;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class BlogController implements Initializable {
@@ -33,28 +38,65 @@ public class BlogController implements Initializable {
     private VBox listPosts = new VBox();
     @FXML
     private ImageView userPic;
-
+    @FXML
+    private Label photo_tf;
     @FXML
     private Text username;
     private final PostServices ps = new PostServices();
-    String date = LocalDate.now().toString();
+    Date date = new Date();
+    List<String> badWords = Arrays.asList("fuck", "suck", "kill", "suicide");
+
+    @FXML
+    void browse_btn_act(){
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg")
+        );
+        fileChooser.setTitle("Choose a profile picture");
+        File file = fileChooser.showOpenDialog(new Stage());
+        if (file != null) {
+            photo_tf.setText(file.getAbsolutePath());
+        }
+    }
+
+    String verifContent(String c){
+        String contentVerified = c;
+        for (String word : badWords){
+            if (c.toLowerCase().contains(word)){
+                contentVerified = c.replaceAll(word, "****");
+            }
+        }
+        return contentVerified;
+    }
 
     @FXML
     void addPost(ActionEvent event) {
-        Post p = new Post(GlobalVar.getUser().getId(), "bbb", contentTxt.getText(), java.sql.Date.valueOf(date), "", 0);
+        String photo = "";
+        String content = "";
+        if (!contentTxt.getText().isEmpty()){
+            content = verifContent(contentTxt.getText());
+        }
+        File file = new File(photo_tf.getText());
         try {
+            if (!photo_tf.getText().isEmpty()){
+                File dest = new File("src/assets/profileuploads/USERIMG" + file.getName().substring(file.getName().lastIndexOf(".")));
+                Files.copy(file.toPath(), dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                photo = dest.getName();
+            }
+            Timestamp timeStamp = new Timestamp(date.getTime());
+            Post p = new Post(GlobalVar.getUser().getId(), "bbb", content, timeStamp, photo, 0);
             ps.add(p);
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Info");
             alert.setContentText("post added");
             alert.show();
             contentTxt.setText("");
-            listPosts.getChildren().remove(0, listPosts.getChildren().size());
+            photo_tf.setText("");
             getAllFromDB();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
-            alert.setContentText(e.getMessage());
+            alert.setContentText("add:" +e.getMessage());
             alert.show();
         }
     }
@@ -76,7 +118,7 @@ public class BlogController implements Initializable {
         } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
-            alert.setContentText(e.getMessage());
+            alert.setContentText("post: " + e.getMessage());
             alert.show();
         }
     }

@@ -29,10 +29,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.*;
 
-public class BlogController implements Initializable {
-
-    public BlogController() {
-    }
+public class BlogController {
 
     @FXML
     private TextArea contentTxt = new TextArea();
@@ -46,8 +43,13 @@ public class BlogController implements Initializable {
     @FXML
     private Text username;
     private final PostServices ps = new PostServices();
+    private final UpdatePostController updatePostController = new UpdatePostController();
+    private PostController pc = new PostController();
     Date date = new Date();
     List<String> badWords = Arrays.asList("fuck", "suck", "kill", "suicide");
+
+    public BlogController() {
+    }
 
     @FXML
     void browse_btn_act() {
@@ -61,7 +63,6 @@ public class BlogController implements Initializable {
             photo_tf.setText(file.getAbsolutePath());
         }
     }
-
     String verifContent(String c) {
         String contentVerified = c;
         for (String word : badWords) {
@@ -70,10 +71,6 @@ public class BlogController implements Initializable {
             }
         }
         return contentVerified;
-    }
-
-    public void refresh(){
-        getAllFromDB();
     }
     @FXML
     void addPost(ActionEvent event) {
@@ -108,7 +105,6 @@ public class BlogController implements Initializable {
     }
 
     public void getAllFromDB() {
-
         if (!listPosts.getChildren().isEmpty()) {
             listPosts.getChildren().remove(0, listPosts.getChildren().size());
         }
@@ -118,7 +114,7 @@ public class BlogController implements Initializable {
                 FXMLLoader fxmlLoader = new FXMLLoader();
                 fxmlLoader.setLocation(getClass().getResource("/gestionBlog/post.fxml"));
                 VBox vBox = fxmlLoader.load();
-                PostController pc = fxmlLoader.getController();
+                pc= fxmlLoader.getController();
                 pc.setPost(post);
                 listPosts.getChildren().add(vBox);
             }
@@ -130,8 +126,7 @@ public class BlogController implements Initializable {
         }
     }
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
+    public void initialize() {
         username.setText(GlobalVar.getUser().getUsername());
         String profilePic = GlobalVar.getUser().getPhoto();
         Image img = new Image(new File("src/assets/profileuploads/" + profilePic).toURI().toString());
@@ -140,5 +135,8 @@ public class BlogController implements Initializable {
         userPic.setClip(clip1);
         userPic.setPreserveRatio(false);
         getAllFromDB();
+        pc.setBlogController(this);
+        updatePostController.setBlogControllerUpdate(this);
+
     }
 }

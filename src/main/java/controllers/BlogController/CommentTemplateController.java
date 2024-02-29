@@ -38,11 +38,13 @@ public class CommentTemplateController {
     private final ClientService us = new ClientService();
     private final CommentaireService cs = new CommentaireService();
     private final PostServices ps = new PostServices();
-
+    private static PostController postController;
+    public void setPostController(PostController pc){
+        CommentTemplateController.postController = pc;
+    }
 
     public CommentTemplateController() {
     }
-
     @FXML
     void showUpdateComnt(){
         content.setDisable(false);
@@ -53,6 +55,7 @@ public class CommentTemplateController {
         try {
             cs.delete(commentaire.getId_comment());
             ps.minNbComnts(post);
+            postController.getAllComments(post.getId_post());
             Alert a = new Alert(Alert.AlertType.INFORMATION);
             a.setContentText("comment deleted successfully!");
             a.show();

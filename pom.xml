@@ -98,9 +98,14 @@
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
-            <version>20210307</version> <!-- Remplacez la version par la dernière version disponible -->
+            <version>20210307</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.stripe</groupId>
+            <artifactId>stripe-java</artifactId>
+            <version>24.17.0</version>
+        </dependency>
 
         <dependency>
             <groupId>org.openpnp</groupId>

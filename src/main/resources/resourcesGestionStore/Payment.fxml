@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+
+<AnchorPane id="AnchorPane" prefHeight="430.0" prefWidth="576.0" style="-fx-background-color: #fff; " xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionStore.PaymentController">
+   <children>
+      <Label alignment="CENTER" layoutX="214.0" layoutY="14.0" prefHeight="45.0" prefWidth="148.0" style="-fx-font-size: 30; -fx-text-fill: #0000ff;" text="Payment " AnchorPane.leftAnchor="214.0" AnchorPane.rightAnchor="214.0" />
+      <Pane layoutX="63.0" layoutY="358.0" prefHeight="53.0" prefWidth="192.0" style="-fx-background-radius: 20; -fx-background-color: #DFE9F5;" AnchorPane.leftAnchor="63.0" AnchorPane.rightAnchor="321.0">
+         <children>
+            <Label fx:id="total" layoutX="14.0" layoutY="11.0" prefHeight="31.0" prefWidth="159.0" style="-fx-font-size: 20;" text="Total :" />
+         </children>
+      </Pane>
+      <Pane layoutX="24.0" layoutY="61.0" prefHeight="281.0" prefWidth="510.0" style="-fx-background-radius: 20; -fx-background-color: #DFE9F5;" AnchorPane.leftAnchor="24.0" AnchorPane.rightAnchor="42.0">
+         <children>
+            <Label layoutX="21.0" layoutY="27.0" prefWidth="51.0" style="-fx-text-fill: Black;" text="Name :" />
+            <TextField fx:id="client_name" layoutX="134.0" layoutY="17.0" prefHeight="37.0" prefWidth="311.0" promptText="Your name" />
+            <Label layoutX="360.0" layoutY="221.0" style="-fx-text-fill: Black;" text="CVC  :" />
+            <Label layoutX="21.0" layoutY="87.0" style="-fx-text-fill: Black;" text="Email :" />
+            <Label layoutX="21.0" layoutY="149.0" style="-fx-text-fill: Black;" text="Card information :" />
+            <Spinner fx:id="YY" editable="true" layoutX="236.0" layoutY="211.0" prefHeight="37.0" prefWidth="102.0" />
+            <Label layoutX="206.0" layoutY="221.0" style="-fx-text-fill: Black;" text="YY :" />
+            <Spinner fx:id="MM" editable="true" layoutX="63.0" layoutY="210.0" prefHeight="37.0" prefWidth="102.0" />
+            <Label layoutX="21.0" layoutY="220.0" style="-fx-text-fill: Black;" text="MM :" />
+            <TextField fx:id="num_card" layoutX="134.0" layoutY="139.0" prefHeight="37.0" prefWidth="311.0" promptText="1234 1234 1234 1234" />
+            <ImageView fitHeight="38.0" fitWidth="115.0" layoutX="347.0" layoutY="138.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../assets/images/card_pay.png" />
+               </image>
+            </ImageView>
+            <TextField fx:id="email" layoutX="134.0" layoutY="77.0" prefHeight="37.0" prefWidth="311.0" promptText="example@gmail.com" />
+            <Spinner fx:id="cvc" editable="true" layoutX="396.0" layoutY="211.0" prefHeight="37.0" prefWidth="102.0" />
+         </children>
+      </Pane>
+      <Button fx:id="pay_btn" layoutX="311.0" layoutY="358.0" mnemonicParsing="false" onAction="#payment" prefHeight="53.0" prefWidth="192.0" style="-fx-border-radius: 50px; /* rayon des coins */     -fx-background-radius: 50px; /* rayon des coins */     -fx-background-color: #DFE9F5;" text="Pay now" />
+   </children>
+</AnchorPane>

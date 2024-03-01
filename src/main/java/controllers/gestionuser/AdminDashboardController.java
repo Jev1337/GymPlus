@@ -1426,16 +1426,16 @@ public class AdminDashboardController {
         }
 
         try {
-            Pane pane= FXMLLoader.load(getClass().getResource("/gestionevents/eventstaffadmin.fxml"));
-            affichage_events_adstaff.getChildren().setAll(pane);
+            Pane pane1= FXMLLoader.load(getClass().getResource("/gestionevents/eventstaffadmin.fxml"));
+            affichage_events_adstaff.getChildren().setAll(pane1);
             Pane pane_event= FXMLLoader.load(getClass().getResource("/gestionequipement/equipement.fxml"));
             EquipmentIdAdminStaff.getChildren().setAll(pane_event);
         } catch (IOException e) {
             e.printStackTrace();
         }
         try {
-            Pane pane= FXMLLoader.load(getClass().getResource("/resourcesGestionStore/InterfaceStore.fxml"));
-            storeId.getChildren().setAll(pane);
+            Pane pane2= FXMLLoader.load(getClass().getResource("/resourcesGestionStore/InterfaceStore.fxml"));
+            storeId.getChildren().setAll(pane2);
         } catch (IOException e) {
             e.printStackTrace();
         }

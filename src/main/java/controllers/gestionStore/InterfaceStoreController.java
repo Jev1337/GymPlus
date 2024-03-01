@@ -1149,6 +1149,37 @@ public class InterfaceStoreController implements Initializable {
         }
     }
 
+    @FXML
+    void PaiementStipe(ActionEvent event) throws IOException {
+
+            int totalStripe = Integer.parseInt(idFactureFX.getText());
+            System.out.println("button paiement stripe :" + totalStripe);
+
+                FXMLLoader loader = new FXMLLoader();
+                loader.setLocation(getClass().getResource("/resourcesGestionStore/Payment.fxml"));
+                GetOneFacture = loader.load();
+
+                //UpdateOneFactureController upF = loader.getController();
+                //upF.setFacture(selectedFacture.getIdFacture() );//, GlobalVar.getUser().getId());
+
+                ScaleTransition st = new ScaleTransition(Duration.millis(100), GetOneFacture);
+                st.setInterpolator(Interpolator.EASE_IN);
+                st.setFromX(0);
+                st.setFromY(0);
+                st.setToX(1);
+                st.setToY(1);
+                Stage stage = new Stage();
+                stage.setTitle("Payment");
+                Scene scene = new Scene(GetOneFacture, 576, 430);
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.initStyle(StageStyle.DECORATED);
+                scene.setFill(Color.TRANSPARENT);
+                stage.setResizable(false);
+                stage.setScene(scene);
+                stage.show();
+
+    }
+
     private void writeInvoiceDataToPDF(PDDocument document) throws IOException
     {
         // Charger l'image depuis le fichier

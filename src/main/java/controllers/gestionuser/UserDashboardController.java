@@ -97,6 +97,8 @@ public class UserDashboardController {
 
     @FXML
     private Pane subscribed_pane;
+    @FXML
+    private Pane storeId;
 
     @FXML
     private Pane unsubscribed_pane;
@@ -799,6 +801,7 @@ public class UserDashboardController {
 
     private double xOffset = 0;
     private double yOffset = 0;
+
     public void initialize() {
         Media media = new Media(new File(getClass().getResource("/assets/sounds/welcome.mp3").getFile()).toURI().toString());
         MediaPlayer mediaPlayer = new MediaPlayer(media);
@@ -815,25 +818,17 @@ public class UserDashboardController {
         initSubsciption();
         initGPPrices();
         try {
-            Pane pane= FXMLLoader.load(getClass().getResource("/gestionBlog/Blog.fxml"));
-            blogId.getChildren().setAll(pane);
+            Pane pane1= FXMLLoader.load(getClass().getResource("/resourcesGestionStore/InterfaceStore.fxml"));
+            storeId.getChildren().setAll(pane1);
+            Pane pane2= FXMLLoader.load(getClass().getResource("/gestionBlog/Blog.fxml"));
+            blogId.getChildren().setAll(pane2);
+            Pane pane3= FXMLLoader.load(getClass().getResource("/gestionevents/event.fxml"));
+            usereventpane_id.getChildren().setAll(pane3);
+            Pane pane4= FXMLLoader.load(getClass().getResource("/gestionSuivi/objectif1.fxml"));
+            ObjectifPan.getChildren().setAll(pane4);
         } catch (IOException e) {
-            stackTraceAlert(e);
+            System.err.println(e.getMessage());
         }
-        try {
-            Pane pane_event= FXMLLoader.load(getClass().getResource("/gestionevents/event.fxml"));
-            usereventpane_id.getChildren().setAll(pane_event);
-        } catch (IOException e) {
-            stackTraceAlert(e);
-        }
-        try {
-            Pane pane_Objectif= FXMLLoader.load(getClass().getResource("/gestionSuivi/objectif1.fxml"));
-            ObjectifPan.getChildren().setAll(pane_Objectif);
-        } catch (IOException e) {
-            stackTraceAlert(e);
-        }
-
-
     }
 
     @FXML

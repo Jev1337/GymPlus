@@ -9,6 +9,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
@@ -25,7 +27,9 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
+
 import java.nio.file.Files;
+
 import services.gestionuser.ClientService;
 import services.gestonblog.CommentaireService;
 import services.gestonblog.PostServices;
@@ -41,19 +45,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
 
 public class PostController implements Initializable {
 
 
     @FXML
     private Label captionTxt;
-
     @FXML
     private ImageView imgPost;
-
     @FXML
     private ImageView imgProfile;
-
     @FXML
     private Label nbComnts;
     @FXML
@@ -83,6 +85,12 @@ public class PostController implements Initializable {
     private final PostServices ps = new PostServices();
     private final CommentaireService cs = new CommentaireService();
     private final ClientService us = new ClientService();
+    private CommentTemplateController commentTemplateController = new CommentTemplateController();
+    private static BlogController blogController;
+
+    public void setBlogController(BlogController bc) {
+        PostController.blogController = bc;
+    }
 
     //*************************************POST HANDLER*************************************
     @FXML
@@ -137,6 +145,10 @@ public class PostController implements Initializable {
         try {
             cs.deleteComntsByPostId(post.getId_post());
             ps.delete(post.getId_post());
+            blogController.getAllFromDB();
+            Alert a = new Alert(Alert.AlertType.INFORMATION);
+            a.setContentText("post is deleted!");
+            a.showAndWait();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -149,15 +161,15 @@ public class PostController implements Initializable {
         post = p;
         captionTxt.setText(post.getContent());
         nbLikes.setText(post.getLikes() + " Likes");
-        nbComnts.setText(post.getLikes() + " Comments");
-        Image imgP = new Image(new File("src/assets/profileuploads/"+post.getPhoto()).toURI().toString());
+        Image imgP = new Image(new File("src/assets/profileuploads/" + post.getPhoto()).toURI().toString());
         imgPost.setImage(imgP);
         dateTxt.setText(post.getDate().toString());
-        if (post.getUser_id() != GlobalVar.getUser().getId()){
+        if (post.getUser_id() != GlobalVar.getUser().getId()) {
             editPost.setVisible(false);
             editPost.setManaged(false);
         }
         try {
+            nbComnts.setText(ps.getNbComntsById(post.getId_post()) + " Comments");
             userNameTxt.setText(us.getUserById(post.getUser_id()).getUsername());
             String profilePic = us.getUserById(p.getUser_id()).getPhoto();
             Image img = new Image(new File("src/assets/profileuploads/" + profilePic).toURI().toString());
@@ -187,12 +199,13 @@ public class PostController implements Initializable {
     public void getAllComments(int idPost) {
         try {
             List<Commentaire> commentaireList = new ArrayList<>(cs.getAllCommentsByPostId(idPost));
+
             for (Commentaire commentaire : commentaireList) {
                 FXMLLoader fxmlLoader = new FXMLLoader();
                 fxmlLoader.setLocation(getClass().getResource("/gestionBlog/commentTemplate.fxml"));
                 VBox vBox = fxmlLoader.load();
-                CommentTemplateController commentTemplateController = fxmlLoader.getController();
-                commentTemplateController.setComment(commentaire);
+                commentTemplateController = fxmlLoader.getController();
+                commentTemplateController.setComment(commentaire, post);
                 comntsList.getChildren().add(vBox);
             }
         } catch (Exception e) {
@@ -208,6 +221,8 @@ public class PostController implements Initializable {
         Commentaire commentaire = new Commentaire(GlobalVar.getUser().getId(), post.getId_post(), comntContent.getText(), java.sql.Date.valueOf(date), 0);
         try {
             cs.add(commentaire);
+            ps.addNbComnts(post);
+            setPost(post);
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Info");
             alert.setContentText("post added");
@@ -243,6 +258,7 @@ public class PostController implements Initializable {
             comntsList.getChildren().remove(0, comntsList.getChildren().size());
             getAllComments(post.getId_post());
         }
+        commentTemplateController.setPostController(this);
     }
 
     @Override

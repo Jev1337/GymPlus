@@ -376,6 +376,8 @@ public class AdminDashboardController {
 
     @FXML
     private Pane subpane;
+    @FXML
+    private Pane storeId;
 
     @FXML
     private ImageView faceid_change;
@@ -1390,13 +1392,14 @@ public class AdminDashboardController {
         hidepane.getChildren().add(progressIndicator);
 
         try {
-            Pane event_pane= FXMLLoader.load(getClass().getResource("/gestionevents/eventstaffadmin.fxml"));
-            affichage_events_adstaff.getChildren().setAll(event_pane);
-            Pane pane_equi= FXMLLoader.load(getClass().getResource("/gestionequipement/equipement.fxml"));
-            EquipmentIdAdminStaff.getChildren().setAll(pane_equi);
-
+            Pane pane= FXMLLoader.load(getClass().getResource("/gestionevents/eventstaffadmin.fxml"));
+            affichage_events_adstaff.getChildren().setAll(pane);
+            Pane pane_event= FXMLLoader.load(getClass().getResource("/gestionequipement/equipement.fxml"));
+            EquipmentIdAdminStaff.getChildren().setAll(pane_event);
+            Pane pane_st = FXMLLoader.load(getClass().getResource("/resourcesGestionStore/InterfaceStore.fxml"));
+            storeId.getChildren().setAll(pane_st);
         } catch (IOException e) {
-            stackTraceAlert(e);
+            System.err.println(e.getMessage());
         }
 
     }
@@ -1418,7 +1421,7 @@ public class AdminDashboardController {
         );
         warning.setLayoutX(50);
         warning.setLayoutY(50);
-        warning.setPrefWidth(1045);
+        warning.setPrefWidth(1075);
         pane.getChildren().add(warning);
     }
     private void initSubList(String type, String search){
@@ -1838,6 +1841,7 @@ public class AdminDashboardController {
             }catch (Exception e) {
                 stackTraceAlert(e);
             }
+
         }
         String condition = searchbar_tf.getText();
         ObservableList<User> obs = FXCollections.observableArrayList(users);

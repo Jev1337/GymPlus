@@ -11,8 +11,13 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
 import java.net.URLEncoder;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.Map;
 
 public class RecetteController {
@@ -24,6 +29,7 @@ public class RecetteController {
 
     @FXML
     private Label instructionFoodLabel;
+
 
 
     public void loadImageFromURL(String imageURL) throws UnsupportedEncodingException {
@@ -42,21 +48,37 @@ public class RecetteController {
     private VBox ingredientsVbox;
 
 
-    public void fiellFields(String Title, JsonNode Ingredients, String Instructions, String Image) throws UnsupportedEncodingException {
-
-        TitileFood.setText(Title);
-
+    public void fiellFields(String Title, JsonNode Ingredients, String Instructions, String Image) throws IOException, InterruptedException {
         ObjectMapper mapper = new ObjectMapper();
         Map<String, String> ingredientsMap = mapper.convertValue(Ingredients, new TypeReference<Map<String, String>>() {});
-        for (Map.Entry<String, String> entry : ingredientsMap.entrySet()) {
-            String ingredientStep = entry.getValue();
-            Label ingredientLabel = new Label(ingredientStep);
-            ingredientsVbox.getChildren().add(ingredientLabel);
-        }
 
-        instructionFoodLabel.setText(Instructions);
+            TitileFood.setText(Title);
+            for (Map.Entry<String, String> entry : ingredientsMap.entrySet()) {
+                String ingredientStep = entry.getValue();
+                Label ingredientLabel = new Label(ingredientStep);
+                ingredientsVbox.getChildren().add(ingredientLabel);
+            }
+            instructionFoodLabel.setText(Instructions);
+
         loadImageFromURL(Image);
 
+    }
+
+    public void fiellFieldsFR(String Title, JsonNode Ingredients, String Instructions, String Image) throws IOException, InterruptedException {
+        ObjectMapper mapper = new ObjectMapper();
+        Map<String, String> ingredientsMap = mapper.convertValue(Ingredients, new TypeReference<Map<String, String>>() {});
+        TitileFood.setText(Title);
+        if (ingredientsMap != null) { // Check if ingredientsMap is not null
+            for (Map.Entry<String, String> entry : ingredientsMap.entrySet()) {
+                String ingredientStep = entry.getValue();
+                Label ingredientLabel = new Label(ingredientStep);
+                ingredientsVbox.getChildren().add(ingredientLabel);
+            }
+        } else {
+            System.out.println("Ingredients is null or not a JSON object");
+        }
+        instructionFoodLabel.setText(Instructions);
+        loadImageFromURL(Image);
     }
 
 

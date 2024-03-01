@@ -2,6 +2,7 @@ package controllers.BlogController;
 
 import controllers.gestionuser.GlobalVar;
 import entities.gestionblog.Commentaire;
+import entities.gestionblog.Post;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -13,6 +14,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.shape.Circle;
 import services.gestionuser.ClientService;
 import services.gestonblog.CommentaireService;
+import services.gestonblog.PostServices;
 
 import java.io.File;
 import java.sql.SQLException;
@@ -32,13 +34,17 @@ public class CommentTemplateController {
     @FXML
     private Button updateBtn;
     private Commentaire commentaire = new Commentaire();
+    private Post post = new Post();
     private final ClientService us = new ClientService();
     private final CommentaireService cs = new CommentaireService();
-
+    private final PostServices ps = new PostServices();
+    private static PostController postController;
+    public void setPostController(PostController pc){
+        CommentTemplateController.postController = pc;
+    }
 
     public CommentTemplateController() {
     }
-
     @FXML
     void showUpdateComnt(){
         content.setDisable(false);
@@ -48,6 +54,8 @@ public class CommentTemplateController {
     void deleteComnt(){
         try {
             cs.delete(commentaire.getId_comment());
+            ps.minNbComnts(post);
+            postController.getAllComments(post.getId_post());
             Alert a = new Alert(Alert.AlertType.INFORMATION);
             a.setContentText("comment deleted successfully!");
             a.show();
@@ -74,8 +82,9 @@ public class CommentTemplateController {
         }
     }
 
-    public void setComment(Commentaire c) {
+    public void setComment(Commentaire c, Post p) {
         commentaire = c;
+        post = p;
         content.setText(c.getContent());
         if (commentaire.getUser_id() != GlobalVar.getUser().getId()){
             editComnt.setVisible(false);

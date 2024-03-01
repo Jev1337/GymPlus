@@ -200,7 +200,8 @@ CREATE TABLE `post` (
   `content` varchar(255) DEFAULT NULL,
   `date` date DEFAULT NULL,
   `photo` text DEFAULT NULL,
-  `likes` int(11) DEFAULT NULL
+  `likes` int(11) DEFAULT NULL,
+  `nbComnts` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------

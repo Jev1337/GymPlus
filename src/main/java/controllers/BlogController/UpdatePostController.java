@@ -32,12 +32,16 @@ public class UpdatePostController {
     private final PostServices ps = new PostServices();
     private Post p = new Post();
     private final ClientService us = new ClientService();
-
+    private static BlogController blogController;
+    public void setBlogControllerUpdate(BlogController bc){
+        UpdatePostController.blogController = bc;
+    }
     @FXML
     void updatePost() {
         try {
             p.setContent(contentTxt.getText());
             ps.update(p);
+            blogController.getAllFromDB();
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Info");
             alert.setContentText("post updated!");

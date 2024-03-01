@@ -1,12 +1,13 @@
 package services.gestionevents;
+
+import entities.gestionevents.Event_details;
 import javafx.scene.control.Alert;
 import services.IService;
 import utils.MyDatabase;
 
 import java.sql.*;
-import java.util.List;
 import java.util.ArrayList;
-import entities.gestionevents.Event_details;
+import java.util.List;
 
 
 public class Event_detailsService implements IService<Event_details> {
@@ -91,7 +92,7 @@ public class Event_detailsService implements IService<Event_details> {
             ps.setString(4, "%" + s + "%");
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                Event_details eventDetails = new Event_details(rs.getString("name"), rs.getString("type"), rs.getString("event_date"), rs.getString("duree"), rs.getInt("nb_places"),rs.getInt("nb_total"));
+                Event_details eventDetails = new Event_details(rs.getString("name"), rs.getString("type"), rs.getString("event_date"), rs.getString("duree"), rs.getInt("nb_places"), rs.getInt("nb_total"));
                 eventDetails.setId(rs.getInt("id"));
                 eventDetailsList.add(eventDetails);
             }
@@ -118,11 +119,41 @@ public class Event_detailsService implements IService<Event_details> {
         }
         return eventDetailsList;
     }
+
     public void updatespots(int id) throws SQLException {
         String query = "UPDATE event_details SET nb_places=nb_places+1 WHERE id=?";
         PreparedStatement ps = connection.prepareStatement(query);
         ps.setInt(1, id);
         ps.executeUpdate();
+    }
+
+    public int get_event_rate(int id) throws SQLException {
+        String query = "SELECT AVG(rate) FROM event_participants WHERE event_details_id=?";
+        PreparedStatement ps = connection.prepareStatement(query);
+        ps.setInt(1, id);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next())
+            return rs.getInt(1);
+        return 0;
+    }
+
+    //show user past events
+    public List<Event_details> getPastEventsByUserId(int id) {
+        List<Event_details> eventDetailsList = new ArrayList<>();
+        try {
+            String query = "SELECT * FROM event_details WHERE id IN (SELECT event_details_id FROM event_participants WHERE user_id=?) and event_date < CURDATE()";
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Event_details eventDetails = new Event_details(rs.getString("name"), rs.getString("type"), rs.getString("event_date"), rs.getString("duree"), rs.getInt("nb_places"), rs.getInt("nb_total"));
+                eventDetails.setId(rs.getInt("id"));
+                eventDetailsList.add(eventDetails);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return eventDetailsList;
     }
 }
 

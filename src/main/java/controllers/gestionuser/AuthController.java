@@ -1067,7 +1067,7 @@ public class AuthController {
                     signin_btn.getScene().setRoot(root);
                 }
             } catch (Exception e) {
-                stackTraceAlert(e);
+                 e.printStackTrace();
             }
         }
         email_tf.setDisable(false);

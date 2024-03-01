@@ -174,7 +174,18 @@
                </effect>
             </Label>
             <CheckBox fx:id="myevents" layoutX="612.0" layoutY="210.0" mnemonicParsing="false" onAction="#switchtomyevents" text="my events" />
+            <Button fx:id="history_btn" layoutX="68.0" layoutY="631.0" mnemonicParsing="false" onAction="#go_to_history" text="History" />
             </children>
         </Pane>
+      <Pane fx:id="history" prefHeight="779.0" prefWidth="1153.0" visible="false">
+         <children>
+            <ListView fx:id="list_events1" layoutX="405.0" layoutY="122.0" prefHeight="312.0" prefWidth="333.0">
+               <effect>
+                  <DropShadow />
+               </effect>
+            </ListView>
+            <Button fx:id="rate" layoutX="525.0" layoutY="485.0" mnemonicParsing="false" onAction="#rate_event" text="Rate" />
+         </children>
+      </Pane>
     </children>
 </AnchorPane>

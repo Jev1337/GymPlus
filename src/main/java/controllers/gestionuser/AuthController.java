@@ -1067,7 +1067,7 @@ public class AuthController {
                     signin_btn.getScene().setRoot(root);
                 }
             } catch (Exception e) {
-                stackTraceAlert(e);
+                 e.printStackTrace();
             }
         }
         email_tf.setDisable(false);
@@ -1216,7 +1216,7 @@ public class AuthController {
             Twilio.init(account_sid, auth_token);
             Verification verification = Verification.creator(
                     verify_sid,
-                    "+216"+phone,
+                    "whatsapp:+216"+phone,
                     "whatsapp")
                     .create();
             System.out.println(verification.getStatus());

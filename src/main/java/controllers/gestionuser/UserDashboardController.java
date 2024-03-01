@@ -2,11 +2,15 @@ package controllers.gestionuser;
 
 import animatefx.animation.*;
 import atlantafx.base.controls.Notification;
+import atlantafx.base.theme.PrimerDark;
+import atlantafx.base.theme.PrimerLight;
 import atlantafx.base.theme.Styles;
 import atlantafx.base.util.Animations;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.sun.jna.platform.win32.Advapi32Util;
+import com.sun.jna.platform.win32.WinReg;
 import com.twilio.Twilio;
 import com.twilio.rest.verify.v2.service.Verification;
 import com.twilio.rest.verify.v2.service.VerificationCheck;
@@ -20,6 +24,7 @@ import de.micromata.paypal.data.Transaction;
 import entities.gestionuser.Abonnement;
 import entities.gestionuser.Client;
 import javafx.animation.*;
+import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
@@ -305,7 +310,11 @@ public class UserDashboardController {
     @FXML
     private Pane ObjectifPan;
 
+    @FXML
+    private CheckBox dark_cb;
 
+    @FXML
+    private CheckBox tts_cb;
 
     @FXML
     private ImageView user_imageview;
@@ -318,8 +327,28 @@ public class UserDashboardController {
 
     @FXML
     private ImageView faceid_change;
+
     @FXML
-    void faceid_change_clicked(){
+    private void dark_cb_act(ActionEvent event){
+        if (dark_cb.isSelected()){
+            Advapi32Util.registrySetStringValue(WinReg.HKEY_CURRENT_USER, "Software\\GymPlus", "theme", "dark");
+            Application.setUserAgentStylesheet(new PrimerDark().getUserAgentStylesheet());
+        }else{
+            Advapi32Util.registrySetStringValue(WinReg.HKEY_CURRENT_USER, "Software\\GymPlus", "theme", "light");
+            Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
+        }
+    }
+
+    @FXML
+    private void tts_cb_act(ActionEvent event){
+        if (tts_cb.isSelected()){
+            Advapi32Util.registrySetStringValue(WinReg.HKEY_CURRENT_USER, "Software\\GymPlus", "tts", "true");
+        }else{
+            Advapi32Util.registrySetStringValue(WinReg.HKEY_CURRENT_USER, "Software\\GymPlus", "tts", "false");
+        }
+    }
+    @FXML
+    private void faceid_change_clicked(){
         setFaceID();
     }
     String faceId = "";
@@ -803,9 +832,6 @@ public class UserDashboardController {
     private double yOffset = 0;
 
     public void initialize() {
-        Media media = new Media(new File(getClass().getResource("/assets/sounds/welcome.mp3").getFile()).toURI().toString());
-        MediaPlayer mediaPlayer = new MediaPlayer(media);
-        mediaPlayer.play();
         fadeInRightAnimation.setNode(UserHomePane);
         fadeInRightAnimation.play();
         stat_combobox.getItems().addAll(FXCollections.observableArrayList("Abonnements", "Clients", "Staff"));
@@ -817,6 +843,10 @@ public class UserDashboardController {
         notify("Successfully Logged In as " + GlobalVar.getUser().getUsername() + "!");
         initSubsciption();
         initGPPrices();
+        String theme = Advapi32Util.registryGetStringValue(WinReg.HKEY_CURRENT_USER, "Software\\GymPlus", "theme");
+        if (theme != null && theme.equals("dark")) {
+            dark_cb.setSelected(true);
+        }
         try {
             Pane pane1= FXMLLoader.load(getClass().getResource("/resourcesGestionStore/InterfaceStore.fxml"));
             storeId.getChildren().setAll(pane1);
@@ -829,8 +859,18 @@ public class UserDashboardController {
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
+        String tts = Advapi32Util.registryGetStringValue(WinReg.HKEY_CURRENT_USER, "Software\\GymPlus", "tts");
+        if (tts != null && tts.equals("true")) {
+            tts_cb.setSelected(true);
+            playWelcome();
+        }
     }
 
+    private void playWelcome(){
+        Media media = new Media(new File(getClass().getResource("/assets/sounds/welcome.mp3").getFile()).toURI().toString());
+        MediaPlayer mediaPlayer = new MediaPlayer(media);
+        mediaPlayer.play();
+    }
     @FXML
     private Label gp1_label;
     @FXML
@@ -1157,7 +1197,7 @@ public class UserDashboardController {
             Twilio.init(account_sid, auth_token);
             Verification verification = Verification.creator(
                             verify_sid,
-                            "+216"+phone,
+                            "whatsapp:+216"+phone,
                             "whatsapp")
                     .create();
             System.out.println(verification.getStatus());

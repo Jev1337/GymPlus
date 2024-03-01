@@ -41,8 +41,6 @@
             <artifactId>font-awesome</artifactId>
             <version>6.4.0</version>
         </dependency>
-
-
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
@@ -68,7 +66,6 @@
             <artifactId>password4j</artifactId>
             <version>1.7.3</version>
         </dependency>
-
         <dependency>
             <groupId>com.github.javafaker</groupId>
             <artifactId>javafaker</artifactId>
@@ -97,6 +94,19 @@
             <artifactId>javafx-web</artifactId>
             <version>21.0.2</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20210307</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.stripe</groupId>
+            <artifactId>stripe-java</artifactId>
+            <version>24.18.0</version>
+        </dependency>
+
         <dependency>
             <groupId>org.openpnp</groupId>
             <artifactId>opencv</artifactId>
@@ -162,17 +172,6 @@
             <artifactId>freemarker</artifactId>
             <version>2.3.32</version>
         </dependency>
-        <dependency>
-            <groupId>net.dreamlu</groupId>
-            <artifactId>mica-captcha</artifactId>
-            <version>3.2.2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-core</artifactId>
-            <version>6.1.4</version>
-        </dependency>
-
 
     </dependencies>
     <build>

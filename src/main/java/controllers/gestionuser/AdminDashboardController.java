@@ -1392,14 +1392,13 @@ public class AdminDashboardController {
         hidepane.getChildren().add(progressIndicator);
 
         try {
-            Pane pane= FXMLLoader.load(getClass().getResource("/gestionevents/eventstaffadmin.fxml"));
-            affichage_events_adstaff.getChildren().setAll(pane);
-            Pane pane_event= FXMLLoader.load(getClass().getResource("/gestionequipement/equipement.fxml"));
-            EquipmentIdAdminStaff.getChildren().setAll(pane_event);
-            Pane pane_st = FXMLLoader.load(getClass().getResource("/resourcesGestionStore/InterfaceStore.fxml"));
-            storeId.getChildren().setAll(pane_st);
+            Pane event_pane= FXMLLoader.load(getClass().getResource("/gestionevents/eventstaffadmin.fxml"));
+            affichage_events_adstaff.getChildren().setAll(event_pane);
+            Pane pane_equi= FXMLLoader.load(getClass().getResource("/gestionequipement/equipement.fxml"));
+            EquipmentIdAdminStaff.getChildren().setAll(pane_equi);
+
         } catch (IOException e) {
-            System.err.println(e.getMessage());
+            stackTraceAlert(e);
         }
 
     }
@@ -1422,7 +1421,25 @@ public class AdminDashboardController {
         warning.setLayoutX(50);
         warning.setLayoutY(50);
         warning.setPrefWidth(1075);
-        pane.getChildren().add(warning);
+        if (!subpane.getChildren().contains(warning)) {
+            subpane.getChildren().add(warning);
+        }
+
+        try {
+            Pane pane1= FXMLLoader.load(getClass().getResource("/gestionevents/eventstaffadmin.fxml"));
+            affichage_events_adstaff.getChildren().setAll(pane1);
+            Pane pane_event= FXMLLoader.load(getClass().getResource("/gestionequipement/equipement.fxml"));
+            EquipmentIdAdminStaff.getChildren().setAll(pane_event);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            Pane pane2= FXMLLoader.load(getClass().getResource("/resourcesGestionStore/InterfaceStore.fxml"));
+            storeId.getChildren().setAll(pane2);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
     private void initSubList(String type, String search){
         selectedAbonnement = null;

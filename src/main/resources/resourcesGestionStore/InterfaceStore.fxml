@@ -322,6 +322,8 @@
                      <font>
                         <Font size="13.0" />
                      </font></Button>
+                  <HBox prefHeight="31.0" prefWidth="208.0" />
+                  <Button mnemonicParsing="false" onAction="#PaiementStipe" prefHeight="30.0" prefWidth="205.0" text="Paiement Stripe" />
                </children>
             </VBox>
             <Label layoutX="269.0" layoutY="60.0" text="Id Invoice">

@@ -913,12 +913,14 @@ public class eventbController {
     public void go_tomanage(ActionEvent event)  {
         //same animation
         BlackListed.setVisible(true);
+        back_to_aff_btn.setVisible(true);
         affichage_events_adstaff.setVisible(false);
         finished_events.setVisible(false);
     }
     @FXML
     public void back_to_aff(ActionEvent event){
         BlackListed.setVisible(false);
+        back_to_aff_btn.setVisible(false);
         affichage_events_adstaff.setVisible(true);
 
     }

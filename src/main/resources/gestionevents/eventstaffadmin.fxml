@@ -23,10 +23,10 @@
       <AnchorPane>
          <children>
             <Pane fx:id="BlackListed" layoutY="48.0" prefHeight="775.0" prefWidth="1182.0" />
-            <Button fx:id="back_to_aff_btn" layoutX="11.0" layoutY="12.0" mnemonicParsing="false" onAction="#back_to_aff" text="Back" />
+            <Button fx:id="back_to_aff_btn" layoutX="11.0" layoutY="12.0" mnemonicParsing="false" onAction="#back_to_aff" text="Back" visible="false" />
          </children>
       </AnchorPane>
-      <Pane fx:id="affichage_events_adstaff" prefHeight="827.0" prefWidth="1180.0" style="-fx-background-color: linear-gradient(to bottom right, lightgray, floralwhite);;" visible="false">
+      <Pane fx:id="affichage_events_adstaff" prefHeight="827.0" prefWidth="1180.0" style="-fx-background-color: linear-gradient(to bottom right, lightgray, floralwhite);;">
          <children>
             <TableView fx:id="tableevents_id" layoutX="346.0" layoutY="138.0" prefHeight="303.0" prefWidth="823.0" style="-fx-background-color: lightgray;">
               <columns>

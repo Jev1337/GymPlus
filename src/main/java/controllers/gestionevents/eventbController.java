@@ -27,6 +27,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class eventbController {
@@ -409,13 +410,15 @@ public class eventbController {
     }
 
     public void afficher1() {
-
-
         try {
-            // delete_passed_events(eventDetailsService.getAll());
-            List<Event_details> events = eventDetailsService.getAll();
-            ObservableList<Event_details> data = FXCollections.observableArrayList(events);
-
+            List<Event_details> allEvents = eventDetailsService.getAll();
+            List<Event_details> events = new ArrayList<>();
+            for (Event_details event : allEvents) {
+                LocalDateTime eventDateTime = LocalDateTime.parse(event.getEvent_date(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                if (eventDateTime.isAfter(LocalDateTime.now())) {
+                    events.add(event);
+                }
+            }
             // Set a custom cell factory for your ListView
             eventList.setCellFactory(param -> new ListCell<Event_details>() {
                 @Override
@@ -435,7 +438,6 @@ public class eventbController {
                         Label durationLabel = new Label("Duration: " + item.getDuree() + " minutes");
                         Label spotsLabel = new Label("Spots: " + item.getNb_places() + "/" + item.getNb_total());
 
-
                         vbox.getChildren().addAll(nameLabel, typeLabel, dateLabel, durationLabel, spotsLabel);
 
                         // Set the custom layout as the graphic of the cell
@@ -444,19 +446,23 @@ public class eventbController {
                 }
             });
 
-            eventList.setItems(data);
+            eventList.setItems(FXCollections.observableArrayList(events));
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public void afficher() {
-
         try {
+            List<Event_details> allEvents = eventDetailsService.getAll();
+            List<Event_details> events = new ArrayList<>();
+            for (Event_details event : allEvents) {
+                LocalDateTime eventDateTime = LocalDateTime.parse(event.getEvent_date(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                if (eventDateTime.isAfter(LocalDateTime.now())) {
+                    events.add(event);
+                }
+            }
 
-            // delete_passed_events(eventDetailsService.getAll());
-
-            List<Event_details> events = eventDetailsService.getAll();
             ObservableList<Event_details> data = FXCollections.observableArrayList(events);
             event_idcol.setCellValueFactory(new PropertyValueFactory<>("id"));
             event_namecol.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -488,8 +494,6 @@ public class eventbController {
             tableevents_id.setItems(data);
         } catch (Exception e) {
             e.printStackTrace();
-
-
         }
     }
 

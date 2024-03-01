@@ -5,6 +5,9 @@ import animatefx.animation.FadeOutRight;
 import atlantafx.base.controls.Notification;
 import atlantafx.base.theme.Styles;
 import atlantafx.base.util.Animations;
+import biweekly.Biweekly;
+import biweekly.ICalendar;
+import biweekly.component.VEvent;
 import controllers.gestionuser.GlobalVar;
 import entities.gestionevents.Event_details;
 import entities.gestionevents.Event_participants;
@@ -17,6 +20,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -39,6 +43,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -124,6 +129,8 @@ public class eventfController {
     private Pane history;
     @FXML
     private ListView<Event_details> list_events1;
+    @FXML
+    private Button rate;
 
 
     public eventfController() {
@@ -412,8 +419,6 @@ public class eventfController {
     }*/
     @FXML
     public void join_event(ActionEvent actionEvent) throws SQLException {
-
-
         Event_details selectedEvent = event_detailsTableView.getSelectionModel().getSelectedItem();
         if (selectedEvent == null) {
             selectedEvent = list_events.getSelectionModel().getSelectedItem();
@@ -507,6 +512,15 @@ public class eventfController {
             eventParticipantsService.add(ev);
             decrementSpots(id);
 
+            // After the user has joined the event, generate the iCalendar data
+            String icsData = generateICalendarData(selectedEvent);
+
+            // Generate the QR code from the iCalendar data
+            ByteArrayOutputStream qrCode = QRCode.from(icsData).to(ImageType.PNG).stream();
+
+            // Display the QR code in an alert
+            displayQRCodeAlert(qrCode);
+
             afficher();
             afficher1();
 
@@ -520,8 +534,48 @@ public class eventfController {
             alert.showAndWait();
 
         }
+    }
 
+    private String generateICalendarData(Event_details event) {
+        ICalendar ical = new ICalendar();
+        VEvent vEvent = new VEvent();
+        vEvent.setSummary(event.getName());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime dateTime = LocalDateTime.parse(event.getEvent_date(), formatter);
+        vEvent.setDateStart(Date.from(dateTime.atZone(ZoneId.systemDefault()).toInstant()));
+        int durationInMinutes = Integer.parseInt(event.getDuree());
+        LocalDateTime endDateTime = dateTime.plusMinutes(durationInMinutes);
+        vEvent.setDateEnd(Date.from(endDateTime.atZone(ZoneId.systemDefault()).toInstant()));
 
+        // Set the location of the event
+        vEvent.setLocation("GymPlus");
+
+        ical.addEvent(vEvent);
+        return Biweekly.write(ical).go();
+    }
+
+    private void displayQRCodeAlert(ByteArrayOutputStream qrCode) {
+        try {
+            // Convert the ByteArrayOutputStream to a javafx.scene.image.Image
+            ByteArrayInputStream bis = new ByteArrayInputStream(qrCode.toByteArray());
+            Image image = new Image(bis);
+
+            // Create an ImageView to display the image
+            ImageView imageView = new ImageView(image);
+
+            // Set the dimensions of the ImageView
+            imageView.setFitWidth(300); // Set the width to 300
+            imageView.setFitHeight(300); // Set the height to 300
+
+            // Create an Alert to display the ImageView
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("QR Code");
+            alert.setHeaderText("Scan this QR code to add the event to your calendar");
+            alert.setGraphic(imageView);
+            alert.showAndWait();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     boolean check_event_date_and_time_passed(int event_id) {
@@ -587,6 +641,9 @@ public class eventfController {
     }
 
     private void updateCountdown() {
+        if(GlobalVar.getUser() == null) {
+            return;
+        }
         Date nextEventDate = getNextEventDate(GlobalVar.getUser().getId());
         if (nextEventDate != null) {
             Date now = new Date();
@@ -934,6 +991,7 @@ public class eventfController {
 
         });
     }
+    @FXML
     public void rate_event(ActionEvent actionEvent) {
         Event_details selectedEvent = list_events1.getSelectionModel().getSelectedItem();
         if (selectedEvent != null) {

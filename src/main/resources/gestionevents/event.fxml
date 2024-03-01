@@ -101,7 +101,7 @@
                 </Pane>
             <Button fx:id="events" layoutX="872.0" layoutY="54.0" mnemonicParsing="false" onAction="#back_to_events" text="&lt;- Events" />
             </children></Pane>
-        <Pane fx:id="event_pane" layoutX="70.0" layoutY="56.0" prefHeight="723.0" prefWidth="1027.0" style="-fx-background-radius: 10; -fx-background-color: lightgreen4;" visible="false">
+        <Pane fx:id="event_pane" layoutX="70.0" layoutY="56.0" prefHeight="723.0" prefWidth="1027.0" style="-fx-background-radius: 10; -fx-background-color: lightgreen4;">
             <children>
                 <Label fx:id="countdownLabel" layoutX="374.0" layoutY="563.0" prefHeight="52.0" prefWidth="336.0" />
                 <Button fx:id="join_id" layoutX="403.0" layoutY="625.0" mnemonicParsing="false" onAction="#join_event" prefHeight="62.0" prefWidth="162.0" text="Join">
@@ -177,13 +177,14 @@
             <Button fx:id="history_btn" layoutX="68.0" layoutY="631.0" mnemonicParsing="false" onAction="#go_to_history" text="History" />
             </children>
         </Pane>
-      <Pane fx:id="history" prefHeight="779.0" prefWidth="1153.0">
+      <Pane fx:id="history" prefHeight="779.0" prefWidth="1153.0" visible="false">
          <children>
             <ListView fx:id="list_events1" layoutX="405.0" layoutY="122.0" prefHeight="312.0" prefWidth="333.0">
                <effect>
                   <DropShadow />
                </effect>
             </ListView>
+            <Button fx:id="rate" layoutX="525.0" layoutY="485.0" mnemonicParsing="false" onAction="#rate_event" text="Rate" />
          </children>
       </Pane>
     </children>

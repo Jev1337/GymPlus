@@ -8,36 +8,102 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane id="AnchorPane" prefHeight="430.0" prefWidth="576.0" style="-fx-background-color: #fff; " xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionStore.PaymentController">
    <children>
-      <Label alignment="CENTER" layoutX="214.0" layoutY="14.0" prefHeight="45.0" prefWidth="148.0" style="-fx-font-size: 30; -fx-text-fill: #0000ff;" text="Payment " AnchorPane.leftAnchor="214.0" AnchorPane.rightAnchor="214.0" />
-      <Pane layoutX="63.0" layoutY="358.0" prefHeight="53.0" prefWidth="192.0" style="-fx-background-radius: 20; -fx-background-color: #DFE9F5;" AnchorPane.leftAnchor="63.0" AnchorPane.rightAnchor="321.0">
+      <Pane fx:id="pane_payment" prefHeight="430.0" prefWidth="576.0">
          <children>
-            <Label fx:id="total" layoutX="14.0" layoutY="11.0" prefHeight="31.0" prefWidth="159.0" style="-fx-font-size: 20;" text="Total :" />
+            <Label alignment="CENTER" layoutX="214.0" layoutY="14.0" prefHeight="45.0" prefWidth="148.0" style="-fx-font-size: 30; -fx-text-fill: #0000ff;" text="Payment " />
+            <Pane layoutX="63.0" layoutY="358.0" prefHeight="53.0" prefWidth="192.0" style="-fx-background-radius: 20; -fx-background-color: #DFE9F5;">
+               <children>
+                  <Label fx:id="total" layoutX="14.0" layoutY="11.0" prefHeight="31.0" prefWidth="159.0" style="-fx-font-size: 20;" text="Total :" />
+               </children>
+            </Pane>
+            <Button fx:id="pay_btn" layoutX="318.0" layoutY="358.0" mnemonicParsing="false" onAction="#payment" prefHeight="53.0" prefWidth="192.0" style="-fx-border-radius: 50px; /* rayon des coins */     -fx-background-radius: 50px; /* rayon des coins */     -fx-background-color: #DFE9F5;" text="Pay now" />
+            <Pane layoutX="32.0" layoutY="61.0" prefHeight="281.0" prefWidth="510.0" style="-fx-background-radius: 20; -fx-background-color: #DFE9F5;">
+               <children>
+                  <Label layoutX="21.0" layoutY="27.0" prefWidth="51.0" style="-fx-text-fill: Black;" text="Name :" />
+                  <TextField fx:id="client_name" layoutX="134.0" layoutY="17.0" prefHeight="37.0" prefWidth="311.0" promptText="Your name" />
+                  <Label layoutX="360.0" layoutY="221.0" style="-fx-text-fill: Black;" text="CVC  :" />
+                  <Label layoutX="21.0" layoutY="87.0" style="-fx-text-fill: Black;" text="Email :" />
+                  <Label layoutX="21.0" layoutY="149.0" style="-fx-text-fill: Black;" text="Card information :" />
+                  <Spinner fx:id="YY" editable="true" layoutX="236.0" layoutY="211.0" prefHeight="37.0" prefWidth="102.0" />
+                  <Label layoutX="206.0" layoutY="221.0" style="-fx-text-fill: Black;" text="YY :" />
+                  <Spinner fx:id="MM" editable="true" layoutX="63.0" layoutY="210.0" prefHeight="37.0" prefWidth="102.0" />
+                  <Label layoutX="21.0" layoutY="220.0" style="-fx-text-fill: Black;" text="MM :" />
+                  <TextField fx:id="num_card" layoutX="134.0" layoutY="139.0" prefHeight="37.0" prefWidth="311.0" promptText="4242424242424242" />
+                  <ImageView fitHeight="38.0" fitWidth="115.0" layoutX="396.0" layoutY="138.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../assets/images/card_pay.png" />
+                     </image>
+                  </ImageView>
+                  <TextField fx:id="email" layoutX="134.0" layoutY="77.0" prefHeight="37.0" prefWidth="311.0" promptText="example@gmail.com" />
+                  <Spinner fx:id="cvc" editable="true" layoutX="396.0" layoutY="211.0" prefHeight="37.0" prefWidth="102.0" />
+               </children>
+            </Pane>
          </children>
       </Pane>
-      <Pane layoutX="24.0" layoutY="61.0" prefHeight="281.0" prefWidth="510.0" style="-fx-background-radius: 20; -fx-background-color: #DFE9F5;" AnchorPane.leftAnchor="24.0" AnchorPane.rightAnchor="42.0">
+      <Pane fx:id="pane_Success" prefHeight="430.0" prefWidth="576.0" styleClass="white-Background" stylesheets="@store.css" visible="false">
          <children>
-            <Label layoutX="21.0" layoutY="27.0" prefWidth="51.0" style="-fx-text-fill: Black;" text="Name :" />
-            <TextField fx:id="client_name" layoutX="134.0" layoutY="17.0" prefHeight="37.0" prefWidth="311.0" promptText="Your name" />
-            <Label layoutX="360.0" layoutY="221.0" style="-fx-text-fill: Black;" text="CVC  :" />
-            <Label layoutX="21.0" layoutY="87.0" style="-fx-text-fill: Black;" text="Email :" />
-            <Label layoutX="21.0" layoutY="149.0" style="-fx-text-fill: Black;" text="Card information :" />
-            <Spinner fx:id="YY" editable="true" layoutX="236.0" layoutY="211.0" prefHeight="37.0" prefWidth="102.0" />
-            <Label layoutX="206.0" layoutY="221.0" style="-fx-text-fill: Black;" text="YY :" />
-            <Spinner fx:id="MM" editable="true" layoutX="63.0" layoutY="210.0" prefHeight="37.0" prefWidth="102.0" />
-            <Label layoutX="21.0" layoutY="220.0" style="-fx-text-fill: Black;" text="MM :" />
-            <TextField fx:id="num_card" layoutX="134.0" layoutY="139.0" prefHeight="37.0" prefWidth="311.0" promptText="1234 1234 1234 1234" />
-            <ImageView fitHeight="38.0" fitWidth="115.0" layoutX="347.0" layoutY="138.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../assets/images/card_pay.png" />
-               </image>
-            </ImageView>
-            <TextField fx:id="email" layoutX="134.0" layoutY="77.0" prefHeight="37.0" prefWidth="311.0" promptText="example@gmail.com" />
-            <Spinner fx:id="cvc" editable="true" layoutX="396.0" layoutY="211.0" prefHeight="37.0" prefWidth="102.0" />
+            <Label fx:id="successFX" layoutX="183.0" layoutY="22.0" prefHeight="68.0" prefWidth="210.0" text="Successful payment" textFill="BLUE">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
+            <Pane layoutX="33.0" layoutY="115.0" prefHeight="190.0" prefWidth="510.0" style="-fx-background-radius: 20; -fx-background-color: #DFE9F5;">
+               <children>
+                  <Label layoutX="122.0" layoutY="27.0" prefHeight="53.0" prefWidth="267.0" text="Your payment is greatly appreciated. ">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="73.0" layoutY="71.0" prefHeight="53.0" prefWidth="365.0" text="We look forward to serving you again in the future. ">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="212.0" layoutY="114.0" prefHeight="53.0" prefWidth="88.0" text="Thank you.">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
+               </children>
+            </Pane>
+            <Button layoutX="214.0" layoutY="341.0" mnemonicParsing="false" onAction="#getrecepeitpayment" prefHeight="45.0" prefWidth="148.0" text="get your recepeit">
+               <font>
+                  <Font size="13.0" />
+               </font>
+            </Button>
          </children>
       </Pane>
-      <Button fx:id="pay_btn" layoutX="311.0" layoutY="358.0" mnemonicParsing="false" onAction="#payment" prefHeight="53.0" prefWidth="192.0" style="-fx-border-radius: 50px; /* rayon des coins */     -fx-background-radius: 50px; /* rayon des coins */     -fx-background-color: #DFE9F5;" text="Pay now" />
+      <Pane fx:id="pane_Fail" prefHeight="430.0" prefWidth="576.0" styleClass="white-Background" stylesheets="@store.css" visible="false">
+         <children>
+            <Pane layoutX="33.0" layoutY="120.0" prefHeight="225.0" prefWidth="510.0" style="-fx-background-radius: 20; -fx-background-color: #DFE9F5;">
+               <children>
+                  <Label layoutX="34.0" layoutY="42.0" prefHeight="53.0" prefWidth="445.0" text="Unfortunately, your recent payment attempt was unsuccessful.">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="59.0" layoutY="83.0" prefHeight="53.0" prefWidth="393.0" text=" Please review your payment information and try again. ">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="152.0" layoutY="126.0" prefHeight="53.0" prefWidth="210.0" text="Thank you for your attention.">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
+               </children>
+            </Pane>
+            <Label layoutX="209.0" layoutY="42.0" prefHeight="45.0" prefWidth="159.0" text="Payment Error" textFill="BLUE">
+               <font>
+                  <Font size="23.0" />
+               </font>
+            </Label>
+         </children>
+      </Pane>
    </children>
 </AnchorPane>

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package controllers.gestionStore;
 
 import com.stripe.Stripe;
@@ -21,6 +16,8 @@ public class PaymentProcessor {
 
     private static final String STRIPE_API_KEY = "sk_test_51OpFDfKiR2IT5FaSfdT8a4tfY4vjNvknSJTvMtbRFogNZHMNYSeAF4ooANjt6J5iapfoeyqxjntMSMtq9nvWwTm000PI1A2xEo"; // your API secret key
 
+
+
     public static boolean processPayment(String name, String email, float amount, String cardNumber, int cardExpMonth, int cardExpYear, String cardCvc) throws StripeException {
         boolean result = false;
         int Conversion;
@@ -30,7 +27,9 @@ public class PaymentProcessor {
         boolean card_exist = false;
         String card_id = "";
         // Set your secret key
-        Stripe.apiKey = STRIPE_API_KEY;
+        Stripe.apiKey = "sk_test_VePHdqKTYQjKNInc7u56JBrQ";
+
+        //Stripe.apiKey = STRIPE_API_KEY;
         Customer stripeCustomer = null;
         Token token = null;
         Map<String, Object> searchParams = new HashMap<>();
@@ -46,7 +45,7 @@ public class PaymentProcessor {
             cardParameter.put("exp_month", cardExpMonth);
             cardParameter.put("exp_year", cardExpYear);
             cardParameter.put("cvc", cardCvc);
-            // Create a Token 
+            // Create a Token
             Map<String, Object> tokenParameter = new HashMap<String, Object>();
             tokenParameter.put("card", cardParameter);
             token = Token.create(tokenParameter);
@@ -70,7 +69,7 @@ public class PaymentProcessor {
             }
             if (card_exist) {
                 System.out.println("card Exist");
-            } else { // we gona create a card for the existing customer if the card doesn t exist 
+            } else { // we gona create a card for the existing customer if the card doesnot exist
                 stripeCustomer.getSources().create(sourceParameter);
             }
         } else {
@@ -80,7 +79,6 @@ public class PaymentProcessor {
             customerParams.put("email", email);
             stripeCustomer = Customer.create(customerParams);
             System.out.println("Created new customer with ID: " + stripeCustomer.getId());
-
             // Create a Card
             Map<String, Object> cardParameter = new HashMap<String, Object>();
             cardParameter.put("number", cardNumber);

@@ -1,22 +1,46 @@
 package controllers.gestionStore;
 
 import com.stripe.exception.StripeException;
+import controllers.gestionuser.GlobalVar;
+import entities.gestionStore.detailfacture;
 import entities.gestionStore.facture;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.Pane;
+import javafx.stage.FileChooser;
+import javafx.stage.Window;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import services.gestionStore.DetailFactureService;
 import services.gestionStore.FactureService;
 
+
+import java.awt.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class PaymentController implements Initializable {
 
+    //*****interface payment
     @FXML
     private Label total;
     @FXML
@@ -30,10 +54,7 @@ public class PaymentController implements Initializable {
     @FXML
     private Spinner<Integer> YY;
     @FXML
-    private Spinner<Integer> cvc; //********************numéro de sécurité de votre carte bancaire.   qui se compose de 4 num
-
-    private float total_pay;
-    private facture Facture;
+    private Spinner<Integer> cvc; //********************numéro de sécurité de votre carte bancaire.   qui se compose de 3 num
     @FXML
     private TextField client_name;
     @FXML
@@ -42,9 +63,26 @@ public class PaymentController implements Initializable {
     private SpinnerValueFactory<Integer> spinMM;
     private SpinnerValueFactory<Integer> spinYY;
     private SpinnerValueFactory<Integer> spinCVC;
+    @FXML
+    private Pane pane_payment;
+    @FXML
+    private Label successFX;
+
+    //*****interface sucess
+    @FXML
+    private Pane pane_Success;
+
+    //*****interfacefail
+    @FXML
+    private Pane pane_Fail;
+
+    //****var
+    private float total_pay;
+    private facture Facture;
 
 
 
+/*
     public void setMM()
     {
         spinMM = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, Integer.MAX_VALUE, 1);
@@ -62,6 +100,8 @@ public class PaymentController implements Initializable {
         spinCVC = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, Integer.MAX_VALUE, 1);
         cvc.setValueFactory(spinCVC);
     }
+
+ */
 
     public void setData(facture f) {
         this.Facture = f;
@@ -166,7 +206,10 @@ public class PaymentController implements Initializable {
                 int yy = YY.getValue();
                 int mm = MM.getValue();
                 String cvc_num = String.valueOf(cvc.getValue());
-                boolean payment_result = PaymentProcessor.processPayment(name, email_txt, total_pay, num, mm, yy, cvc_num);
+                //boolean payment_result1 = PaymentProcessor.processPayment(name, email_txt, total_pay, num, mm, yy, cvc_num);
+
+                boolean payment_result = PaymentProcessor.processPayment(name, email_txt, total_pay, "4242424242424242", 12, 24, "100");
+
                 if (payment_result) {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Success");
@@ -174,8 +217,7 @@ public class PaymentController implements Initializable {
                     alert.setHeaderText(null);
                     alert.showAndWait();
                     //*************************************
-
-                    //redirect_to_successPage();
+                    redirect_to_successPage();
                 } else {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
                     alert.setContentText("Payment Failed.");
@@ -183,7 +225,7 @@ public class PaymentController implements Initializable {
                     alert.setHeaderText(null);
                     alert.showAndWait();
                     //***************************
-                    //redirect_to_FailPage();
+                    redirect_to_FailPage();
                 }
             }
         }
@@ -243,54 +285,167 @@ public class PaymentController implements Initializable {
         return matcher.matches();
     }
 
-    /*
+
     private void redirect_to_successPage() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../gui/reservation/Success_page.fxml"));
-            Parent root = loader.load();
-            //UPDATE The Controller with Data :
-            Success_pageController controller = loader.getController();
-            controller.setData(this.reservation);
-            Scene scene = new Scene(root);
-            Stage stage = (Stage) pay_btn.getScene().getWindow();
-            stage.setScene(scene);
-        } catch (IOException ex) {
-            System.out.println(ex.getMessage());
-        }
+        pane_payment.setVisible(false);
+        pane_Success.setVisible(true);
     }
 
     private void redirect_to_FailPage() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../gui/reservation/Fail_page.fxml"));
-            Parent root = loader.load();
-            //UPDATE The Controller with Data :
-            Fail_pageController controller = loader.getController();
-            controller.setData(this.reservation);
-            Scene scene = new Scene(root);
-            Stage stage = (Stage) pay_btn.getScene().getWindow();
-            stage.setScene(scene);
-        } catch (IOException ex) {
-            System.out.println(ex.getMessage());
-        }
+        pane_payment.setVisible(false);
+        pane_Fail.setVisible(true);
     }
 
     @FXML
-    private void redirectToListReservation(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../gui/reservation/Reservation_view_client.fxml"));
-            Parent root = loader.load();
-            //UPDATE The Controller with Data :
-            Reservation_view_client controller = loader.getController();
-            controller.setData(this.reservation.getClient_id());
-            Scene scene = new Scene(root);
-            Stage stage = (Stage) back_btn.getScene().getWindow();
-            stage.setScene(scene);
-        } catch (IOException ex) {
-            System.out.println(ex.getMessage());
+    void getrecepeitpayment(ActionEvent event) {
+        // Créer un nouv doc PDF
+        try (PDDocument document = new PDDocument()) {
+            PDPage page = new PDPage();
+            document.addPage(page);
+
+            // Écrire data de la facture dans fichier PDF
+            getReceiptPdf(document);
+
+            // Afficher dossier ou je vais select le dossier ou mettre mon pdf
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Enregistrer la facture");
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Fichiers PDF", "*.pdf"));
+
+            // Aff path du dossu=ier ou je vais mettre mon pdf
+            Window window = pane_Success.getScene().getWindow();
+            File file = fileChooser.showSaveDialog(window);
+
+            if (file != null) {
+                // Sauvegarder le fichier PDF au path select
+                document.save(file);
+
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Impression PDF");
+                alert.setHeaderText(null);
+                alert.setContentText("La facture a été enregistrée dans un fichier PDF.");
+                alert.showAndWait();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erreur");
+            alert.setHeaderText("Erreur lors de la génération du fichier PDF");
+            alert.setContentText("Une erreur s'est produite lors de la création du fichier PDF.");
+            alert.showAndWait();
         }
     }
 
-     */
+    private final DetailFactureService dfS = new DetailFactureService();
+    private void getReceiptPdf(PDDocument document) throws IOException {
+        // Récupérer les données de la facture
+        String date = String.valueOf(this.Facture.getDateVente());
+        String total = String.valueOf(this.Facture.getPrixtotalPaye());
+        String idClient = GlobalVar.getUser().getFirstname();
+        String idFacture = String.valueOf(this.Facture.getIdFacture());
+
+        try (PDPageContentStream contentStream = new PDPageContentStream(document, document.getPage(0))) {
+            contentStream.setNonStrokingColor(java.awt.Color.decode("#0000FF"));
+            contentStream.setFont(PDType1Font.HELVETICA_BOLD, 20);
+            contentStream.beginText();
+            contentStream.newLineAtOffset(250, 700);
+            contentStream.showText("GymPlus");
+            contentStream.endText();
+
+            contentStream.setNonStrokingColor(java.awt.Color.BLACK);
+            contentStream.setFont(PDType1Font.TIMES_ROMAN, 12);
+            contentStream.beginText();
+            contentStream.newLineAtOffset(70, 680);
+            contentStream.newLineAtOffset(0, -20);
+            contentStream.showText("Date: " + date);
+            contentStream.newLineAtOffset(0, -20);
+            contentStream.showText("Total Facture: " + total);
+            contentStream.newLineAtOffset(0, -20);
+            contentStream.showText("ID Client: " + idClient);
+            contentStream.newLineAtOffset(0, -20);
+            contentStream.showText("ID Facture: " + idFacture);
+            contentStream.endText();
+
+            contentStream.setNonStrokingColor(java.awt.Color.decode("#0000FF"));
+            contentStream.setFont(PDType1Font.HELVETICA_BOLD, 12);
+            contentStream.beginText();
+            contentStream.newLineAtOffset(70, 580);
+            contentStream.showText("Detail Facture");
+            contentStream.endText();
+
+            float xPosition = 70;
+            float yPosition = 560;
+            ObservableList<detailfacture> detailFactureList = FXCollections.observableArrayList(dfS.getDetailFacture(Integer.parseInt(idFacture)));
+
+
+            // Dessiner les bordures du tableau
+            float tableWidth = 480; // Largeur totale du tableau
+            float tableHeight = 20 * (detailFactureList.size() + 1); // Hauteur totale du tableau
+            float yStart = yPosition; // Position verticale de départ du tableau
+            float yEnd = yStart - tableHeight; // Position verticale de fin du tableau
+
+            // Dessiner les lignes horizontales
+            contentStream.setStrokingColor(java.awt.Color.white);
+            contentStream.setLineWidth(1f); // Épaisseur de la ligne
+
+            // Ligne supérieure du tableau
+            contentStream.moveTo(xPosition, yStart);
+            contentStream.lineTo(xPosition + tableWidth, yStart);
+            contentStream.stroke();
+
+            // Dessiner les lignes verticales
+            float columnWidth = tableWidth / 5; // Largeur de chaque colonne
+
+            // Boucle pour dessiner les lignes verticales séparant les colonnes
+            for (int i = 1; i < 6; i++) {
+                float x = xPosition + i * columnWidth;
+                contentStream.moveTo(x, yStart);
+                contentStream.lineTo(x, yEnd);
+                contentStream.stroke();
+            }
+
+            // Affichage des en-têtes du tableau
+            contentStream.beginText();
+            contentStream.setNonStrokingColor(java.awt.Color.BLACK);
+            contentStream.setFont(PDType1Font.HELVETICA_BOLD, 12);
+            contentStream.newLineAtOffset(xPosition + 5, yPosition);
+            contentStream.showText("ID Detail");
+            contentStream.newLineAtOffset(columnWidth, 0);
+            contentStream.showText("ID Produit");
+            contentStream.newLineAtOffset(columnWidth, 0);
+            contentStream.showText("Prix unitaire");
+            contentStream.newLineAtOffset(columnWidth, 0);
+            contentStream.showText("Quantite");
+            contentStream.newLineAtOffset(columnWidth, 0);
+            contentStream.showText("Total Article");
+            contentStream.endText();
+            yPosition -= 20; // Ajuster l'espacement vertical pour le contenu
+
+            // Affichage des détails de la facture dans le PDF
+            for (detailfacture detail : detailFactureList) {
+                contentStream.beginText();
+                contentStream.setNonStrokingColor(java.awt.Color.BLACK);
+                contentStream.setFont(PDType1Font.TIMES_ROMAN, 12);
+                contentStream.newLineAtOffset(xPosition, yPosition);
+                contentStream.showText(String.valueOf(detail.getIdDetailFacture()));
+                contentStream.newLineAtOffset(columnWidth, 0);
+                contentStream.showText(String.valueOf(detail.getIdProduit()));
+                contentStream.newLineAtOffset(columnWidth, 0);
+                contentStream.showText(String.valueOf(detail.getPrixVenteUnitaire()));
+                contentStream.newLineAtOffset(columnWidth, 0);
+                contentStream.showText(String.valueOf(detail.getQuantite()));
+                contentStream.newLineAtOffset(columnWidth, 0);
+                contentStream.showText(String.valueOf(detail.getPrixVenteUnitaire() * detail.getQuantite() * (1 - detail.getTauxRemise())));
+                contentStream.endText();
+                yPosition -= 20; // Ajuster l'espacement vertical entre les détails de la facture
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {

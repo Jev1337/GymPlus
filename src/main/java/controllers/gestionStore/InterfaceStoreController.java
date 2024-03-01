@@ -223,6 +223,7 @@ public class InterfaceStoreController implements Initializable {
     }
     private facture fc = new facture();
     private final FactureService factureService = new FactureService();
+    String pathPhoto = "file:///D:/projet_PI/GymPlus/src/assets/imageProduit/";
 
 
     //*****GetAllProduit
@@ -349,7 +350,10 @@ public class InterfaceStoreController implements Initializable {
             String nom = produit.getName();
             float prix = produit.getPrix();
 
-            Image imageP = new Image("file:///D:/projet_PI/GymPlus/imageProduit/" + photo);
+            //Image imageP = new Image("file:///D:/projet_PI/GymPlus/imageProduit/" + photo);
+            //Image imageP = new Image("file:///D:/projet_PI/GymPlus/src/assets/imageProduit/" + photo);
+            Image imageP = new Image(pathPhoto + photo);
+
 
             ImageView imageView = new ImageView(imageP);
             Label labelPhoto = new Label();
@@ -846,7 +850,9 @@ public class InterfaceStoreController implements Initializable {
                 float prixtotalArticle = lp.get(i).getPrixtotalArticle();
                 int quantite = lp.get(i).getQuantite();
 
-                Image imageP = new Image("file:///D:/projet_PI/GymPlus/imageProduit/" + photo);
+                //Image imageP = new Image("file:///D:/projet_PI/GymPlus/imageProduit/" + photo);
+                Image imageP = new Image(pathPhoto + photo);
+
                 ImageView imageView = new ImageView(imageP);
 
                 Label labelPhoto = new Label();
@@ -1182,6 +1188,7 @@ public class InterfaceStoreController implements Initializable {
 
     private void writeInvoiceDataToPDF(PDDocument document) throws IOException
     {
+        /*
         // Charger l'image depuis le fichier
         //String imagePath = "../../assets/profileuploads/USERIMG11111111.png";
 
@@ -1265,7 +1272,121 @@ public class InterfaceStoreController implements Initializable {
             throw new RuntimeException(e);
         }
 
+         */
+        // Récupérer les données de la facture
+//        String date = String.valueOf(this.Facture.getDateVente());
+//        String total = String.valueOf(this.Facture.getPrixtotalPaye());
+//        String idClient = GlobalVar.getUser().getFirstname();
+//        String idFacture = String.valueOf(this.Facture.getIdFacture());
+        String date = DateFX.getText();
+        String total = TotalFactureFX.getText();
+        String idClient = idClientFX.getText();
+        String idFacture = idFactureFX.getText();
+
+
+        try (PDPageContentStream contentStream = new PDPageContentStream(document, document.getPage(0))) {
+            contentStream.setNonStrokingColor(java.awt.Color.decode("#0000FF"));
+            contentStream.setFont(PDType1Font.HELVETICA_BOLD, 20);
+            contentStream.beginText();
+            contentStream.newLineAtOffset(250, 700);
+            contentStream.showText("GymPlus");
+            contentStream.endText();
+
+            contentStream.setNonStrokingColor(java.awt.Color.BLACK);
+            contentStream.setFont(PDType1Font.TIMES_ROMAN, 12);
+            contentStream.beginText();
+            contentStream.newLineAtOffset(70, 680);
+            contentStream.newLineAtOffset(0, -20);
+            contentStream.showText("Date: " + date);
+            contentStream.newLineAtOffset(0, -20);
+            contentStream.showText("Total Facture: " + total);
+            contentStream.newLineAtOffset(0, -20);
+            contentStream.showText("ID Client: " + idClient);
+            contentStream.newLineAtOffset(0, -20);
+            contentStream.showText("ID Facture: " + idFacture);
+            contentStream.endText();
+
+            contentStream.setNonStrokingColor(java.awt.Color.decode("#0000FF"));
+            contentStream.setFont(PDType1Font.HELVETICA_BOLD, 12);
+            contentStream.beginText();
+            contentStream.newLineAtOffset(70, 580);
+            contentStream.showText("Detail Facture");
+            contentStream.endText();
+
+            float xPosition = 70;
+            float yPosition = 560;
+            ObservableList<detailfacture> detailFactureList = FXCollections.observableArrayList(dfS.getDetailFacture(Integer.parseInt(idFacture)));
+
+
+            // Dessiner les bordures du tableau
+            float tableWidth = 480; // Largeur totale du tableau
+            float tableHeight = 20 * (detailFactureList.size() + 1); // Hauteur totale du tableau
+            float yStart = yPosition; // Position verticale de départ du tableau
+            float yEnd = yStart - tableHeight; // Position verticale de fin du tableau
+
+            // Dessiner les lignes horizontales
+            contentStream.setStrokingColor(java.awt.Color.white);
+            contentStream.setLineWidth(1f); // Épaisseur de la ligne
+
+            // Ligne supérieure du tableau
+            contentStream.moveTo(xPosition, yStart);
+            contentStream.lineTo(xPosition + tableWidth, yStart);
+            contentStream.stroke();
+
+            // Dessiner les lignes verticales
+            float columnWidth = tableWidth / 5; // Largeur de chaque colonne
+
+            // Boucle pour dessiner les lignes verticales séparant les colonnes
+            for (int i = 1; i < 6; i++) {
+                float x = xPosition + i * columnWidth;
+                contentStream.moveTo(x, yStart);
+                contentStream.lineTo(x, yEnd);
+                contentStream.stroke();
+            }
+
+            // Affichage des en-têtes du tableau
+            contentStream.beginText();
+            contentStream.setNonStrokingColor(java.awt.Color.BLACK);
+            contentStream.setFont(PDType1Font.HELVETICA_BOLD, 12);
+            contentStream.newLineAtOffset(xPosition + 5, yPosition);
+            contentStream.showText("ID Detail");
+            contentStream.newLineAtOffset(columnWidth, 0);
+            contentStream.showText("ID Produit");
+            contentStream.newLineAtOffset(columnWidth, 0);
+            contentStream.showText("Prix unitaire");
+            contentStream.newLineAtOffset(columnWidth, 0);
+            contentStream.showText("Quantite");
+            contentStream.newLineAtOffset(columnWidth, 0);
+            contentStream.showText("Total Article");
+            contentStream.endText();
+            yPosition -= 20; // Ajuster l'espacement vertical pour le contenu
+
+            // Affichage des détails de la facture dans le PDF
+            for (detailfacture detail : detailFactureList) {
+                contentStream.beginText();
+                contentStream.setNonStrokingColor(java.awt.Color.BLACK);
+                contentStream.setFont(PDType1Font.TIMES_ROMAN, 12);
+                contentStream.newLineAtOffset(xPosition, yPosition);
+                contentStream.showText(String.valueOf(detail.getIdDetailFacture()));
+                contentStream.newLineAtOffset(columnWidth, 0);
+                contentStream.showText(String.valueOf(detail.getIdProduit()));
+                contentStream.newLineAtOffset(columnWidth, 0);
+                contentStream.showText(String.valueOf(detail.getPrixVenteUnitaire()));
+                contentStream.newLineAtOffset(columnWidth, 0);
+                contentStream.showText(String.valueOf(detail.getQuantite()));
+                contentStream.newLineAtOffset(columnWidth, 0);
+                contentStream.showText(String.valueOf(detail.getPrixVenteUnitaire() * detail.getQuantite() * (1 - detail.getTauxRemise())));
+                contentStream.endText();
+                yPosition -= 20; // Ajuster l'espacement vertical entre les détails de la facture
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
+
+
+
+
 
     public void setFacture(facture selectedFacture)
     {

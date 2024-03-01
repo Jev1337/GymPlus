@@ -20,7 +20,13 @@
 
 <AnchorPane prefHeight="808.0" prefWidth="1156.0" style="-fx-background-color: linear-gradient(to bottom right, lightgray, floralwhite);" stylesheets="@event.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionevents.eventbController">
    <children>
-      <Pane fx:id="affichage_events_adstaff" prefHeight="827.0" prefWidth="1180.0" style="-fx-background-color: linear-gradient(to bottom right, lightgray, floralwhite);;">
+      <AnchorPane>
+         <children>
+            <Pane fx:id="BlackListed" layoutY="48.0" prefHeight="775.0" prefWidth="1182.0" />
+            <Button fx:id="back_to_aff_btn" layoutX="11.0" layoutY="12.0" mnemonicParsing="false" onAction="#back_to_aff" text="Back" />
+         </children>
+      </AnchorPane>
+      <Pane fx:id="affichage_events_adstaff" prefHeight="827.0" prefWidth="1180.0" style="-fx-background-color: linear-gradient(to bottom right, lightgray, floralwhite);;" visible="false">
          <children>
             <TableView fx:id="tableevents_id" layoutX="346.0" layoutY="138.0" prefHeight="303.0" prefWidth="823.0" style="-fx-background-color: lightgray;">
               <columns>
@@ -143,6 +149,7 @@
                </children>
             </Pane>
             <Button fx:id="finished_events_btn" layoutX="46.0" layoutY="776.0" mnemonicParsing="false" onAction="#go_to_finished" text="Finished events" />
+            <Button fx:id="manage_users_btn" layoutX="173.0" layoutY="777.0" mnemonicParsing="false" onAction="#go_tomanage" prefHeight="36.0" prefWidth="119.0" text="Manager Users" />
          </children>
       </Pane>
       <Pane fx:id="finished_events" prefHeight="826.0" prefWidth="1179.0" visible="false">

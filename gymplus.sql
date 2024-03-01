@@ -128,6 +128,12 @@ CREATE TABLE `event_participants` (
   'rate' int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+CREATE TABLE `black_listed` (
+                                `id_user` int(11) NOT NULL,
+                                `start_ban` date NOT NULL DEFAULT current_timestamp(),
+                                `end_ban` date NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+COMMIT;
 -- --------------------------------------------------------
 
 --

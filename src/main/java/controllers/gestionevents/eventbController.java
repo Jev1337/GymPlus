@@ -10,6 +10,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
@@ -19,6 +20,7 @@ import services.gestionevents.Event_detailsService;
 import services.gestionevents.Event_participantsService;
 import utils.MyDatabase;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -151,6 +153,15 @@ public class eventbController {
     private Pane finished_events;
     @FXML
     private Button back_toeve;
+
+    @FXML
+    private Pane BlackListed;
+    @FXML
+    private Button manage_users_btn;
+
+    @FXML
+    private Button back_to_aff_btn;
+
 
 
 
@@ -731,6 +742,14 @@ public class eventbController {
 
     @FXML
     void initialize() {
+
+        try {
+            Pane pane= FXMLLoader.load(getClass().getResource("/gestionevents/blacklisted.fxml"));
+            BlackListed.getChildren().setAll(pane);
+
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+        }
         afficher();
         afficher1();
         fill_points();
@@ -890,4 +909,18 @@ public class eventbController {
         });
         f.play();
     }
+    @FXML
+    public void go_tomanage(ActionEvent event)  {
+        //same animation
+        BlackListed.setVisible(true);
+        affichage_events_adstaff.setVisible(false);
+        finished_events.setVisible(false);
+    }
+    @FXML
+    public void back_to_aff(ActionEvent event){
+        BlackListed.setVisible(false);
+        affichage_events_adstaff.setVisible(true);
+
+    }
+
 }

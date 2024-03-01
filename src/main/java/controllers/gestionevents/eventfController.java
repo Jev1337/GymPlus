@@ -11,6 +11,17 @@ import biweekly.component.VEvent;
 import controllers.gestionuser.GlobalVar;
 import entities.gestionevents.Event_details;
 import entities.gestionevents.Event_participants;
+import jakarta.activation.DataHandler;
+import jakarta.activation.DataSource;
+import jakarta.mail.Message;
+import jakarta.mail.Multipart;
+import jakarta.mail.Session;
+import jakarta.mail.Transport;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeBodyPart;
+import jakarta.mail.internet.MimeMessage;
+import jakarta.mail.internet.MimeMultipart;
+import jakarta.mail.util.ByteArrayDataSource;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
@@ -24,7 +35,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.stage.FileChooser;
 import javafx.util.Duration;
 import net.glxn.qrgen.core.image.ImageType;
 import net.glxn.qrgen.javase.QRCode;
@@ -35,7 +45,6 @@ import utils.MyDatabase;
 import javax.imageio.ImageIO;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -47,7 +56,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-
+import java.util.Properties;
 
 
 public class eventfController {
@@ -762,7 +771,6 @@ public class eventfController {
                 update_user_pts(GlobalVar.getUser().getId(), GlobalVar.getUser().getEvent_points());
                 points_label.setText("Points: " + GlobalVar.getUser().getEvent_points());
 
-
                 String details = "User ID: " + GlobalVar.getUser().getId() +
                         "\nFirst Name: " + GlobalVar.getUser().getFirstname() +
                         "\nLast Name: " + GlobalVar.getUser().getLastname() +
@@ -773,41 +781,11 @@ public class eventfController {
                                 .to(ImageType.PNG)
                                 .stream();
 
+                // Convert the QR code image to a DataSource
+                DataSource qrCodeDataSource = new ByteArrayDataSource(bout.toByteArray(), "image/png");
 
-                ByteArrayInputStream bin = new ByteArrayInputStream(bout.toByteArray());
-                javafx.scene.image.Image qrImage = null;
-                try {
-                    qrImage = SwingFXUtils.toFXImage(ImageIO.read(bin), null);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-
-                Alert qrCodeAlert = new Alert(Alert.AlertType.INFORMATION);
-                qrCodeAlert.setTitle("Congratulations");
-                qrCodeAlert.setHeaderText("You have successfully claimed GymPlus Whey Protein");
-
-                ImageView qrImageView = new ImageView(qrImage);
-                qrCodeAlert.setGraphic(qrImageView);
-                ButtonType saveButtonType = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
-                qrCodeAlert.getButtonTypes().setAll(saveButtonType, ButtonType.CANCEL);
-                Optional<ButtonType> qrResult = qrCodeAlert.showAndWait();
-                if (qrResult.get() == saveButtonType) {
-                    FileChooser fileChooser = new FileChooser();
-                    fileChooser.setTitle("Save Image");
-                    FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("PNG files (*.png)", "*.png");
-                    fileChooser.getExtensionFilters().add(extFilter);
-                    File file = fileChooser.showSaveDialog(null);
-                    if (file != null) {
-                        try {
-                            ImageIO.write(SwingFXUtils.fromFXImage(qrImage, null), "png", file);
-                        } catch (IOException ex) {
-                            System.out.println(ex.getMessage());
-                        }
-                    }
-                }
-
-                qrCodeAlert.showAndWait();
+                // Send the QR code via email
+                sendEmailWithQRCode(GlobalVar.getUser().getEmail(), "Congratulations", "You have successfully claimed GymPlus Whey Protein", qrCodeDataSource);
             }
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -831,7 +809,6 @@ public class eventfController {
                 update_user_pts(GlobalVar.getUser().getId(), GlobalVar.getUser().getEvent_points());
                 points_label.setText("Points: " + GlobalVar.getUser().getEvent_points());
 
-
                 String details = "User ID: " + GlobalVar.getUser().getId() +
                         "\nFirst Name: " + GlobalVar.getUser().getFirstname() +
                         "\nLast Name: " + GlobalVar.getUser().getLastname() +
@@ -842,41 +819,11 @@ public class eventfController {
                                 .to(ImageType.PNG)
                                 .stream();
 
+                // Convert the QR code image to a DataSource
+                DataSource qrCodeDataSource = new ByteArrayDataSource(bout.toByteArray(), "image/png");
 
-                ByteArrayInputStream bin = new ByteArrayInputStream(bout.toByteArray());
-                javafx.scene.image.Image qrImage = null;
-                try {
-                    qrImage = SwingFXUtils.toFXImage(ImageIO.read(bin), null);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                // Display QR code in an alert
-                Alert qrCodeAlert = new Alert(Alert.AlertType.INFORMATION);
-                qrCodeAlert.setTitle("Congratulations");
-                qrCodeAlert.setHeaderText("You have successfully claimed GymPlus Weightlifting Belt");
-
-                ImageView qrImageView = new ImageView(qrImage);
-                qrCodeAlert.setGraphic(qrImageView);
-                ButtonType saveButtonType = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
-                qrCodeAlert.getButtonTypes().setAll(saveButtonType, ButtonType.CANCEL);
-                Optional<ButtonType> qrResult = qrCodeAlert.showAndWait();
-                if (qrResult.get() == saveButtonType) {
-                    FileChooser fileChooser = new FileChooser();
-                    fileChooser.setTitle("Save Image");
-                    FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("PNG files (*.png)", "*.png");
-                    fileChooser.getExtensionFilters().add(extFilter);
-                    File file = fileChooser.showSaveDialog(null);
-                    if (file != null) {
-                        try {
-                            ImageIO.write(SwingFXUtils.fromFXImage(qrImage, null), "png", file);
-                        } catch (IOException ex) {
-                            System.out.println(ex.getMessage());
-                        }
-                    }
-                }
-
-                qrCodeAlert.showAndWait();
+                // Send the QR code via email
+                sendEmailWithQRCode(GlobalVar.getUser().getEmail(), "Congratulations", "You have successfully claimed GymPlus Weightlifting Belt", qrCodeDataSource);
             }
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -886,6 +833,68 @@ public class eventfController {
             alert.showAndWait();
         }
     }
+
+    public void sendEmailWithQRCode(String to, String subject, String body, DataSource qrCodeDataSource) {
+        new Thread(() -> {
+            try {
+                String from = "gymplus-noreply@grandelation.com";
+                String password = "yzDvS_UoSL7b";
+                String host = "mail.grandelation.com";
+
+                // Setup mail server
+                Properties props = new Properties();
+                props.put("mail.smtp.host", host);
+                props.put("mail.debug", "true");
+                props.put("mail.smtp.auth", "true");
+                props.put("mail.smtp.ssl.enable", "true");
+                props.put("mail.smtp.port", "465");
+
+                // Get the Session object.
+                Session session = Session.getInstance(props, null);
+
+                // Create a default MimeMessage object.
+                MimeMessage message = new MimeMessage(session);
+
+                // Set From: header field of the header.
+                message.setFrom(new InternetAddress(from));
+
+                // Set To: header field of the header.
+                message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+
+                // Set Subject: header field
+                message.setSubject(subject);
+
+                // Create a multipart message
+                Multipart multipart = new MimeMultipart();
+
+                // Create the message part
+                MimeBodyPart messageBodyPart = new MimeBodyPart();
+
+                // Now set the actual message
+                messageBodyPart.setText(body);
+
+                // Set text message part
+                multipart.addBodyPart(messageBodyPart);
+
+                // Part two is attachment
+                MimeBodyPart attachment = new MimeBodyPart();
+                attachment.setDataHandler(new DataHandler(qrCodeDataSource));
+                attachment.setFileName("qr-code.png");
+                multipart.addBodyPart(attachment);
+
+                // Send the complete message parts
+                message.setContent(multipart);
+
+                // Send message
+                Transport.send(message, from, password);
+
+                System.out.println("Sent message successfully....");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }).start();
+    }
+
 
     @FXML
     public void claim_bag(ActionEvent actionEvent) {
@@ -900,7 +909,6 @@ public class eventfController {
                 GlobalVar.getUser().setEvent_points(GlobalVar.getUser().getEvent_points() - 2000);
                 update_user_pts(GlobalVar.getUser().getId(), GlobalVar.getUser().getEvent_points());
                 points_label.setText("Points: " + GlobalVar.getUser().getEvent_points());
-
 
                 String details = "User ID: " + GlobalVar.getUser().getId() +
                         "\nFirst Name: " + GlobalVar.getUser().getFirstname() +
@@ -920,6 +928,11 @@ public class eventfController {
                     e.printStackTrace();
                 }
 
+                // Convert the QR code image to a DataSource
+                DataSource qrCodeDataSource = new ByteArrayDataSource(bout.toByteArray(), "image/png");
+
+                // Send the QR code via email
+                sendEmailWithQRCode(GlobalVar.getUser().getEmail(), "Congratulations", "You have successfully claimed GymPlus Gym Bag", qrCodeDataSource);
 
                 Alert qrCodeAlert = new Alert(Alert.AlertType.INFORMATION);
                 qrCodeAlert.setTitle("Congratulations");
@@ -927,24 +940,6 @@ public class eventfController {
 
                 ImageView qrImageView = new ImageView(qrImage);
                 qrCodeAlert.setGraphic(qrImageView);
-                ButtonType saveButtonType = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
-                qrCodeAlert.getButtonTypes().setAll(saveButtonType, ButtonType.CANCEL);
-                Optional<ButtonType> qrResult = qrCodeAlert.showAndWait();
-                if (qrResult.get() == saveButtonType) {
-                    FileChooser fileChooser = new FileChooser();
-                    fileChooser.setTitle("Save Image");
-                    FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("PNG files (*.png)", "*.png");
-                    fileChooser.getExtensionFilters().add(extFilter);
-                    File file = fileChooser.showSaveDialog(null);
-                    if (file != null) {
-                        try {
-                            ImageIO.write(SwingFXUtils.fromFXImage(qrImage, null), "png", file);
-                        } catch (IOException ex) {
-                            System.out.println(ex.getMessage());
-                        }
-                    }
-                }
-
                 qrCodeAlert.showAndWait();
             }
         } else {

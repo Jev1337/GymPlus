@@ -1,6 +1,8 @@
 package controllers.gestionuser;
 
-import animatefx.animation.*;
+import animatefx.animation.FadeIn;
+import animatefx.animation.FadeInRight;
+import animatefx.animation.FadeOutRight;
 import atlantafx.base.controls.Notification;
 import atlantafx.base.theme.Styles;
 import atlantafx.base.util.Animations;
@@ -19,7 +21,10 @@ import de.micromata.paypal.data.ShippingPreference;
 import de.micromata.paypal.data.Transaction;
 import entities.gestionuser.Abonnement;
 import entities.gestionuser.Client;
-import javafx.animation.*;
+import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
@@ -34,12 +39,6 @@ import javafx.scene.chart.BarChart;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
-import javafx.scene.control.Button;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -62,6 +61,7 @@ import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.objdetect.CascadeClassifier;
 import org.opencv.objdetect.Objdetect;
 import org.opencv.videoio.VideoCapture;
+import services.gestionevents.BlackListedService;
 import services.gestionuser.AbonnementDetailsService;
 import services.gestionuser.AbonnementService;
 import services.gestionuser.ClientService;
@@ -74,6 +74,7 @@ import java.nio.file.StandardCopyOption;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.List;
 
 public class UserDashboardController {
 
@@ -85,6 +86,17 @@ public class UserDashboardController {
     private final Notification msg = new Notification();
     private final FadeOutRight fadeOutRightAnimation = new FadeOutRight();
     private final FadeInRight fadeInRightAnimation = new FadeInRight();
+    private BlackListedService black_listed= new BlackListedService();
+    private List<Integer> blpeople;
+
+    {
+        try {
+            blpeople = black_listed.blpeople();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
     @FXML
     private Pane blogId = new Pane();
@@ -512,10 +524,27 @@ public class UserDashboardController {
 
     @FXML
     void event_btn_act(ActionEvent event) {
-        //if user not subscribed it redirects him to the siubscription pane
         try {
             if (!abonnementService.isUserSubscribed(GlobalVar.getUser().getId())) {
                 switchToPane(UserSubscriptionPane);
+                return;
+            }
+            // Check if user is blacklisted
+            if(blpeople.contains(GlobalVar.getUser().getId())) {
+                // Get the number of remaining days in the ban
+                String remainingDays = black_listed.remainingDays(GlobalVar.getUser().getId());
+
+                // Create an alert
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Access Denied");
+                alert.setHeaderText(null);
+                alert.setContentText("You are blacklisted and cannot join any event. You have " + remainingDays + " remaining in your ban.");
+
+                // Show the alert and wait for the user to close it
+                alert.showAndWait();
+
+                // Redirect the user to the home pane
+                switchToPane(UserHomePane);
                 return;
             }
         } catch (SQLException e) {
@@ -527,18 +556,34 @@ public class UserDashboardController {
 
     @FXML
     void event_btn_clicked(MouseEvent event) {
-        {
-            //if user not subscribed it redirects him to the siubscription pane
-            try {
-                if (!abonnementService.isUserSubscribed(GlobalVar.getUser().getId())) {
-                    switchToPane(UserSubscriptionPane);
-                    return;
-                }
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
+        //if user not subscribed it redirects him to the subscription pane
+        try {
+            if (!abonnementService.isUserSubscribed(GlobalVar.getUser().getId())) {
+                switchToPane(UserSubscriptionPane);
+                return;
             }
-            switchToPane(UserEventPane);
+            // Check if user is blacklisted
+            if(blpeople.contains(GlobalVar.getUser().getId())) {
+                // Get the number of remaining days in the ban
+                String remainingDays = black_listed.remainingDays(GlobalVar.getUser().getId());
+
+                // Create an alert
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Access Denied");
+                alert.setHeaderText(null);
+                alert.setContentText("You are blacklisted and cannot join any event. You have " + remainingDays + " remaining in your ban.");
+
+                // Show the alert and wait for the user to close it
+                alert.showAndWait();
+
+                // Redirect the user to the home pane
+                switchToPane(UserHomePane);
+                return;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
+        switchToPane(UserEventPane);
     }
 
     @FXML
@@ -1183,4 +1228,5 @@ public class UserDashboardController {
         }
         return false;
     }
+
 }

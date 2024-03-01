@@ -578,6 +578,10 @@ public class eventfController {
     }
 
     private void updateCountdown() {
+        if(GlobalVar.getUser() == null) {
+            return;
+        }
+
         Date nextEventDate = getNextEventDate(GlobalVar.getUser().getId());
         if (nextEventDate != null) {
             Date now = new Date();

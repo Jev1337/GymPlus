@@ -401,7 +401,7 @@
                                                 <Cursor fx:constant="HAND" />
                                              </cursor>
                                           </Button>
-                                          <DatePicker fx:id="dateofbirth_tf" layoutX="26.0" layoutY="204.0" prefHeight="36.0" prefWidth="229.0" />
+                                          <DatePicker fx:id="dateofbirth_tf" editable="false" layoutX="26.0" layoutY="204.0" prefHeight="36.0" prefWidth="229.0" />
                                           <TextArea fx:id="address_ta" layoutX="289.0" layoutY="203.0" prefHeight="98.0" prefWidth="227.0" />
                                           <ImageView fitHeight="150.0" fitWidth="42.0" layoutX="204.0" layoutY="358.0" pickOnBounds="true" preserveRatio="true" />
                                           <ImageView fx:id="faceid_change" fitHeight="33.0" fitWidth="31.0" layoutX="531.0" layoutY="23.0" onMouseClicked="#faceid_change_clicked" pickOnBounds="true" preserveRatio="true">

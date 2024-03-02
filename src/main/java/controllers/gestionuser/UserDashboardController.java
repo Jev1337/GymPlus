@@ -1,12 +1,18 @@
 package controllers.gestionuser;
 
-import animatefx.animation.*;
+import animatefx.animation.FadeIn;
+import animatefx.animation.FadeInRight;
+import animatefx.animation.FadeOutRight;
 import atlantafx.base.controls.Notification;
+import atlantafx.base.theme.PrimerDark;
+import atlantafx.base.theme.PrimerLight;
 import atlantafx.base.theme.Styles;
 import atlantafx.base.util.Animations;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.sun.jna.platform.win32.Advapi32Util;
+import com.sun.jna.platform.win32.WinReg;
 import com.twilio.Twilio;
 import com.twilio.rest.verify.v2.service.Verification;
 import com.twilio.rest.verify.v2.service.VerificationCheck;
@@ -20,6 +26,7 @@ import de.micromata.paypal.data.Transaction;
 import entities.gestionuser.Abonnement;
 import entities.gestionuser.Client;
 import javafx.animation.*;
+import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
@@ -34,12 +41,6 @@ import javafx.scene.chart.BarChart;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
-import javafx.scene.control.Button;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -62,6 +63,7 @@ import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.objdetect.CascadeClassifier;
 import org.opencv.objdetect.Objdetect;
 import org.opencv.videoio.VideoCapture;
+import services.gestionevents.BlackListedService;
 import services.gestionuser.AbonnementDetailsService;
 import services.gestionuser.AbonnementService;
 import services.gestionuser.ClientService;
@@ -74,6 +76,7 @@ import java.nio.file.StandardCopyOption;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.List;
 
 public class UserDashboardController {
 
@@ -85,6 +88,17 @@ public class UserDashboardController {
     private final Notification msg = new Notification();
     private final FadeOutRight fadeOutRightAnimation = new FadeOutRight();
     private final FadeInRight fadeInRightAnimation = new FadeInRight();
+    private BlackListedService black_listed= new BlackListedService();
+    private List<Integer> blpeople;
+
+    {
+        try {
+            blpeople = black_listed.blpeople();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
     @FXML
     private Pane blogId = new Pane();
@@ -305,7 +319,11 @@ public class UserDashboardController {
     @FXML
     private Pane ObjectifPan;
 
+    @FXML
+    private CheckBox dark_cb;
 
+    @FXML
+    private CheckBox tts_cb;
 
     @FXML
     private ImageView user_imageview;
@@ -318,8 +336,28 @@ public class UserDashboardController {
 
     @FXML
     private ImageView faceid_change;
+
     @FXML
-    void faceid_change_clicked(){
+    private void dark_cb_act(ActionEvent event){
+        if (dark_cb.isSelected()){
+            Advapi32Util.registrySetStringValue(WinReg.HKEY_CURRENT_USER, "Software\\GymPlus", "theme", "dark");
+            Application.setUserAgentStylesheet(new PrimerDark().getUserAgentStylesheet());
+        }else{
+            Advapi32Util.registrySetStringValue(WinReg.HKEY_CURRENT_USER, "Software\\GymPlus", "theme", "light");
+            Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
+        }
+    }
+
+    @FXML
+    private void tts_cb_act(ActionEvent event){
+        if (tts_cb.isSelected()){
+            Advapi32Util.registrySetStringValue(WinReg.HKEY_CURRENT_USER, "Software\\GymPlus", "tts", "true");
+        }else{
+            Advapi32Util.registrySetStringValue(WinReg.HKEY_CURRENT_USER, "Software\\GymPlus", "tts", "false");
+        }
+    }
+    @FXML
+    private void faceid_change_clicked(){
         setFaceID();
     }
     String faceId = "";
@@ -512,10 +550,27 @@ public class UserDashboardController {
 
     @FXML
     void event_btn_act(ActionEvent event) {
-        //if user not subscribed it redirects him to the siubscription pane
         try {
             if (!abonnementService.isUserSubscribed(GlobalVar.getUser().getId())) {
                 switchToPane(UserSubscriptionPane);
+                return;
+            }
+            // Check if user is blacklisted
+            if(blpeople.contains(GlobalVar.getUser().getId())) {
+                // Get the number of remaining days in the ban
+                String remainingDays = black_listed.remainingDays(GlobalVar.getUser().getId());
+
+                // Create an alert
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Access Denied");
+                alert.setHeaderText(null);
+                alert.setContentText("You are blacklisted and cannot join any event. You have " + remainingDays + " remaining in your ban.");
+
+                // Show the alert and wait for the user to close it
+                alert.showAndWait();
+
+                // Redirect the user to the home pane
+                switchToPane(UserHomePane);
                 return;
             }
         } catch (SQLException e) {
@@ -527,18 +582,34 @@ public class UserDashboardController {
 
     @FXML
     void event_btn_clicked(MouseEvent event) {
-        {
-            //if user not subscribed it redirects him to the siubscription pane
-            try {
-                if (!abonnementService.isUserSubscribed(GlobalVar.getUser().getId())) {
-                    switchToPane(UserSubscriptionPane);
-                    return;
-                }
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
+        //if user not subscribed it redirects him to the subscription pane
+        try {
+            if (!abonnementService.isUserSubscribed(GlobalVar.getUser().getId())) {
+                switchToPane(UserSubscriptionPane);
+                return;
             }
-            switchToPane(UserEventPane);
+            // Check if user is blacklisted
+            if(blpeople.contains(GlobalVar.getUser().getId())) {
+                // Get the number of remaining days in the ban
+                String remainingDays = black_listed.remainingDays(GlobalVar.getUser().getId());
+
+                // Create an alert
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Access Denied");
+                alert.setHeaderText(null);
+                alert.setContentText("You are blacklisted and cannot join any event. You have " + remainingDays + " remaining in your ban.");
+
+                // Show the alert and wait for the user to close it
+                alert.showAndWait();
+
+                // Redirect the user to the home pane
+                switchToPane(UserHomePane);
+                return;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
+        switchToPane(UserEventPane);
     }
 
     @FXML
@@ -803,9 +874,6 @@ public class UserDashboardController {
     private double yOffset = 0;
 
     public void initialize() {
-        Media media = new Media(new File(getClass().getResource("/assets/sounds/welcome.mp3").getFile()).toURI().toString());
-        MediaPlayer mediaPlayer = new MediaPlayer(media);
-        mediaPlayer.play();
         fadeInRightAnimation.setNode(UserHomePane);
         fadeInRightAnimation.play();
         stat_combobox.getItems().addAll(FXCollections.observableArrayList("Abonnements", "Clients", "Staff"));
@@ -817,6 +885,10 @@ public class UserDashboardController {
         notify("Successfully Logged In as " + GlobalVar.getUser().getUsername() + "!");
         initSubsciption();
         initGPPrices();
+        String theme = Advapi32Util.registryGetStringValue(WinReg.HKEY_CURRENT_USER, "Software\\GymPlus", "theme");
+        if (theme != null && theme.equals("dark")) {
+            dark_cb.setSelected(true);
+        }
         try {
             Pane pane1= FXMLLoader.load(getClass().getResource("/resourcesGestionStore/InterfaceStore.fxml"));
             storeId.getChildren().setAll(pane1);
@@ -829,8 +901,18 @@ public class UserDashboardController {
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
+        String tts = Advapi32Util.registryGetStringValue(WinReg.HKEY_CURRENT_USER, "Software\\GymPlus", "tts");
+        if (tts != null && tts.equals("true")) {
+            tts_cb.setSelected(true);
+            playWelcome();
+        }
     }
 
+    private void playWelcome(){
+        Media media = new Media(new File(getClass().getResource("/assets/sounds/welcome.mp3").getFile()).toURI().toString());
+        MediaPlayer mediaPlayer = new MediaPlayer(media);
+        mediaPlayer.play();
+    }
     @FXML
     private Label gp1_label;
     @FXML
@@ -1157,7 +1239,7 @@ public class UserDashboardController {
             Twilio.init(account_sid, auth_token);
             Verification verification = Verification.creator(
                             verify_sid,
-                            "+216"+phone,
+                            "whatsapp:+216"+phone,
                             "whatsapp")
                     .create();
             System.out.println(verification.getStatus());
@@ -1183,4 +1265,5 @@ public class UserDashboardController {
         }
         return false;
     }
+
 }

@@ -82,8 +82,6 @@ public class AuthController {
     @FXML
     public ImageView faceid_btn;
     @FXML
-    public FontAwesomeIconView google_btn;
-    @FXML
     public Button browse_btn;
 
     @FXML
@@ -975,7 +973,6 @@ public class AuthController {
         signin_btn.setDisable(true);
         signup_switch_btn.setDisable(true);
         faceid_btn.setDisable(true);
-        google_btn.setDisable(true);
     }
     private void disableAllSU(){
         cin_tf.setDisable(true);
@@ -1067,7 +1064,7 @@ public class AuthController {
                     signin_btn.getScene().setRoot(root);
                 }
             } catch (Exception e) {
-                stackTraceAlert(e);
+                 e.printStackTrace();
             }
         }
         email_tf.setDisable(false);
@@ -1075,7 +1072,6 @@ public class AuthController {
         signin_btn.setDisable(false);
         signup_switch_btn.setDisable(false);
         faceid_btn.setDisable(false);
-        google_btn.setDisable(false);
     }
 
     public void initialize() {
@@ -1216,7 +1212,7 @@ public class AuthController {
             Twilio.init(account_sid, auth_token);
             Verification verification = Verification.creator(
                     verify_sid,
-                    "+216"+phone,
+                    "whatsapp:+216"+phone,
                     "whatsapp")
                     .create();
             System.out.println(verification.getStatus());

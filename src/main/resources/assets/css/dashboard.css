@@ -1,0 +1,32 @@
+.pane {
+   -fx-background-color: -color-bg-overlay;
+   -fx-border-radius: 30px;
+   -fx-background-radius: 30px;
+}
+
+.subpane {
+   -fx-background-color: -color-bg-inset;
+   -fx-border-radius: 30px;
+   -fx-background-radius: 30px;
+}
+
+.noborderpane {
+   -fx-background-color: -color-bg-overlay;
+}
+
+.nobordersubpane {
+   -fx-background-color: -color-bg-inset;
+}
+
+.bg {
+   -fx-background-color: -color-bg-default;
+}
+
+
+.lighttext {
+   -fx-text-fill: black;
+}
+
+.darktext {
+   -fx-text-fill: white;
+}

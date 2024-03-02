@@ -6,6 +6,8 @@ import animatefx.animation.FadeOutRight;
 import atlantafx.base.controls.Message;
 import atlantafx.base.controls.Notification;
 import atlantafx.base.controls.RingProgressIndicator;
+import atlantafx.base.theme.PrimerDark;
+import atlantafx.base.theme.PrimerLight;
 import atlantafx.base.theme.Styles;
 import atlantafx.base.util.Animations;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
@@ -14,6 +16,7 @@ import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -56,13 +59,11 @@ import org.opencv.objdetect.Objdetect;
 import org.opencv.objdetect.QRCodeDetector;
 import org.opencv.videoio.VideoCapture;
 import services.gestionuser.*;
-
+import com.sun.jna.platform.win32.Advapi32Util;
+import com.sun.jna.platform.win32.WinReg;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.lang.management.ManagementFactory;
-import java.lang.management.MemoryMXBean;
-import java.lang.management.MemoryUsage;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.sql.Date;
@@ -460,9 +461,34 @@ public class AdminDashboardController {
     @FXML
     private CheckBox legacyuserlist_cb;
 
+    @FXML
+    private CheckBox dark_cb;
+
+    @FXML
+    private CheckBox tts_cb;
+
     private Abonnement selectedAbonnement;
     private Client selectedClient;
 
+    @FXML
+    private void dark_cb_act(ActionEvent event){
+        if (dark_cb.isSelected()){
+            Advapi32Util.registrySetStringValue(WinReg.HKEY_CURRENT_USER, "Software\\GymPlus", "theme", "dark");
+            Application.setUserAgentStylesheet(new PrimerDark().getUserAgentStylesheet());
+        }else{
+            Advapi32Util.registrySetStringValue(WinReg.HKEY_CURRENT_USER, "Software\\GymPlus", "theme", "light");
+            Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
+        }
+    }
+
+    @FXML
+    private void tts_cb_act(ActionEvent event){
+        if (tts_cb.isSelected()){
+            Advapi32Util.registrySetStringValue(WinReg.HKEY_CURRENT_USER, "Software\\GymPlus", "tts", "true");
+        }else{
+            Advapi32Util.registrySetStringValue(WinReg.HKEY_CURRENT_USER, "Software\\GymPlus", "tts", "false");
+        }
+    }
 
     @FXML
     private void savegp_btn_act(ActionEvent event) {
@@ -1359,9 +1385,6 @@ public class AdminDashboardController {
     private double xOffset = 0;
     private double yOffset = 0;
     public void initialize() {
-        Media media = new Media(new File(getClass().getResource("/assets/sounds/welcome.mp3").getFile()).toURI().toString());
-        MediaPlayer mediaPlayer = new MediaPlayer(media);
-        mediaPlayer.play();
         fadeInRightAnimation.setNode(AdminHomePane);
         fadeInRightAnimation.play();
         stat_combobox.getItems().addAll(FXCollections.observableArrayList("Abonnements", "Clients", "Staff"));
@@ -1382,6 +1405,10 @@ public class AdminDashboardController {
         initWarning(subpane);
         initWarning(usermgmt_pane);
         initGPPrices();
+        String theme = Advapi32Util.registryGetStringValue(WinReg.HKEY_CURRENT_USER, "Software\\GymPlus", "theme");
+        if (theme != null && theme.equals("dark")) {
+            dark_cb.setSelected(true);
+        }
 
         RingProgressIndicator progressIndicator = new RingProgressIndicator();
         progressIndicator.setProgress(ProgressIndicator.INDETERMINATE_PROGRESS);
@@ -1400,7 +1427,19 @@ public class AdminDashboardController {
         } catch (IOException e) {
             stackTraceAlert(e);
         }
+        String tts = Advapi32Util.registryGetStringValue(WinReg.HKEY_CURRENT_USER, "Software\\GymPlus", "tts");
+        if (tts != null && tts.equals("true")) {
+            tts_cb.setSelected(true);
+            playWelcome();
+        }
 
+
+    }
+
+    private void playWelcome(){
+        Media media = new Media(new File(getClass().getResource("/assets/sounds/welcome.mp3").getFile()).toURI().toString());
+        MediaPlayer mediaPlayer = new MediaPlayer(media);
+        mediaPlayer.play();
     }
 
 
@@ -1477,7 +1516,7 @@ public class AdminDashboardController {
                 hBox.setSpacing(10);
                 hBox.setPadding(new Insets(10));
 
-                hBox.setStyle("-fx-background-color: #f4f4f4");
+                hBox.setStyle("-fx-background-color: -color-bg-inset;");
                 ImageView imageView = new ImageView();
                 imageView.setFitWidth(50);
                 imageView.setFitHeight(50);
@@ -1513,19 +1552,19 @@ public class AdminDashboardController {
                     if (selectedAbonnement != null && selectedAbonnement.getId() == abonnement.getId())
                         hBox.setStyle("-fx-background-color: #2196f3");
                     else
-                        hBox.setStyle("-fx-background-color: #e0e0e0");
+                        hBox.setStyle("-fx-background-color: -color-bg-overlay;");
                 });
                 hBox.setOnMouseExited(e -> {
                     if (selectedAbonnement != null && selectedAbonnement.getId() == abonnement.getId())
                         hBox.setStyle("-fx-background-color: #2196f3");
                     else
-                        hBox.setStyle("-fx-background-color: #f4f4f4");
+                        hBox.setStyle("-fx-background-color: -color-bg-inset;");
                 });
                 hBox.setOnMouseClicked(e -> {
                     selectedAbonnement = abonnement;
                     for (Node node : subbed_vbox.getChildren()) {
                         if (node instanceof HBox && node != hBox) {
-                            node.setStyle("-fx-background-color: #f4f4f4");
+                            node.setStyle("-fx-background-color: -color-bg-overlay;");
                         }
                     }
                     hBox.setStyle("-fx-background-color: #2196f3");
@@ -1895,15 +1934,15 @@ public class AdminDashboardController {
             HBox hBox = new HBox();
             hBox.setSpacing(10);
             hBox.setPadding(new Insets(10, 10, 10, 10));
-            hBox.setStyle("-fx-background-color: #f4f4f4; -fx-border-radius: 10px; -fx-background-radius: 10px;");
+            hBox.setStyle("-fx-background-color: -color-bg-inset; -fx-border-radius: 10px; -fx-background-radius: 10px;");
             hBox.setAlignment(Pos.CENTER_LEFT);
             hBox.setPrefHeight(100);
             hBox.setCursor(Cursor.HAND);
             hBox.setOnMouseEntered(e -> {
-                hBox.setStyle("-fx-background-color: #e4e4e4; -fx-border-radius: 10px; -fx-background-radius: 10px;");
+                hBox.setStyle("-fx-background-color: -color-bg-overlay; -fx-border-radius: 10px; -fx-background-radius: 10px;");
             });
             hBox.setOnMouseExited(e -> {
-                hBox.setStyle("-fx-background-color: #f4f4f4; -fx-border-radius: 10px; -fx-background-radius: 10px;");
+                hBox.setStyle("-fx-background-color: -color-bg-inset; -fx-border-radius: 10px; -fx-background-radius: 10px;");
             });
             hBox.setOnMouseClicked(e -> {
                 if (user.getId() == GlobalVar.getUser().getId()){
@@ -2012,26 +2051,26 @@ public class AdminDashboardController {
                 HBox hBox = new HBox();
                 hBox.setSpacing(10);
                 hBox.setPadding(new Insets(10, 10, 10, 10));
-                hBox.setStyle("-fx-background-color: #f4f4f4;");
+                hBox.setStyle("-fx-background-color: -color-bg-inset;");
                 hBox.setAlignment(Pos.CENTER_LEFT);
                 hBox.setCursor(Cursor.HAND);
                 hBox.setOnMouseEntered(e -> {
                     if (selectedClient != null && selectedClient.getId() == user.getId())
                         hBox.setStyle("-fx-background-color: #2196f3");
                     else
-                        hBox.setStyle("-fx-background-color: #e4e4e4;");
+                        hBox.setStyle("-fx-background-color: -color-bg-overlay;");
                 });
                 hBox.setOnMouseExited(e -> {
                     if (selectedClient != null && selectedClient.getId() == user.getId())
                         hBox.setStyle("-fx-background-color: #2196f3");
                     else
-                        hBox.setStyle("-fx-background-color: #f4f4f4");
+                        hBox.setStyle("-fx-background-color: -color-bg-inset;");
                 });
                 hBox.setOnMouseClicked(e -> {
                     selectedClient = (Client) user;
                     for (Node node : userlistsub_vbox.getChildren()) {
                         if (node instanceof HBox && node != hBox) {
-                            node.setStyle("-fx-background-color: #f4f4f4");
+                            node.setStyle("-fx-background-color: -color-bg-inset;");
                         }
                     }
                     hBox.setStyle("-fx-background-color: #2196f3");

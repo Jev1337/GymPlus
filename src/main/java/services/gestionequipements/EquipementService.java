@@ -71,4 +71,14 @@ public class EquipementService implements IService<Equipements_details>{
         }
         return null;
     }
+
+    public int getEquipementCount() throws SQLException {
+        String sql = "select count(*) from equipements_details";
+        Statement st = connection.createStatement();
+        ResultSet rs = st.executeQuery(sql);
+        if (rs.next()) {
+            return rs.getInt(1);
+        }
+        return 0;
+    }
 }

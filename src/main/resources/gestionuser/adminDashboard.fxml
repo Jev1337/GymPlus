@@ -142,13 +142,13 @@
                                               <NumberAxis side="LEFT" />
                                             </yAxis>
                                           </LineChart>
-                                          <Label layoutX="81.0" layoutY="20.0" style="-fx-font-size: 18;" text="Maintenance Start Dates">
+                                          <Label layoutX="82.0" layoutY="20.0" style="-fx-font-size: 18;" text="Maintenance Start Dates">
                                              <font>
                                                 <Font name="Open Sans Regular" size="17.0" />
                                              </font>
                                           </Label>
                                           <ComboBox fx:id="stat_combobox" layoutX="318.0" layoutY="15.0" onAction="#stat_combobox_act" prefHeight="36.0" prefWidth="91.0" />
-                                          <FontAwesomeIconView glyphName="BAR_CHART" layoutX="32.0" layoutY="45.0" size="36">
+                                          <FontAwesomeIconView glyphName="BAR_CHART" layoutX="33.0" layoutY="45.0" size="36">
                                              <cursor>
                                                 <Cursor fx:constant="HAND" />
                                              </cursor>
@@ -310,7 +310,7 @@
                                           </FontAwesomeIconView>
                                        </children>
                                     </Pane>
-                                    <Pane layoutX="37.0" layoutY="395.0" prefHeight="302.0" prefWidth="624.0" styleClass="pane">
+                                    <Pane layoutX="37.0" layoutY="395.0" prefHeight="302.0" prefWidth="612.0" styleClass="pane">
                                        <children>
                                           <Label layoutX="84.0" layoutY="35.0" style="-fx-font-size: 18;" text="App Performance">
                                              <font>

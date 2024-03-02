@@ -46,6 +46,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.LineChart;
+import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -63,6 +64,9 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import okhttp3.*;
+import org.icmp4j.IcmpPingRequest;
+import org.icmp4j.IcmpPingResponse;
+import org.icmp4j.IcmpPingUtil;
 import org.json.JSONObject;
 import org.opencv.core.*;
 import org.opencv.imgcodecs.Imgcodecs;
@@ -71,6 +75,8 @@ import org.opencv.objdetect.CascadeClassifier;
 import org.opencv.objdetect.Objdetect;
 import org.opencv.objdetect.QRCodeDetector;
 import org.opencv.videoio.VideoCapture;
+import services.gestionequipements.EquipementService;
+import services.gestionequipements.MaintenancesService;
 import services.gestionuser.AbonnementService;
 import services.gestionuser.AdminService;
 import services.gestionuser.ClientService;
@@ -201,14 +207,12 @@ public class StaffDashboardController {
     @FXML
     private Button shop_btn;
 
-    @FXML
-    private BarChart<String, Number> stat_barchart;
 
     @FXML
     private ComboBox<String> stat_combobox;
 
     @FXML
-    private LineChart<String, Number> stat_linechart;
+    private LineChart<String, Integer> stat_linechart;
 
     @FXML
     private Pane EquipmentIdAdminStaff;
@@ -321,6 +325,19 @@ public class StaffDashboardController {
     @FXML
     private CheckBox legacyuserlist_cb;
 
+    @FXML
+    private PieChart piechart_gp;
+
+    @FXML
+    private Label total_equip;
+
+    @FXML
+    private Label total_maint;
+
+    @FXML
+    private Label total_income;
+
+
     private Abonnement selectedAbonnement;
     private Client selectedClient;
     private VideoCapture capture;
@@ -339,6 +356,24 @@ public class StaffDashboardController {
 
     @FXML
     private TextArea feedback_ta;
+
+    @FXML
+    private Label smtp_lat;
+
+    @FXML
+    private Label db_lat;
+
+    @FXML
+    private Label mem_us;
+
+    @FXML
+    private Label openai_lat;
+
+    @FXML
+    private Label azure_lat;
+
+    @FXML
+    private Label facepp_lat;
 
     @FXML
     private void checkver_btn_act(ActionEvent event){
@@ -860,11 +895,13 @@ public class StaffDashboardController {
     @FXML
     void home_btn_act(ActionEvent event) {
         switchToPane(StaffHomePane);
+        initCharts();
     }
 
     @FXML
     void home_btn_clicked(MouseEvent event) {
         switchToPane(StaffHomePane);
+        initCharts();
     }
 
     @FXML
@@ -1451,37 +1488,82 @@ public class StaffDashboardController {
         in.playFromStart();
     }
     private void initCharts(){
-        XYChart.Series<String,Number> series = new XYChart.Series<>();
-        series.getData().add(new XYChart.Data<>("Jan", 100));
-        series.getData().add(new XYChart.Data<>("Feb", 200));
-        series.getData().add(new XYChart.Data<>("Mar", 50));
-        series.getData().add(new XYChart.Data<>("Apr", 75));
-        series.getData().add(new XYChart.Data<>("May", 110));
-        series.getData().add(new XYChart.Data<>("Jun", 300));
-        series.getData().add(new XYChart.Data<>("Jul", 111));
-        series.getData().add(new XYChart.Data<>("Aug", 30));
-        series.getData().add(new XYChart.Data<>("Sep", 75));
-        series.getData().add(new XYChart.Data<>("Oct", 55));
-        series.getData().add(new XYChart.Data<>("Nov", 225));
-        series.getData().add(new XYChart.Data<>("Dec", 99));
-        series.setName("Lorem");
-        stat_linechart.getData().add(series);
+        try {
+            MaintenancesService maintenancesService = new MaintenancesService();
+            EquipementService equipementService = new EquipementService();
+            total_income.setText(String.valueOf(abonnementService.getCurMonthIncome()));
+            total_equip.setText(String.valueOf(equipementService.getEquipementCount()));
+            total_maint.setText(String.valueOf(maintenancesService.getMaintenancesCount()));
+            stat_linechart.getData().setAll(maintenancesService.getMaintenancesByMonth());
+            stat_linechart.setLegendVisible(false);
+            stat_combobox.setValue("Maintenances");
+        }catch (Exception e) {
+            stackTraceAlert(e);
+        }
 
-        XYChart.Series<String,Number> series2 = new XYChart.Series<>();
-        series2.getData().add(new XYChart.Data<>("Jan", 100));
-        series2.getData().add(new XYChart.Data<>("Feb", 200));
-        series2.getData().add(new XYChart.Data<>("Mar", 50));
-        series2.getData().add(new XYChart.Data<>("Apr", 75));
-        series2.getData().add(new XYChart.Data<>("May", 110));
-        series2.getData().add(new XYChart.Data<>("Jun", 300));
-        series2.getData().add(new XYChart.Data<>("Jul", 111));
-        series2.getData().add(new XYChart.Data<>("Aug", 30));
-        series2.getData().add(new XYChart.Data<>("Sep", 75));
-        series2.getData().add(new XYChart.Data<>("Oct", 55));
-        series2.getData().add(new XYChart.Data<>("Nov", 225));
-        series2.getData().add(new XYChart.Data<>("Dec", 99));
-        series2.setName("Ipsum");
-        stat_barchart.getData().add(series2);
+
+        int gp1 = 0, gp2 = 0, gp3 = 0;
+        try {
+            List<Abonnement> list = abonnementService.getAllCurrent();
+            for (Abonnement abonnement : list) {
+                if (abonnement.getType().equals("GP 1"))
+                    gp1++;
+                else if (abonnement.getType().equals("GP 2"))
+                    gp2++;
+                else if (abonnement.getType().equals("GP 3"))
+                    gp3++;
+            }
+        }catch (Exception e){
+            stackTraceAlert(e);
+        }
+        ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList(
+                new PieChart.Data("GP 1", gp1),
+                new PieChart.Data("GP 2", gp2),
+                new PieChart.Data("GP 3", gp3)
+        );
+        piechart_gp.setData(pieChartData);
+        IcmpPingRequest pingRequest = IcmpPingUtil.createIcmpPingRequest();
+        pingRequest.setHost("grandelation.com");
+        pingRequest.setTimeout(1000);
+        IcmpPingResponse pingResponse = IcmpPingUtil.executePingRequest(pingRequest);
+        if (pingResponse.getSuccessFlag()) {
+            smtp_lat.setText(pingResponse.getRtt() + "ms");
+        }else {
+            smtp_lat.setText("N/A");
+        }
+        pingRequest.setHost("localhost");
+        pingResponse = IcmpPingUtil.executePingRequest(pingRequest);
+        if (pingResponse.getSuccessFlag()) {
+            db_lat.setText(pingResponse.getRtt() + "ms");
+        }else {
+            db_lat.setText("N/A");
+        }
+        Runtime runtime = Runtime.getRuntime();
+        long memory = runtime.totalMemory() - runtime.freeMemory();
+        memory = memory / (1024 * 1024);
+        mem_us.setText(memory + "MB");
+        pingRequest.setHost("api.openai.com");
+        pingResponse = IcmpPingUtil.executePingRequest(pingRequest);
+        if (pingResponse.getSuccessFlag()) {
+            openai_lat.setText(pingResponse.getRtt() + "ms");
+        }else {
+            openai_lat.setText("N/A");
+        }
+        pingRequest.setHost("api.cognitive.microsoft.com");
+        pingResponse = IcmpPingUtil.executePingRequest(pingRequest);
+        if (pingResponse.getSuccessFlag()) {
+            azure_lat.setText(pingResponse.getRtt() + "ms");
+        }else {
+            azure_lat.setText("N/A");
+        }
+        pingRequest.setHost("dynamodb.ca-central-1.amazonaws.com");
+        pingResponse = IcmpPingUtil.executePingRequest(pingRequest);
+        if (pingResponse.getSuccessFlag()) {
+            facepp_lat.setText(pingResponse.getRtt() + "ms");
+        }else {
+            facepp_lat.setText("N/A");
+        }
+
     }
 
     private boolean validateEmail(String email){

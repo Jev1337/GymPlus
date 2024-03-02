@@ -2,12 +2,9 @@ package controllers.BlogController;
 
 import controllers.gestionuser.GlobalVar;
 import entities.gestionblog.Post;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
@@ -18,16 +15,15 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 import services.gestonblog.PostServices;
-
 import java.io.File;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 public class BlogController {
 
@@ -89,10 +85,6 @@ public class BlogController {
             Timestamp timeStamp = new Timestamp(date.getTime());
             Post p = new Post(GlobalVar.getUser().getId(), "bbb", content, timeStamp, photo, 0, 0);
             ps.add(p);
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Info");
-            alert.setContentText("post added");
-            alert.show();
             contentTxt.setText("");
             photo_tf.setText("");
             getAllFromDB();

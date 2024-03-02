@@ -11,12 +11,10 @@
     -fx-background-color: #fff;
 }
 
-
 .table-view {
     -fx-background-color: #DFE9F5;
     -fx-table-cell-border-color: transparent;
 }
-
 
 .button{
     -fx-border-radius: 50px; /* rayon des coins */

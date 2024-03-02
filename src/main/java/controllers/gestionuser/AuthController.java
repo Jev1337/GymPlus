@@ -82,8 +82,6 @@ public class AuthController {
     @FXML
     public ImageView faceid_btn;
     @FXML
-    public FontAwesomeIconView google_btn;
-    @FXML
     public Button browse_btn;
 
     @FXML
@@ -975,7 +973,6 @@ public class AuthController {
         signin_btn.setDisable(true);
         signup_switch_btn.setDisable(true);
         faceid_btn.setDisable(true);
-        google_btn.setDisable(true);
     }
     private void disableAllSU(){
         cin_tf.setDisable(true);
@@ -1075,7 +1072,6 @@ public class AuthController {
         signin_btn.setDisable(false);
         signup_switch_btn.setDisable(false);
         faceid_btn.setDisable(false);
-        google_btn.setDisable(false);
     }
 
     public void initialize() {

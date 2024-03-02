@@ -389,14 +389,13 @@ public class EquipementController {
             body = body.replace("{E1}", String.valueOf(ide));
             String host = "mail.grandelation.com";
 
-            //jakarta mail
             Properties props = new Properties();
             props.put("mail.smtp.host", host);
             props.put("mail.debug", "true");
             props.put("mail.smtp.auth", "true");
             props.put("mail.smtp.ssl.enable", "true");
             props.put("mail.smtp.port", "465");
-            //message
+
             Session session = Session.getInstance(props, null);
             MimeMessage msg = new MimeMessage(session);
             msg.setFrom(mail);

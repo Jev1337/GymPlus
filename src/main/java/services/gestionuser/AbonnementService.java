@@ -130,4 +130,29 @@ public class AbonnementService implements IService<Abonnement> {
         }
         return abonnements;
     }
+
+    public float getCurMonthIncome(){
+        float income = 0;
+        try {
+            String query1 = "SELECT SUM(prix) as income FROM abonnement_details JOIN abonnement ON abonnement_details.name = abonnement.type WHERE MONTH(DATE_ADD(dateFinAb, INTERVAL -3 MONTH)) = MONTH(NOW()) AND YEAR(DATE_ADD(dateFinAb, INTERVAL -3 MONTH)) = YEAR(NOW()) AND abonnement.type = 'GP 1'";
+            String query2 = "SELECT SUM(prix) as income FROM abonnement_details JOIN abonnement ON abonnement_details.name = abonnement.type WHERE MONTH(DATE_ADD(dateFinAb, INTERVAL -6 MONTH)) = MONTH(NOW()) AND YEAR(DATE_ADD(dateFinAb, INTERVAL -6 MONTH)) = YEAR(NOW()) AND abonnement.type = 'GP 2'";
+            String query3 = "SELECT SUM(prix) as income FROM abonnement_details JOIN abonnement ON abonnement_details.name = abonnement.type WHERE MONTH(DATE_ADD(dateFinAb, INTERVAL -12 MONTH)) = MONTH(NOW()) AND YEAR(DATE_ADD(dateFinAb, INTERVAL -12 MONTH)) = YEAR(NOW()) AND abonnement.type = 'GP 3'";
+            Statement st = connection.createStatement();
+            ResultSet rs = st.executeQuery(query1);
+            if (rs.next()) {
+                income += rs.getFloat("income");
+            }
+            rs = st.executeQuery(query2);
+            if (rs.next()) {
+                income += rs.getFloat("income");
+            }
+            rs = st.executeQuery(query3);
+            if (rs.next()) {
+                income += rs.getFloat("income");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return income;
+    }
 }

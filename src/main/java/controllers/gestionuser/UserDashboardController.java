@@ -820,6 +820,10 @@ public class UserDashboardController {
                 });
                 alert.showAndWait();
                 if (webView.getEngine().getLocation().contains("success")) {
+                    String paymentId = paymentCreated.getId();
+                    paymentCreated = PayPalConnector.getPaymentDetails(paypalConfig, paymentId);
+                    String payerId = paymentCreated.getPayer().getPayerInfo().getPayerId();
+                    PayPalConnector.executePayment(paypalConfig, paymentId, payerId);
                     alert.close();
                     return true;
                 }else {

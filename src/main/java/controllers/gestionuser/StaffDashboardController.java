@@ -65,6 +65,7 @@ import org.opencv.objdetect.CascadeClassifier;
 import org.opencv.objdetect.Objdetect;
 import org.opencv.objdetect.QRCodeDetector;
 import org.opencv.videoio.VideoCapture;
+import services.gestionevents.Event_detailsService;
 import services.gestionuser.AbonnementService;
 import services.gestionuser.ClientService;
 import services.gestionuser.StaffService;
@@ -91,6 +92,7 @@ public class StaffDashboardController {
     private final FadeInRight fadeInRightAnimation = new FadeInRight();
 
     private final Notification msg = new Notification();
+    private Event_detailsService eventDetailsService = new Event_detailsService();
 
     @FXML
     private Button subscription_btn;
@@ -326,6 +328,8 @@ public class StaffDashboardController {
 
     @FXML
     private CheckBox tts_cb;
+    @FXML
+    private Label total_events;
 
     @FXML
     private void dark_cb_act(ActionEvent event){
@@ -1117,7 +1121,7 @@ public class StaffDashboardController {
         subtype_cb.getItems().addAll(FXCollections.observableArrayList( "All","GP 1", "GP 2", "GP 3"));
         subtypeadd_cb.getItems().addAll(FXCollections.observableArrayList("GP 1", "GP 2", "GP 3"));
         subtypeedit_cb.getItems().addAll(FXCollections.observableArrayList("GP 1", "GP 2", "GP 3"));
-
+        total_events.setText(String.valueOf(eventDetailsService.total_events()));
         initProfile();
         initCharts();
         setFitToWidthAll();

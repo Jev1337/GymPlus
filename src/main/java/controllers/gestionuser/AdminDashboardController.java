@@ -58,6 +58,7 @@ import org.opencv.objdetect.CascadeClassifier;
 import org.opencv.objdetect.Objdetect;
 import org.opencv.objdetect.QRCodeDetector;
 import org.opencv.videoio.VideoCapture;
+import services.gestionevents.Event_detailsService;
 import services.gestionuser.*;
 import com.sun.jna.platform.win32.Advapi32Util;
 import com.sun.jna.platform.win32.WinReg;
@@ -466,9 +467,12 @@ public class AdminDashboardController {
 
     @FXML
     private CheckBox tts_cb;
-
+    @FXML
+    private Label total_events;
     private Abonnement selectedAbonnement;
     private Client selectedClient;
+    private Event_detailsService eventDetailsService = new Event_detailsService();
+
 
     @FXML
     private void dark_cb_act(ActionEvent event){
@@ -1393,6 +1397,7 @@ public class AdminDashboardController {
         subtype_cb.getItems().addAll(FXCollections.observableArrayList( "All","GP 1", "GP 2", "GP 3"));
         subtypeadd_cb.getItems().addAll(FXCollections.observableArrayList("GP 1", "GP 2", "GP 3"));
         subtypeedit_cb.getItems().addAll(FXCollections.observableArrayList("GP 1", "GP 2", "GP 3"));
+        total_events.setText(String.valueOf(eventDetailsService.total_events()));
         initProfile();
         initCharts();
         setFitToWidthAll();

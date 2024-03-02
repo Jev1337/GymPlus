@@ -155,6 +155,20 @@ public class Event_detailsService implements IService<Event_details> {
         }
         return eventDetailsList;
     }
+    public int total_events() {
+        String query = "SELECT COUNT(*) FROM event_details";
+        PreparedStatement ps = null;
+        try {
+            ps = connection.prepareStatement(query);
+
+        ResultSet rs = ps.executeQuery();
+        if (rs.next())
+            return rs.getInt(1);
+        return 0;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
 
 

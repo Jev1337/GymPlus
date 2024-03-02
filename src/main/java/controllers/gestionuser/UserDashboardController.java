@@ -336,6 +336,8 @@ public class UserDashboardController {
 
     @FXML
     private ImageView faceid_change;
+    @FXML
+    private Label total_events;
 
     @FXML
     private void dark_cb_act(ActionEvent event){
@@ -886,6 +888,8 @@ public class UserDashboardController {
         initSubsciption();
         initGPPrices();
         String theme = Advapi32Util.registryGetStringValue(WinReg.HKEY_CURRENT_USER, "Software\\GymPlus", "theme");
+        String nb_events= clientService.get_nb_events(GlobalVar.getUser().getId());
+        total_events.setText(nb_events);
         if (theme != null && theme.equals("dark")) {
             dark_cb.setSelected(true);
         }
@@ -1265,5 +1269,6 @@ public class UserDashboardController {
         }
         return false;
     }
+
 
 }

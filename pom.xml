@@ -201,6 +201,11 @@
                 <artifactId>biweekly</artifactId>
                 <version>0.6.4</version>
             </dependency>
+        <dependency>
+            <groupId>com.restfb</groupId>
+            <artifactId>restfb</artifactId>
+            <version>3.23.0</version>
+        </dependency>
 
 
     </dependencies>

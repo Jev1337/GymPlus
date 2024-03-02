@@ -18,7 +18,7 @@
 <?import javafx.scene.paint.Stop?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="mainPane" prefHeight="779.0" prefWidth="1153.0" style="-fx-background-color: linear-gradient(to bottom right, lightgray, floralwhite);;" stylesheets="@event.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionevents.eventfController">
+<AnchorPane fx:id="mainPane" prefHeight="779.0" prefWidth="1153.0" stylesheets="@event.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionevents.eventfController">
     <stylesheets>
         <URL value="@event.css" />
     </stylesheets>
@@ -101,9 +101,9 @@
                 </Pane>
             <Button fx:id="events" layoutX="872.0" layoutY="54.0" mnemonicParsing="false" onAction="#back_to_events" text="&lt;- Events" />
             </children></Pane>
-        <Pane fx:id="event_pane" layoutX="70.0" layoutY="56.0" prefHeight="723.0" prefWidth="1027.0" style="-fx-background-radius: 10; -fx-background-color: lightgreen4;">
+        <Pane fx:id="event_pane" layoutX="70.0" layoutY="56.0" prefHeight="723.0" prefWidth="1027.0">
             <children>
-                <Label fx:id="countdownLabel" layoutX="374.0" layoutY="563.0" prefHeight="52.0" prefWidth="336.0" />
+                <Label fx:id="countdownLabel" layoutX="305.0" layoutY="565.0" prefHeight="52.0" prefWidth="336.0" />
                 <Button fx:id="join_id" layoutX="403.0" layoutY="625.0" mnemonicParsing="false" onAction="#join_event" prefHeight="62.0" prefWidth="162.0" text="Join">
                     <font>
                         <Font size="30.0" />
@@ -124,7 +124,7 @@
                   <DropShadow />
                </effect>
                 </TableView>
-                <Label layoutX="43.0" layoutY="165.0" text="Search">
+                <Label layoutX="34.0" layoutY="140.0" text="Search">
                <font>
                   <Font name="System Bold" size="21.0" />
                </font>
@@ -144,7 +144,7 @@
                      </stops>
                   </LinearGradient>
                </textFill></Label>
-                <TextField fx:id="search_id" layoutX="42.0" layoutY="194.0" onKeyTyped="#search" promptText="Search For Events">
+                <TextField fx:id="search_id" layoutX="34.0" layoutY="176.0" onKeyTyped="#search" promptText="Search For Events">
                <effect>
                   <DropShadow />
                </effect></TextField>
@@ -152,11 +152,11 @@
                <effect>
                   <DropShadow />
                </effect></Button>
-            <ListView fx:id="list_events" layoutX="306.0" layoutY="244.0" prefHeight="312.0" prefWidth="333.0">
+            <ListView fx:id="list_events" layoutX="228.0" layoutY="244.0" prefHeight="312.0" prefWidth="601.0">
                <effect>
                   <DropShadow />
                </effect></ListView>
-            <CheckBox fx:id="check_table" layoutX="372.0" layoutY="210.0" mnemonicParsing="false" onAction="#switch_to_table" text="Table" />
+            <CheckBox fx:id="check_table" layoutX="372.0" layoutY="210.0" mnemonicParsing="false" onAction="#switch_to_table" text="Table" visible="false" />
             <ImageView fx:id="image_cover_event" fitHeight="190.0" fitWidth="1174.0" layoutX="-73.0" layoutY="-58.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../assets/images/eventsclient.png" />
@@ -173,7 +173,7 @@
                   <DropShadow />
                </effect>
             </Label>
-            <CheckBox fx:id="myevents" layoutX="612.0" layoutY="210.0" mnemonicParsing="false" onAction="#switchtomyevents" text="my events" />
+            <CheckBox fx:id="myevents" layoutX="495.0" layoutY="209.0" mnemonicParsing="false" onAction="#switchtomyevents" text="my events" />
             <Button fx:id="history_btn" layoutX="68.0" layoutY="631.0" mnemonicParsing="false" onAction="#go_to_history" text="History" />
             </children>
         </Pane>
@@ -185,6 +185,7 @@
                </effect>
             </ListView>
             <Button fx:id="rate" layoutX="525.0" layoutY="485.0" mnemonicParsing="false" onAction="#rate_event" text="Rate" />
+            <Button fx:id="back_btn" layoutX="66.0" layoutY="67.0" mnemonicParsing="false" onAction="#back_toeventsss" text="Back" />
          </children>
       </Pane>
     </children>

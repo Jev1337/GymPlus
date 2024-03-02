@@ -29,6 +29,10 @@ import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
@@ -43,9 +47,13 @@ import services.gestionevents.Event_participantsService;
 import utils.MyDatabase;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URLEncoder;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -140,6 +148,8 @@ public class eventfController {
     private ListView<Event_details> list_events1;
     @FXML
     private Button rate;
+    @FXML
+    private Button back_btn;
 
 
     public eventfController() {
@@ -528,7 +538,7 @@ public class eventfController {
             ByteArrayOutputStream qrCode = QRCode.from(icsData).to(ImageType.PNG).stream();
 
             // Display the QR code in an alert
-            displayQRCodeAlert(qrCode);
+            displayQRCodeAlert(qrCode, selectedEvent);
 
             afficher();
             afficher1();
@@ -563,7 +573,7 @@ public class eventfController {
         return Biweekly.write(ical).go();
     }
 
-    private void displayQRCodeAlert(ByteArrayOutputStream qrCode) {
+    private void displayQRCodeAlert(ByteArrayOutputStream qrCode, Event_details event) {
         try {
             // Convert the ByteArrayOutputStream to a javafx.scene.image.Image
             ByteArrayInputStream bis = new ByteArrayInputStream(qrCode.toByteArray());
@@ -581,7 +591,24 @@ public class eventfController {
             alert.setTitle("QR Code");
             alert.setHeaderText("Scan this QR code to add the event to your calendar");
             alert.setGraphic(imageView);
-            alert.showAndWait();
+
+            // Create a "Share on Twitter" button
+            ButtonType shareOnTwitterButton = new ButtonType("Share on Twitter");
+
+            // Add the "Share on Twitter" button to the alert
+            alert.getButtonTypes().add(shareOnTwitterButton);
+
+            // Add an event filter to handle the "Share on Twitter" button click
+            alert.getDialogPane().lookupButton(shareOnTwitterButton).addEventFilter(ActionEvent.ACTION, eventFilter -> {
+                // Create a Twitter post
+                createTwitterPost(event);
+
+                // Consume the event to prevent the alert from closing
+                eventFilter.consume();
+            });
+
+            // Show the alert without waiting for the user's response
+            alert.show();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -953,11 +980,17 @@ public class eventfController {
 
     @FXML
     void go_to_history(ActionEvent event) {
-        if (history.isVisible()) {
-            history.setVisible(false);
-        } else {
-            history.setVisible(true);
-        }
+
+            FadeOutRight f = new FadeOutRight(event_pane);
+            f.setOnFinished((e) -> {
+                event_pane.setVisible(false);
+                FadeInRight f2 = new FadeInRight(history);
+                history.setOpacity(0);
+                history.setVisible(true);
+                f2.play();
+            });
+            f.play();
+
     }
 
     public void afficher_history() throws SQLException {
@@ -1034,6 +1067,32 @@ public class eventfController {
 
 
         }
+    }
+    public void createTwitterPost(Event_details event) {
+        String message = "I just joined the event " + event.getName() + " on " + event.getEvent_date() + "! Join me there!";
+        try {
+            String urlEncodedMessage = URLEncoder.encode(message, "UTF-8");
+            String url = "https://twitter.com/intent/tweet?text=" + urlEncodedMessage;
+
+            if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+                Desktop.getDesktop().browse(new URI(url));
+            }
+        } catch (IOException | URISyntaxException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void back_toeventsss(ActionEvent event){
+        FadeOutRight f = new FadeOutRight(history);
+        f.setOnFinished((e) -> {
+            history.setVisible(false);
+            FadeInRight f2 = new FadeInRight(event_pane); // Apply the animation to event_pane
+            event_pane.setOpacity(0);
+            event_pane.setVisible(true);
+            f2.play();
+        });
+        f.play();
     }
 
 }

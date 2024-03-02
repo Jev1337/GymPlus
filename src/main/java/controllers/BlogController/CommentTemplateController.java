@@ -54,11 +54,10 @@ public class CommentTemplateController {
     void deleteComnt(){
         try {
             cs.delete(commentaire.getId_comment());
-            ps.minNbComnts(post);
+            PostController.comnts--;
+            post.setNbComnts(PostController.comnts);
+            ps.updateNbComnts(post);
             postController.getAllComments(post.getId_post());
-            Alert a = new Alert(Alert.AlertType.INFORMATION);
-            a.setContentText("comment deleted successfully!");
-            a.show();
         } catch (SQLException e) {
             Alert a = new Alert(Alert.AlertType.ERROR);
             a.setContentText(e.getMessage());
@@ -72,9 +71,7 @@ public class CommentTemplateController {
             cs.update(commentaire);
             content.setDisable(true);
             updateBtn.setDisable(true);
-            Alert a = new Alert(Alert.AlertType.INFORMATION);
-            a.setContentText("comment updated successfully!");
-            a.show();
+
         } catch (SQLException e) {
             Alert a = new Alert(Alert.AlertType.ERROR);
             a.setContentText(e.getMessage());

@@ -133,4 +133,14 @@ public class MaintenancesService implements IService<Maintenances>{
         }
         return series;
     }
+
+    public int getMaintenancesCount() throws SQLException {
+        String sql = "select count(*) from maintenances";
+        Statement st = connection.createStatement();
+        ResultSet rs = st.executeQuery(sql);
+        if (rs.next()) {
+            return rs.getInt(1);
+        }
+        return 0;
+    }
 }

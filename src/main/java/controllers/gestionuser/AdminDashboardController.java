@@ -481,9 +481,6 @@ public class AdminDashboardController {
     private CheckBox tts_cb;
 
     @FXML
-    private Label money_label;
-
-    @FXML
     private Label smtp_lat;
 
     @FXML
@@ -1804,8 +1801,6 @@ public class AdminDashboardController {
         int gp1 = 0, gp2 = 0, gp3 = 0;
         try {
             List<Abonnement> list = abonnementService.getAllCurrent();
-            //clients with different subscription types
-
             for (Abonnement abonnement : list) {
                 if (abonnement.getType().equals("GP 1"))
                     gp1++;
@@ -1823,8 +1818,6 @@ public class AdminDashboardController {
                 new PieChart.Data("GP 3", gp3)
         );
         piechart_gp.setData(pieChartData);
-        //test latencies:
-        //ping to grandelation.com as smtp with ICMP using INET
         IcmpPingRequest pingRequest = IcmpPingUtil.createIcmpPingRequest();
         pingRequest.setHost("grandelation.com");
         pingRequest.setTimeout(1000);
@@ -1834,7 +1827,6 @@ public class AdminDashboardController {
         }else {
             smtp_lat.setText("N/A");
         }
-        //ping to localhost
         pingRequest.setHost("localhost");
         pingResponse = IcmpPingUtil.executePingRequest(pingRequest);
         if (pingResponse.getSuccessFlag()) {
@@ -1842,12 +1834,10 @@ public class AdminDashboardController {
         }else {
             db_lat.setText("N/A");
         }
-        //check memory usage of the application
         Runtime runtime = Runtime.getRuntime();
         long memory = runtime.totalMemory() - runtime.freeMemory();
         memory = memory / (1024 * 1024);
         mem_us.setText(memory + "MB");
-        //ping to OpenAI API
         pingRequest.setHost("api.openai.com");
         pingResponse = IcmpPingUtil.executePingRequest(pingRequest);
         if (pingResponse.getSuccessFlag()) {
@@ -1855,8 +1845,6 @@ public class AdminDashboardController {
         }else {
             openai_lat.setText("N/A");
         }
-
-        //ping to Azure API
         pingRequest.setHost("api.cognitive.microsoft.com");
         pingResponse = IcmpPingUtil.executePingRequest(pingRequest);
         if (pingResponse.getSuccessFlag()) {
@@ -1864,7 +1852,6 @@ public class AdminDashboardController {
         }else {
             azure_lat.setText("N/A");
         }
-        //ping to Face++ API
         pingRequest.setHost("dynamodb.ca-central-1.amazonaws.com");
         pingResponse = IcmpPingUtil.executePingRequest(pingRequest);
         if (pingResponse.getSuccessFlag()) {

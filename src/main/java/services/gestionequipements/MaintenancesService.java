@@ -1,6 +1,7 @@
 package services.gestionequipements;
 
 import entities.gestionequipements.Maintenances;
+import javafx.scene.chart.XYChart;
 import utils.MyDatabase;
 import services.IService;
 
@@ -71,5 +72,65 @@ public class MaintenancesService implements IService<Maintenances>{
         ps.setInt(1, id);
         ResultSet rs = ps.executeQuery();
         return rs.next();
+    }
+
+    public XYChart.Series<String, Integer> getMaintenancesByMonth() throws SQLException {
+        String sql = "select count(id), monthname(date_maintenance) from maintenances group by monthname(date_maintenance)";
+        Statement st = connection.createStatement();
+        ResultSet rs = st.executeQuery(sql);
+        XYChart.Series<String, Integer> series = new XYChart.Series<>();
+        series.getData().add(new XYChart.Data<>("January", 0));
+        series.getData().add(new XYChart.Data<>("February", 0));
+        series.getData().add(new XYChart.Data<>("March", 0));
+        series.getData().add(new XYChart.Data<>("April", 0));
+        series.getData().add(new XYChart.Data<>("May", 0));
+        series.getData().add(new XYChart.Data<>("June", 0));
+        series.getData().add(new XYChart.Data<>("July", 0));
+        series.getData().add(new XYChart.Data<>("August", 0));
+        series.getData().add(new XYChart.Data<>("September", 0));
+        series.getData().add(new XYChart.Data<>("October", 0));
+        series.getData().add(new XYChart.Data<>("November", 0));
+        series.getData().add(new XYChart.Data<>("December", 0));
+        while (rs.next()) {
+            switch (rs.getString(2)) {
+                case "January":
+                    series.getData().get(0).setYValue(rs.getInt(1));
+                    break;
+                case "February":
+                    series.getData().get(1).setYValue(rs.getInt(1));
+                    break;
+                case "March":
+                    series.getData().get(2).setYValue(rs.getInt(1));
+                    break;
+                case "April":
+                    series.getData().get(3).setYValue(rs.getInt(1));
+                    break;
+                case "May":
+                    series.getData().get(4).setYValue(rs.getInt(1));
+                    break;
+                case "June":
+                    series.getData().get(5).setYValue(rs.getInt(1));
+                    break;
+                case "July":
+                    series.getData().get(6).setYValue(rs.getInt(1));
+                    break;
+                case "August":
+                    series.getData().get(7).setYValue(rs.getInt(1));
+                    break;
+                case "September":
+                    series.getData().get(8).setYValue(rs.getInt(1));
+                    break;
+                case "October":
+                    series.getData().get(9).setYValue(rs.getInt(1));
+                    break;
+                case "November":
+                    series.getData().get(10).setYValue(rs.getInt(1));
+                    break;
+                case "December":
+                    series.getData().get(11).setYValue(rs.getInt(1));
+                    break;
+            }
+        }
+        return series;
     }
 }

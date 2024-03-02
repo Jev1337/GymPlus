@@ -20,6 +20,12 @@ import entities.gestionuser.Abonnement;
 import entities.gestionuser.Client;
 import entities.gestionuser.Staff;
 import entities.gestionuser.User;
+import jakarta.mail.Multipart;
+import jakarta.mail.Session;
+import jakarta.mail.Transport;
+import jakarta.mail.internet.MimeBodyPart;
+import jakarta.mail.internet.MimeMessage;
+import jakarta.mail.internet.MimeMultipart;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -66,6 +72,7 @@ import org.opencv.objdetect.Objdetect;
 import org.opencv.objdetect.QRCodeDetector;
 import org.opencv.videoio.VideoCapture;
 import services.gestionuser.AbonnementService;
+import services.gestionuser.AdminService;
 import services.gestionuser.ClientService;
 import services.gestionuser.StaffService;
 
@@ -78,6 +85,7 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Properties;
 
 public class StaffDashboardController {
 
@@ -326,7 +334,84 @@ public class StaffDashboardController {
 
     @FXML
     private CheckBox tts_cb;
+    @FXML
+    private Button checkver_btn;
 
+    @FXML
+    private TextArea feedback_ta;
+
+    @FXML
+    private void checkver_btn_act(ActionEvent event){
+        try{
+            checkver_btn.setDisable(true);
+            OkHttpClient client = new OkHttpClient().newBuilder()
+                    .build();
+            Request request = new Request.Builder()
+                    .url("https://grandelation.com/api/gymplus/checkver")
+                    .method("GET", null)
+                    .addHeader("User-Agent", "Moyasar Payment Gateway")
+                    .build();
+            Response response = client.newCall(request).execute();
+            JSONObject jsonObject = new JSONObject(response.body().string());
+            if (jsonObject.getString("version").equals("1.0")){
+                notify("You are using the latest version of GymPlus!");
+            }else{
+                notify("A new version of GymPlus is available! Please update to the latest version.");
+            }
+            checkver_btn.setDisable(false);
+
+        }catch (Exception e){
+            stackTraceAlert(e);
+        }
+    }
+
+    @FXML
+    private void sendfeedback_btn_act(ActionEvent event){
+        try {
+            if (!validateText(feedback_ta.getText())) {
+                return;
+            }
+            String mail = "gymplus-noreply@grandelation.com";
+            String password = "yzDvS_UoSL7b";
+            List<String> emails = new AdminService().getAllAdminsEmails();
+            String to = String.join(",", emails);
+            String subject = "Maintenance Alert";
+            //the body will be "index.html" inside src/assets/html
+            File file = new File("src/assets/html/feedback.html");
+            String body = "";
+            body = new String(java.nio.file.Files.readAllBytes(file.toPath()));
+            body = body.replace("{E1}", String.valueOf(GlobalVar.getUser().getEmail()));
+            body = body.replace("{E2}", feedback_ta.getText());
+            String host = "mail.grandelation.com";
+
+            Properties props = new Properties();
+            props.put("mail.smtp.host", host);
+            props.put("mail.debug", "true");
+            props.put("mail.smtp.auth", "true");
+            props.put("mail.smtp.ssl.enable", "true");
+            props.put("mail.smtp.port", "465");
+
+            Session session = Session.getInstance(props, null);
+            MimeMessage msg = new MimeMessage(session);
+            msg.setFrom(mail);
+            msg.setRecipients(jakarta.mail.Message.RecipientType.TO, to);
+            msg.setSubject(subject);
+            msg.setSentDate(new java.util.Date());
+            MimeBodyPart mimeBodyPart = new MimeBodyPart();
+            mimeBodyPart.setContent(body, "text/html");
+            Multipart multipart = new MimeMultipart();
+            multipart.addBodyPart(mimeBodyPart);
+            msg.setContent(multipart);
+
+            Transport.send(msg, mail, password);
+            notify("Feedback has been sent successfully!");
+        }catch (Exception e){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setContentText(e.getMessage());
+            alert.showAndWait();
+        }
+    }
     @FXML
     private void dark_cb_act(ActionEvent event){
         if (dark_cb.isSelected()){

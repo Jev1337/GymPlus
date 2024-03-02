@@ -12,6 +12,12 @@ import atlantafx.base.theme.Styles;
 import atlantafx.base.util.Animations;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import entities.gestionuser.*;
+import jakarta.mail.Multipart;
+import jakarta.mail.Session;
+import jakarta.mail.Transport;
+import jakarta.mail.internet.MimeBodyPart;
+import jakarta.mail.internet.MimeMessage;
+import jakarta.mail.internet.MimeMultipart;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -32,6 +38,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.LineChart;
+import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -50,6 +57,9 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import okhttp3.*;
+import org.icmp4j.IcmpPingRequest;
+import org.icmp4j.IcmpPingResponse;
+import org.icmp4j.IcmpPingUtil;
 import org.json.JSONObject;
 import org.opencv.core.*;
 import org.opencv.imgcodecs.Imgcodecs;
@@ -58,6 +68,7 @@ import org.opencv.objdetect.CascadeClassifier;
 import org.opencv.objdetect.Objdetect;
 import org.opencv.objdetect.QRCodeDetector;
 import org.opencv.videoio.VideoCapture;
+import services.gestionequipements.MaintenancesService;
 import services.gestionuser.*;
 import com.sun.jna.platform.win32.Advapi32Util;
 import com.sun.jna.platform.win32.WinReg;
@@ -71,6 +82,7 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Properties;
 
 public class AdminDashboardController {
 
@@ -137,6 +149,9 @@ public class AdminDashboardController {
 
     @FXML
     private ComboBox<String> acctypemanage_cb;
+
+    @FXML
+    private ComboBox<String> stat_combobox;
 
     @FXML
     private TextArea address_ta;
@@ -319,13 +334,11 @@ public class AdminDashboardController {
     private TextField photomanage_tf;
 
     @FXML
-    private BarChart<String, Number> stat_barchart;
+    private PieChart piechart_gp;
+
 
     @FXML
-    private ComboBox<String> stat_combobox;
-
-    @FXML
-    private LineChart<String, Number> stat_linechart;
+    private LineChart<String, Integer> stat_linechart;
 
     @FXML
     private Pane affichage_events_adstaff= new Pane();
@@ -467,8 +480,60 @@ public class AdminDashboardController {
     @FXML
     private CheckBox tts_cb;
 
+    @FXML
+    private Label money_label;
+
+    @FXML
+    private Label smtp_lat;
+
+    @FXML
+    private Label db_lat;
+
+    @FXML
+    private Label mem_us;
+
+    @FXML
+    private Label openai_lat;
+
+    @FXML
+    private Label azure_lat;
+
+    @FXML
+    private Label facepp_lat;
+
     private Abonnement selectedAbonnement;
     private Client selectedClient;
+
+    @FXML
+    private Button checkver_btn;
+
+
+    @FXML
+    private void checkver_btn_act(ActionEvent event){
+        try{
+            checkver_btn.setDisable(true);
+            OkHttpClient client = new OkHttpClient().newBuilder()
+                    .build();
+            Request request = new Request.Builder()
+                    .url("https://grandelation.com/api/gymplus/checkver")
+                    .method("GET", null)
+                    .addHeader("User-Agent", "Moyasar Payment Gateway")
+                    .build();
+            Response response = client.newCall(request).execute();
+            JSONObject jsonObject = new JSONObject(response.body().string());
+            if (jsonObject.getString("version").equals("1.0")){
+                notify("You are using the latest version of GymPlus!");
+            }else{
+                notify("A new version of GymPlus is available! Please update to the latest version.");
+            }
+            checkver_btn.setDisable(false);
+
+        }catch (Exception e){
+            stackTraceAlert(e);
+        }
+    }
+
+
 
     @FXML
     private void dark_cb_act(ActionEvent event){
@@ -663,11 +728,13 @@ public class AdminDashboardController {
     @FXML
     void home_btn_act(ActionEvent event) {
         switchToPane(AdminHomePane);
+        initCharts();
     }
 
     @FXML
     void home_btn_clicked(MouseEvent event) {
         switchToPane(AdminHomePane);
+        initCharts();
     }
 
 
@@ -1387,9 +1454,9 @@ public class AdminDashboardController {
     public void initialize() {
         fadeInRightAnimation.setNode(AdminHomePane);
         fadeInRightAnimation.play();
-        stat_combobox.getItems().addAll(FXCollections.observableArrayList("Abonnements", "Clients", "Staff"));
         type_cb.getItems().addAll(FXCollections.observableArrayList("All", "Admin", "Staff", "Client"));
         acctypemanage_cb.getItems().addAll(FXCollections.observableArrayList("Admin", "Staff", "Client"));
+        stat_combobox.getItems().addAll(FXCollections.observableArrayList("Maintenances", "Events"));
         subtype_cb.getItems().addAll(FXCollections.observableArrayList( "All","GP 1", "GP 2", "GP 3"));
         subtypeadd_cb.getItems().addAll(FXCollections.observableArrayList("GP 1", "GP 2", "GP 3"));
         subtypeedit_cb.getItems().addAll(FXCollections.observableArrayList("GP 1", "GP 2", "GP 3"));
@@ -1702,6 +1769,7 @@ public class AdminDashboardController {
 
 
     private void initCharts(){
+
         int count1 = 0;
         try {
             count1 = clientService.getAll().size();
@@ -1723,24 +1791,16 @@ public class AdminDashboardController {
             percentactivemem_label.setText((count2 * 100) / count1 + "%");
             percentactivemem_prog.setProgress((double) (count2 * 100) / count1 / 100);
         }
+        try {
+            MaintenancesService maintenancesService = new MaintenancesService();
+            stat_linechart.getData().setAll(maintenancesService.getMaintenancesByMonth());
+            stat_linechart.setLegendVisible(false);
+            stat_combobox.setValue("Maintenances");
+        }catch (Exception e) {
+            stackTraceAlert(e);
+        }
 
-        XYChart.Series<String,Number> series = new XYChart.Series<>();
-        series.getData().add(new XYChart.Data<>("Jan", 100));
-        series.getData().add(new XYChart.Data<>("Feb", 200));
-        series.getData().add(new XYChart.Data<>("Mar", 50));
-        series.getData().add(new XYChart.Data<>("Apr", 75));
-        series.getData().add(new XYChart.Data<>("May", 110));
-        series.getData().add(new XYChart.Data<>("Jun", 300));
-        series.getData().add(new XYChart.Data<>("Jul", 111));
-        series.getData().add(new XYChart.Data<>("Aug", 30));
-        series.getData().add(new XYChart.Data<>("Sep", 75));
-        series.getData().add(new XYChart.Data<>("Oct", 55));
-        series.getData().add(new XYChart.Data<>("Nov", 225));
-        series.getData().add(new XYChart.Data<>("Dec", 99));
-        series.setName("Lorem");
-        stat_linechart.getData().add(series);
 
-        XYChart.Series<String,Number> series2 = new XYChart.Series<>();
         int gp1 = 0, gp2 = 0, gp3 = 0;
         try {
             List<Abonnement> list = abonnementService.getAllCurrent();
@@ -1757,12 +1817,63 @@ public class AdminDashboardController {
         }catch (Exception e){
             stackTraceAlert(e);
         }
-        series2.getData().add(new XYChart.Data<>("GP 1", gp1));
-        series2.getData().add(new XYChart.Data<>("GP 2", gp2));
-        series2.getData().add(new XYChart.Data<>("GP 3", gp3));
+        ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList(
+                new PieChart.Data("GP 1", gp1),
+                new PieChart.Data("GP 2", gp2),
+                new PieChart.Data("GP 3", gp3)
+        );
+        piechart_gp.setData(pieChartData);
+        //test latencies:
+        //ping to grandelation.com as smtp with ICMP using INET
+        IcmpPingRequest pingRequest = IcmpPingUtil.createIcmpPingRequest();
+        pingRequest.setHost("grandelation.com");
+        pingRequest.setTimeout(1000);
+        IcmpPingResponse pingResponse = IcmpPingUtil.executePingRequest(pingRequest);
+        if (pingResponse.getSuccessFlag()) {
+            smtp_lat.setText(pingResponse.getRtt() + "ms");
+        }else {
+            smtp_lat.setText("N/A");
+        }
+        //ping to localhost
+        pingRequest.setHost("localhost");
+        pingResponse = IcmpPingUtil.executePingRequest(pingRequest);
+        if (pingResponse.getSuccessFlag()) {
+            db_lat.setText(pingResponse.getRtt() + "ms");
+        }else {
+            db_lat.setText("N/A");
+        }
+        //check memory usage of the application
+        Runtime runtime = Runtime.getRuntime();
+        long memory = runtime.totalMemory() - runtime.freeMemory();
+        memory = memory / (1024 * 1024);
+        mem_us.setText(memory + "MB");
+        //ping to OpenAI API
+        pingRequest.setHost("api.openai.com");
+        pingResponse = IcmpPingUtil.executePingRequest(pingRequest);
+        if (pingResponse.getSuccessFlag()) {
+            openai_lat.setText(pingResponse.getRtt() + "ms");
+        }else {
+            openai_lat.setText("N/A");
+        }
 
-        series2.setName("GP Subscriptions");
-        stat_barchart.getData().add(series2);
+        //ping to Azure API
+        pingRequest.setHost("api.cognitive.microsoft.com");
+        pingResponse = IcmpPingUtil.executePingRequest(pingRequest);
+        if (pingResponse.getSuccessFlag()) {
+            azure_lat.setText(pingResponse.getRtt() + "ms");
+        }else {
+            azure_lat.setText("N/A");
+        }
+        //ping to Face++ API
+        pingRequest.setHost("dynamodb.ca-central-1.amazonaws.com");
+        pingResponse = IcmpPingUtil.executePingRequest(pingRequest);
+        if (pingResponse.getSuccessFlag()) {
+            facepp_lat.setText(pingResponse.getRtt() + "ms");
+        }else {
+            facepp_lat.setText("N/A");
+        }
+
+
     }
     private boolean validateEmail(String email){
         if(!email.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")){

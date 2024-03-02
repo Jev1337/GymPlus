@@ -1499,7 +1499,7 @@ public class AdminDashboardController {
                 hBox.setSpacing(10);
                 hBox.setPadding(new Insets(10));
 
-                hBox.setStyle("-fx-background-color: #f4f4f4");
+                hBox.setStyle("-fx-background-color: -color-bg-inset;");
                 ImageView imageView = new ImageView();
                 imageView.setFitWidth(50);
                 imageView.setFitHeight(50);
@@ -1535,19 +1535,19 @@ public class AdminDashboardController {
                     if (selectedAbonnement != null && selectedAbonnement.getId() == abonnement.getId())
                         hBox.setStyle("-fx-background-color: #2196f3");
                     else
-                        hBox.setStyle("-fx-background-color: #e0e0e0");
+                        hBox.setStyle("-fx-background-color: -color-bg-overlay;");
                 });
                 hBox.setOnMouseExited(e -> {
                     if (selectedAbonnement != null && selectedAbonnement.getId() == abonnement.getId())
                         hBox.setStyle("-fx-background-color: #2196f3");
                     else
-                        hBox.setStyle("-fx-background-color: #f4f4f4");
+                        hBox.setStyle("-fx-background-color: -color-bg-inset;");
                 });
                 hBox.setOnMouseClicked(e -> {
                     selectedAbonnement = abonnement;
                     for (Node node : subbed_vbox.getChildren()) {
                         if (node instanceof HBox && node != hBox) {
-                            node.setStyle("-fx-background-color: #f4f4f4");
+                            node.setStyle("-fx-background-color: -color-bg-overlay;");
                         }
                     }
                     hBox.setStyle("-fx-background-color: #2196f3");
@@ -1917,15 +1917,15 @@ public class AdminDashboardController {
             HBox hBox = new HBox();
             hBox.setSpacing(10);
             hBox.setPadding(new Insets(10, 10, 10, 10));
-            hBox.setStyle("-fx-background-color: #f4f4f4; -fx-border-radius: 10px; -fx-background-radius: 10px;");
+            hBox.setStyle("-fx-background-color: -color-bg-inset; -fx-border-radius: 10px; -fx-background-radius: 10px;");
             hBox.setAlignment(Pos.CENTER_LEFT);
             hBox.setPrefHeight(100);
             hBox.setCursor(Cursor.HAND);
             hBox.setOnMouseEntered(e -> {
-                hBox.setStyle("-fx-background-color: #e4e4e4; -fx-border-radius: 10px; -fx-background-radius: 10px;");
+                hBox.setStyle("-fx-background-color: -color-bg-overlay; -fx-border-radius: 10px; -fx-background-radius: 10px;");
             });
             hBox.setOnMouseExited(e -> {
-                hBox.setStyle("-fx-background-color: #f4f4f4; -fx-border-radius: 10px; -fx-background-radius: 10px;");
+                hBox.setStyle("-fx-background-color: -color-bg-inset; -fx-border-radius: 10px; -fx-background-radius: 10px;");
             });
             hBox.setOnMouseClicked(e -> {
                 if (user.getId() == GlobalVar.getUser().getId()){
@@ -2034,26 +2034,26 @@ public class AdminDashboardController {
                 HBox hBox = new HBox();
                 hBox.setSpacing(10);
                 hBox.setPadding(new Insets(10, 10, 10, 10));
-                hBox.setStyle("-fx-background-color: #f4f4f4;");
+                hBox.setStyle("-fx-background-color: -color-bg-inset;");
                 hBox.setAlignment(Pos.CENTER_LEFT);
                 hBox.setCursor(Cursor.HAND);
                 hBox.setOnMouseEntered(e -> {
                     if (selectedClient != null && selectedClient.getId() == user.getId())
                         hBox.setStyle("-fx-background-color: #2196f3");
                     else
-                        hBox.setStyle("-fx-background-color: #e4e4e4;");
+                        hBox.setStyle("-fx-background-color: -color-bg-overlay;");
                 });
                 hBox.setOnMouseExited(e -> {
                     if (selectedClient != null && selectedClient.getId() == user.getId())
                         hBox.setStyle("-fx-background-color: #2196f3");
                     else
-                        hBox.setStyle("-fx-background-color: #f4f4f4");
+                        hBox.setStyle("-fx-background-color: -color-bg-inset;");
                 });
                 hBox.setOnMouseClicked(e -> {
                     selectedClient = (Client) user;
                     for (Node node : userlistsub_vbox.getChildren()) {
                         if (node instanceof HBox && node != hBox) {
-                            node.setStyle("-fx-background-color: #f4f4f4");
+                            node.setStyle("-fx-background-color: -color-bg-inset;");
                         }
                     }
                     hBox.setStyle("-fx-background-color: #2196f3");

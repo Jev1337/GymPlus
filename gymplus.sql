@@ -85,6 +85,20 @@ CREATE TABLE `detailfacture` (
   `prixTotalArticle` float DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `livraison`
+--
+CREATE TABLE `livraison` (
+                             `idLivraison` int(11) NOT NULL,
+                             `idFacture` int(11) DEFAULT NULL,
+                             `idClient` int(11) DEFAULT NULL,
+                             `Lieu` varchar(255) DEFAULT NULL,
+                             `etat` varchar(100) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 -- --------------------------------------------------------
 
 --
@@ -279,12 +293,25 @@ ALTER TABLE `abonnement_details`
   ADD PRIMARY KEY (`name`);
 
 --
+-- AUTO_INCREMENT pour la table `livraison`
+--
+ALTER TABLE `livraison`
+    MODIFY `idLivraison` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- Index pour la table `livraison`
+--
+ALTER TABLE `livraison`
+    ADD PRIMARY KEY (`idLivraison`);
+--
 -- Indexes for table `commentaire`
 --
 ALTER TABLE `commentaire`
   ADD PRIMARY KEY (`id_comment`),
   ADD KEY `user_id` (`user_id`),
   ADD KEY `commentaire_ibfk_2` (`id_post`);
+
+
 
 --
 -- Indexes for table `detailfacture`

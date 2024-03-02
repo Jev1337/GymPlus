@@ -1,6 +1,7 @@
 package controllers.gestionStore;
 
 import controllers.gestionuser.GlobalVar;
+import entities.gestionStore.Livraison;
 import entities.gestionStore.detailfacture;
 import entities.gestionStore.facture;
 import entities.gestionStore.produit;
@@ -50,9 +51,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.SQLException;
-import java.util.Date;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class InterfaceStoreController implements Initializable {
 
@@ -828,6 +827,45 @@ public class InterfaceStoreController implements Initializable {
         Panier.setVisible(false);
         GetAllProduit.setVisible(true);
     }
+
+//    public String a ="Latitude: 55.26315789473682, Longitude: -75.28846153846153, lieu :Baie-d'Hudson" ;
+    public String a ="Baie-Hudson" ;
+
+//    public String b = "Latitude: -22.5, Longitude:-151.44230769230768, lieu :Rurutu";
+//    public String c = "Latitude: 40.26315789473685, Longitude:19.90384615384616, lieu :kurvelesh";
+    public String b = "Rurutu";
+    public String c = "kurvelesh";
+    List<String> list = new ArrayList<>();
+
+
+    public Livraison ajouter() throws SQLException {
+        list.add(a);
+        list.add(b);
+        list.add(c);
+
+        Random rand = new Random();
+        String location = list.get(rand.nextInt(list.size()));
+        Livraison l = new Livraison();
+
+        int IdderniereFacture = factureService.getDerniereFacture().getIdFacture();
+        l.setIdFacture(IdderniereFacture);
+        l.setIdClient(GlobalVar.getUser().getId());
+//        if(!villeLabel.getText().isEmpty()) {
+//            l.setLieu(villeLabel.getText());
+//        }
+//        else
+//        {
+            villeLabel.setText(location);
+            l.setLieu(villeLabel.getText());
+//            System.out.println("lieu a: " + villeLabel.getText());
+//        l.setLieu("Rurutu");
+        l.setEtat("en cours");
+
+        System.out.println("jawekkk behyyyyy");
+
+        return l;
+    }
+
     @FXML
     void ValiderPanier(ActionEvent event)
     {
@@ -854,7 +892,7 @@ public class InterfaceStoreController implements Initializable {
     @FXML
     private WebView WebViewMap;
     @FXML
-    private Label villeLabel;
+    private Label villeLabel = new Label();
 
     private static String getCityName(double latitude, double longitude) {
         String cityName = "Unknown";
@@ -930,7 +968,7 @@ public class InterfaceStoreController implements Initializable {
         //villeLabel.setText("Latitude: " + latitude + ", Longitude: " + longitude);
         String a = getCityName(latitude , longitude);
         //System.out.println("a : " + a );
-        villeLabel.setText("Latitude: " + latitude + ", Longitude: " + longitude + "lieu :" + a);
+        villeLabel.setText("Latitude: " + latitude + ", Longitude: " + longitude + ", lieu :" + a);
 
     }
 

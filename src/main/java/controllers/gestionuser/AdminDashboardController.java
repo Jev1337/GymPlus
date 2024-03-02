@@ -1044,7 +1044,7 @@ public class AdminDashboardController {
                     adminService.getUserByEmail(emailmanage_tf.getText()) != null
                     || staffService.getUserByEmail(emailmanage_tf.getText()) != null
                     || clientService.getUserByEmail(emailmanage_tf.getText()) != null
-                || clientService.getUserByUsername(usernamemanage_tf.getText()) != null
+                    || clientService.getUserByUsername(usernamemanage_tf.getText()) != null
                     || staffService.getUserByUsername(usernamemanage_tf.getText()) != null
                     || adminService.getUserByUsername(usernamemanage_tf.getText()) != null){
                 errorAlert("Duplicate entry", "Duplicate entry", "A user with the same username, email or CIN already exists");
@@ -1419,13 +1419,14 @@ public class AdminDashboardController {
         hidepane.getChildren().add(progressIndicator);
 
         try {
-            Pane event_pane= FXMLLoader.load(getClass().getResource("/gestionevents/eventstaffadmin.fxml"));
-            affichage_events_adstaff.getChildren().setAll(event_pane);
-            Pane pane_equi= FXMLLoader.load(getClass().getResource("/gestionequipement/equipement.fxml"));
-            EquipmentIdAdminStaff.getChildren().setAll(pane_equi);
-
+            Pane pane= FXMLLoader.load(getClass().getResource("/gestionevents/eventstaffadmin.fxml"));
+            affichage_events_adstaff.getChildren().setAll(pane);
+            Pane pane_event= FXMLLoader.load(getClass().getResource("/gestionequipement/equipement.fxml"));
+            EquipmentIdAdminStaff.getChildren().setAll(pane_event);
+            Pane pane_st = FXMLLoader.load(getClass().getResource("/resourcesGestionStore/InterfaceStore.fxml"));
+            storeId.getChildren().setAll(pane_st);
         } catch (IOException e) {
-            stackTraceAlert(e);
+            System.err.println(e.getMessage());
         }
         String tts = Advapi32Util.registryGetStringValue(WinReg.HKEY_CURRENT_USER, "Software\\GymPlus", "tts");
         if (tts != null && tts.equals("true")) {
@@ -1460,25 +1461,7 @@ public class AdminDashboardController {
         warning.setLayoutX(50);
         warning.setLayoutY(50);
         warning.setPrefWidth(1075);
-        if (!subpane.getChildren().contains(warning)) {
-            subpane.getChildren().add(warning);
-        }
-
-        try {
-            Pane pane1= FXMLLoader.load(getClass().getResource("/gestionevents/eventstaffadmin.fxml"));
-            affichage_events_adstaff.getChildren().setAll(pane1);
-            Pane pane_event= FXMLLoader.load(getClass().getResource("/gestionequipement/equipement.fxml"));
-            EquipmentIdAdminStaff.getChildren().setAll(pane_event);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
-            Pane pane2= FXMLLoader.load(getClass().getResource("/resourcesGestionStore/InterfaceStore.fxml"));
-            storeId.getChildren().setAll(pane2);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+        pane.getChildren().add(warning);
     }
     private void initSubList(String type, String search){
         selectedAbonnement = null;
@@ -2142,30 +2125,30 @@ public class AdminDashboardController {
     }
 
     private void stackTraceAlert(Exception exception){
-            var alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Exception Dialog");
-            alert.setHeaderText("An exception occurred");
-            alert.setContentText("An exception occurred, please check the stacktrace below");
+        var alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Exception Dialog");
+        alert.setHeaderText("An exception occurred");
+        alert.setContentText("An exception occurred, please check the stacktrace below");
 
-            var stringWriter = new StringWriter();
-            var printWriter = new PrintWriter(stringWriter);
-            exception.printStackTrace(printWriter);
+        var stringWriter = new StringWriter();
+        var printWriter = new PrintWriter(stringWriter);
+        exception.printStackTrace(printWriter);
 
-            var textArea = new TextArea(stringWriter.toString());
-            textArea.setEditable(false);
-            textArea.setWrapText(false);
-            textArea.setMaxWidth(Double.MAX_VALUE);
-            textArea.setMaxHeight(Double.MAX_VALUE);
-            GridPane.setVgrow(textArea, Priority.ALWAYS);
-            GridPane.setHgrow(textArea, Priority.ALWAYS);
+        var textArea = new TextArea(stringWriter.toString());
+        textArea.setEditable(false);
+        textArea.setWrapText(false);
+        textArea.setMaxWidth(Double.MAX_VALUE);
+        textArea.setMaxHeight(Double.MAX_VALUE);
+        GridPane.setVgrow(textArea, Priority.ALWAYS);
+        GridPane.setHgrow(textArea, Priority.ALWAYS);
 
-            var content = new GridPane();
-            content.setMaxWidth(Double.MAX_VALUE);
-            content.add(new Label("Full stacktrace:"), 0, 0);
-            content.add(textArea, 0, 1);
+        var content = new GridPane();
+        content.setMaxWidth(Double.MAX_VALUE);
+        content.add(new Label("Full stacktrace:"), 0, 0);
+        content.add(textArea, 0, 1);
 
-            alert.initOwner(AdminInfoPane.getScene().getWindow());
-            alert.getDialogPane().setExpandableContent(content);
-            alert.showAndWait();
+        alert.initOwner(AdminInfoPane.getScene().getWindow());
+        alert.getDialogPane().setExpandableContent(content);
+        alert.showAndWait();
     }
 }

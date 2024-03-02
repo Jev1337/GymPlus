@@ -4,6 +4,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.logging.Logger;
+
+import controllers.gestionStore.InterfaceStoreController;
+import controllers.gestionuser.GlobalVar;
+import entities.gestionStore.Livraison;
 import entities.gestionStore.detailfacture;
 import entities.gestionStore.facture;
 import entities.gestionStore.produit;
@@ -152,12 +156,17 @@ public class PanierService
         return contenuPanier;
     }
 
+
     public void Valider()
     {
         try
         {
             FactureService fs = new FactureService();
             fs.add(MonPanier);
+
+            LivraisonService LS = new LivraisonService();
+            InterfaceStoreController i = new InterfaceStoreController();
+            LS.add(i.ajouter());
         }
         catch (SQLException e)
         {

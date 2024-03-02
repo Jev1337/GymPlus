@@ -60,7 +60,7 @@
                         <Font size="13.0" />
                      </font>
                   </Label>
-                  <TextField id="NameFX" fx:id="NameFX2" layoutX="172.0" layoutY="53.0" promptText="Nom Produit" styleClass="gradient-Background" />
+                  <TextField id="NameFX" fx:id="NameFX2" layoutX="172.0" layoutY="53.0" promptText="Name Product" styleClass="gradient-Background" />
                   <Label layoutX="29.0" layoutY="103.0" prefHeight="25.0" prefWidth="42.0" text="Price">
                      <font>
                         <Font size="13.0" />
@@ -71,9 +71,9 @@
                         <Font size="13.0" />
                      </font>
                   </Label>
-                  <TextField id="PrixFX" fx:id="PrixFX1" layoutX="172.0" layoutY="103.0" promptText="Prix" styleClass="gradient-Background" />
+                  <TextField id="PrixFX" fx:id="PrixFX1" layoutX="172.0" layoutY="103.0" promptText="Price" styleClass="gradient-Background" />
                   <TextField id="StockFX" fx:id="StockFX1" layoutX="172.0" layoutY="149.0" promptText="Stock" styleClass="gradient-Background" />
-                  <TextField id="SeuilFX" fx:id="SeuilFX1" layoutX="172.0" layoutY="205.0" promptText="Seuil" styleClass="gradient-Background" />
+                  <TextField id="SeuilFX" fx:id="SeuilFX1" layoutX="172.0" layoutY="205.0" promptText="Limit" styleClass="gradient-Background" />
                   <Label layoutX="29.0" layoutY="205.0" prefHeight="25.0" prefWidth="42.0" text="Limit">
                      <font>
                         <Font size="13.0" />
@@ -89,7 +89,7 @@
                         <Font size="13.0" />
                      </font>
                   </Label>
-                  <Label id="promoFX" layoutX="29.0" layoutY="378.0" prefHeight="17.0" prefWidth="84.0" text="Promo">
+                  <Label id="promoFX" layoutX="29.0" layoutY="378.0" prefHeight="17.0" prefWidth="84.0" text="Discount">
                      <font>
                         <Font size="13.0" />
                      </font>
@@ -100,7 +100,7 @@
                         <Font size="13.0" />
                      </font>
                   </Button>
-                  <TextField fx:id="PromoFX1" layoutX="172.0" layoutY="375.0" styleClass="gradient-Background" />
+                  <TextField fx:id="PromoFX1" layoutX="172.0" layoutY="375.0" promptText="Discount" styleClass="gradient-Background" />
                   <Label fx:id="PhotoPath1" layoutX="321.0" layoutY="317.0" prefHeight="27.0" prefWidth="171.0" />
                </children>
             </Pane>
@@ -555,12 +555,12 @@
                         <Font size="13.0" />
                      </font>
                   </Label>
-                  <TextField id="NameFX" fx:id="NameFX" layoutX="198.0" layoutY="35.0" promptText="Nom Produit" styleClass="gradient-Background" text="Name Product" />
-                  <TextArea id="DescriptionFX" fx:id="DescriptionFX" layoutX="198.0" layoutY="396.0" prefHeight="116.0" prefWidth="149.0" promptText="Description..." styleClass="gradient-Background" text="Description..." />
-                  <TextField id="PrixFX" fx:id="PrixFX" layoutX="199.0" layoutY="86.0" promptText="Prix" styleClass="gradient-Background" text="Price" />
-                  <TextField id="StockFX" fx:id="StockFX" layoutX="199.0" layoutY="136.0" promptText="Stock" styleClass="gradient-Background" text="Stock" />
-                  <TextField id="SeuilFX" fx:id="SeuilFX" layoutX="198.0" layoutY="186.0" promptText="Seuil" styleClass="gradient-Background" text="Limit" />
-                  <TextField fx:id="PromoFX" layoutX="198.0" layoutY="338.0" promptText="Promo" styleClass="gradient-Background" text="Discount" />
+                  <TextField id="NameFX" fx:id="NameFX" layoutX="198.0" layoutY="35.0" promptText="Nom Produit" styleClass="gradient-Background" />
+                  <TextArea id="DescriptionFX" fx:id="DescriptionFX" layoutX="198.0" layoutY="396.0" prefHeight="116.0" prefWidth="149.0" promptText="Description..." styleClass="gradient-Background" />
+                  <TextField id="PrixFX" fx:id="PrixFX" layoutX="199.0" layoutY="86.0" promptText="Prix" styleClass="gradient-Background" />
+                  <TextField id="StockFX" fx:id="StockFX" layoutX="199.0" layoutY="136.0" promptText="Stock" styleClass="gradient-Background" />
+                  <TextField id="SeuilFX" fx:id="SeuilFX" layoutX="198.0" layoutY="186.0" promptText="Seuil" styleClass="gradient-Background" />
+                  <TextField fx:id="PromoFX" layoutX="198.0" layoutY="338.0" promptText="Discount" styleClass="gradient-Background" />
                   <ComboBox id="Categorie_Combo" fx:id="Categorie_Combo" layoutX="198.0" layoutY="238.0" onAction="#Select" prefHeight="25.0" prefWidth="149.0" styleClass="gradient-Background" stylesheets="@store.css">
                      <effect>
                         <Lighting diffuseConstant="2.0" specularConstant="0.0">

@@ -10,6 +10,10 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.ColorAdjust?>
+<?import javafx.scene.effect.Light.Distant?>
+<?import javafx.scene.effect.Lighting?>
+<?import javafx.scene.effect.Shadow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -20,54 +24,15 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.web.WebView?>
 
-<AnchorPane prefHeight="757.0" prefWidth="1153.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionStore.InterfaceStoreController">
+<AnchorPane prefHeight="757.0" prefWidth="1153.0" styleClass="white-Background" stylesheets="@store.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionStore.InterfaceStoreController">
    <children>
-      <Pane fx:id="UpdateProduit" prefHeight="757.0" prefWidth="1153.0" styleClass="white-Background" stylesheets="@store.css" visible="false">
+      <Pane fx:id="UpdateProduit" prefHeight="772.0" prefWidth="1168.0" styleClass="white-Background" stylesheets="@store.css" visible="false">
          <children>
-            <Label layoutX="477.0" layoutY="155.0" text="Product Name">
+            <Label layoutX="477.0" layoutY="632.0" prefHeight="27.0" prefWidth="69.0" text="Description" visible="false">
                <font>
                   <Font size="13.0" />
                </font></Label>
-            <Label layoutX="477.0" layoutY="204.0" prefHeight="25.0" prefWidth="42.0" text="Price">
-               <font>
-                  <Font size="13.0" />
-               </font></Label>
-            <Label layoutX="477.0" layoutY="259.0" prefHeight="19.0" prefWidth="42.0" text="Stock">
-               <font>
-                  <Font size="13.0" />
-               </font></Label>
-            <Label layoutX="477.0" layoutY="309.0" prefHeight="25.0" prefWidth="42.0" text="Limit">
-               <font>
-                  <Font size="13.0" />
-               </font></Label>
-            <Label layoutX="477.0" layoutY="514.0" prefHeight="25.0" prefWidth="69.0" text="Description" visible="false">
-               <font>
-                  <Font size="13.0" />
-               </font></Label>
-            <Label layoutX="477.0" layoutY="363.0" prefHeight="25.0" prefWidth="68.0" text="Category">
-               <font>
-                  <Font size="13.0" />
-               </font></Label>
-            <Label layoutX="477.0" layoutY="415.0" prefHeight="25.0" prefWidth="42.0" text="Photo">
-               <font>
-                  <Font size="13.0" />
-               </font></Label>
-            <TextField id="NameFX" fx:id="NameFX2" layoutX="606.0" layoutY="151.0" promptText="Nom Produit" styleClass="gradient-Background" />
-            <TextArea id="DescriptionFX" fx:id="DescriptionFX1" layoutX="607.0" layoutY="510.0" prefHeight="116.0" prefWidth="149.0" promptText="Description..." styleClass="gradient-Background" visible="false" />
-            <TextField id="PrixFX" fx:id="PrixFX1" layoutX="606.0" layoutY="204.0" promptText="Prix" styleClass="gradient-Background" />
-            <TextField id="StockFX" fx:id="StockFX1" layoutX="606.0" layoutY="255.0" promptText="Stock" styleClass="gradient-Background" />
-            <TextField id="SeuilFX" fx:id="SeuilFX1" layoutX="606.0" layoutY="306.0" promptText="Seuil" styleClass="gradient-Background" />
-            <Label id="promoFX" layoutX="477.0" layoutY="467.0" prefHeight="17.0" prefWidth="84.0" text="Promo">
-               <font>
-                  <Font size="13.0" />
-               </font></Label>
-            <TextField fx:id="PromoFX1" layoutX="606.0" layoutY="463.0" styleClass="gradient-Background" />
-            <ComboBox id="Categorie_Combo" fx:id="Categorie_Combo1" layoutX="606.0" layoutY="359.0" onAction="#combo_update" prefWidth="150.0" styleClass="gradient-Background" />
-            <Button fx:id="ChoisirPhotoFX1" layoutX="606.0" layoutY="409.0" mnemonicParsing="false" onMouseClicked="#choisirPhotoUpdate" prefHeight="25.0" prefWidth="149.0" text="Select Photo">
-               <font>
-                  <Font size="13.0" />
-               </font></Button>
-            <Label fx:id="PhotoPath1" layoutX="776.0" layoutY="415.0" prefHeight="17.0" prefWidth="201.0" />
+            <TextArea id="DescriptionFX" fx:id="DescriptionFX1" layoutX="607.0" layoutY="623.0" prefHeight="116.0" prefWidth="149.0" promptText="Description..." styleClass="gradient-Background" visible="false" />
             <VBox prefHeight="757.0" prefWidth="205.0" styleClass="white-Background" stylesheets="@store.css">
                <children>
                   <Label prefHeight="55.0" prefWidth="211.0" text="   Update Product" textFill="BLUE">
@@ -88,6 +53,57 @@
                   </HBox>
                </children>
             </VBox>
+            <Pane fx:id="aucunProduit2" layoutX="412.0" layoutY="169.0" prefHeight="434.0" prefWidth="508.0" style="-fx-background-radius: 20; -fx-background-color: #DFE9F5;">
+               <children>
+                  <Label layoutX="29.0" layoutY="56.0" text="Product Name">
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                  </Label>
+                  <TextField id="NameFX" fx:id="NameFX2" layoutX="172.0" layoutY="53.0" promptText="Name Product" styleClass="gradient-Background" />
+                  <Label layoutX="29.0" layoutY="103.0" prefHeight="25.0" prefWidth="42.0" text="Price">
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="29.0" layoutY="152.0" prefHeight="19.0" prefWidth="42.0" text="Stock">
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                  </Label>
+                  <TextField id="PrixFX" fx:id="PrixFX1" layoutX="172.0" layoutY="103.0" promptText="Price" styleClass="gradient-Background" />
+                  <TextField id="StockFX" fx:id="StockFX1" layoutX="172.0" layoutY="149.0" promptText="Stock" styleClass="gradient-Background" />
+                  <TextField id="SeuilFX" fx:id="SeuilFX1" layoutX="172.0" layoutY="205.0" promptText="Limit" styleClass="gradient-Background" />
+                  <Label layoutX="29.0" layoutY="205.0" prefHeight="25.0" prefWidth="42.0" text="Limit">
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="29.0" layoutY="264.0" prefHeight="25.0" prefWidth="68.0" text="Category">
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="29.0" layoutY="318.0" prefHeight="25.0" prefWidth="42.0" text="Photo">
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                  </Label>
+                  <Label id="promoFX" layoutX="29.0" layoutY="378.0" prefHeight="17.0" prefWidth="84.0" text="Discount">
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                  </Label>
+                  <ComboBox id="Categorie_Combo" fx:id="Categorie_Combo1" layoutX="172.0" layoutY="264.0" onAction="#combo_update" prefWidth="150.0" styleClass="gradient-Background" />
+                  <Button fx:id="ChoisirPhotoFX1" layoutX="173.0" layoutY="317.0" mnemonicParsing="false" onMouseClicked="#choisirPhotoUpdate" prefHeight="25.0" prefWidth="149.0" text="Select Photo">
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                  </Button>
+                  <TextField fx:id="PromoFX1" layoutX="172.0" layoutY="375.0" promptText="Discount" styleClass="gradient-Background" />
+                  <Label fx:id="PhotoPath1" layoutX="321.0" layoutY="317.0" prefHeight="27.0" prefWidth="171.0" />
+               </children>
+            </Pane>
          </children></Pane>
       <Pane fx:id="GetOneProduit" prefHeight="757.0" prefWidth="1153.0" styleClass="white-Background" stylesheets="@store.css" visible="false">
          <children>
@@ -288,7 +304,7 @@
             </TableView>
             <Button layoutX="565.0" layoutY="624.0" mnemonicParsing="false" onAction="#RefreshTable" prefHeight="30.0" prefWidth="205.0" styleClass="bleu-Background" stylesheets="@store.css" text="refresh" />
          </children></Pane>
-      <Pane fx:id="GetOneFacture" prefHeight="757.0" prefWidth="1153.0" styleClass="white-Background" stylesheets="@store.css" visible="false">
+      <Pane fx:id="GetOneFacture" prefHeight="772.0" prefWidth="1168.0" styleClass="white-Background" stylesheets="@store.css" visible="false">
          <children>
             <TableView fx:id="ViewDetailFacture" layoutX="439.0" layoutY="197.0" prefHeight="300.0" prefWidth="560.0" styleClass="bleu-Background" stylesheets="@store.css">
                <columns>
@@ -322,6 +338,8 @@
                      <font>
                         <Font size="13.0" />
                      </font></Button>
+                  <HBox prefHeight="31.0" prefWidth="208.0" />
+                  <Button mnemonicParsing="false" onAction="#PaiementStipe" prefHeight="30.0" prefWidth="205.0" text="Paiement Stripe" />
                </children>
             </VBox>
             <Label layoutX="269.0" layoutY="60.0" text="Id Invoice">
@@ -367,9 +385,9 @@
          </children></Pane>
       <Pane fx:id="GetAllProduit" prefHeight="767.0" prefWidth="1163.0" styleClass="white-Background" stylesheets="@store.css">
          <children>
-            <VBox prefHeight="757.0" prefWidth="208.0" styleClass="white-Background" stylesheets="@store.css">
+            <VBox prefHeight="767.0" prefWidth="208.0" styleClass="white-Background" stylesheets="@store.css">
                <children>
-                  <ImageView fitHeight="208.0" fitWidth="247.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="207.0" fitWidth="221.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../assets/images/GymplusLogo.png" />
                      </image>
@@ -424,6 +442,12 @@
                      <font>
                         <Font size="13.0" />
                      </font></Button>
+                  <Label fx:id="stockProductFX" prefHeight="38.0" prefWidth="206.0" text="Stock Product" textFill="BLUE">
+                     <font>
+                        <Font name="Calibri Light Italic" size="20.0" />
+                     </font>
+                  </Label>
+                  <Button fx:id="BtnStock" mnemonicParsing="false" onAction="#checkStock" prefHeight="30.0" prefWidth="208.0" text="Check Stock" />
                </children>
             </VBox>
             <VBox layoutX="215.0" prefHeight="757.0" prefWidth="938.0" styleClass="white-Background" stylesheets="@store.css">
@@ -433,19 +457,9 @@
                         <Font name="Calibri Light Italic" size="20.0" />
                      </font>
                   </Label>
-                  <ScrollPane prefHeight="111.0" prefWidth="434.0" styleClass="white-Background" stylesheets="@store.css">
+                  <ScrollPane prefHeight="213.0" prefWidth="938.0" styleClass="white-Background" stylesheets="@store.css">
                      <content>
-                        <HBox fx:id="HBoxRecentlyAdded" prefHeight="109.0" prefWidth="952.0" styleClass="white-Background" stylesheets="@store.css" />
-                     </content>
-                  </ScrollPane>
-                  <Label text="Recommended For You" textFill="BLUE">
-                     <font>
-                        <Font name="Calibri Light Italic" size="20.0" />
-                     </font>
-                  </Label>
-                  <ScrollPane prefHeight="109.0" prefWidth="435.0">
-                     <content>
-                        <HBox prefHeight="108.0" prefWidth="951.0" styleClass="white-Background" stylesheets="@store.css" />
+                        <HBox fx:id="HBoxRecentlyAdded" prefHeight="199.0" prefWidth="952.0" styleClass="white-Background" stylesheets="@store.css" />
                      </content>
                   </ScrollPane>
                   <Label text="All Product" textFill="BLUE">
@@ -471,44 +485,6 @@
       </Pane>
       <Pane fx:id="AddProduit" prefHeight="767.0" prefWidth="1163.0" styleClass="white-Background" stylesheets="@store.css" visible="false">
          <children>
-            <Label layoutX="475.0" layoutY="125.0" text="Name Product">
-               <font>
-                  <Font size="13.0" />
-               </font></Label>
-            <Label layoutX="477.0" layoutY="178.0" prefHeight="17.0" prefWidth="69.0" text="Price">
-               <font>
-                  <Font size="13.0" />
-               </font></Label>
-            <Label layoutX="475.0" layoutY="228.0" prefHeight="17.0" prefWidth="69.0" text="Stock">
-               <font>
-                  <Font size="13.0" />
-               </font></Label>
-            <Label layoutX="475.0" layoutY="278.0" prefHeight="17.0" prefWidth="69.0" text="Limit">
-               <font>
-                  <Font size="13.0" />
-               </font></Label>
-            <Label layoutX="475.0" layoutY="482.0" prefHeight="17.0" prefWidth="69.0" text="Description">
-               <font>
-                  <Font size="13.0" />
-               </font></Label>
-            <Label layoutX="473.0" layoutY="330.0" prefHeight="17.0" prefWidth="69.0" text="Category">
-               <font>
-                  <Font size="13.0" />
-               </font></Label>
-            <Label layoutX="475.0" layoutY="379.0" prefHeight="17.0" prefWidth="69.0" text="Photo">
-               <font>
-                  <Font size="13.0" />
-               </font></Label>
-            <TextField id="NameFX" fx:id="NameFX" layoutX="614.0" layoutY="121.0" promptText="Nom Produit" styleClass="gradient-Background" />
-            <TextArea id="DescriptionFX" fx:id="DescriptionFX" layoutX="614.0" layoutY="482.0" prefHeight="116.0" prefWidth="149.0" promptText="Description..." styleClass="gradient-Background" />
-            <TextField id="PrixFX" fx:id="PrixFX" layoutX="614.0" layoutY="174.0" promptText="Prix" styleClass="gradient-Background" />
-            <TextField id="StockFX" fx:id="StockFX" layoutX="614.0" layoutY="224.0" promptText="Stock" styleClass="gradient-Background" />
-            <TextField id="SeuilFX" fx:id="SeuilFX" layoutX="614.0" layoutY="274.0" promptText="Seuil" styleClass="gradient-Background" />
-            <Label id="promoFX" layoutX="475.0" layoutY="430.0" prefHeight="17.0" prefWidth="84.0" text="Discount">
-               <font>
-                  <Font size="13.0" />
-               </font></Label>
-            <TextField fx:id="PromoFX" layoutX="614.0" layoutY="426.0" promptText="Promo" styleClass="gradient-Background" />
             <VBox prefHeight="767.0" prefWidth="209.0" styleClass="white-Background">
                <children>
                   <Label prefHeight="48.0" prefWidth="211.0" text="      Add Product" textFill="BLUE">
@@ -537,12 +513,120 @@
                      </font></Button>
                </children>
             </VBox>
-            <ComboBox id="Categorie_Combo" fx:id="Categorie_Combo" layoutX="614.0" layoutY="326.0" onAction="#Select" prefHeight="25.0" prefWidth="149.0" styleClass="gradient-Background" stylesheets="@store.css" />
-            <Button fx:id="ChoisirPhotoFX" layoutX="614.0" layoutY="374.0" mnemonicParsing="false" onMouseClicked="#choisirPhoto" prefHeight="27.0" prefWidth="150.0" styleClass="gradient-Background" stylesheets="@store.css" text="Select Photo">
-               <font>
-                  <Font size="13.0" />
-               </font></Button>
-            <Label fx:id="PhotoPath" layoutX="812.0" layoutY="373.0" prefHeight="30.0" prefWidth="210.0" />
+            <Pane fx:id="aucunProduit1" layoutX="453.0" layoutY="114.0" prefHeight="557.0" prefWidth="560.0" style="-fx-background-radius: 20; -fx-background-color: #DFE9F5;">
+               <children>
+                  <Label layoutX="75.0" layoutY="38.0" text="Name Product">
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="75.0" layoutY="89.0" prefHeight="17.0" prefWidth="69.0" text="Price">
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="75.0" layoutY="139.0" prefHeight="17.0" prefWidth="69.0" text="Stock">
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="75.0" layoutY="189.0" prefHeight="17.0" prefWidth="69.0" text="Limit">
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="75.0" layoutY="393.0" prefHeight="17.0" prefWidth="69.0" text="Description">
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="75.0" layoutY="241.0" prefHeight="17.0" prefWidth="69.0" text="Category">
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="75.0" layoutY="290.0" prefHeight="17.0" prefWidth="69.0" text="Photo">
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                  </Label>
+                  <Label id="promoFX" layoutX="75.0" layoutY="341.0" prefHeight="17.0" prefWidth="84.0" text="Discount">
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                  </Label>
+                  <TextField id="NameFX" fx:id="NameFX" layoutX="198.0" layoutY="35.0" promptText="Nom Produit" styleClass="gradient-Background" />
+                  <TextArea id="DescriptionFX" fx:id="DescriptionFX" layoutX="198.0" layoutY="396.0" prefHeight="116.0" prefWidth="149.0" promptText="Description..." styleClass="gradient-Background" />
+                  <TextField id="PrixFX" fx:id="PrixFX" layoutX="199.0" layoutY="86.0" promptText="Prix" styleClass="gradient-Background" />
+                  <TextField id="StockFX" fx:id="StockFX" layoutX="199.0" layoutY="136.0" promptText="Stock" styleClass="gradient-Background" />
+                  <TextField id="SeuilFX" fx:id="SeuilFX" layoutX="198.0" layoutY="186.0" promptText="Seuil" styleClass="gradient-Background" />
+                  <TextField fx:id="PromoFX" layoutX="198.0" layoutY="338.0" promptText="Discount" styleClass="gradient-Background" />
+                  <ComboBox id="Categorie_Combo" fx:id="Categorie_Combo" layoutX="198.0" layoutY="238.0" onAction="#Select" prefHeight="25.0" prefWidth="149.0" styleClass="gradient-Background" stylesheets="@store.css">
+                     <effect>
+                        <Lighting diffuseConstant="2.0" specularConstant="0.0">
+                           <bumpInput>
+                              <Shadow />
+                           </bumpInput>
+                           <light>
+                              <Light.Distant />
+                           </light>
+                        </Lighting>
+                     </effect>
+                  </ComboBox>
+                  <Button fx:id="ChoisirPhotoFX" layoutX="198.0" layoutY="286.0" mnemonicParsing="false" onMouseClicked="#choisirPhoto" prefHeight="27.0" prefWidth="150.0" stylesheets="@store.css" text="Select Photo">
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                     <effect>
+                        <ColorAdjust contrast="1.0" saturation="0.08" />
+                     </effect>
+                  </Button>
+                  <Label fx:id="PhotoPath" layoutX="357.0" layoutY="286.0" prefHeight="30.0" prefWidth="201.0" />
+               </children>
+            </Pane>
          </children></Pane>
+      <Pane fx:id="stock_pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="772.0" prefWidth="1168.0" visible="false">
+         <children>
+            <Pane fx:id="aucunProduit" layoutX="435.0" layoutY="167.0" prefHeight="368.0" prefWidth="521.0" style="-fx-background-radius: 20; -fx-background-color: #DFE9F5;" visible="false">
+               <children>
+                  <Label layoutX="66.0" layoutY="62.0" prefHeight="72.0" prefWidth="389.0" text="Tous nos produits sont disponibles en quantité suffisante. ">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="82.0" layoutY="184.0" prefHeight="38.0" prefWidth="358.0" text="Aucun problème de stock à signaler pour le moment.">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Label>
+               </children>
+            </Pane>
+            <Pane fx:id="prodexist" layoutX="432.0" layoutY="167.0" prefHeight="368.0" prefWidth="521.0" style="-fx-background-radius: 20; -fx-background-color: #DFE9F5;">
+               <children>
+                  <HBox fx:id="hboxStock" layoutX="138.0" layoutY="53.0" prefHeight="262.0" prefWidth="245.0" />
+               </children>
+            </Pane>
+            <VBox prefHeight="772.0" prefWidth="208.0">
+               <children>
+                  <Label prefHeight="56.0" prefWidth="211.0" text="      Check Stock" textFill="BLUE">
+                     <font>
+                        <Font size="23.0" />
+                     </font>
+                  </Label>
+                  <ImageView fitHeight="207.0" fitWidth="221.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../assets/images/GymplusLogo.png" />
+                     </image>
+                  </ImageView>
+                  <HBox prefHeight="63.0" prefWidth="208.0" />
+                  <Button mnemonicParsing="false" onAction="#ExitFromStock" prefHeight="30.0" prefWidth="208.0" text="Exit">
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                  </Button>
+               </children>
+            </VBox>
+         </children>
+      </Pane>
    </children>
 </AnchorPane>

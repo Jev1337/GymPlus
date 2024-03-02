@@ -85,6 +85,20 @@ CREATE TABLE `detailfacture` (
   `prixTotalArticle` float DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `livraison`
+--
+CREATE TABLE `livraison` (
+                             `idLivraison` int(11) NOT NULL,
+                             `idFacture` int(11) DEFAULT NULL,
+                             `idClient` int(11) DEFAULT NULL,
+                             `Lieu` varchar(255) DEFAULT NULL,
+                             `etat` varchar(100) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 -- --------------------------------------------------------
 
 --
@@ -125,15 +139,15 @@ CREATE TABLE `event_details` (
 CREATE TABLE `event_participants` (
   `event_details_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
-  'rate' int(11) DEFAULT NULL
+  `rate` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE `black_listed` (
-                                `id_user` int(11) NOT NULL,
-                                `start_ban` date NOT NULL DEFAULT current_timestamp(),
-                                `end_ban` date NOT NULL DEFAULT current_timestamp()
+  `id_user` int(11) NOT NULL,
+  `start_ban` date NOT NULL DEFAULT current_timestamp(),
+  `end_ban` date NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-COMMIT;
+
 -- --------------------------------------------------------
 
 --
@@ -279,12 +293,25 @@ ALTER TABLE `abonnement_details`
   ADD PRIMARY KEY (`name`);
 
 --
+-- AUTO_INCREMENT pour la table `livraison`
+--
+ALTER TABLE `livraison`
+    MODIFY `idLivraison` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- Index pour la table `livraison`
+--
+ALTER TABLE `livraison`
+    ADD PRIMARY KEY (`idLivraison`);
+--
 -- Indexes for table `commentaire`
 --
 ALTER TABLE `commentaire`
   ADD PRIMARY KEY (`id_comment`),
   ADD KEY `user_id` (`user_id`),
   ADD KEY `commentaire_ibfk_2` (`id_post`);
+
+
 
 --
 -- Indexes for table `detailfacture`
@@ -469,13 +496,6 @@ ALTER TABLE `objectif`
 ALTER TABLE `planning`
   ADD CONSTRAINT `planning_ibfk_1` FOREIGN KEY (`idObjectif`) REFERENCES `objectif` (`idObjectif`);
 
-
---
--- Constraints for table `post`
---
-ALTER TABLE `post`
-  ADD CONSTRAINT `post_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-COMMIT;
 
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

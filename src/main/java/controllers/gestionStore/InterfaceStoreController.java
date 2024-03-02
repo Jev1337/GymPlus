@@ -1,6 +1,7 @@
 package controllers.gestionStore;
 
 import controllers.gestionuser.GlobalVar;
+import entities.gestionStore.Livraison;
 import entities.gestionStore.detailfacture;
 import entities.gestionStore.facture;
 import entities.gestionStore.produit;
@@ -50,9 +51,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.SQLException;
-import java.util.Date;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class InterfaceStoreController implements Initializable {
 
@@ -71,6 +70,8 @@ public class InterfaceStoreController implements Initializable {
     private Label GetAllFactureLB;
     @FXML
     private Pane GetAllProduit;
+    @FXML
+    private Pane stock_pane;
     @FXML
     private Pane GetOneFacture;
     @FXML
@@ -93,6 +94,18 @@ public class InterfaceStoreController implements Initializable {
     private ComboBox<String> boxMontantFX;
     @FXML
     private TextField searchFX;
+
+    //*****Check Stock
+    @FXML
+    private Button BtnStock;
+    @FXML
+    private Label stockProductFX;
+    @FXML
+    private Pane aucunProduit;
+    @FXML
+    private Pane prodexist;
+    @FXML
+    private HBox hboxStock;
 
     //*****AddProduit
     @FXML
@@ -223,6 +236,7 @@ public class InterfaceStoreController implements Initializable {
     }
     private facture fc = new facture();
     private final FactureService factureService = new FactureService();
+    String pathPhoto = "file:///D:/projet_PI/GymPlus/src/assets/imageProduit/";
 
 
     //*****GetAllProduit
@@ -256,6 +270,55 @@ public class InterfaceStoreController implements Initializable {
     void boxMontant(ActionEvent event)
     {
         String s = boxMontantFX.getSelectionModel().getSelectedItem().toString();
+    }
+
+    public void ProductRecentlyAdded()
+    {
+        try {
+            ProduitService prodService = new ProduitService();
+
+            ObservableList<produit> produits = FXCollections.observableArrayList(prodService.getLatestProducts(3));
+
+            afficherRecentyAddedHbox(produits);
+
+        } catch (SQLException e)
+        {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erreur");
+            alert.setHeaderText("Erreur lors du chargement des factures");
+            alert.setContentText("Une erreur s'est produite lors du chargement des factures depuis la base de données.");
+            alert.showAndWait();
+        }
+    }
+
+    public void afficherRecentyAddedHbox( ObservableList<produit> produits)
+    {
+
+        for (produit p : produits)
+        {
+            String photo = p.getPhoto();
+            ImageView imageView = new ImageView(new Image(pathPhoto + photo));
+
+            Label nameLabel = new Label(p.getName());
+            Label priceLabel = new Label(String.valueOf(p.getPrix()));
+
+            VBox productBox = new VBox();
+            productBox.getChildren().addAll(imageView, nameLabel, priceLabel);
+
+            // gestionnaire d'événements quand je clik sur photo
+            final int productId = p.getIdProduit();
+            imageView.setOnMouseClicked(event -> {
+                GetAllProduit.setVisible(false);
+                GetOneProduit.setVisible(true);
+
+                loadProductDetails(productId);
+                System.out.println("rania****" + productId);
+
+            });
+
+            HBoxRecentlyAdded.getChildren().add(productBox);
+        }
+
     }
 
     public void AfficherAllProduct()
@@ -349,7 +412,10 @@ public class InterfaceStoreController implements Initializable {
             String nom = produit.getName();
             float prix = produit.getPrix();
 
-            Image imageP = new Image("file:///D:/projet_PI/GymPlus/imageProduit/" + photo);
+            //Image imageP = new Image("file:///D:/projet_PI/GymPlus/imageProduit/" + photo);
+            //Image imageP = new Image("file:///D:/projet_PI/GymPlus/src/assets/imageProduit/" + photo);
+            Image imageP = new Image(pathPhoto + photo);
+
 
             ImageView imageView = new ImageView(imageP);
             Label labelPhoto = new Label();
@@ -370,7 +436,6 @@ public class InterfaceStoreController implements Initializable {
                 GetOneProduit.setVisible(true);
 
                 loadProductDetails(productId);
-                System.out.println("rania****" + productId);
 
             });
 
@@ -397,8 +462,80 @@ public class InterfaceStoreController implements Initializable {
         ProductContainer.setVgap(10);
     }
 
+    @FXML
+    void checkStock(ActionEvent event) throws IOException, SQLException {
+        GetAllProduit.setVisible(false);
+        stock_pane.setVisible(true);
+
+        checkStockAndAlert();
+    }
 
 
+
+    //*****Check Stock
+    public void checkStockAndAlert() throws SQLException {
+
+        ProduitService prodService = new ProduitService();
+        List<produit> produits = prodService.getAll();
+
+        boolean stockInsuffisant = false;
+
+        for (produit p : produits)
+        {
+            if (p.getStock() <= p.getSeuil())
+            {
+                prodexist.setVisible(true);
+                aucunProduit.setVisible(false);
+
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Erreur");
+                alert.setContentText("Stock épuisé pour le produit id : " + p.getIdProduit() + "name : " + p.getName());
+                alert.showAndWait();
+
+                afficherProdStockinsuffHbox(p);
+
+                stockInsuffisant = true;
+
+            }
+        }
+        if (!stockInsuffisant)
+        {
+            prodexist.setVisible(false);
+            aucunProduit.setVisible(true);
+        }
+
+
+    }
+
+    public void afficherProdStockinsuffHbox(produit p)
+    {
+
+        String photo = p.getPhoto();
+        ImageView imageView = new ImageView(new Image(pathPhoto + photo));
+
+        Label nameLabel = new Label("name Product :" + p.getName());
+        Label idProduitLabel = new Label(" id Product :" + String.valueOf(p.getIdProduit()));
+        Label stockLabel = new Label("stock :" + String.valueOf(p.getStock()));
+        Label limitLabel = new Label("limit :" + String.valueOf(p.getSeuil()));
+
+        VBox productBox = new VBox();
+        productBox.getChildren().addAll(imageView, idProduitLabel, nameLabel, stockLabel, limitLabel);
+
+        imageView.setOnMouseClicked(event -> {
+            stock_pane.setVisible(false);
+            UpdateProduit.setVisible(true);
+        });
+
+        hboxStock.getChildren().add(productBox);
+
+    }
+
+    @FXML
+    void ExitFromStock(ActionEvent event) {
+        stock_pane.setVisible(false);
+        GetAllProduit.setVisible(true);
+        refreshProductList();
+    }
 
 
     //*****AddProduit
@@ -447,7 +584,7 @@ public class InterfaceStoreController implements Initializable {
     }
 
     @FXML
-    void naviger(ActionEvent event) {
+    void naviger(ActionEvent event) throws SQLException {
         AddProduit.setVisible(false);
         GetAllProduit.setVisible(true);
         refreshProductList();
@@ -455,10 +592,12 @@ public class InterfaceStoreController implements Initializable {
 
     public void refreshProductList() {
         ProductContainer.getChildren().clear();
+        HBoxRecentlyAdded.getChildren().clear();
         filterProducts(searchFX.getText());
         trierProduitsMontant(boxMontantFX.getValue());
         trierProduitsCategorie(boxCategorieFX.getValue());
         AfficherAllProduct();
+        ProductRecentlyAdded();
     }
 
 
@@ -498,8 +637,7 @@ public class InterfaceStoreController implements Initializable {
     }
 
     @FXML
-    void Quittez(ActionEvent event)
-    {
+    void Quittez(ActionEvent event) throws SQLException {
         GetOneProduit.setVisible(false);
         GetAllProduit.setVisible(true);
         refreshProductList();
@@ -689,6 +827,45 @@ public class InterfaceStoreController implements Initializable {
         Panier.setVisible(false);
         GetAllProduit.setVisible(true);
     }
+
+//    public String a ="Latitude: 55.26315789473682, Longitude: -75.28846153846153, lieu :Baie-d'Hudson" ;
+    public String a ="Baie-Hudson" ;
+
+//    public String b = "Latitude: -22.5, Longitude:-151.44230769230768, lieu :Rurutu";
+//    public String c = "Latitude: 40.26315789473685, Longitude:19.90384615384616, lieu :kurvelesh";
+    public String b = "Rurutu";
+    public String c = "kurvelesh";
+    List<String> list = new ArrayList<>();
+
+
+    public Livraison ajouter() throws SQLException {
+        list.add(a);
+        list.add(b);
+        list.add(c);
+
+        Random rand = new Random();
+        String location = list.get(rand.nextInt(list.size()));
+        Livraison l = new Livraison();
+
+        int IdderniereFacture = factureService.getDerniereFacture().getIdFacture();
+        l.setIdFacture(IdderniereFacture);
+        l.setIdClient(GlobalVar.getUser().getId());
+//        if(!villeLabel.getText().isEmpty()) {
+//            l.setLieu(villeLabel.getText());
+//        }
+//        else
+//        {
+            villeLabel.setText(location);
+            l.setLieu(villeLabel.getText());
+//            System.out.println("lieu a: " + villeLabel.getText());
+//        l.setLieu("Rurutu");
+        l.setEtat("en cours");
+
+        System.out.println("jawekkk behyyyyy");
+
+        return l;
+    }
+
     @FXML
     void ValiderPanier(ActionEvent event)
     {
@@ -715,7 +892,7 @@ public class InterfaceStoreController implements Initializable {
     @FXML
     private WebView WebViewMap;
     @FXML
-    private Label villeLabel;
+    private Label villeLabel = new Label();
 
     private static String getCityName(double latitude, double longitude) {
         String cityName = "Unknown";
@@ -791,7 +968,7 @@ public class InterfaceStoreController implements Initializable {
         //villeLabel.setText("Latitude: " + latitude + ", Longitude: " + longitude);
         String a = getCityName(latitude , longitude);
         //System.out.println("a : " + a );
-        villeLabel.setText("Latitude: " + latitude + ", Longitude: " + longitude + "lieu :" + a);
+        villeLabel.setText("Latitude: " + latitude + ", Longitude: " + longitude + ", lieu :" + a);
 
     }
 
@@ -846,7 +1023,9 @@ public class InterfaceStoreController implements Initializable {
                 float prixtotalArticle = lp.get(i).getPrixtotalArticle();
                 int quantite = lp.get(i).getQuantite();
 
-                Image imageP = new Image("file:///D:/projet_PI/GymPlus/imageProduit/" + photo);
+                //Image imageP = new Image("file:///D:/projet_PI/GymPlus/imageProduit/" + photo);
+                Image imageP = new Image(pathPhoto + photo);
+
                 ImageView imageView = new ImageView(imageP);
 
                 Label labelPhoto = new Label();
@@ -1149,8 +1328,40 @@ public class InterfaceStoreController implements Initializable {
         }
     }
 
+    @FXML
+    void PaiementStipe(ActionEvent event) throws IOException {
+
+            int totalStripe = Integer.parseInt(idFactureFX.getText());
+            System.out.println("button paiement stripe :" + totalStripe);
+
+                FXMLLoader loader = new FXMLLoader();
+                loader.setLocation(getClass().getResource("/resourcesGestionStore/Payment.fxml"));
+                GetOneFacture = loader.load();
+
+                //UpdateOneFactureController upF = loader.getController();
+                //upF.setFacture(selectedFacture.getIdFacture() );//, GlobalVar.getUser().getId());
+
+                ScaleTransition st = new ScaleTransition(Duration.millis(100), GetOneFacture);
+                st.setInterpolator(Interpolator.EASE_IN);
+                st.setFromX(0);
+                st.setFromY(0);
+                st.setToX(1);
+                st.setToY(1);
+                Stage stage = new Stage();
+                stage.setTitle("Payment");
+                Scene scene = new Scene(GetOneFacture, 576, 430);
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.initStyle(StageStyle.DECORATED);
+                scene.setFill(Color.TRANSPARENT);
+                stage.setResizable(false);
+                stage.setScene(scene);
+                stage.show();
+
+    }
+
     private void writeInvoiceDataToPDF(PDDocument document) throws IOException
     {
+        /*
         // Charger l'image depuis le fichier
         //String imagePath = "../../assets/profileuploads/USERIMG11111111.png";
 
@@ -1234,7 +1445,121 @@ public class InterfaceStoreController implements Initializable {
             throw new RuntimeException(e);
         }
 
+         */
+        // Récupérer les données de la facture
+//        String date = String.valueOf(this.Facture.getDateVente());
+//        String total = String.valueOf(this.Facture.getPrixtotalPaye());
+//        String idClient = GlobalVar.getUser().getFirstname();
+//        String idFacture = String.valueOf(this.Facture.getIdFacture());
+        String date = DateFX.getText();
+        String total = TotalFactureFX.getText();
+        String idClient = idClientFX.getText();
+        String idFacture = idFactureFX.getText();
+
+
+        try (PDPageContentStream contentStream = new PDPageContentStream(document, document.getPage(0))) {
+            contentStream.setNonStrokingColor(java.awt.Color.decode("#0000FF"));
+            contentStream.setFont(PDType1Font.HELVETICA_BOLD, 20);
+            contentStream.beginText();
+            contentStream.newLineAtOffset(250, 700);
+            contentStream.showText("GymPlus");
+            contentStream.endText();
+
+            contentStream.setNonStrokingColor(java.awt.Color.BLACK);
+            contentStream.setFont(PDType1Font.TIMES_ROMAN, 12);
+            contentStream.beginText();
+            contentStream.newLineAtOffset(70, 680);
+            contentStream.newLineAtOffset(0, -20);
+            contentStream.showText("Date: " + date);
+            contentStream.newLineAtOffset(0, -20);
+            contentStream.showText("Total Facture: " + total);
+            contentStream.newLineAtOffset(0, -20);
+            contentStream.showText("ID Client: " + idClient);
+            contentStream.newLineAtOffset(0, -20);
+            contentStream.showText("ID Facture: " + idFacture);
+            contentStream.endText();
+
+            contentStream.setNonStrokingColor(java.awt.Color.decode("#0000FF"));
+            contentStream.setFont(PDType1Font.HELVETICA_BOLD, 12);
+            contentStream.beginText();
+            contentStream.newLineAtOffset(70, 580);
+            contentStream.showText("Detail Facture");
+            contentStream.endText();
+
+            float xPosition = 70;
+            float yPosition = 560;
+            ObservableList<detailfacture> detailFactureList = FXCollections.observableArrayList(dfS.getDetailFacture(Integer.parseInt(idFacture)));
+
+
+            // Dessiner les bordures du tableau
+            float tableWidth = 480; // Largeur totale du tableau
+            float tableHeight = 20 * (detailFactureList.size() + 1); // Hauteur totale du tableau
+            float yStart = yPosition; // Position verticale de départ du tableau
+            float yEnd = yStart - tableHeight; // Position verticale de fin du tableau
+
+            // Dessiner les lignes horizontales
+            contentStream.setStrokingColor(java.awt.Color.white);
+            contentStream.setLineWidth(1f); // Épaisseur de la ligne
+
+            // Ligne supérieure du tableau
+            contentStream.moveTo(xPosition, yStart);
+            contentStream.lineTo(xPosition + tableWidth, yStart);
+            contentStream.stroke();
+
+            // Dessiner les lignes verticales
+            float columnWidth = tableWidth / 5; // Largeur de chaque colonne
+
+            // Boucle pour dessiner les lignes verticales séparant les colonnes
+            for (int i = 1; i < 6; i++) {
+                float x = xPosition + i * columnWidth;
+                contentStream.moveTo(x, yStart);
+                contentStream.lineTo(x, yEnd);
+                contentStream.stroke();
+            }
+
+            // Affichage des en-têtes du tableau
+            contentStream.beginText();
+            contentStream.setNonStrokingColor(java.awt.Color.BLACK);
+            contentStream.setFont(PDType1Font.HELVETICA_BOLD, 12);
+            contentStream.newLineAtOffset(xPosition + 5, yPosition);
+            contentStream.showText("ID Detail");
+            contentStream.newLineAtOffset(columnWidth, 0);
+            contentStream.showText("ID Produit");
+            contentStream.newLineAtOffset(columnWidth, 0);
+            contentStream.showText("Prix unitaire");
+            contentStream.newLineAtOffset(columnWidth, 0);
+            contentStream.showText("Quantite");
+            contentStream.newLineAtOffset(columnWidth, 0);
+            contentStream.showText("Total Article");
+            contentStream.endText();
+            yPosition -= 20; // Ajuster l'espacement vertical pour le contenu
+
+            // Affichage des détails de la facture dans le PDF
+            for (detailfacture detail : detailFactureList) {
+                contentStream.beginText();
+                contentStream.setNonStrokingColor(java.awt.Color.BLACK);
+                contentStream.setFont(PDType1Font.TIMES_ROMAN, 12);
+                contentStream.newLineAtOffset(xPosition, yPosition);
+                contentStream.showText(String.valueOf(detail.getIdDetailFacture()));
+                contentStream.newLineAtOffset(columnWidth, 0);
+                contentStream.showText(String.valueOf(detail.getIdProduit()));
+                contentStream.newLineAtOffset(columnWidth, 0);
+                contentStream.showText(String.valueOf(detail.getPrixVenteUnitaire()));
+                contentStream.newLineAtOffset(columnWidth, 0);
+                contentStream.showText(String.valueOf(detail.getQuantite()));
+                contentStream.newLineAtOffset(columnWidth, 0);
+                contentStream.showText(String.valueOf(detail.getPrixVenteUnitaire() * detail.getQuantite() * (1 - detail.getTauxRemise())));
+                contentStream.endText();
+                yPosition -= 20; // Ajuster l'espacement vertical entre les détails de la facture
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
+
+
+
+
 
     public void setFacture(facture selectedFacture)
     {
@@ -1350,6 +1675,9 @@ public class InterfaceStoreController implements Initializable {
 
             AddProdFX.setVisible(false);
             AddProdFX.setManaged(false);
+
+            BtnStock.setVisible(false);
+            stockProductFX.setVisible(false);
         }
 
         //comboBox categorie
@@ -1382,6 +1710,7 @@ public class InterfaceStoreController implements Initializable {
         trierProduitsMontant(boxMontantFX.getValue());
         trierProduitsCategorie(boxCategorieFX.getValue());
         AfficherAllProduct();
+        ProductRecentlyAdded();
 
 
         //*****Add Produit

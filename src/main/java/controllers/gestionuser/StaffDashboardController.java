@@ -20,6 +20,12 @@ import entities.gestionuser.Abonnement;
 import entities.gestionuser.Client;
 import entities.gestionuser.Staff;
 import entities.gestionuser.User;
+import jakarta.mail.Multipart;
+import jakarta.mail.Session;
+import jakarta.mail.Transport;
+import jakarta.mail.internet.MimeBodyPart;
+import jakarta.mail.internet.MimeMessage;
+import jakarta.mail.internet.MimeMultipart;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -40,6 +46,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.LineChart;
+import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -57,6 +64,9 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import okhttp3.*;
+import org.icmp4j.IcmpPingRequest;
+import org.icmp4j.IcmpPingResponse;
+import org.icmp4j.IcmpPingUtil;
 import org.json.JSONObject;
 import org.opencv.core.*;
 import org.opencv.imgcodecs.Imgcodecs;
@@ -66,7 +76,10 @@ import org.opencv.objdetect.Objdetect;
 import org.opencv.objdetect.QRCodeDetector;
 import org.opencv.videoio.VideoCapture;
 import services.gestionevents.Event_detailsService;
+import services.gestionequipements.EquipementService;
+import services.gestionequipements.MaintenancesService;
 import services.gestionuser.AbonnementService;
+import services.gestionuser.AdminService;
 import services.gestionuser.ClientService;
 import services.gestionuser.StaffService;
 
@@ -79,6 +92,7 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Properties;
 
 public class StaffDashboardController {
 
@@ -195,14 +209,12 @@ public class StaffDashboardController {
     @FXML
     private Button shop_btn;
 
-    @FXML
-    private BarChart<String, Number> stat_barchart;
 
     @FXML
     private ComboBox<String> stat_combobox;
 
     @FXML
-    private LineChart<String, Number> stat_linechart;
+    private LineChart<String, Integer> stat_linechart;
 
     @FXML
     private Pane EquipmentIdAdminStaff;
@@ -315,6 +327,19 @@ public class StaffDashboardController {
     @FXML
     private CheckBox legacyuserlist_cb;
 
+    @FXML
+    private PieChart piechart_gp;
+
+    @FXML
+    private Label total_equip;
+
+    @FXML
+    private Label total_maint;
+
+    @FXML
+    private Label total_income;
+
+
     private Abonnement selectedAbonnement;
     private Client selectedClient;
     private VideoCapture capture;
@@ -330,7 +355,102 @@ public class StaffDashboardController {
     private CheckBox tts_cb;
     @FXML
     private Label total_events;
+    @FXML
+    private Button checkver_btn;
 
+    @FXML
+    private TextArea feedback_ta;
+
+    @FXML
+    private Label smtp_lat;
+
+    @FXML
+    private Label db_lat;
+
+    @FXML
+    private Label mem_us;
+
+    @FXML
+    private Label openai_lat;
+
+    @FXML
+    private Label azure_lat;
+
+    @FXML
+    private Label facepp_lat;
+
+    @FXML
+    private void checkver_btn_act(ActionEvent event){
+        try{
+            checkver_btn.setDisable(true);
+            OkHttpClient client = new OkHttpClient().newBuilder()
+                    .build();
+            Request request = new Request.Builder()
+                    .url("https://grandelation.com/api/gymplus/checkver")
+                    .method("GET", null)
+                    .addHeader("User-Agent", "Moyasar Payment Gateway")
+                    .build();
+            Response response = client.newCall(request).execute();
+            JSONObject jsonObject = new JSONObject(response.body().string());
+            if (jsonObject.getString("version").equals("1.0")){
+                notify("You are using the latest version of GymPlus!");
+            }else{
+                notify("A new version of GymPlus is available! Please update to the latest version.");
+            }
+            checkver_btn.setDisable(false);
+
+        }catch (Exception e){
+            stackTraceAlert(e);
+        }
+    }
+
+    @FXML
+    private void sendfeedback_btn_act(ActionEvent event){
+        try {
+            if (!validateText(feedback_ta.getText())) {
+                return;
+            }
+            String mail = "gymplus-noreply@grandelation.com";
+            String password = "yzDvS_UoSL7b";
+            List<String> emails = new AdminService().getAllAdminsEmails();
+            String to = String.join(",", emails);
+            String subject = "Maintenance Alert";
+            //the body will be "index.html" inside src/assets/html
+            File file = new File("src/assets/html/feedback.html");
+            String body = "";
+            body = new String(java.nio.file.Files.readAllBytes(file.toPath()));
+            body = body.replace("{E1}", String.valueOf(GlobalVar.getUser().getEmail()));
+            body = body.replace("{E2}", feedback_ta.getText());
+            String host = "mail.grandelation.com";
+
+            Properties props = new Properties();
+            props.put("mail.smtp.host", host);
+            props.put("mail.debug", "true");
+            props.put("mail.smtp.auth", "true");
+            props.put("mail.smtp.ssl.enable", "true");
+            props.put("mail.smtp.port", "465");
+
+            Session session = Session.getInstance(props, null);
+            MimeMessage msg = new MimeMessage(session);
+            msg.setFrom(mail);
+            msg.setRecipients(jakarta.mail.Message.RecipientType.TO, to);
+            msg.setSubject(subject);
+            msg.setSentDate(new java.util.Date());
+            MimeBodyPart mimeBodyPart = new MimeBodyPart();
+            mimeBodyPart.setContent(body, "text/html");
+            Multipart multipart = new MimeMultipart();
+            multipart.addBodyPart(mimeBodyPart);
+            msg.setContent(multipart);
+
+            Transport.send(msg, mail, password);
+            notify("Feedback has been sent successfully!");
+        }catch (Exception e){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setContentText(e.getMessage());
+            alert.showAndWait();
+        }
+    }
     @FXML
     private void dark_cb_act(ActionEvent event){
         if (dark_cb.isSelected()){
@@ -779,11 +899,13 @@ public class StaffDashboardController {
     @FXML
     void home_btn_act(ActionEvent event) {
         switchToPane(StaffHomePane);
+        initCharts();
     }
 
     @FXML
     void home_btn_clicked(MouseEvent event) {
         switchToPane(StaffHomePane);
+        initCharts();
     }
 
     @FXML
@@ -1205,7 +1327,7 @@ public class StaffDashboardController {
                 HBox hBox = new HBox();
                 hBox.setSpacing(10);
                 hBox.setPadding(new Insets(10, 10, 10, 10));
-                hBox.setStyle("-fx-background-color: #f4f4f4;");
+                hBox.setStyle("-fx-background-color: -color-bg-inset;");
                 hBox.setAlignment(Pos.CENTER_LEFT);
                 hBox.setCursor(Cursor.HAND);
                 hBox.setOnMouseEntered(e -> {
@@ -1218,13 +1340,13 @@ public class StaffDashboardController {
                     if (selectedClient != null && selectedClient.getId() == user.getId())
                         hBox.setStyle("-fx-background-color: #2196f3");
                     else
-                        hBox.setStyle("-fx-background-color: #f4f4f4");
+                        hBox.setStyle("-fx-background-color: -color-bg-inset;");
                 });
                 hBox.setOnMouseClicked(e -> {
                     selectedClient = (Client) user;
                     for (Node node : userlistsub_vbox.getChildren()) {
                         if (node instanceof HBox && node != hBox) {
-                            node.setStyle("-fx-background-color: #f4f4f4");
+                            node.setStyle("-fx-background-color: -color-bg-inset;");
                         }
                     }
                     hBox.setStyle("-fx-background-color: #2196f3");
@@ -1286,7 +1408,7 @@ public class StaffDashboardController {
                 hBox.setSpacing(10);
                 hBox.setPadding(new Insets(10));
 
-                hBox.setStyle("-fx-background-color: #f4f4f4");
+                hBox.setStyle("-fx-background-color: -color-bg-inset;");
                 ImageView imageView = new ImageView();
                 imageView.setFitWidth(50);
                 imageView.setFitHeight(50);
@@ -1322,19 +1444,19 @@ public class StaffDashboardController {
                     if (selectedAbonnement != null && selectedAbonnement.getId() == abonnement.getId())
                         hBox.setStyle("-fx-background-color: #2196f3");
                     else
-                        hBox.setStyle("-fx-background-color: #e0e0e0");
+                        hBox.setStyle("-fx-background-color: -color-bg-overlay;");
                 });
                 hBox.setOnMouseExited(e -> {
                     if (selectedAbonnement != null && selectedAbonnement.getId() == abonnement.getId())
                         hBox.setStyle("-fx-background-color: #2196f3");
                     else
-                        hBox.setStyle("-fx-background-color: #f4f4f4");
+                        hBox.setStyle("-fx-background-color: -color-bg-inset;");
                 });
                 hBox.setOnMouseClicked(e -> {
                     selectedAbonnement = abonnement;
                     for (Node node : subbed_vbox.getChildren()) {
                         if (node instanceof HBox && node != hBox) {
-                            node.setStyle("-fx-background-color: #f4f4f4");
+                            node.setStyle("-fx-background-color: -color-bg-inset;");
                         }
                     }
                     hBox.setStyle("-fx-background-color: #2196f3");
@@ -1370,37 +1492,82 @@ public class StaffDashboardController {
         in.playFromStart();
     }
     private void initCharts(){
-        XYChart.Series<String,Number> series = new XYChart.Series<>();
-        series.getData().add(new XYChart.Data<>("Jan", 100));
-        series.getData().add(new XYChart.Data<>("Feb", 200));
-        series.getData().add(new XYChart.Data<>("Mar", 50));
-        series.getData().add(new XYChart.Data<>("Apr", 75));
-        series.getData().add(new XYChart.Data<>("May", 110));
-        series.getData().add(new XYChart.Data<>("Jun", 300));
-        series.getData().add(new XYChart.Data<>("Jul", 111));
-        series.getData().add(new XYChart.Data<>("Aug", 30));
-        series.getData().add(new XYChart.Data<>("Sep", 75));
-        series.getData().add(new XYChart.Data<>("Oct", 55));
-        series.getData().add(new XYChart.Data<>("Nov", 225));
-        series.getData().add(new XYChart.Data<>("Dec", 99));
-        series.setName("Lorem");
-        stat_linechart.getData().add(series);
+        try {
+            MaintenancesService maintenancesService = new MaintenancesService();
+            EquipementService equipementService = new EquipementService();
+            total_income.setText(String.valueOf(abonnementService.getCurMonthIncome()));
+            total_equip.setText(String.valueOf(equipementService.getEquipementCount()));
+            total_maint.setText(String.valueOf(maintenancesService.getMaintenancesCount()));
+            stat_linechart.getData().setAll(maintenancesService.getMaintenancesByMonth());
+            stat_linechart.setLegendVisible(false);
+            stat_combobox.setValue("Maintenances");
+        }catch (Exception e) {
+            stackTraceAlert(e);
+        }
 
-        XYChart.Series<String,Number> series2 = new XYChart.Series<>();
-        series2.getData().add(new XYChart.Data<>("Jan", 100));
-        series2.getData().add(new XYChart.Data<>("Feb", 200));
-        series2.getData().add(new XYChart.Data<>("Mar", 50));
-        series2.getData().add(new XYChart.Data<>("Apr", 75));
-        series2.getData().add(new XYChart.Data<>("May", 110));
-        series2.getData().add(new XYChart.Data<>("Jun", 300));
-        series2.getData().add(new XYChart.Data<>("Jul", 111));
-        series2.getData().add(new XYChart.Data<>("Aug", 30));
-        series2.getData().add(new XYChart.Data<>("Sep", 75));
-        series2.getData().add(new XYChart.Data<>("Oct", 55));
-        series2.getData().add(new XYChart.Data<>("Nov", 225));
-        series2.getData().add(new XYChart.Data<>("Dec", 99));
-        series2.setName("Ipsum");
-        stat_barchart.getData().add(series2);
+
+        int gp1 = 0, gp2 = 0, gp3 = 0;
+        try {
+            List<Abonnement> list = abonnementService.getAllCurrent();
+            for (Abonnement abonnement : list) {
+                if (abonnement.getType().equals("GP 1"))
+                    gp1++;
+                else if (abonnement.getType().equals("GP 2"))
+                    gp2++;
+                else if (abonnement.getType().equals("GP 3"))
+                    gp3++;
+            }
+        }catch (Exception e){
+            stackTraceAlert(e);
+        }
+        ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList(
+                new PieChart.Data("GP 1", gp1),
+                new PieChart.Data("GP 2", gp2),
+                new PieChart.Data("GP 3", gp3)
+        );
+        piechart_gp.setData(pieChartData);
+        IcmpPingRequest pingRequest = IcmpPingUtil.createIcmpPingRequest();
+        pingRequest.setHost("grandelation.com");
+        pingRequest.setTimeout(1000);
+        IcmpPingResponse pingResponse = IcmpPingUtil.executePingRequest(pingRequest);
+        if (pingResponse.getSuccessFlag()) {
+            smtp_lat.setText(pingResponse.getRtt() + "ms");
+        }else {
+            smtp_lat.setText("N/A");
+        }
+        pingRequest.setHost("localhost");
+        pingResponse = IcmpPingUtil.executePingRequest(pingRequest);
+        if (pingResponse.getSuccessFlag()) {
+            db_lat.setText(pingResponse.getRtt() + "ms");
+        }else {
+            db_lat.setText("N/A");
+        }
+        Runtime runtime = Runtime.getRuntime();
+        long memory = runtime.totalMemory() - runtime.freeMemory();
+        memory = memory / (1024 * 1024);
+        mem_us.setText(memory + "MB");
+        pingRequest.setHost("api.openai.com");
+        pingResponse = IcmpPingUtil.executePingRequest(pingRequest);
+        if (pingResponse.getSuccessFlag()) {
+            openai_lat.setText(pingResponse.getRtt() + "ms");
+        }else {
+            openai_lat.setText("N/A");
+        }
+        pingRequest.setHost("api.cognitive.microsoft.com");
+        pingResponse = IcmpPingUtil.executePingRequest(pingRequest);
+        if (pingResponse.getSuccessFlag()) {
+            azure_lat.setText(pingResponse.getRtt() + "ms");
+        }else {
+            azure_lat.setText("N/A");
+        }
+        pingRequest.setHost("dynamodb.ca-central-1.amazonaws.com");
+        pingResponse = IcmpPingUtil.executePingRequest(pingRequest);
+        if (pingResponse.getSuccessFlag()) {
+            facepp_lat.setText(pingResponse.getRtt() + "ms");
+        }else {
+            facepp_lat.setText("N/A");
+        }
+
     }
 
     private boolean validateEmail(String email){

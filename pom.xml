@@ -42,10 +42,18 @@
             <version>21.0.2</version>
         </dependency>
         <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-web</artifactId>
+            <version>20.0.2</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>font-awesome</artifactId>
             <version>6.4.0</version>
         </dependency>
+
+
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
@@ -72,6 +80,12 @@
             <version>1.7.3</version>
         </dependency>
         <dependency>
+            <groupId>com.github.javafaker</groupId>
+            <artifactId>javafaker</artifactId>
+            <version>1.0.2</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-media</artifactId>
             <version>21.0.2</version>
@@ -93,6 +107,19 @@
             <artifactId>javafx-web</artifactId>
             <version>21.0.2</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20210307</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.stripe</groupId>
+            <artifactId>stripe-java</artifactId>
+            <version>24.18.0</version>
+        </dependency>
+
         <dependency>
             <groupId>org.openpnp</groupId>
             <artifactId>opencv</artifactId>
@@ -129,6 +156,11 @@
             <version>10.0.0</version>
         </dependency>
         <dependency>
+            <groupId>net.dreamlu</groupId>
+            <artifactId>mica-captcha</artifactId>
+            <version>3.2.2</version>
+        </dependency>
+        <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-swing</artifactId>
             <version>11</version>
@@ -153,7 +185,6 @@
             <artifactId>jakarta.mail</artifactId>
             <version>2.0.1</version>
         </dependency>
-
         <dependency>
             <groupId>org.freemarker</groupId>
             <artifactId>freemarker</artifactId>
@@ -195,7 +226,6 @@
             <artifactId>jna-platform</artifactId>
             <version>5.14.0</version>
         </dependency>
-
         <dependency>
                 <groupId>net.sf.biweekly</groupId>
                 <artifactId>biweekly</artifactId>
@@ -206,6 +236,13 @@
             <artifactId>restfb</artifactId>
             <version>3.23.0</version>
         </dependency>
+            
+        <dependency>
+            <groupId>sheltekio.javalibs</groupId>
+            <artifactId>icmp4j</artifactId>
+            <version>1.2</version>
+        </dependency>
+
 
 
     </dependencies>

@@ -72,6 +72,8 @@ public class InterfaceStoreController implements Initializable {
     @FXML
     private Pane GetAllProduit;
     @FXML
+    private Pane stock_pane;
+    @FXML
     private Pane GetOneFacture;
     @FXML
     private Pane GetOneProduit;
@@ -93,6 +95,18 @@ public class InterfaceStoreController implements Initializable {
     private ComboBox<String> boxMontantFX;
     @FXML
     private TextField searchFX;
+
+    //*****Check Stock
+    @FXML
+    private Button BtnStock;
+    @FXML
+    private Label stockProductFX;
+    @FXML
+    private Pane aucunProduit;
+    @FXML
+    private Pane prodexist;
+    @FXML
+    private HBox hboxStock;
 
     //*****AddProduit
     @FXML
@@ -259,6 +273,55 @@ public class InterfaceStoreController implements Initializable {
         String s = boxMontantFX.getSelectionModel().getSelectedItem().toString();
     }
 
+    public void ProductRecentlyAdded()
+    {
+        try {
+            ProduitService prodService = new ProduitService();
+
+            ObservableList<produit> produits = FXCollections.observableArrayList(prodService.getLatestProducts(3));
+
+            afficherRecentyAddedHbox(produits);
+
+        } catch (SQLException e)
+        {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erreur");
+            alert.setHeaderText("Erreur lors du chargement des factures");
+            alert.setContentText("Une erreur s'est produite lors du chargement des factures depuis la base de données.");
+            alert.showAndWait();
+        }
+    }
+
+    public void afficherRecentyAddedHbox( ObservableList<produit> produits)
+    {
+
+        for (produit p : produits)
+        {
+            String photo = p.getPhoto();
+            ImageView imageView = new ImageView(new Image(pathPhoto + photo));
+
+            Label nameLabel = new Label(p.getName());
+            Label priceLabel = new Label(String.valueOf(p.getPrix()));
+
+            VBox productBox = new VBox();
+            productBox.getChildren().addAll(imageView, nameLabel, priceLabel);
+
+            // gestionnaire d'événements quand je clik sur photo
+            final int productId = p.getIdProduit();
+            imageView.setOnMouseClicked(event -> {
+                GetAllProduit.setVisible(false);
+                GetOneProduit.setVisible(true);
+
+                loadProductDetails(productId);
+                System.out.println("rania****" + productId);
+
+            });
+
+            HBoxRecentlyAdded.getChildren().add(productBox);
+        }
+
+    }
+
     public void AfficherAllProduct()
     {
         try {
@@ -374,7 +437,6 @@ public class InterfaceStoreController implements Initializable {
                 GetOneProduit.setVisible(true);
 
                 loadProductDetails(productId);
-                System.out.println("rania****" + productId);
 
             });
 
@@ -401,8 +463,80 @@ public class InterfaceStoreController implements Initializable {
         ProductContainer.setVgap(10);
     }
 
+    @FXML
+    void checkStock(ActionEvent event) throws IOException, SQLException {
+        GetAllProduit.setVisible(false);
+        stock_pane.setVisible(true);
+
+        checkStockAndAlert();
+    }
 
 
+
+    //*****Check Stock
+    public void checkStockAndAlert() throws SQLException {
+
+        ProduitService prodService = new ProduitService();
+        List<produit> produits = prodService.getAll();
+
+        boolean stockInsuffisant = false;
+
+        for (produit p : produits)
+        {
+            if (p.getStock() <= p.getSeuil())
+            {
+                prodexist.setVisible(true);
+                aucunProduit.setVisible(false);
+
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Erreur");
+                alert.setContentText("Stock épuisé pour le produit id : " + p.getIdProduit() + "name : " + p.getName());
+                alert.showAndWait();
+
+                afficherProdStockinsuffHbox(p);
+
+                stockInsuffisant = true;
+
+            }
+        }
+        if (!stockInsuffisant)
+        {
+            prodexist.setVisible(false);
+            aucunProduit.setVisible(true);
+        }
+
+
+    }
+
+    public void afficherProdStockinsuffHbox(produit p)
+    {
+
+        String photo = p.getPhoto();
+        ImageView imageView = new ImageView(new Image(pathPhoto + photo));
+
+        Label nameLabel = new Label("name Product :" + p.getName());
+        Label idProduitLabel = new Label(" id Product :" + String.valueOf(p.getIdProduit()));
+        Label stockLabel = new Label("stock :" + String.valueOf(p.getStock()));
+        Label limitLabel = new Label("limit :" + String.valueOf(p.getSeuil()));
+
+        VBox productBox = new VBox();
+        productBox.getChildren().addAll(imageView, idProduitLabel, nameLabel, stockLabel, limitLabel);
+
+        imageView.setOnMouseClicked(event -> {
+            stock_pane.setVisible(false);
+            UpdateProduit.setVisible(true);
+        });
+
+        hboxStock.getChildren().add(productBox);
+
+    }
+
+    @FXML
+    void ExitFromStock(ActionEvent event) {
+        stock_pane.setVisible(false);
+        GetAllProduit.setVisible(true);
+        refreshProductList();
+    }
 
 
     //*****AddProduit
@@ -451,7 +585,7 @@ public class InterfaceStoreController implements Initializable {
     }
 
     @FXML
-    void naviger(ActionEvent event) {
+    void naviger(ActionEvent event) throws SQLException {
         AddProduit.setVisible(false);
         GetAllProduit.setVisible(true);
         refreshProductList();
@@ -459,10 +593,12 @@ public class InterfaceStoreController implements Initializable {
 
     public void refreshProductList() {
         ProductContainer.getChildren().clear();
+        HBoxRecentlyAdded.getChildren().clear();
         filterProducts(searchFX.getText());
         trierProduitsMontant(boxMontantFX.getValue());
         trierProduitsCategorie(boxCategorieFX.getValue());
         AfficherAllProduct();
+        ProductRecentlyAdded();
     }
 
 
@@ -502,8 +638,7 @@ public class InterfaceStoreController implements Initializable {
     }
 
     @FXML
-    void Quittez(ActionEvent event)
-    {
+    void Quittez(ActionEvent event) throws SQLException {
         GetOneProduit.setVisible(false);
         GetAllProduit.setVisible(true);
         refreshProductList();
@@ -1502,6 +1637,9 @@ public class InterfaceStoreController implements Initializable {
 
             AddProdFX.setVisible(false);
             AddProdFX.setManaged(false);
+
+            BtnStock.setVisible(false);
+            stockProductFX.setVisible(false);
         }
 
         //comboBox categorie
@@ -1534,6 +1672,7 @@ public class InterfaceStoreController implements Initializable {
         trierProduitsMontant(boxMontantFX.getValue());
         trierProduitsCategorie(boxCategorieFX.getValue());
         AfficherAllProduct();
+        ProductRecentlyAdded();
 
 
         //*****Add Produit

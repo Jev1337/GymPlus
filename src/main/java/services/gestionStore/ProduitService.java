@@ -222,5 +222,35 @@ public class ProduitService implements IService<produit>
         return produits;
     }
 
+    public List<produit> getLatestProducts(int limit) throws SQLException {
+        List<produit> produits = new ArrayList<>();
+
+        String sql = "SELECT * FROM produit ORDER BY idProduit DESC LIMIT ?";
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ps.setInt(1, limit);
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            produit p = new produit();
+            p.setIdProduit(rs.getInt("idProduit"));
+            p.setName(rs.getString("name"));
+            p.setPrix(rs.getFloat("prix"));
+            p.setStock(rs.getInt("stock"));
+            p.setDescription(rs.getString("description"));
+            p.setCategorie(rs.getString("categorie"));
+            p.setPhoto(rs.getString("photo"));
+            p.setSeuil(rs.getInt("seuil"));
+            p.setPromo(rs.getFloat("promo"));
+
+            produits.add(p);
+        }
+
+        rs.close();
+        ps.close();
+
+        return produits;
+    }
+
+
 }
 

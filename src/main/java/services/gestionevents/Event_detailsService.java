@@ -81,6 +81,36 @@ public class Event_detailsService implements IService<Event_details> {
         return eventDetailsList;
     }
 
+    public List<Event_details> getAll_past() throws SQLException {
+        List<Event_details> eventDetailsList = new ArrayList<>();
+        String query = "SELECT * FROM event_details where event_date < CURDATE()";
+        Statement st = connection.createStatement();
+        ResultSet rs = st.executeQuery(query);
+        while (rs.next()) {
+            Event_details eventDetails = new Event_details(rs.getString("name"), rs.getString("type"), rs.getString("event_date"), rs.getString("duree"), rs.getInt("nb_places"), rs.getInt("nb_total"));
+            eventDetails.setId(rs.getInt("id"));
+            eventDetailsList.add(eventDetails);
+
+
+        }
+        return eventDetailsList;
+    }
+
+    public List<Event_details> getAll_now() throws SQLException {
+        List<Event_details> eventDetailsList = new ArrayList<>();
+        String query = "SELECT * FROM event_details where event_date > CURDATE()";
+        Statement st = connection.createStatement();
+        ResultSet rs = st.executeQuery(query);
+        while (rs.next()) {
+            Event_details eventDetails = new Event_details(rs.getString("name"), rs.getString("type"), rs.getString("event_date"), rs.getString("duree"), rs.getInt("nb_places"), rs.getInt("nb_total"));
+            eventDetails.setId(rs.getInt("id"));
+            eventDetailsList.add(eventDetails);
+
+
+        }
+        return eventDetailsList;
+    }
+
     public List<Event_details> search(String s) {
         List<Event_details> eventDetailsList = new ArrayList<>();
         try {
@@ -106,6 +136,23 @@ public class Event_detailsService implements IService<Event_details> {
         List<Event_details> eventDetailsList = new ArrayList<>();
         try {
             String query = "SELECT * FROM event_details WHERE id IN (SELECT event_details_id FROM event_participants WHERE user_id=?)";
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Event_details eventDetails = new Event_details(rs.getString("name"), rs.getString("type"), rs.getString("event_date"), rs.getString("duree"), rs.getInt("nb_places"), rs.getInt("nb_total"));
+                eventDetails.setId(rs.getInt("id"));
+                eventDetailsList.add(eventDetails);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return eventDetailsList;
+    }
+    public List<Event_details> getEventsByUserId_now(int id) {
+        List<Event_details> eventDetailsList = new ArrayList<>();
+        try {
+            String query = "SELECT * FROM event_details WHERE id IN (SELECT event_details_id FROM event_participants WHERE user_id=?) and event_date > CURDATE()";
             PreparedStatement ps = connection.prepareStatement(query);
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();

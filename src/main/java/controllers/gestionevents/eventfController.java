@@ -30,6 +30,7 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
@@ -42,6 +43,9 @@ import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import net.glxn.qrgen.core.image.ImageType;
 import net.glxn.qrgen.javase.QRCode;
+import org.controlsfx.control.Rating;
+import org.kordamp.ikonli.feather.Feather;
+import org.kordamp.ikonli.javafx.FontIcon;
 import services.gestionevents.Event_detailsService;
 import services.gestionevents.Event_participantsService;
 import utils.MyDatabase;
@@ -65,7 +69,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
-
 
 public class eventfController {
     private final ObservableList<Event_details> event_details = FXCollections.observableArrayList();
@@ -100,7 +103,8 @@ public class eventfController {
 
     @FXML
     private Label countdownLabel;
-
+    @FXML
+    private Button rewards;
     private Timeline timeline;
     @FXML
     private AnchorPane mainPane;
@@ -150,6 +154,10 @@ public class eventfController {
     private Button rate;
     @FXML
     private Button back_btn;
+    @FXML
+    private Button backtoeventpane1;
+    @FXML
+    private Pane title_events;
 
 
     public eventfController() {
@@ -172,6 +180,55 @@ public class eventfController {
 
     @FXML
     void initialize() {
+        join_id.setText("Join");
+        join_id.setGraphic(new FontIcon(Feather.LOG_IN));
+        join_id.getStyleClass().addAll(Styles.BUTTON_OUTLINED, Styles.SUCCESS);
+        join_id.setMnemonicParsing(true);
+
+        history_btn.getStyleClass().addAll(
+                Styles.BUTTON_OUTLINED, Styles.ACCENT
+
+        );
+        history_btn.setMnemonicParsing(true);
+        history_btn.setGraphic(new FontIcon(Feather.CLOCK));
+        rewards.getStyleClass().addAll(
+                Styles.BUTTON_OUTLINED, Styles.ACCENT
+
+        );
+        rewards.setMnemonicParsing(true);
+        rewards.setGraphic(new FontIcon(Feather.GIFT));
+        String style = "-fx-color-cell-bg-selected: -color-accent-emphasis;" +
+                "-fx-color-cell-fg-selected: -color-fg-emphasis;" +
+                "-fx-color-cell-bg-selected-focused: -color-accent-emphasis;" +
+                "-fx-color-cell-fg-selected-focused: -color-fg-emphasis;";
+
+        list_events.setStyle(style);
+        list_events.getSelectionModel().selectFirst();
+        list_events1.setStyle(style);
+        list_events1.getSelectionModel().selectFirst();
+
+        events.setText("Back");
+        events.setGraphic(new FontIcon(Feather.ARROW_LEFT));
+        events.getStyleClass().add(Styles.ACCENT);
+        events.setMnemonicParsing(true);
+        backtoeventpane1.setText("Back");
+        backtoeventpane1.setGraphic(new FontIcon(Feather.ARROW_LEFT));
+        backtoeventpane1.getStyleClass().add(Styles.ACCENT);
+        backtoeventpane1.setMnemonicParsing(true);
+
+        rate.setText("Rate");
+        rate.setGraphic(new FontIcon(Feather.STAR));
+        rate.getStyleClass().add(Styles.ACCENT);
+        rate.setMnemonicParsing(true);
+
+
+        Button[] buttons = {bag_btn, whey_btn, belt_btn};
+
+        for (Button button : buttons) {
+            button.setGraphic(new FontIcon(Feather.GIFT));
+            button.getStyleClass().addAll(Styles.BUTTON_OUTLINED, Styles.SUCCESS);
+            button.setMnemonicParsing(true);
+        }
         try {
             System.out.println("Points: " + GlobalVar.getUser().getEvent_points());
             afficher();
@@ -188,7 +245,7 @@ public class eventfController {
     public void switchtomyevents(ActionEvent actionEvent) {
         if (myevents.isSelected()) {
 
-            List<Event_details> events = eventDetailsService.getEventsByUserId(GlobalVar.getUser().getId());
+            List<Event_details> events = eventDetailsService.getEventsByUserId_now(GlobalVar.getUser().getId());
             //change image_cover_event to anothe image
             image_cover_event.setImage(new javafx.scene.image.Image("file:src/main/resources/assets/images/myevents.png"));
             event_details.clear();
@@ -220,6 +277,7 @@ public class eventfController {
 
                     {
                         bar.setPrefWidth(100);
+                        bar.setStyle("-fx-accent: -color-fg-default;");
 
                     }
 
@@ -247,8 +305,15 @@ public class eventfController {
                     }
                 };
             });
+
+
+
+
+
+
+
             //list too
-            List<Event_details> events2 = eventDetailsService.getEventsByUserId(GlobalVar.getUser().getId());
+            List<Event_details> events2 = eventDetailsService.getEventsByUserId_now(GlobalVar.getUser().getId());
             ObservableList<Event_details> event_details2 = FXCollections.observableArrayList(events2);
             list_events.setItems(event_details2);
             list_events.setCellFactory(param -> new ListCell<Event_details>() {
@@ -263,9 +328,10 @@ public class eventfController {
                         Label nameLabel = new Label("Name: " + item.getName());
                         Label typeLabel = new Label("Type: " + item.getType());
                         Label dateLabel = new Label("Date: " + item.getEvent_date());
-                        Label durationLabel = new Label("Duration: " + item.getDuree());
+                        Label durationLabel = new Label("Duration: " + item.getDuree()+" minutes");
                         //add the progress bar to the list view
                         ProgressBar bar = new ProgressBar();
+                        bar.setStyle("-fx-accent: -color-fg-default;");
                         bar.setPrefWidth(100);
                         int totalSpots = item.getNb_total();
                         int availableSpots = totalSpots - item.getNb_places();
@@ -294,7 +360,7 @@ public class eventfController {
     }
 
     void afficher() throws SQLException {
-        List<Event_details> events = eventDetailsService.getAll();
+        List<Event_details> events = eventDetailsService.getAll_now();
         event_details.clear();
         event_details.addAll(events);
         ScrollPane scrollPane = new ScrollPane();
@@ -325,6 +391,7 @@ public class eventfController {
 
                 {
                     bar.setPrefWidth(100);
+                    bar.setStyle("-fx-accent: -color-fg-default;");
 
                 }
 
@@ -357,7 +424,7 @@ public class eventfController {
 
     public void afficher1() throws SQLException {
         //afficher les events dans une list view list_events
-        List<Event_details> events = eventDetailsService.getAll();
+        List<Event_details> events = eventDetailsService.getAll_now();
         ObservableList<Event_details> event_details = FXCollections.observableArrayList(events);
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setContent(list_events);
@@ -377,6 +444,7 @@ public class eventfController {
                     Label durationLabel = new Label("Duration: " + item.getDuree() + " minutes");
                     //add the progress bar to the list view
                     ProgressBar bar = new ProgressBar();
+                    bar.setStyle("-fx-accent: -color-fg-default;");
                     bar.setPrefWidth(100);
                     int totalSpots = item.getNb_total();
                     int availableSpots = totalSpots - item.getNb_places();
@@ -477,9 +545,10 @@ public class eventfController {
 
             if (hasUserJoinedEvent(selectedEvent.getId(), GlobalVar.getUser().getId())) {
 
+
                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                 alert.setTitle("Error");
-                alert.setHeaderText("You are already a participant in this event");
+                alert.setHeaderText("You are a participant in this event");
                 alert.setContentText(" Are you sure you want to leave?");
                 Optional<ButtonType> result = alert.showAndWait();
                 if (result.get() == ButtonType.OK) {
@@ -498,6 +567,7 @@ public class eventfController {
                     return;
                 }
             }
+
             System.out.println("Join event: " + name + ", " + type + ", " + date + ", " + duration);
             try {
                 PreparedStatement stmt = connection.prepareStatement("SELECT id FROM event_details WHERE name = ? AND type = ? AND event_date = ? AND duree = ? AND nb_places = ?");
@@ -720,6 +790,7 @@ public class eventfController {
                     Label durationLabel = new Label("Duration: " + item.getDuree());
                     //add the progress bar to the list view
                     ProgressBar bar = new ProgressBar();
+                    bar.setStyle("-fx-accent: -color-fg-default;");
                     bar.setPrefWidth(100);
                     int totalSpots = item.getNb_total();
                     int availableSpots = totalSpots - item.getNb_places();
@@ -1023,40 +1094,41 @@ public class eventfController {
     public void rate_event(ActionEvent actionEvent) {
         Event_details selectedEvent = list_events1.getSelectionModel().getSelectedItem();
         if (selectedEvent != null) {
-            TextInputDialog dialog = new TextInputDialog();
+            Dialog<Integer> dialog = new Dialog<>();
             dialog.setTitle("Rate Event");
             dialog.setHeaderText("Rate " + selectedEvent.getName());
-            dialog.setContentText("Enter a rating between 1 and 5:");
-            Optional<String> result = dialog.showAndWait();
+
+            Rating ratingControl = new Rating();
+            ratingControl.setMax(5);
+            dialog.getDialogPane().setContent(ratingControl);
+
+            // Create a custom ButtonType for confirmation
+            ButtonType confirmButtonType = new ButtonType("Confirm", ButtonBar.ButtonData.OK_DONE);
+            dialog.getDialogPane().getButtonTypes().addAll(confirmButtonType, ButtonType.CANCEL);
+
+            dialog.setResultConverter(dialogButton -> {
+                if (dialogButton == confirmButtonType) {
+                    return (int) ratingControl.getRating();
+                }
+                return null;
+            });
+
+            Optional<Integer> result = dialog.showAndWait();
             if (result.isPresent()) {
+                int rating = result.get();
+                Event_participantsService eventParticipantsService = new Event_participantsService();
+                Event_participants eventParticipants = eventParticipantsService.getByEventIdAndUserId(selectedEvent.getId(), GlobalVar.getUser().getId());
+                eventParticipants.setRate(rating);
                 try {
-                    int rating = Integer.parseInt(result.get());
-                    if (rating < 1 || rating > 5) {
-                        Alert alert = new Alert(Alert.AlertType.ERROR);
-                        alert.setTitle("Error");
-                        alert.setHeaderText("Invalid rating");
-                        alert.setContentText("Please enter a rating between 1 and 5");
-                        alert.showAndWait();
-                    } else {
-                        Event_participantsService eventParticipantsService = new Event_participantsService();
-                        Event_participants eventParticipants = eventParticipantsService.getByEventIdAndUserId(selectedEvent.getId(), GlobalVar.getUser().getId());
-                        eventParticipants.setRate(rating);
-                        eventParticipantsService.update(eventParticipants);
-                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                        alert.setTitle("Success");
-                        alert.setHeaderText("Rating submitted");
-                        alert.setContentText("Thank you for rating " + selectedEvent.getName());
-                        alert.showAndWait();
-                    }
-                } catch (NumberFormatException e) {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Error");
-                    alert.setHeaderText("Invalid rating");
-                    alert.setContentText("Please enter a valid number");
-                    alert.showAndWait();
+                    eventParticipantsService.update(eventParticipants);
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
                 }
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Success");
+                alert.setHeaderText("Rating submitted");
+                alert.setContentText("Thank you for rating " + selectedEvent.getName());
+                alert.showAndWait();
             }
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -1064,8 +1136,6 @@ public class eventfController {
             alert.setHeaderText("No event selected");
             alert.setContentText("Please select an event to rate");
             alert.showAndWait();
-
-
         }
     }
     public void createTwitterPost(Event_details event) {
@@ -1094,6 +1164,7 @@ public class eventfController {
         });
         f.play();
     }
+
 
 }
 

@@ -61,95 +61,56 @@
 {
     -fx-background-color: #1a53ff; /* Darker blue background on hover */
 }
-#list_events {
-    -fx-background-color: #f5f5f5; /* Light gray background */
-    -fx-padding: 10px; /* Padding around the list */
-}
 
-#list_events .list-cell {
-    -fx-background-color: #ffffff; /* White background for each cell */
-    -fx-border-color: #d3d3d3; /* Light gray border for each cell */
-    -fx-padding: 10px; /* Padding around each cell */
-    -fx-border-width: 0;
-}
-
-#list_events .list-cell:filled:selected {
-    -fx-background-color: #add8e6; /* Light blue background for selected cell */
-}
-
-#list_events .list-cell:empty {
-    -fx-border-color: transparent; /* No border for empty cells */
-}
-
-#list_events .list-cell .vbox {
-    -fx-spacing: 10px; /* Spacing between VBox children */
-}
-
-#list_events .list-cell .vbox .title {
-    -fx-font-size: 18px; /* Font size for titles */
-    -fx-font-weight: bold; /* Bold font for titles */
-    -fx-text-fill: #000000; /* Black color for titles */
-}
 #ajouter_id
 {
-    -fx-background-color: #4d79ff; /* Blue background */
-    -fx-text-fill: #fff; /* White text */
-    -fx-border-radius: 5px; /* Rounded corners */
-    -fx-padding: 5px 10px; /* Padding around text */
-    -fx-font-weight: bold; /* Bold text */
     -fx-cursor: hand; /* Hand cursor on hover */
 }
 #editeventconfirm_id
 {
-    -fx-background-color: #4d79ff; /* Blue background */
-    -fx-text-fill: #fff; /* White text */
-    -fx-border-radius: 5px; /* Rounded corners */
-    -fx-padding: 5px 10px; /* Padding around text */
-    -fx-font-weight: bold; /* Bold text */
+
     -fx-cursor: hand; /* Hand cursor on hover */
 }
 #editeventconfirm_id1
 {
-    -fx-background-color: #ff1a1a; /* Blue background */
-    -fx-text-fill: #fff; /* White text */
-    -fx-border-radius: 5px; /* Rounded corners */
-    -fx-padding: 5px 10px; /* Padding around text */
-    -fx-font-weight: bold; /* Bold text */
     -fx-cursor: hand; /* Hand cursor on hover */
 }
 #points_label {
-    -fx-font-size: 20px;
+    -fx-font-size: 18px;
     -fx-font-weight: bold;
-    -fx-text-fill: #ff0000;
-    -fx-background-color: #ffffff;
+    -fx-text-fill: -color-fg-default;
     -fx-padding: 10px;
-    -fx-border-color: #000000;
-    -fx-border-width: 2px;
-    -fx-border-radius: 5px;
     -fx-alignment: center;
+}
+
+#title_events {
+    background: linear-gradient(to right, #00aaff, #00627f);
 }
 #join_id
 {
-    -fx-background-color: #4d79ff; /* Blue background */
-    -fx-text-fill: #fff; /* White text */
-    -fx-border-radius: 5px; /* Rounded corners */
-    -fx-padding: 5px 10px; /* Padding around text */
-    -fx-font-weight: bold; /* Bold text */
+
     -fx-cursor: hand; /* Hand cursor on hover */
-    /* Add a border around the text */
-    -fx-border-color: #000000;
-    -fx-border-width: 2px;
-    -fx-border-radius: 5px;
-    -fx-alignment: center;
-    /*change text size*/
-    -fx-font-size: 20px;
-
-
-
 }
+    #list_events .list-cell:empty {
+        -fx-border-width: 0;
+
+            -fx-background-color: transparent;
+    }
+
+#list_events1 .list-cell:empty {
+    -fx-border-width: 0;
+
+    -fx-background-color: transparent;
+}
+#eventList .list-cell:empty {
+    -fx-border-width: 0;
+
+    -fx-background-color: transparent;
+}
+
 #join_id:hover
 {
-    -fx-background-color: #1a53ff; /* Darker blue background on hover */
+    -fx-background-color: Green; /* Darker blue background on hover */
 }
 #rewards {
     -fx-background-color: gold; /* Golden background */
@@ -164,7 +125,7 @@
 
     -fx-alignment: center;
     /*change text size*/
-    -fx-font-size: 20px;
+    -fx-font-size: 15px;
 }
 
 #rewards:hover {
@@ -218,44 +179,10 @@
     -fx-font-weight: bold; /* Bold font for cell text */
     -fx-text-fill: #000000; /* Black color for cell text */
 }
+#title_events {
+    background: linear-gradient(to right, #00aaff, #00627f);
+}
 
-#ListParticipants_id
-{
-    -fx-background-color: #fefee2;
-    -fx-text-fill: #fff; /* White text */
-    -fx-border-radius: 5px; /* Rounded corners */
 
-    -fx-font-weight: bold; /* Bold text */
-    -fx-cursor: hand; /* Hand cursor on hover */
-}
-#ListParticipants_id1
-{
-    -fx-background-color: #ff1a1a; /* Red background */
-    -fx-text-fill: #fff; /* White text */
-    -fx-border-radius: 5px; /* Rounded corners */
-    -fx-padding: 5px 10px; /* Padding around text */
-    -fx-font-weight: bold; /* Bold text */
-    -fx-cursor: hand; /* Hand cursor on hover */
-}
-#eventList
-{
-    -fx-background-color: #4d79ff; /* Blue background */
-    -fx-text-fill: #fff; /* White text */
-    -fx-border-radius: 5px; /* Rounded corners */
-    -fx-padding: 5px 10px; /* Padding around text */
-    -fx-font-weight: bold; /* Bold text */
-    -fx-cursor: hand; /* Hand cursor on hover */
-}
-#eventList:hover
-{
-    -fx-background-color: #1a53ff; /* Darker blue background on hover */
-}
-#eventList1
-{
-    -fx-background-color: #ff1a1a; /* Red background */
-    -fx-text-fill: #fff; /* White text */
-    -fx-border-radius: 5px; /* Rounded corners */
-    -fx-padding: 5px 10px; /* Padding around text */
-    -fx-font-weight: bold; /* Bold text */
-    -fx-cursor: hand; /* Hand cursor on hover */
-}
+
+

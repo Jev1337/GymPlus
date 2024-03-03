@@ -1,5 +1,6 @@
 package controllers.gestionevents;
 
+import atlantafx.base.theme.Styles;
 import entities.gestionevents.Black_Listed;
 import entities.gestionuser.User;
 import javafx.collections.FXCollections;
@@ -9,6 +10,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
+import org.kordamp.ikonli.feather.Feather;
+import org.kordamp.ikonli.javafx.FontIcon;
 import services.gestionevents.BlackListedService;
 
 import java.sql.*;
@@ -54,8 +57,33 @@ public class blacklistedController {
     @FXML
     private Button back_tomanag;
 
+
     @FXML
     void initialize() {
+        String style = "-fx-color-cell-bg-selected: -fx-color-accent-emphasis;" +
+                "-fx-color-cell-fg-selected: -fx-color-fg-emphasis;" +
+                "-fx-color-cell-bg-selected-focused: -fx-color-accent-emphasis;" +
+                "-fx-color-cell-fg-selected-focused: -fx-color-fg-emphasis;";
+
+        black_listedpeople.setStyle(style);
+        black_listedpeople.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
+        black_listedpeople.getSelectionModel().selectFirst();
+        table_all_users.setStyle(style);
+        table_all_users.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
+        table_all_users.getSelectionModel().selectFirst();
+        show_users_btn.setGraphic(new FontIcon(Feather.USERS));
+        show_users_btn.getStyleClass().addAll(Styles.BUTTON_ICON, Styles.SUCCESS);
+
+        show_blacklisted_btn.setGraphic(new FontIcon(Feather.SLASH));
+        show_blacklisted_btn.getStyleClass().addAll(Styles.BUTTON_ICON, Styles.BUTTON_OUTLINED, Styles.DANGER);
+
+        unban_btn.setGraphic(new FontIcon(Feather.CHECK_CIRCLE));
+        unban_btn.getStyleClass().addAll(Styles.BUTTON_ICON, Styles.SUCCESS);
+
+        ban_btn.setGraphic(new FontIcon(Feather.SLASH));
+        ban_btn.getStyleClass().addAll(Styles.BUTTON_ICON, Styles.DANGER);
+
+
         afficherBlackListed();
         afficher_all_users();
         unbanUser();

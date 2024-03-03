@@ -2,7 +2,7 @@ package controllers.gestionevents;
 
 import animatefx.animation.FadeInLeft;
 import animatefx.animation.FadeOutLeft;
-import controllers.gestionuser.GlobalVar;
+import atlantafx.base.theme.Styles;
 import entities.gestionevents.Event_details;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
@@ -13,9 +13,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
+import org.kordamp.ikonli.feather.Feather;
+import org.kordamp.ikonli.javafx.FontIcon;
 import services.gestionevents.Event_detailsService;
 import services.gestionevents.Event_participantsService;
 import utils.MyDatabase;
@@ -120,11 +123,15 @@ public class eventbController {
     @FXML
     private Button editeventconfirm_id1;
     @FXML
+    private Button editeventconfirm_id;
+    @FXML
     private Pane ajout_event;
     @FXML
-    private Button edit_participant;
-    @FXML
-    private Button confirm_edit_parts;
+    private Pane title_events;
+
+
+
+
     @FXML
     private Label event_name_label;
     @FXML
@@ -161,6 +168,8 @@ public class eventbController {
 
     @FXML
     private Button back_to_aff_btn;
+    @FXML
+    private AnchorPane blp;
 
 
 
@@ -297,32 +306,39 @@ public class eventbController {
     @FXML
     void delete_event(ActionEvent event) {
         try {
-            ajout_event.setVisible(true);
             Event_detailsService eventDetailsService = new Event_detailsService();
+            Event_participantsService event_Participants = new Event_participantsService();
             Event_details selectedEvent = tableevents_id.getSelectionModel().getSelectedItem();
             if (selectedEvent == null) {
                 selectedEvent = eventList.getSelectionModel().getSelectedItem();
             }
             if (selectedEvent != null) {
-                eventDetailsService.delete(selectedEvent.getId());
-                // delete_passed_events(eventDetailsService.getAll());
-                //all the participants in the event will have their points decrease by 100
-                Event_participantsService event_Participants = new Event_participantsService();
-                List<String> participants = event_Participants.getParticipants(selectedEvent.getId());
-                for (int i = 0; i < participants.size(); i += 3) {
-                    int user_id = Integer.parseInt(participants.get(i));
-                    int points = get_points(user_id);
-                    update_user_pts(user_id, points - 100);
+                // Get the list of participants of the selected event
+                List<Integer> participants = event_Participants.getParticipantsId(selectedEvent.getId());
+                // Loop over the list of participants and update their points
+                for (int userId : participants) {
+                    int points = get_points(userId);
+                    update_user_pts(userId, points - 100);
                 }
-
+                eventDetailsService.delete(selectedEvent.getId());
+                fill_points();
                 afficher();
                 afficher1();
                 fillParticipants();
                 fillParticipants1();
 
-                // Hide the editevent_id pane and show the ajout_event pane without animation
-                editevent_id.setVisible(false);
-                ajout_event.setVisible(true);
+                // Hide the editevent_id pane and show the ajout_event pane with animation
+                FadeOutLeft f = new FadeOutLeft(editevent_id);
+                f.setOnFinished((e) -> {
+                    editevent_id.setVisible(false);
+                    editevent_id.toBack(); // send the edit pane to the back
+                    FadeInLeft f2 = new FadeInLeft(ajout_event);
+                    ajout_event.setOpacity(0);
+                    ajout_event.setVisible(true);
+                    ajout_event.toFront(); // bring the add pane to the front
+                    f2.play();
+                });
+                f.play();
             } else {
                 System.out.println("No event selected");
             }
@@ -698,11 +714,22 @@ public class eventbController {
 
     void update_user_pts(int id, int points) {
         try {
+
             update_user_ptsStatement.setInt(1, points);
             update_user_ptsStatement.setInt(2, id);
             update_user_ptsStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+    void update_user_pts_via_username(String username, int points) {
+        try{
+            String query = "UPDATE user SET event_points = ? WHERE username = ?";
+            PreparedStatement ps = MyDatabase.getInstance().getConnection().prepareStatement(query);
+            ps.setInt(1, points);
+            ps.setString(2, username);
+            ps.executeUpdate();
+        } catch (SQLException e) {
         }
     }
 
@@ -720,12 +747,14 @@ public class eventbController {
                     event_Participants.delete(selectedEvent.getId(), selectedParticipant.get(0));
 
                     //change points in database
-                    update_user_pts(GlobalVar.getUser().getId(), GlobalVar.getUser().getEvent_points() - 100);
-
+                    String selectedUserusername = selectedParticipant.get(0);
+                    int points = get_points_by_username(selectedUserusername);
+                    update_user_pts_via_username(selectedUserusername, points - 100);
 
                     //spots +1
                     eventDetailsService.updatespots(selectedEvent.getId());
                     fillParticipants();
+                    fill_points();
                     afficher();
                     afficher1();
                 } catch (Exception e) {
@@ -737,11 +766,76 @@ public class eventbController {
         } else {
             System.out.println("No event selected");
         }
-
     }
 
     @FXML
     void initialize() {
+        delete_id.setText("Delete");
+        delete_id.setGraphic(new FontIcon(Feather.TRASH));
+        delete_id.getStyleClass().add(Styles.DANGER);
+        delete_id.setContentDisplay(ContentDisplay.RIGHT);
+        delete_id.setMnemonicParsing(true);
+        ajouter_id.setText("Add");
+        ajouter_id.setGraphic(new FontIcon(Feather.PLUS)); // Set the icon to a plus icon
+        ajouter_id.getStyleClass().add(Styles.SUCCESS);
+        ajouter_id.setMnemonicParsing(true);
+        edit_id.setText("Edit");
+        edit_id.setGraphic(new FontIcon(Feather.EDIT)); // Set the icon to a pen icon
+        edit_id.getStyleClass().add(Styles.ACCENT);
+        edit_id.setMnemonicParsing(true);
+        editeventconfirm_id.setText("Edit");
+        editeventconfirm_id.setGraphic(new FontIcon(Feather.EDIT)); // Set the icon to a pen icon
+        editeventconfirm_id.getStyleClass().add(Styles.ACCENT);
+        editeventconfirm_id.setMnemonicParsing(true);
+        editeventconfirm_id1.setText("Cancel");
+        editeventconfirm_id1.setGraphic(new FontIcon(Feather.X)); // Set the icon to a pen icon
+        editeventconfirm_id1.getStyleClass().add(Styles.DANGER);
+        editeventconfirm_id1.setMnemonicParsing(true);
+
+
+
+        back_toeve.setText("Back");
+        back_toeve.setGraphic(new FontIcon(Feather.ARROW_LEFT)); // Set the icon to a pen icon
+        back_toeve.getStyleClass().add(Styles.ACCENT);
+        back_toeve.setMnemonicParsing(true);
+        finished_events_btn.setText("Finished events");
+        finished_events_btn.setGraphic(new FontIcon(Feather.CALENDAR)); // Set the icon to a pen icon
+        finished_events_btn.getStyleClass().add(Styles.ACCENT);
+        finished_events_btn.setMnemonicParsing(true);
+        manage_users_btn.setText("Manage users");
+        manage_users_btn.setGraphic(new FontIcon(Feather.USERS)); // Set the icon to a pen icon
+        manage_users_btn.getStyleClass().add(Styles.ACCENT);
+        manage_users_btn.setMnemonicParsing(true);
+        back_to_aff_btn.setText("Back");
+        back_to_aff_btn.setGraphic(new FontIcon(Feather.ARROW_LEFT)); // Set the icon to a pen icon
+        back_to_aff_btn.getStyleClass().add(Styles.ACCENT);
+        back_to_aff_btn.setMnemonicParsing(true);
+
+        String style = "-fx-color-cell-bg-selected: -fx-color-accent-emphasis;" +
+                "-fx-color-cell-fg-selected: -fx-color-fg-emphasis;" +
+                "-fx-color-cell-bg-selected-focused: -fx-color-accent-emphasis;" +
+                "-fx-color-cell-fg-selected-focused: -fx-color-fg-emphasis;";
+
+        list_points.setStyle(style);
+
+        list_points.getSelectionModel().selectFirst();
+        list_points.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
+        ListParticipants_id.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
+        ListParticipants_id.setStyle(style);
+        ListParticipants_id.getSelectionModel().selectFirst();
+        tableevents_id1.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
+        tableevents_id1.setStyle(style);
+        tableevents_id1.getSelectionModel().selectFirst();
+        tableevents_id.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
+        tableevents_id.setStyle(style);
+        tableevents_id.getSelectionModel().selectFirst();
+
+
+
+        eventList.setStyle(style);
+        eventList.getSelectionModel().selectFirst();
+
+
 
         try {
             Pane pane= FXMLLoader.load(getClass().getResource("/gestionevents/blacklisted.fxml"));
@@ -781,6 +875,24 @@ public class eventbController {
         }
         return 0;
     }
+    public int get_points_by_username(String username) throws SQLException {
+        String query = "SELECT event_points FROM user WHERE username = ?";
+        PreparedStatement ps = MyDatabase.getInstance().getConnection().prepareStatement(query);
+        ps.setString(1, username);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            return rs.getInt("event_points");
+        }
+        return 0;
+    }
+
+
+
+
+
+
+
+
 
     public String get_username(int user_id) throws SQLException {
         getUsernameStatement.setInt(1, user_id);
@@ -835,7 +947,7 @@ public class eventbController {
     public void show_passed_events() {
         //show events with the ratings the rating is the average of the ratings of the participants in that event use the method eget_event_rate
         try {
-            List<Event_details> events = eventDetailsService.getAll();
+            List<Event_details> events = eventDetailsService.getAll_past();
             ObservableList<Event_details> data = FXCollections.observableArrayList(events);
             event_idcol1.setCellValueFactory(new PropertyValueFactory<>("id"));
             event_namecol1.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -860,8 +972,8 @@ public class eventbController {
                 @Override
                 public ObservableValue<String> call(TableColumn.CellDataFeatures<Event_details, String> param) {
                     Event_details event = param.getValue();
-                    String ratio = String.valueOf(event.getNb_places()) + "/" + String.valueOf(event.getNb_total());
-                    return new SimpleStringProperty(ratio);
+                    int participants = event.getNb_total() - event.getNb_places();
+                    return new SimpleStringProperty(String.valueOf(participants));
                 }
             });
             //get the event rate from the event participants by get_event_rate
@@ -888,12 +1000,17 @@ public class eventbController {
 
     @FXML
     void go_to_finished(ActionEvent event) {
-        //same animation
-
+        FadeOutLeft f = new FadeOutLeft(affichage_events_adstaff);
+        f.setOnFinished((e) -> {
             affichage_events_adstaff.setVisible(false);
-
+            affichage_events_adstaff.toBack();
+            FadeInLeft f2 = new FadeInLeft(finished_events);
+            finished_events.setOpacity(0);
             finished_events.setVisible(true);
-
+            finished_events.toFront();
+            f2.play();
+        });
+        f.play();
     }
     @FXML
     public void gobackto_eve(ActionEvent event)  {
@@ -909,20 +1026,35 @@ public class eventbController {
         });
         f.play();
     }
+
     @FXML
-    public void go_tomanage(ActionEvent event)  {
-        //same animation
-        BlackListed.setVisible(true);
-        back_to_aff_btn.setVisible(true);
-        affichage_events_adstaff.setVisible(false);
-        finished_events.setVisible(false);
+    public void go_tomanage(ActionEvent event) {
+        FadeOutLeft f = new FadeOutLeft(affichage_events_adstaff);
+        f.setOnFinished((e) -> {
+            affichage_events_adstaff.setVisible(false);
+            affichage_events_adstaff.toBack();
+            FadeInLeft f2 = new FadeInLeft(blp);
+            blp.setOpacity(0);
+            blp.setVisible(true);
+            blp.toFront();
+            f2.play();
+        });
+        f.play();
     }
+
     @FXML
     public void back_to_aff(ActionEvent event){
-        BlackListed.setVisible(false);
-        back_to_aff_btn.setVisible(false);
-        affichage_events_adstaff.setVisible(true);
-
+        FadeOutLeft f = new FadeOutLeft(blp);
+        f.setOnFinished((e) -> {
+            blp.setVisible(false);
+            blp.toBack();
+            FadeInLeft f2 = new FadeInLeft(affichage_events_adstaff);
+            affichage_events_adstaff.setOpacity(0);
+            affichage_events_adstaff.setVisible(true);
+            affichage_events_adstaff.toFront();
+            f2.play();
+        });
+        f.play();
     }
 
 }

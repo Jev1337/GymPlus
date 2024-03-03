@@ -4,50 +4,68 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.effect.Glow?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="779.0" prefWidth="1153.0" style="-fx-background-color: linear-gradient(to bottom right, lightgray, floralwhite);" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionevents.blacklistedController">
+<AnchorPane prefHeight="792.0" prefWidth="1090.0" styleClass="pane" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionevents.blacklistedController">
    <children>
-      <Pane fx:id="All_users" layoutY="68.0" prefHeight="710.0" prefWidth="1158.0" visible="false">
+      <Pane fx:id="All_users" layoutX="183.0" layoutY="116.0" prefHeight="561.0" prefWidth="754.0" styleClass="subpane">
          <children>
-            <Button fx:id="ban_btn" layoutX="504.0" layoutY="598.0" mnemonicParsing="false" onAction="#ban_user" prefHeight="53.0" prefWidth="170.0" text="Ban">
+            <Button fx:id="ban_btn" layoutX="331.0" layoutY="469.0" mnemonicParsing="false" onAction="#ban_user" prefHeight="47.0" prefWidth="107.0" text="Ban">
                <font>
                   <Font size="32.0" />
                </font>
             </Button>
-            <ScrollPane layoutX="183.0" layoutY="88.0" prefHeight="480.0" prefWidth="839.0">
+            <ScrollPane layoutX="89.0" layoutY="73.0" prefHeight="348.0" prefWidth="599.0">
                <content>
-                  <TableView fx:id="table_all_users" prefHeight="478.0" prefWidth="837.0">
+                  <TableView fx:id="table_all_users" prefHeight="346.0" prefWidth="595.0">
                     <columns>
-                      <TableColumn fx:id="idcol" prefWidth="154.1333435177803" text="User_id" />
-                      <TableColumn fx:id="usernamecol" prefWidth="210.6667022705078" text="User Name" />
-                        <TableColumn fx:id="firstnamecol" prefWidth="247.7332763671875" text="First Name" />
-                        <TableColumn fx:id="lastnamecol" prefWidth="226.93328857421875" text="Last Name" />
+                      <TableColumn fx:id="idcol" prefWidth="66.9332702755928" text="ID" />
+                      <TableColumn fx:id="usernamecol" prefWidth="166.39996337890625" text="User Name" />
+                        <TableColumn fx:id="firstnamecol" prefWidth="172.7999725341797" text="First Name" />
+                        <TableColumn fx:id="lastnamecol" prefWidth="188.00004882812505" text="Last Name" />
                     </columns>
                   </TableView>
                </content>
             </ScrollPane>
+            <Text fill="#1986d9" layoutX="336.0" layoutY="44.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Users">
+               <font>
+                  <Font size="41.0" />
+               </font>
+               <effect>
+                  <Glow />
+               </effect>
+            </Text>
          </children>
       </Pane>
-      <Pane fx:id="blacklisted_users" layoutX="6.0" layoutY="70.0" prefHeight="721.0" prefWidth="1154.0">
+      <Pane fx:id="blacklisted_users" layoutX="180.0" layoutY="113.0" prefHeight="566.0" prefWidth="759.0" styleClass="subpane" visible="false">
          <children>
-            <ScrollPane layoutX="230.0" layoutY="138.0">
+            <ScrollPane layoutX="165.0" layoutY="60.0" prefHeight="383.0" prefWidth="422.0">
                <content>
-                  <TableView fx:id="black_listedpeople" prefHeight="448.0" prefWidth="679.0" style="-fx-background-color: white;">
+                  <TableView fx:id="black_listedpeople" prefHeight="379.0" prefWidth="420.0" style="-fx-background-color: white;">
                     <columns>
-                      <TableColumn fx:id="id_user_col" prefWidth="157.60003662109375" text="id_user" />
-                      <TableColumn fx:id="start_ban_col" prefWidth="254.9333953857422" text="Start_Ban" />
-                        <TableColumn fx:id="end_ban_col" prefWidth="265.06658935546875" text="End_Ban" />
+                      <TableColumn fx:id="id_user_col" prefWidth="50.66667252779007" text="ID" />
+                      <TableColumn fx:id="start_ban_col" prefWidth="191.1999168395996" text="Start Date" />
+                        <TableColumn fx:id="end_ban_col" prefWidth="176.8000030517578" text="End Date" />
                     </columns>
                   </TableView>
                </content>
             </ScrollPane>
-            <Button fx:id="unban_btn" layoutX="511.0" layoutY="623.0" mnemonicParsing="false" onAction="#unban_user" prefHeight="63.0" prefWidth="152.0" text="Unban" />
+            <Button fx:id="unban_btn" layoutX="300.0" layoutY="472.0" mnemonicParsing="false" onAction="#unban_user" prefHeight="63.0" prefWidth="152.0" text="Unban" />
+            <Text fill="#f70000" layoutX="272.0" layoutY="39.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Black Listed">
+               <font>
+                  <Font size="41.0" />
+               </font>
+               <effect>
+                  <Glow />
+               </effect>
+            </Text>
          </children>
       </Pane>
-      <Button fx:id="show_users_btn" layoutX="237.0" layoutY="20.0" mnemonicParsing="false" onAction="#show_n_users" prefHeight="31.0" prefWidth="139.0" text="Users" />
-      <Button fx:id="show_blacklisted_btn" layoutX="652.0" layoutY="15.0" mnemonicParsing="false" onAction="#show_blacklisted" prefHeight="33.0" prefWidth="164.0" text="Banned" />
+      <Button fx:id="show_users_btn" layoutX="250.0" layoutY="40.0" mnemonicParsing="false" onAction="#show_n_users" prefHeight="47.0" prefWidth="169.0" text="Users" />
+      <Button fx:id="show_blacklisted_btn" layoutX="703.0" layoutY="40.0" mnemonicParsing="false" onAction="#show_blacklisted" prefHeight="47.0" prefWidth="172.0" text="Banned" />
    </children>
 </AnchorPane>

@@ -18,68 +18,79 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="808.0" prefWidth="1156.0" style="-fx-background-color: linear-gradient(to bottom right, lightgray, floralwhite);" stylesheets="@event.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionevents.eventbController">
+<AnchorPane maxHeight="808.0" maxWidth="1156.0" minHeight="808.0" minWidth="1156.0" prefHeight="808.0" prefWidth="1156.0" stylesheets="@event.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionevents.eventbController">
    <children>
-      <AnchorPane>
+      <AnchorPane fx:id="blp" prefHeight="651.0" prefWidth="1182.0" visible="false">
          <children>
-            <Pane fx:id="BlackListed" layoutY="48.0" prefHeight="775.0" prefWidth="1182.0" />
-            <Button fx:id="back_to_aff_btn" layoutX="11.0" layoutY="12.0" mnemonicParsing="false" onAction="#back_to_aff" text="Back" visible="false" />
+            <Pane fx:id="BlackListed" layoutY="48.0" prefHeight="600.0" prefWidth="1182.0" />
+            <Button fx:id="back_to_aff_btn" layoutX="11.0" layoutY="12.0" mnemonicParsing="false" onAction="#back_to_aff" text="Back" />
          </children>
       </AnchorPane>
-      <Pane fx:id="affichage_events_adstaff" prefHeight="827.0" prefWidth="1180.0" style="-fx-background-color: linear-gradient(to bottom right, lightgray, floralwhite);;">
+      <Pane fx:id="affichage_events_adstaff" prefHeight="808.0" prefWidth="1156.0">
          <children>
-            <TableView fx:id="tableevents_id" layoutX="346.0" layoutY="138.0" prefHeight="303.0" prefWidth="823.0" style="-fx-background-color: lightgray;">
-              <columns>
-                <TableColumn fx:id="event_idcol" prefWidth="110.93331909179688" text="Event_id" />
-                <TableColumn fx:id="event_namecol" prefWidth="133.06668090820312" text="Event_Name" />
-                  <TableColumn fx:id="event_typecol" prefWidth="135.7332763671875" text="Event Type" />
-                  <TableColumn fx:id="event_datecol" prefWidth="152.2667236328125" text="Event Date" />
-                  <TableColumn fx:id="event_durationcol" prefWidth="127.7332763671875" text="Event Duration" />
-                  <TableColumn fx:id="event_spotscol" prefWidth="84.80010986328125" text="Spots" />
-                  <TableColumn fx:id="event_ratecol" prefWidth="76.0" text="Rate" />
-              </columns>
-               <effect>
-                  <DropShadow />
-               </effect>
-            </TableView>
-            <Button fx:id="edit_id" layoutX="537.0" layoutY="448.0" mnemonicParsing="false" onAction="#edit_event" prefHeight="36.0" prefWidth="101.0" text="Edit">
+            <ScrollPane layoutX="358.0" layoutY="110.0">
+               <content>
+                  <TableView fx:id="tableevents_id" prefHeight="303.0" prefWidth="750.0" visible="false">
+                    <columns>
+                      <TableColumn fx:id="event_idcol" prefWidth="110.93331909179688" text="Id" />
+                      <TableColumn fx:id="event_namecol" prefWidth="133.06668090820312" text="Name" />
+                        <TableColumn fx:id="event_typecol" prefWidth="135.7332763671875" text="Event Type" />
+                        <TableColumn fx:id="event_datecol" prefWidth="152.2667236328125" text="Event Date" />
+                        <TableColumn fx:id="event_durationcol" prefWidth="127.7332763671875" text="Event Duration" />
+                        <TableColumn fx:id="event_spotscol" prefWidth="84.80010986328125" text="Spots" />
+                    </columns>
+                     <effect>
+                        <DropShadow />
+                     </effect>
+                  </TableView>
+               </content>
+            </ScrollPane>
+            <Button fx:id="edit_id" layoutX="374.0" layoutY="433.0" mnemonicParsing="false" onAction="#edit_event" prefHeight="36.0" prefWidth="101.0" text="Edit">
                <effect>
                   <DropShadow />
                </effect></Button>
-            <Button fx:id="delete_id" layoutX="747.0" layoutY="448.0" mnemonicParsing="false" onAction="#delete_event" prefHeight="36.0" prefWidth="101.0" text="Delete">
+            <Button fx:id="delete_id" layoutX="987.0" layoutY="430.0" mnemonicParsing="false" onAction="#delete_event" prefHeight="36.0" prefWidth="98.0" text="Delete">
                <effect>
                   <DropShadow />
                </effect></Button>
-            <TableView fx:id="ListParticipants_id" layoutX="526.0" layoutY="493.0" prefHeight="303.0" prefWidth="341.0" style="-fx-background-color: lightgray;">
-              <columns>
-                  <TableColumn fx:id="firstname_id" minWidth="0.0" prefWidth="103.0" text="First Name" />
-                <TableColumn fx:id="lastname_id" prefWidth="119.0" text="Last Name" />
-                <TableColumn fx:id="username_id" minWidth="0.0" prefWidth="118.0" text="UserName" />
-              </columns>
-               <effect>
-                  <DropShadow />
-               </effect>
-            </TableView>
+            <ScrollPane layoutX="427.0" layoutY="503.0">
+               <content>
+                  <TableView fx:id="ListParticipants_id" prefHeight="291.0" prefWidth="342.0">
+                    <columns>
+                        <TableColumn fx:id="firstname_id" minWidth="0.0" prefWidth="103.0" text="First Name" />
+                      <TableColumn fx:id="lastname_id" prefWidth="119.0" text="Last Name" />
+                      <TableColumn fx:id="username_id" minWidth="0.0" prefWidth="118.0" text="UserName" />
+                    </columns>
+                     <effect>
+                        <DropShadow />
+                     </effect>
+                  </TableView>
+               </content>
+            </ScrollPane>
             <Button fx:id="kick_id" layoutX="312.0" layoutY="612.0" mnemonicParsing="false" onAction="#kick_user" prefHeight="44.0" prefWidth="88.0" text="Kick">
                <effect>
                   <DropShadow />
                </effect></Button>
-            <TableView fx:id="list_points" layoutX="909.0" layoutY="469.0" prefHeight="320.0" prefWidth="243.0" style="-fx-background-color: lightgray;" visible="false">
-               <columns>
-                  <TableColumn fx:id="username_id1" minWidth="0.0" prefWidth="147.2000732421875" text="UserName" />
-                  <TableColumn fx:id="points_id1" minWidth="0.0" prefWidth="95.0" text="Points" />
-               </columns>
-            </TableView>
-            <ScrollPane layoutX="540.0" layoutY="134.0" prefWidth="326.0">
+            <ListView fx:id="eventList" layoutX="352.0" layoutY="102.0" prefHeight="303.0" prefWidth="753.0" style="-fx-background-radius: 20;">
+               <effect>
+                  <DropShadow />
+               </effect>
+            </ListView>
+            <ScrollPane layoutX="887.0" layoutY="501.0" prefHeight="299.0" prefWidth="243.0">
                <content>
-                  <ListView fx:id="eventList" prefHeight="303.0" prefWidth="308.0" style="-fx-background-color: lightgray; -fx-background-radius: 20; -fx-border-color: white;" visible="false">
+                  <TableView fx:id="list_points" prefHeight="290.0" prefWidth="243.0">
+                     <columns>
+                        <TableColumn fx:id="username_id1" minWidth="0.0" prefWidth="147.2000732421875" text="UserName" />
+                        <TableColumn fx:id="points_id1" minWidth="0.0" prefWidth="95.0" text="Points" />
+                     </columns>
                      <effect>
                         <DropShadow />
-                     </effect></ListView>
+                     </effect>
+                  </TableView>
                </content>
             </ScrollPane>
-            <CheckBox fx:id="table_view" layoutX="761.0" layoutY="106.0" mnemonicParsing="false" onAction="#show_table" text="Table" />
-            <Pane fx:id="ajout_event" layoutX="72.0" layoutY="126.0" prefHeight="416.0" prefWidth="253.0" style="-fx-background-color: lightgray; -fx-background-radius: 20;">
+            <CheckBox fx:id="table_view" layoutX="691.0" layoutY="437.0" mnemonicParsing="false" onAction="#show_table" text="Table" />
+            <Pane fx:id="ajout_event" layoutX="34.0" layoutY="140.0" prefHeight="416.0" prefWidth="253.0" style="-fx-background-radius: 20; -fx-background-color: linear-gradient(to left, #006277, #00aaff);">
                <children>
                   <TextField fx:id="eventname_id" layoutX="36.0" layoutY="84.0" style="-fx-background-radius: 15;" />
                   <TextField fx:id="eventtype_id" layoutX="36.0" layoutY="140.0" style="-fx-background-radius: 15;" />
@@ -87,19 +98,37 @@
                      <effect>
                         <DropShadow />
                      </effect></Button>
-                  <Label layoutX="34.0" layoutY="63.0" text="Event Name" textFill="#354d86" />
-                  <Label layoutX="36.0" layoutY="119.0" text="Type" textFill="#354d86" />
-                  <Label layoutX="36.0" layoutY="176.0" text="Date" textFill="#354d86" />
+                  <Label layoutX="34.0" layoutY="63.0" text="Event Name">
+                     <effect>
+                        <Glow />
+                     </effect></Label>
+                  <Label layoutX="36.0" layoutY="119.0" text="Type">
+                     <effect>
+                        <Glow />
+                     </effect></Label>
+                  <Label layoutX="36.0" layoutY="176.0" text="Date">
+                     <effect>
+                        <Glow />
+                     </effect></Label>
                   <TextField fx:id="eventduree_id" layoutX="36.0" layoutY="262.0" style="-fx-background-radius: 15;" />
-                  <Label layoutX="38.0" layoutY="240.0" text="Duration" textFill="#354d86" />
+                  <Label layoutX="38.0" layoutY="240.0" text="Duration">
+                     <effect>
+                        <Glow />
+                     </effect></Label>
                   <TextField fx:id="eventdate_id1" layoutX="153.0" layoutY="200.0" prefHeight="36.0" prefWidth="64.0" style="-fx-background-radius: 15;" />
                   <TextField fx:id="eventspots_id" layoutX="36.0" layoutY="319.0" style="-fx-background-radius: 15;" />
-                  <Label layoutX="37.0" layoutY="298.0" text="Spots" textFill="#354d86" />
+                  <Label layoutX="37.0" layoutY="298.0" text="Spots">
+                     <effect>
+                        <Glow />
+                     </effect></Label>
                   <DatePicker fx:id="eventdate_id" layoutX="37.0" layoutY="200.0" prefHeight="36.0" prefWidth="109.0" style="-fx-background-radius: 15;" />
-                  <Text fill="#1f58c9" layoutX="14.0" layoutY="43.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Add Event:" wrappingWidth="130.5625">
+                  <Text fill="#1a5f71" layoutX="14.0" layoutY="43.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Add Event:" wrappingWidth="130.5625">
                      <font>
                         <Font size="27.0" />
                      </font>
+                     <effect>
+                        <Glow />
+                     </effect>
                   </Text>
                   <ImageView fitHeight="57.0" fitWidth="54.0" layoutX="177.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -111,7 +140,7 @@
                   <DropShadow />
                </effect>
             </Pane>
-            <Pane fx:id="editevent_id" layoutX="72.0" layoutY="126.0" prefHeight="416.0" prefWidth="253.0" style="-fx-background-color: lightgray; -fx-background-radius: 20;" visible="false">
+            <Pane fx:id="editevent_id" layoutX="34.0" layoutY="140.0" prefHeight="416.0" prefWidth="253.0" style="-fx-background-color: linear-gradient(to left, #006277, #00aaff); -fx-background-radius: 20;" visible="false">
                <children>
                   <Label layoutX="36.0" layoutY="71.0" text="Event Name" textFill="#354d86" />
                   <Label layoutX="36.0" layoutY="134.0" text="Type" textFill="#354d86" />
@@ -132,13 +161,13 @@
                   <TextField fx:id="editeventdate_id1" layoutX="145.0" layoutY="218.0" prefHeight="36.0" prefWidth="75.0" promptText="New Event Date" style="-fx-background-radius: 15;" />
                   <TextField fx:id="editeventtype_id" layoutX="35.0" layoutY="154.0" prefHeight="36.0" prefWidth="181.0" promptText="New Event Type" style="-fx-background-radius: 15;" />
                   <TextField fx:id="editeventname_id" layoutX="35.0" layoutY="91.0" prefHeight="36.0" prefWidth="181.0" promptText="New Event Eame" style="-fx-background-radius: 15;" />
-                  <Button fx:id="editeventconfirm_id" layoutX="172.0" layoutY="345.0" mnemonicParsing="false" onAction="#edit_event_confirm" prefHeight="36.0" prefWidth="64.0" text="Edit" />
-                  <Button fx:id="editeventconfirm_id1" layoutX="38.0" layoutY="345.0" mnemonicParsing="false" onAction="#edit_event_cancel" prefHeight="36.0" prefWidth="75.0" text="Cancel" />
+                  <Button fx:id="editeventconfirm_id" layoutX="136.0" layoutY="353.0" mnemonicParsing="false" onAction="#edit_event_confirm" prefHeight="36.0" prefWidth="98.0" text="Edit" />
+                  <Button fx:id="editeventconfirm_id1" layoutX="21.0" layoutY="353.0" mnemonicParsing="false" onAction="#edit_event_cancel" prefHeight="36.0" prefWidth="98.0" text="Cancel" />
                </children>
             </Pane>
-            <Pane layoutX="-4.0" layoutY="-9.0" prefHeight="100.0" prefWidth="1189.0" style="-fx-background-color: linear-gradient(to bottom right, gray, darkgray);;">
+            <Pane fx:id="title_events" layoutX="-4.0" layoutY="-9.0" prefHeight="93.0" prefWidth="1166.0" style="-fx-background-color: linear-gradient(to right, #00aaff, #00627f);">
                <children>
-                  <Text fill="WHITE" layoutX="499.0" layoutY="79.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Events">
+                  <Text fill="WHITE" layoutX="494.0" layoutY="74.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Events">
                      <font>
                         <Font size="70.0" />
                      </font>
@@ -148,27 +177,31 @@
                   </Text>
                </children>
             </Pane>
-            <Button fx:id="finished_events_btn" layoutX="46.0" layoutY="776.0" mnemonicParsing="false" onAction="#go_to_finished" text="Finished events" />
-            <Button fx:id="manage_users_btn" layoutX="173.0" layoutY="777.0" mnemonicParsing="false" onAction="#go_tomanage" prefHeight="36.0" prefWidth="119.0" text="Manager Users" />
+            <Button fx:id="finished_events_btn" layoutX="21.0" layoutY="758.0" mnemonicParsing="false" onAction="#go_to_finished" prefHeight="36.0" prefWidth="136.0" text="Finished events" />
+            <Button fx:id="manage_users_btn" layoutX="178.0" layoutY="758.0" mnemonicParsing="false" onAction="#go_tomanage" prefHeight="36.0" prefWidth="136.0" text="Manager Users" />
          </children>
       </Pane>
-      <Pane fx:id="finished_events" prefHeight="826.0" prefWidth="1179.0" visible="false">
+      <Pane fx:id="finished_events" prefHeight="808.0" prefWidth="1156.0" styleClass="pane" stylesheets="@../assets/css/dashboard.css" visible="false">
          <children>
-            <TableView fx:id="tableevents_id1" layoutX="200.0" layoutY="127.0" prefHeight="543.0" prefWidth="823.0" style="-fx-background-color: lightgray;">
-               <columns>
-                  <TableColumn fx:id="event_idcol1" prefWidth="110.93331909179688" text="Event_id" />
-                  <TableColumn fx:id="event_namecol1" prefWidth="133.06668090820312" text="Event_Name" />
-                  <TableColumn fx:id="event_typecol1" prefWidth="135.7332763671875" text="Event Type" />
-                  <TableColumn fx:id="event_datecol1" prefWidth="152.2667236328125" text="Event Date" />
-                  <TableColumn fx:id="event_durationcol1" prefWidth="127.7332763671875" text="Event Duration" />
-                  <TableColumn fx:id="event_spotscol1" prefWidth="84.80010986328125" text="Spots" />
-                  <TableColumn fx:id="event_ratecol1" prefWidth="76.0" text="Rate" />
-               </columns>
-               <effect>
-                  <DropShadow />
-               </effect>
-            </TableView>
-            <Button fx:id="back_toeve" layoutX="1040.0" layoutY="53.0" mnemonicParsing="false" onAction="#gobackto_eve" text="Back" />
+            <ScrollPane layoutX="191.0" layoutY="118.0">
+               <content>
+                  <TableView fx:id="tableevents_id1" prefHeight="543.0" prefWidth="823.0">
+                     <columns>
+                        <TableColumn fx:id="event_idcol1" prefWidth="81.33332824707031" text="Event_id" />
+                        <TableColumn fx:id="event_namecol1" prefWidth="137.86669921875" text="Event_Name" />
+                        <TableColumn fx:id="event_typecol1" prefWidth="129.33331298828125" text="Event Type" />
+                        <TableColumn fx:id="event_datecol1" prefWidth="149.60003662109375" text="Event Date" />
+                        <TableColumn fx:id="event_durationcol1" prefWidth="127.20001220703125" text="Event Duration" />
+                        <TableColumn fx:id="event_spotscol1" prefWidth="128.00006103515625" text="Participants" />
+                        <TableColumn fx:id="event_ratecol1" prefWidth="76.0" text="Rate" />
+                     </columns>
+                     <effect>
+                        <DropShadow />
+                     </effect>
+                  </TableView>
+               </content>
+            </ScrollPane>
+            <Button fx:id="back_toeve" layoutX="24.0" layoutY="24.0" mnemonicParsing="false" onAction="#gobackto_eve" text="Back" />
          </children>
       </Pane>
    </children>

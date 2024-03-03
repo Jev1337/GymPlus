@@ -2,21 +2,32 @@ package controllers.BlogController;
 
 import controllers.gestionuser.GlobalVar;
 import entities.gestionblog.Post;
+import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import clientMessanger.Client;
 import services.gestonblog.PostServices;
 import java.io.File;
+import java.io.IOException;
+import java.net.Socket;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.sql.Timestamp;
@@ -38,9 +49,11 @@ public class BlogController {
     private Label photo_tf;
     @FXML
     private Text username;
+
     private final PostServices ps = new PostServices();
     private final UpdatePostController updatePostController = new UpdatePostController();
     private PostController pc = new PostController();
+    private ClientMessangerController clientMessangerController = new ClientMessangerController();
     Date date = new Date();
     List<String> badWords = Arrays.asList("fuck", "suck", "kill", "suicide");
 
@@ -118,7 +131,27 @@ public class BlogController {
         }
     }
 
+    @FXML
+    public void addUserBtn() throws IOException {
+        Stage primaryStage = new Stage();
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gestionBlog/ClientForm.fxml"));
+
+        ClientMessangerController controller = new ClientMessangerController();
+        controller.setClientName(GlobalVar.getUser().getUsername()); // Set the parameter
+        fxmlLoader.setController(controller);
+
+        primaryStage.setScene(new Scene(fxmlLoader.load()));
+        primaryStage.setTitle("Client");
+        primaryStage.setResizable(false);
+        primaryStage.centerOnScreen();
+        primaryStage.setOnCloseRequest(windowEvent -> {
+            controller.shutdown();
+        });
+        primaryStage.show();
+
+    }
     public void initialize() {
+
         username.setText(GlobalVar.getUser().getUsername());
         String profilePic = GlobalVar.getUser().getPhoto();
         Image img = new Image(new File("src/assets/profileuploads/" + profilePic).toURI().toString());
@@ -129,6 +162,7 @@ public class BlogController {
         getAllFromDB();
         pc.setBlogController(this);
         updatePostController.setBlogControllerUpdate(this);
-
+        //Messanger Handler: Client
+        clientMessangerController.setClientName(GlobalVar.getUser().getUsername());
     }
 }

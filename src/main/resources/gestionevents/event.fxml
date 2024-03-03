@@ -22,7 +22,7 @@
 
 <AnchorPane fx:id="mainPane" prefHeight="835.0" prefWidth="1153.0" style="-fx-background-color: -color-bg-subtle;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionevents.eventfController">
     <children>
-        <Pane fx:id="event_points" layoutX="59.0" layoutY="44.0" prefHeight="730.0" prefWidth="1051.0" styleClass="pane" visible="false">
+        <Pane fx:id="event_points" layoutX="59.0" layoutY="44.0" prefHeight="730.0" prefWidth="1051.0" styleClass="pane">
             <children>
                 <Label layoutX="332.0" layoutY="32.0" prefHeight="96.0" prefWidth="382.0" text="Reward  Hub" textAlignment="CENTER">
                     <font>
@@ -65,7 +65,7 @@
                                 <Font size="20.0" />
                             </font>
                         </Label>
-                        <Button fx:id="whey_btn" layoutX="82.0" layoutY="159.0" mnemonicParsing="false" styleClass="rounded" text="Claim">
+                        <Button fx:id="whey_btn" layoutX="82.0" layoutY="159.0" mnemonicParsing="false" onAction="#claim_whey" styleClass="rounded" text="Claim">
                      <font>
                         <Font size="24.0" />
                      </font></Button>
@@ -83,7 +83,7 @@
                                 <Font size="20.0" />
                             </font>
                         </Label>
-                        <Button fx:id="belt_btn" layoutX="79.0" layoutY="163.0" mnemonicParsing="false" styleClass="rounded" text="Claim">
+                        <Button fx:id="belt_btn" layoutX="79.0" layoutY="163.0" mnemonicParsing="false" onAction="#claim_belt" styleClass="rounded" text="Claim">
                      <font>
                         <Font size="24.0" />
                      </font></Button>
@@ -106,7 +106,7 @@
                                 <Font size="20.0" />
                             </font>
                         </Label>
-                        <Button fx:id="bag_btn" layoutX="79.0" layoutY="149.0" mnemonicParsing="false" styleClass="rounded" text="Claim">
+                        <Button fx:id="bag_btn" layoutX="79.0" layoutY="149.0" mnemonicParsing="false" onAction="#claim_bag" styleClass="rounded" text="Claim">
                      <font>
                         <Font size="24.0" />
                      </font></Button>
@@ -119,7 +119,7 @@
                 </Pane>
             <Button fx:id="events" layoutX="27.0" layoutY="18.0" mnemonicParsing="false" onAction="#back_to_events" text="&lt;- Events" />
             </children></Pane>
-        <Pane fx:id="event_pane" layoutX="70.0" layoutY="56.0" prefHeight="723.0" prefWidth="1077.0">
+        <Pane fx:id="event_pane" layoutX="70.0" layoutY="56.0" prefHeight="723.0" prefWidth="1077.0" visible="false">
             <children>
                 <Label fx:id="countdownLabel" layoutX="345.0" layoutY="127.0" prefHeight="52.0" prefWidth="336.0" />
                 <Button fx:id="join_id" layoutX="307.0" layoutY="596.0" mnemonicParsing="false" onAction="#join_event" prefHeight="5.0" prefWidth="124.0" text="Join" textAlignment="CENTER">

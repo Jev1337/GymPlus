@@ -33,6 +33,7 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.*;
 import javafx.util.Duration;
+import netscape.javascript.JSObject;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -187,6 +188,11 @@ public class InterfaceStoreController implements Initializable {
     private Label nomClientFX;
     @FXML
     private ComboBox<String> comboPaiement;
+    @FXML
+    private WebView WebViewMap;
+    @FXML
+    private Label villeLabel = new Label();
+
 
 
     //*****GetAllFacture
@@ -243,6 +249,8 @@ public class InterfaceStoreController implements Initializable {
     private TableColumn<Livraison, String> ColLieu;
     @FXML
     private TextField updateEtatFX;
+    @FXML
+    private WebView webWiewMapStaff;
 
 
 
@@ -267,7 +275,7 @@ public class InterfaceStoreController implements Initializable {
         GetAllProduit.setVisible(false);
         Livraison_pane.setVisible(true);
         chargerTableLivraison();
-
+        chargerMap(webWiewMapStaff);
     }
 
     @FXML
@@ -944,11 +952,6 @@ public class InterfaceStoreController implements Initializable {
         }
     }
 
-    @FXML
-    private WebView WebViewMap;
-    @FXML
-    private Label villeLabel = new Label();
-
     private static String getCityName(double latitude, double longitude) {
         String cityName = "Unknown";
 
@@ -986,9 +989,9 @@ public class InterfaceStoreController implements Initializable {
     }
 
 
-    public void chargerMap()
+    public void chargerMap(WebView web)
     {
-        WebEngine webEngine = WebViewMap.getEngine();
+        WebEngine webEngine = web.getEngine();
         webEngine.loadContent("<html><head>"
                 + "<meta charset=\"UTF-8\">"
                 + "<title>Map</title>"
@@ -1003,6 +1006,7 @@ public class InterfaceStoreController implements Initializable {
                 + "var marker; map.on('click', function (e) { if (marker) { map.removeLayer(marker); } marker = L.marker(e.latlng).addTo(map); "
                 + "document.getElementById('latitude').value = e.latlng.lat;"
                 + "document.getElementById('longitude').value = e.latlng.lng;});"
+                + "function addMarker(lat, lng, lieu) { var marker = L.marker([lat, lng]).addTo(map); marker.bindPopup(lieu).openPopup(); }"
                 + "</script>"
                 + "</body></html>");
     }
@@ -1051,7 +1055,7 @@ public class InterfaceStoreController implements Initializable {
         nomClientFX.setText(String.valueOf(MonPanier.getMonPanier().getId()));
         TotalPanierFX.setText(String.valueOf(MonPanier.getMonPanier().calculerPrixTotalFacture()));
 
-        chargerMap();
+        chargerMap(WebViewMap);
 
         try {
 
@@ -1728,6 +1732,31 @@ public class InterfaceStoreController implements Initializable {
             ColClient.setCellValueFactory(new PropertyValueFactory<>("idClient"));
             ColLieu.setCellValueFactory(new PropertyValueFactory<>("Lieu"));
             ColEtat.setCellValueFactory(new PropertyValueFactory<>("etat"));
+
+            ColEtat.setCellFactory(column -> new TableCell<Livraison, String>() {
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+
+                    if (item == null || empty) {
+                        setText(null);
+                        setStyle(""); // Assurez-vous de réinitialiser le style si la cellule est vide
+                    } else {
+                        setText(item);
+
+                        // Définir le style en fonction de la valeur de l'état
+                        if ("en cours".equals(item.toLowerCase())) {
+                            setTextFill(Color.RED); // Texte en rouge pour "en cours"
+                        } else if ("delivered".equals(item.toLowerCase())) {
+                            setTextFill(Color.GREEN); // Texte en vert pour "delivered"
+                        } else {
+                            // Réinitialiser le style par défaut si l'état n'est ni "en cours" ni "delivered"
+                            setTextFill(Color.BLACK); // Vous pouvez choisir une autre couleur par défaut si nécessaire
+                        }
+                    }
+                }
+            });
+
         }
         catch (SQLException e)
         {
@@ -1739,6 +1768,12 @@ public class InterfaceStoreController implements Initializable {
         }
     }
 
+    // Méthode pour ajouter un marqueur à la carte
+    public void addMarkerToMap(String latitude, String longitude, String lieu) {
+        WebEngine webEngine = webWiewMapStaff.getEngine();
+        JSObject window = (JSObject) webEngine.executeScript("window");
+        window.call("addMarker", latitude, longitude, lieu);
+    }
 
     Livraison l = new Livraison();
     @FXML
@@ -1746,6 +1781,17 @@ public class InterfaceStoreController implements Initializable {
 
         Livraison selectedLivraison = getAllLivTab.getSelectionModel().getSelectedItem();
         System.out.println("id Livraison selectionner " + selectedLivraison);
+
+        String lieu = selectedLivraison.getLieu();
+
+        // Ajouter des vérifications pour chaque lieu et ajouter le marqueur correspondant
+        if (lieu.equals("Baie-d'Hudson")) {
+            addMarkerToMap("55.26315789473682", "-75.28846153846153", lieu);
+        } else if (lieu.equals("Rurutu")) {
+            addMarkerToMap("-22.5", "-151.44230769230768", lieu);
+        } else if (lieu.equals("kurvelesh")) {
+            addMarkerToMap("40.26315789473685", "19.90384615384616", lieu);
+        }
 
         try
         {

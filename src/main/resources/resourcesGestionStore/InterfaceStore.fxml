@@ -259,7 +259,7 @@
             <ComboBox fx:id="comboPaiement" layoutX="428.0" layoutY="168.0" onAction="#selectPaiement" prefHeight="25.0" prefWidth="116.0" styleClass="bleu-Background" stylesheets="@store.css" />
             <WebView fx:id="WebViewMap" layoutX="691.0" layoutY="213.0" onMouseClicked="#selectville" prefHeight="416.0" prefWidth="455.0" />
             <Label fx:id="textMap" layoutX="809.0" layoutY="651.0" prefHeight="43.0" prefWidth="191.0" text="Lieu" visible="false" />
-            <Label fx:id="villeLabel" layoutX="604.0" layoutY="165.0" prefHeight="31.0" prefWidth="541.0" text="Lieu choisi" visible="false" />
+            <Label fx:id="villeLabel" layoutX="604.0" layoutY="165.0" prefHeight="31.0" prefWidth="541.0" text="Lieu choisi" />
          </children></Pane>
       <Pane fx:id="GetAllFacture" layoutX="-5.0" prefHeight="773.0" prefWidth="1176.0" styleClass="white-Background" stylesheets="@store.css" visible="false">
          <children>
@@ -649,7 +649,7 @@
                   </Button>
                </children>
             </VBox>
-            <TableView fx:id="getAllLivTab" layoutX="469.0" layoutY="115.0" prefHeight="315.0" prefWidth="484.0">
+            <TableView fx:id="getAllLivTab" layoutX="250.0" layoutY="122.0" prefHeight="315.0" prefWidth="484.0">
               <columns>
                 <TableColumn fx:id="ColIdLivraison" prefWidth="75.0" text="id Delevery" />
                 <TableColumn fx:id="ColIdFacture" prefWidth="75.0" text="id Invoice" />
@@ -669,6 +669,7 @@
                   <Font size="23.0" />
                </font>
             </Label>
+            <WebView fx:id="webWiewMapStaff" layoutX="769.0" layoutY="122.0" prefHeight="314.0" prefWidth="389.0" />
          </children>
       </Pane>
    </children>

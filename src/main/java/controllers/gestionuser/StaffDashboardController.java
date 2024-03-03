@@ -44,10 +44,8 @@ import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.chart.BarChart;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.PieChart;
-import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
@@ -75,9 +73,9 @@ import org.opencv.objdetect.CascadeClassifier;
 import org.opencv.objdetect.Objdetect;
 import org.opencv.objdetect.QRCodeDetector;
 import org.opencv.videoio.VideoCapture;
-import services.gestionevents.Event_detailsService;
 import services.gestionequipements.EquipementService;
 import services.gestionequipements.MaintenancesService;
+import services.gestionevents.Event_detailsService;
 import services.gestionuser.AbonnementService;
 import services.gestionuser.AdminService;
 import services.gestionuser.ClientService;
@@ -948,7 +946,27 @@ public class StaffDashboardController {
 
     @FXML
     void stat_combobox_act(ActionEvent event) {
+        String selectedItem = stat_combobox.getSelectionModel().getSelectedItem();
 
+        if (selectedItem.equals("Events")) {
+            total_events.setText(String.valueOf(eventDetailsService.total_events()));
+
+            stat_linechart.getData().clear();
+
+            try {
+                stat_linechart.getData().setAll(eventDetailsService.getEventsByMonth());
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+
+            MaintenancesService maintenancesService = new MaintenancesService();
+            try {
+                stat_linechart.getData().setAll(maintenancesService.getMaintenancesByMonth());
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     @FXML

@@ -673,11 +673,11 @@ public class eventfController {
                 // Create a Twitter post
                 createTwitterPost(event);
 
-                // Consume the event to prevent the alert from closing
+
                 eventFilter.consume();
             });
 
-            // Show the alert without waiting for the user's response
+
             alert.show();
         } catch (Exception e) {
             e.printStackTrace();

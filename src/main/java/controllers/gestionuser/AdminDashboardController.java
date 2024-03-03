@@ -10,14 +10,10 @@ import atlantafx.base.theme.PrimerDark;
 import atlantafx.base.theme.PrimerLight;
 import atlantafx.base.theme.Styles;
 import atlantafx.base.util.Animations;
+import com.sun.jna.platform.win32.Advapi32Util;
+import com.sun.jna.platform.win32.WinReg;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import entities.gestionuser.*;
-import jakarta.mail.Multipart;
-import jakarta.mail.Session;
-import jakarta.mail.Transport;
-import jakarta.mail.internet.MimeBodyPart;
-import jakarta.mail.internet.MimeMessage;
-import jakarta.mail.internet.MimeMultipart;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -36,10 +32,8 @@ import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.chart.BarChart;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.PieChart;
-import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
@@ -68,11 +62,10 @@ import org.opencv.objdetect.CascadeClassifier;
 import org.opencv.objdetect.Objdetect;
 import org.opencv.objdetect.QRCodeDetector;
 import org.opencv.videoio.VideoCapture;
-import services.gestionevents.Event_detailsService;
 import services.gestionequipements.MaintenancesService;
+import services.gestionevents.Event_detailsService;
 import services.gestionuser.*;
-import com.sun.jna.platform.win32.Advapi32Util;
-import com.sun.jna.platform.win32.WinReg;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -83,7 +76,6 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Properties;
 
 public class AdminDashboardController {
 
@@ -1078,7 +1070,27 @@ public class AdminDashboardController {
     }
     @FXML
     void stat_combobox_act(ActionEvent event) {
+        String selectedItem = stat_combobox.getSelectionModel().getSelectedItem();
 
+        if (selectedItem.equals("Events")) {
+            total_events.setText(String.valueOf(eventDetailsService.total_events()));
+
+            stat_linechart.getData().clear();
+
+            try {
+                stat_linechart.getData().setAll(eventDetailsService.getEventsByMonth());
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+
+            MaintenancesService maintenancesService = new MaintenancesService();
+            try {
+                stat_linechart.getData().setAll(maintenancesService.getMaintenancesByMonth());
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     public void createacc_btn_act(ActionEvent actionEvent) {
@@ -1475,6 +1487,7 @@ public class AdminDashboardController {
         initWarning(subpane);
         initWarning(usermgmt_pane);
         initGPPrices();
+
         String theme = Advapi32Util.registryGetStringValue(WinReg.HKEY_CURRENT_USER, "Software\\GymPlus", "theme");
         if (theme != null && theme.equals("dark")) {
             dark_cb.setSelected(true);

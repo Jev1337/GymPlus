@@ -883,7 +883,7 @@ public class eventfController {
                 DataSource qrCodeDataSource = new ByteArrayDataSource(bout.toByteArray(), "image/png");
 
                 // Send the QR code via email
-                sendEmailWithQRCode(GlobalVar.getUser().getEmail(), "Congratulations", "You have successfully claimed GymPlus Whey Protein", qrCodeDataSource);
+                sendEmailWithQRCode(GlobalVar.getUser().getEmail(), "Congratulations", "You have successfully claimed GymPlus Whey Protein get it by scanning it in the gym reception", qrCodeDataSource);
             }
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -921,7 +921,7 @@ public class eventfController {
                 DataSource qrCodeDataSource = new ByteArrayDataSource(bout.toByteArray(), "image/png");
 
                 // Send the QR code via email
-                sendEmailWithQRCode(GlobalVar.getUser().getEmail(), "Congratulations", "You have successfully claimed GymPlus Weightlifting Belt", qrCodeDataSource);
+                sendEmailWithQRCode(GlobalVar.getUser().getEmail(), "Congratulations", "You have successfully claimed GymPlus Weightlifting Belt get it by scanning it in the gym reception ", qrCodeDataSource);
             }
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -1030,7 +1030,7 @@ public class eventfController {
                 DataSource qrCodeDataSource = new ByteArrayDataSource(bout.toByteArray(), "image/png");
 
                 // Send the QR code via email
-                sendEmailWithQRCode(GlobalVar.getUser().getEmail(), "Congratulations", "You have successfully claimed GymPlus Gym Bag", qrCodeDataSource);
+                sendEmailWithQRCode(GlobalVar.getUser().getEmail(), "Congratulations", "You have successfully claimed GymPlus Bag get it by scanning it in the gym reception ", qrCodeDataSource);
 
                 Alert qrCodeAlert = new Alert(Alert.AlertType.INFORMATION);
                 qrCodeAlert.setTitle("Congratulations");

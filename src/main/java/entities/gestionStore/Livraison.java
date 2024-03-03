@@ -51,6 +51,11 @@ public class Livraison {
     public Livraison() {
     }
 
+    public Livraison(int idLivraison, String etat) {
+        this.idLivraison = idLivraison;
+        this.etat = etat;
+    }
+
     public Livraison(int idFacture, int idClient, String lieu, String etat) {
         this.idFacture = idFacture;
         this.idClient = idClient;

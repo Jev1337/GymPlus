@@ -39,10 +39,7 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.json.JSONException;
 import org.json.JSONObject;
-import services.gestionStore.DetailFactureService;
-import services.gestionStore.FactureService;
-import services.gestionStore.PanierService;
-import services.gestionStore.ProduitService;
+import services.gestionStore.*;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -94,6 +91,12 @@ public class InterfaceStoreController implements Initializable {
     private ComboBox<String> boxMontantFX;
     @FXML
     private TextField searchFX;
+    @FXML
+    private Button BtnLivraisonFX;
+    @FXML
+    private Label getAlldelevFX;
+    @FXML
+    private Pane Livraison_pane;
 
     //*****Check Stock
     @FXML
@@ -225,6 +228,23 @@ public class InterfaceStoreController implements Initializable {
     private TableColumn<detailfacture, Integer> nameProdCol;
     private final DetailFactureService dfS = new DetailFactureService();
 
+    //*****Livraison
+    @FXML
+    private TableView<Livraison> getAllLivTab;
+    @FXML
+    private TableColumn<Livraison, Integer> ColClient;
+    @FXML
+    private TableColumn<Livraison, String> ColEtat;
+    @FXML
+    private TableColumn<Livraison, String> ColIdFacture;
+    @FXML
+    private TableColumn<Livraison, Integer> ColIdLivraison;
+    @FXML
+    private TableColumn<Livraison, String> ColLieu;
+    @FXML
+    private TextField updateEtatFX;
+
+
 
     //*****Var
     FileChooser filePhoto = new FileChooser();
@@ -236,10 +256,25 @@ public class InterfaceStoreController implements Initializable {
     }
     private facture fc = new facture();
     private final FactureService factureService = new FactureService();
+    private final LivraisonService LivraisonService = new LivraisonService();
     String pathPhoto = "file:///D:/projet_PI/GymPlus/src/assets/imageProduit/";
 
 
     //*****GetAllProduit
+
+    @FXML
+    void BtnLivraison(ActionEvent event) {
+        GetAllProduit.setVisible(false);
+        Livraison_pane.setVisible(true);
+        chargerTableLivraison();
+
+    }
+
+    @FXML
+    void ExitFromDelevery(ActionEvent event) {
+        Livraison_pane.setVisible(false);
+        GetAllProduit.setVisible(true);
+    }
 
     @FXML
     void ConsulterPanier(ActionEvent event) {
@@ -277,7 +312,7 @@ public class InterfaceStoreController implements Initializable {
         try {
             ProduitService prodService = new ProduitService();
 
-            ObservableList<produit> produits = FXCollections.observableArrayList(prodService.getLatestProducts(3));
+            ObservableList<produit> produits = FXCollections.observableArrayList(prodService.getLatestProducts(4));
 
             afficherRecentyAddedHbox(produits);
 
@@ -305,6 +340,10 @@ public class InterfaceStoreController implements Initializable {
             VBox productBox = new VBox();
             productBox.getChildren().addAll(imageView, nameLabel, priceLabel);
 
+            // Ajouter un espacement entre chaque produit
+            HBox.setMargin(productBox, new Insets(0, 0, 0, 10)); // Ajoute une marge à gauche de 10 pixels
+
+
             // gestionnaire d'événements quand je clik sur photo
             final int productId = p.getIdProduit();
             imageView.setOnMouseClicked(event -> {
@@ -312,7 +351,7 @@ public class InterfaceStoreController implements Initializable {
                 GetOneProduit.setVisible(true);
 
                 loadProductDetails(productId);
-                System.out.println("rania****" + productId);
+//                System.out.println("rania****" + productId);
 
             });
 
@@ -400,7 +439,7 @@ public class InterfaceStoreController implements Initializable {
     public void gridAff(ObservableList<produit> produits)
     {
         // Nombre de produits par colonne
-        int produitsParLigne = 4;
+        int produitsParLigne = 3;
 
         // Ajout data dans GridPane
         int row = 0;
@@ -524,10 +563,38 @@ public class InterfaceStoreController implements Initializable {
         imageView.setOnMouseClicked(event -> {
             stock_pane.setVisible(false);
             UpdateProduit.setVisible(true);
+            hboxStock.getChildren().clear();
+            ChargerProd(p.getIdProduit());
         });
 
         hboxStock.getChildren().add(productBox);
 
+    }
+
+    private void ChargerProd( int id)
+    {
+        try {
+            ProduitService produitService = new ProduitService();
+
+            produit p = produitService.getOne(id);
+
+            String categorie = p.getCategorie();
+            Categorie_Combo1.setValue(categorie);
+            NameFX2.setText(p.getName());
+            PrixFX1.setText(String.valueOf(p.getPrix()));
+            StockFX1.setText(String.valueOf(p.getStock()));
+            SeuilFX1.setText(String.valueOf(p.getSeuil()));
+            descriptionFx1.setText(p.getDescription());
+            PhotoPath1.setText(p.getPhoto());
+            PromoFX1.setText(String.valueOf(p.getPromo()));
+
+        } catch (SQLException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erreur");
+            alert.setHeaderText("Erreur lors du chargement des détails du produit");
+            alert.setContentText("Une erreur s'est produite lors du chargement des détails du produit.");
+            alert.showAndWait();
+        }
     }
 
     @FXML
@@ -829,15 +896,12 @@ public class InterfaceStoreController implements Initializable {
     }
 
 //    public String a ="Latitude: 55.26315789473682, Longitude: -75.28846153846153, lieu :Baie-d'Hudson" ;
-    public String a ="Baie-Hudson" ;
-
 //    public String b = "Latitude: -22.5, Longitude:-151.44230769230768, lieu :Rurutu";
 //    public String c = "Latitude: 40.26315789473685, Longitude:19.90384615384616, lieu :kurvelesh";
+    public String a ="Baie-Hudson" ;
     public String b = "Rurutu";
     public String c = "kurvelesh";
     List<String> list = new ArrayList<>();
-
-
     public Livraison ajouter() throws SQLException {
         list.add(a);
         list.add(b);
@@ -850,18 +914,9 @@ public class InterfaceStoreController implements Initializable {
         int IdderniereFacture = factureService.getDerniereFacture().getIdFacture();
         l.setIdFacture(IdderniereFacture);
         l.setIdClient(GlobalVar.getUser().getId());
-//        if(!villeLabel.getText().isEmpty()) {
-//            l.setLieu(villeLabel.getText());
-//        }
-//        else
-//        {
-            villeLabel.setText(location);
-            l.setLieu(villeLabel.getText());
-//            System.out.println("lieu a: " + villeLabel.getText());
-//        l.setLieu("Rurutu");
+        villeLabel.setText(location);
+        l.setLieu(villeLabel.getText());
         l.setEtat("en cours");
-
-        System.out.println("jawekkk behyyyyy");
 
         return l;
     }
@@ -1658,6 +1713,71 @@ public class InterfaceStoreController implements Initializable {
         }
     }
 
+    //*****Livraison
+    public void chargerTableLivraison()
+    {
+        try
+        {
+            ObservableList<Livraison> livraisons = FXCollections.observableArrayList(LivraisonService.getAll());
+
+            getAllLivTab.setItems(livraisons);
+
+            // colonne TableView
+            ColIdLivraison.setCellValueFactory(new PropertyValueFactory<>("idLivraison"));
+            ColIdFacture.setCellValueFactory(new PropertyValueFactory<>("idFacture"));
+            ColClient.setCellValueFactory(new PropertyValueFactory<>("idClient"));
+            ColLieu.setCellValueFactory(new PropertyValueFactory<>("Lieu"));
+            ColEtat.setCellValueFactory(new PropertyValueFactory<>("etat"));
+        }
+        catch (SQLException e)
+        {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erreur");
+            alert.setHeaderText("Erreur lors du chargement des Livraisons");
+            alert.setContentText("Une erreur s'est produite lors du chargement des Livraisons depuis la base de données.");
+            alert.showAndWait();
+        }
+    }
+
+
+    Livraison l = new Livraison();
+    @FXML
+    void updateEtat(ActionEvent event) throws SQLException {
+
+        Livraison selectedLivraison = getAllLivTab.getSelectionModel().getSelectedItem();
+        System.out.println("id Livraison selectionner " + selectedLivraison);
+
+        try
+        {
+            l.setEtat(updateEtatFX.getText());
+            String etatLiv = updateEtatFX.getText();
+
+            int x = selectedLivraison.getIdLivraison();
+
+            Livraison l = new Livraison(x , etatLiv);
+
+
+            LivraisonService.update(l);
+
+
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Info");
+            alert.setContentText("Livraison updated!");
+            alert.show();
+
+            chargerTableLivraison();
+
+        } catch (SQLException e)
+        {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setContentText(e.getMessage());
+            alert.show();
+        }
+    }
+
+
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -1678,9 +1798,20 @@ public class InterfaceStoreController implements Initializable {
 
             BtnStock.setVisible(false);
             stockProductFX.setVisible(false);
+
         }
 
-        //comboBox categorie
+        if (GlobalVar.getUser().getRole().equals("client"))
+        {
+            BtnLivraisonFX.setVisible(false);
+            BtnLivraisonFX.setManaged(false);
+            getAlldelevFX.setVisible(false);
+            getAlldelevFX.setVisible(false);
+
+        }
+
+
+            //comboBox categorie
         ObservableList<String> list_categorie = FXCollections.observableArrayList("Food", "equipement", "vetement" , "All");
         boxCategorieFX.setItems(list_categorie);
 

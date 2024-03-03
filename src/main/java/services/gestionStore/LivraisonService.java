@@ -35,7 +35,7 @@ public class LivraisonService implements IService<Livraison> {
     }
 
     @Override
-    public List getAll() throws SQLException {
+    public List<Livraison> getAll() throws SQLException {
         String sql = "select * from livraison";
         Statement st = connection.createStatement();
         ResultSet rs = st.executeQuery(sql);

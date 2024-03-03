@@ -35,17 +35,12 @@
             <TextArea id="DescriptionFX" fx:id="DescriptionFX1" layoutX="607.0" layoutY="623.0" prefHeight="116.0" prefWidth="149.0" promptText="Description..." styleClass="gradient-Background" visible="false" />
             <VBox prefHeight="757.0" prefWidth="205.0" styleClass="white-Background" stylesheets="@store.css">
                <children>
-                  <Label prefHeight="55.0" prefWidth="211.0" text="   Update Product" textFill="BLUE">
-                     <font>
-                        <Font size="23.0" />
-                     </font>
-                  </Label>
-                  <ImageView fitHeight="205.0" fitWidth="209.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="53.0" fitWidth="211.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../assets/images/GymplusLogo.png" />
+                        <Image url="@../assets/images/gymplustext.png" />
                      </image>
                   </ImageView>
-                  <HBox prefHeight="86.0" prefWidth="205.0" />
+                  <HBox prefHeight="314.0" prefWidth="205.0" />
                   <HBox prefHeight="31.0" prefWidth="208.0">
                      <children>
                         <Button id="AjouterFX" fx:id="ModifierFX" mnemonicParsing="false" onAction="#Modifier" prefHeight="31.0" prefWidth="208.0" styleClass="bleu-Background" stylesheets="@store.css" text="Update" />
@@ -104,22 +99,22 @@
                   <Label fx:id="PhotoPath1" layoutX="321.0" layoutY="317.0" prefHeight="27.0" prefWidth="171.0" />
                </children>
             </Pane>
+            <Label layoutX="546.0" layoutY="67.0" prefHeight="55.0" prefWidth="211.0" text="   Update Product" textFill="BLUE">
+               <font>
+                  <Font size="23.0" />
+               </font>
+            </Label>
          </children></Pane>
       <Pane fx:id="GetOneProduit" prefHeight="757.0" prefWidth="1153.0" styleClass="white-Background" stylesheets="@store.css" visible="false">
          <children>
             <VBox prefHeight="757.0" prefWidth="205.0" styleClass="white-Background" stylesheets="@store.css">
                <children>
-                  <Label prefHeight="57.0" prefWidth="220.0" text="      Product Details" textFill="BLUE">
-                     <font>
-                        <Font size="20.0" />
-                     </font>
-                  </Label>
-                  <ImageView fitHeight="205.0" fitWidth="209.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="53.0" fitWidth="211.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../assets/images/GymplusLogo.png" />
+                        <Image url="@../assets/images/gymplustext.png" />
                      </image>
                   </ImageView>
-                  <HBox prefHeight="51.0" prefWidth="205.0" />
+                  <HBox prefHeight="203.0" prefWidth="205.0" />
                   <Button fx:id="AddPanierFX" mnemonicParsing="false" onAction="#AddPanier" prefHeight="30.0" prefWidth="209.0" styleClass="bleu-Background" stylesheets="@store.css" text="Add to Cart">
                      <font>
                         <Font size="13.0" />
@@ -188,22 +183,22 @@
                   <Font size="13.0" />
                </font>
             </Label>
+            <Label layoutX="544.0" layoutY="47.0" prefHeight="57.0" prefWidth="220.0" text="      Product Details" textFill="BLUE">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Label>
          </children></Pane>
-      <Pane fx:id="Panier" layoutX="14.0" layoutY="5.0" prefHeight="757.0" prefWidth="1153.0" styleClass="white-Background" stylesheets="@store.css" visible="false">
+      <Pane fx:id="Panier" layoutX="4.0" layoutY="5.0" prefHeight="767.0" prefWidth="1163.0" styleClass="white-Background" stylesheets="@store.css" visible="false">
          <children>
             <VBox prefHeight="757.0" prefWidth="220.0" styleClass="white-Background" stylesheets="@store.css">
                <children>
-                  <Label alignment="CENTER" prefHeight="55.0" prefWidth="214.0" text="Your Shopping Cart" textFill="BLUE">
-                     <font>
-                        <Font size="24.0" />
-                     </font>
-                  </Label>
-                  <ImageView fitHeight="208.0" fitWidth="205.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="53.0" fitWidth="211.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../assets/images/GymplusLogo.png" />
+                        <Image url="@../assets/images/gymplustext.png" />
                      </image>
                   </ImageView>
-                  <HBox prefHeight="68.0" prefWidth="220.0" />
+                  <HBox prefHeight="315.0" prefWidth="220.0" />
                   <Button mnemonicParsing="false" onAction="#ValiderPanier" prefHeight="30.0" prefWidth="757.0" styleClass="bleu-Background" stylesheets="@store.css" text="Validate Cart">
                      <VBox.margin>
                         <Insets />
@@ -231,12 +226,12 @@
                   </GridPane>
                </content>
             </ScrollPane>
-            <Label fx:id="TotalPanierFX" layoutX="949.0" layoutY="49.0" prefHeight="17.0" prefWidth="102.0" text="Total Panier">
+            <Label fx:id="TotalPanierFX" layoutX="949.0" layoutY="85.0" prefHeight="17.0" prefWidth="102.0" text="Total Panier">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
-            <Label layoutX="801.0" layoutY="49.0" prefHeight="27.0" prefWidth="116.0" text="Total Cart :">
+            <Label layoutX="803.0" layoutY="85.0" prefHeight="27.0" prefWidth="116.0" text="Total Cart :">
                <font>
                   <Font size="18.0" />
                </font>
@@ -263,24 +258,19 @@
                </font></Label>
             <ComboBox fx:id="comboPaiement" layoutX="428.0" layoutY="168.0" onAction="#selectPaiement" prefHeight="25.0" prefWidth="116.0" styleClass="bleu-Background" stylesheets="@store.css" />
             <WebView fx:id="WebViewMap" layoutX="691.0" layoutY="213.0" onMouseClicked="#selectville" prefHeight="416.0" prefWidth="455.0" />
-            <Label fx:id="textMap" layoutX="809.0" layoutY="651.0" prefHeight="43.0" prefWidth="191.0" text="Lieu" />
-            <Label fx:id="villeLabel" layoutX="606.0" layoutY="165.0" prefHeight="31.0" prefWidth="541.0" text="Lieu choisi" />
+            <Label fx:id="textMap" layoutX="809.0" layoutY="651.0" prefHeight="43.0" prefWidth="191.0" text="Lieu" visible="false" />
+            <Label fx:id="villeLabel" layoutX="604.0" layoutY="165.0" prefHeight="31.0" prefWidth="541.0" text="Lieu choisi" visible="false" />
          </children></Pane>
-      <Pane fx:id="GetAllFacture" layoutX="5.0" layoutY="-22.0" prefHeight="757.0" prefWidth="1153.0" styleClass="white-Background" stylesheets="@store.css" visible="false">
+      <Pane fx:id="GetAllFacture" layoutX="-5.0" prefHeight="773.0" prefWidth="1176.0" styleClass="white-Background" stylesheets="@store.css" visible="false">
          <children>
-            <VBox layoutY="23.0" prefHeight="757.0" prefWidth="205.0" styleClass="white-Background" stylesheets="@store.css">
+            <VBox prefHeight="757.0" prefWidth="205.0" styleClass="white-Background" stylesheets="@store.css">
                <children>
-                  <Label prefHeight="37.0" prefWidth="205.0" text=" Get All Invoices" textFill="BLUE">
-                     <font>
-                        <Font size="25.0" />
-                     </font>
-                  </Label>
-                  <ImageView fitHeight="208.0" fitWidth="205.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="53.0" fitWidth="211.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../assets/images/GymplusLogo.png" />
+                        <Image url="@../assets/images/gymplustext.png" />
                      </image>
                   </ImageView>
-                  <HBox prefHeight="94.0" prefWidth="205.0" styleClass="white-Background" stylesheets="@store.css" />
+                  <HBox prefHeight="260.0" prefWidth="205.0" />
                   <Button mnemonicParsing="false" onAction="#AffOneFacture" prefHeight="30.0" prefWidth="205.0" styleClass="bleu-Background" stylesheets="@store.css" text="Get Details" />
                   <HBox prefHeight="31.0" prefWidth="208.0" styleClass="white-Background" stylesheets="@store.css" />
                   <Button mnemonicParsing="false" onAction="#Quitter" prefHeight="30.0" prefWidth="205.0" styleClass="bleu-Background" stylesheets="@store.css" text="Exit" />
@@ -302,11 +292,16 @@
                   <TableColumn fx:id="MethodeP" prefWidth="122.0" text="Payment Method" />
                </columns>
             </TableView>
-            <Button layoutX="565.0" layoutY="624.0" mnemonicParsing="false" onAction="#RefreshTable" prefHeight="30.0" prefWidth="205.0" styleClass="bleu-Background" stylesheets="@store.css" text="refresh" />
+            <Button layoutX="565.0" layoutY="624.0" mnemonicParsing="false" onAction="#RefreshTable" prefHeight="30.0" prefWidth="205.0" styleClass="bleu-Background" stylesheets="@store.css" text="refresh" visible="false" />
+            <Label layoutX="565.0" layoutY="77.0" prefHeight="37.0" prefWidth="205.0" text=" Get All Invoices" textFill="BLUE">
+               <font>
+                  <Font size="25.0" />
+               </font>
+            </Label>
          </children></Pane>
       <Pane fx:id="GetOneFacture" prefHeight="772.0" prefWidth="1168.0" styleClass="white-Background" stylesheets="@store.css" visible="false">
          <children>
-            <TableView fx:id="ViewDetailFacture" layoutX="439.0" layoutY="197.0" prefHeight="300.0" prefWidth="560.0" styleClass="bleu-Background" stylesheets="@store.css">
+            <TableView fx:id="ViewDetailFacture" layoutX="439.0" layoutY="236.0" prefHeight="262.0" prefWidth="560.0" styleClass="bleu-Background" stylesheets="@store.css">
                <columns>
                   <TableColumn fx:id="idDetailCol" prefWidth="81.0" text="Id Detail" />
                   <TableColumn fx:id="nameProdCol" prefWidth="69.0" text="Id Product" />
@@ -318,17 +313,12 @@
             </TableView>
             <VBox prefHeight="757.0" prefWidth="205.0" styleClass="white-Background" stylesheets="@store.css">
                <children>
-                  <Label prefHeight="63.0" prefWidth="205.0" text=" List Invoice Details" textFill="BLUE">
-                     <font>
-                        <Font size="23.0" />
-                     </font>
-                  </Label>
-                  <ImageView fitHeight="205.0" fitWidth="205.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="53.0" fitWidth="211.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../assets/images/GymplusLogo.png" />
+                        <Image url="@../assets/images/gymplustext.png" />
                      </image>
                   </ImageView>
-                  <HBox prefHeight="89.0" prefWidth="205.0" />
+                  <HBox prefHeight="237.0" prefWidth="205.0" />
                   <Button mnemonicParsing="false" onAction="#imprimer" prefHeight="30.0" prefWidth="205.0" styleClass="bleu-Background" stylesheets="@store.css" text="Print">
                      <font>
                         <Font size="13.0" />
@@ -342,32 +332,32 @@
                   <Button mnemonicParsing="false" onAction="#PaiementStipe" prefHeight="30.0" prefWidth="205.0" text="Paiement Stripe" />
                </children>
             </VBox>
-            <Label layoutX="269.0" layoutY="60.0" text="Id Invoice">
+            <Label layoutX="269.0" layoutY="84.0" text="Id Invoice">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <Label fx:id="idFactureFX" layoutX="369.0" layoutY="60.0" prefHeight="20.0" prefWidth="161.0" text="id facture">
+            <Label fx:id="idFactureFX" layoutX="369.0" layoutY="84.0" prefHeight="20.0" prefWidth="161.0" text="id facture">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <Label layoutX="269.0" layoutY="112.0" prefHeight="20.0" prefWidth="68.0" text="Id Client ">
+            <Label layoutX="269.0" layoutY="136.0" prefHeight="20.0" prefWidth="68.0" text="Id Client ">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <Label fx:id="idClientFX" layoutX="369.0" layoutY="112.0" prefHeight="20.0" prefWidth="96.0" text="Id Client">
+            <Label fx:id="idClientFX" layoutX="369.0" layoutY="136.0" prefHeight="20.0" prefWidth="96.0" text="Id Client">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <Label layoutX="269.0" layoutY="156.0" text="Sale Date">
+            <Label layoutX="269.0" layoutY="180.0" text="Sale Date">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <Label fx:id="DateFX" layoutX="369.0" layoutY="156.0" prefHeight="20.0" prefWidth="205.0" text="Date">
+            <Label fx:id="DateFX" layoutX="369.0" layoutY="180.0" prefHeight="20.0" prefWidth="205.0" text="Date">
                <font>
                   <Font size="14.0" />
                </font>
@@ -382,14 +372,19 @@
                   <Font size="18.0" />
                </font>
             </Label>
+            <Label layoutX="567.0" layoutY="20.0" prefHeight="63.0" prefWidth="205.0" text=" List Invoice Details" textFill="BLUE">
+               <font>
+                  <Font size="23.0" />
+               </font>
+            </Label>
          </children></Pane>
       <Pane fx:id="GetAllProduit" prefHeight="767.0" prefWidth="1163.0" styleClass="white-Background" stylesheets="@store.css">
          <children>
             <VBox prefHeight="767.0" prefWidth="208.0" styleClass="white-Background" stylesheets="@store.css">
                <children>
-                  <ImageView fitHeight="207.0" fitWidth="221.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="53.0" fitWidth="211.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../assets/images/GymplusLogo.png" />
+                        <Image url="@../assets/images/gymplustext.png" />
                      </image>
                   </ImageView>
                   <Label prefHeight="38.0" prefWidth="206.0" text="Search" textFill="BLUE">
@@ -424,6 +419,12 @@
                      <font>
                         <Font size="13.0" />
                      </font></Button>
+                  <Label fx:id="getAlldelevFX" prefHeight="38.0" prefWidth="206.0" text="Get all deliveries" textFill="BLUE">
+                     <font>
+                        <Font name="Calibri Light Italic" size="20.0" />
+                     </font>
+                  </Label>
+                  <Button fx:id="BtnLivraisonFX" mnemonicParsing="false" onAction="#BtnLivraison" prefHeight="30.0" prefWidth="208.0" text="Check delivery" />
                   <Label fx:id="AddProdFX" prefHeight="38.0" prefWidth="206.0" text="Add Product" textFill="BLUE">
                      <font>
                         <Font name="Calibri Light Italic" size="20.0" />
@@ -467,7 +468,7 @@
                         <Font name="Calibri Light Italic" size="20.0" />
                      </font>
                   </Label>
-                  <ScrollPane fx:id="ScrollAllProduct" prefHeight="496.0" prefWidth="974.0" styleClass="white-Background" stylesheets="@store.css" VBox.vgrow="ALWAYS">
+                  <ScrollPane fx:id="ScrollAllProduct" prefHeight="496.0" prefWidth="938.0" styleClass="white-Background" stylesheets="@store.css" VBox.vgrow="ALWAYS">
                      <content>
                         <GridPane fx:id="ProductContainer" alignment="CENTER" hgap="10" prefHeight="569.0" prefWidth="936.0" styleClass="white-Background" stylesheets="@store.css" vgap="10">
                            <padding>
@@ -487,30 +488,27 @@
          <children>
             <VBox prefHeight="767.0" prefWidth="209.0" styleClass="white-Background">
                <children>
-                  <Label prefHeight="48.0" prefWidth="211.0" text="      Add Product" textFill="BLUE">
-                     <font>
-                        <Font size="23.0" />
-                     </font>
-                  </Label>
-                  <ImageView fitHeight="216.0" fitWidth="209.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="53.0" fitWidth="211.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../assets/images/GymplusLogo.png" />
+                        <Image url="@../assets/images/gymplustext.png" />
                      </image>
                   </ImageView>
-                  <HBox prefHeight="57.0" prefWidth="209.0" />
+                  <HBox prefHeight="272.0" prefWidth="209.0" />
                   <HBox prefHeight="31.0" prefWidth="208.0">
                      <children>
                         <Button id="AjouterFX" fx:id="ajouterFX" mnemonicParsing="false" onAction="#ajouter" prefHeight="30.0" prefWidth="208.0" styleClass="bleu-Background" stylesheets="@store.css" text="Add Product">
                            <font>
                               <Font size="13.0" />
-                           </font></Button>
+                           </font>
+                        </Button>
                      </children>
                   </HBox>
                   <HBox prefHeight="31.0" prefWidth="208.0" />
                   <Button id="AfficherFX" mnemonicParsing="false" onAction="#naviger" prefHeight="30.0" prefWidth="209.0" styleClass="bleu-Background" stylesheets="@store.css" text="Show">
                      <font>
                         <Font size="13.0" />
-                     </font></Button>
+                     </font>
+                  </Button>
                </children>
             </VBox>
             <Pane fx:id="aucunProduit1" layoutX="453.0" layoutY="114.0" prefHeight="557.0" prefWidth="560.0" style="-fx-background-radius: 20; -fx-background-color: #DFE9F5;">
@@ -584,7 +582,13 @@
                   <Label fx:id="PhotoPath" layoutX="357.0" layoutY="286.0" prefHeight="30.0" prefWidth="201.0" />
                </children>
             </Pane>
-         </children></Pane>
+            <Label layoutX="628.0" layoutY="28.0" prefHeight="48.0" prefWidth="211.0" text="      Add Product" textFill="BLUE">
+               <font>
+                  <Font size="23.0" />
+               </font>
+            </Label>
+         </children>
+      </Pane>
       <Pane fx:id="stock_pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="772.0" prefWidth="1168.0" visible="false">
          <children>
             <Pane fx:id="aucunProduit" layoutX="435.0" layoutY="167.0" prefHeight="368.0" prefWidth="521.0" style="-fx-background-radius: 20; -fx-background-color: #DFE9F5;" visible="false">
@@ -608,17 +612,12 @@
             </Pane>
             <VBox prefHeight="772.0" prefWidth="208.0">
                <children>
-                  <Label prefHeight="56.0" prefWidth="211.0" text="      Check Stock" textFill="BLUE">
-                     <font>
-                        <Font size="23.0" />
-                     </font>
-                  </Label>
-                  <ImageView fitHeight="207.0" fitWidth="221.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="53.0" fitWidth="211.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../assets/images/GymplusLogo.png" />
+                        <Image url="@../assets/images/gymplustext.png" />
                      </image>
                   </ImageView>
-                  <HBox prefHeight="63.0" prefWidth="208.0" />
+                  <HBox prefHeight="275.0" prefWidth="208.0" />
                   <Button mnemonicParsing="false" onAction="#ExitFromStock" prefHeight="30.0" prefWidth="208.0" text="Exit">
                      <font>
                         <Font size="13.0" />
@@ -626,6 +625,50 @@
                   </Button>
                </children>
             </VBox>
+            <Label layoutX="590.0" layoutY="59.0" prefHeight="56.0" prefWidth="211.0" text="      Check Stock" textFill="BLUE">
+               <font>
+                  <Font size="23.0" />
+               </font>
+            </Label>
+         </children>
+      </Pane>
+      <Pane fx:id="Livraison_pane" prefHeight="772.0" prefWidth="1168.0" visible="false">
+         <children>
+            <VBox prefHeight="772.0" prefWidth="208.0">
+               <children>
+                  <ImageView fitHeight="53.0" fitWidth="211.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../assets/images/gymplustext.png" />
+                     </image>
+                  </ImageView>
+                  <HBox prefHeight="277.0" prefWidth="208.0" />
+                  <Button mnemonicParsing="false" onAction="#ExitFromDelevery" prefHeight="30.0" prefWidth="208.0" text="Exit">
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                  </Button>
+               </children>
+            </VBox>
+            <TableView fx:id="getAllLivTab" layoutX="469.0" layoutY="115.0" prefHeight="315.0" prefWidth="484.0">
+              <columns>
+                <TableColumn fx:id="ColIdLivraison" prefWidth="75.0" text="id Delevery" />
+                <TableColumn fx:id="ColIdFacture" prefWidth="75.0" text="id Invoice" />
+                  <TableColumn fx:id="ColClient" prefWidth="93.0" text="Client" />
+                  <TableColumn fx:id="ColLieu" prefWidth="121.0" text="Place" />
+                  <TableColumn fx:id="ColEtat" prefWidth="118.0" text="State" />
+              </columns>
+            </TableView>
+            <TextField fx:id="updateEtatFX" layoutX="795.0" layoutY="506.0" onAction="#updateEtat" text="Delivered" />
+            <Label layoutX="516.0" layoutY="509.0" prefHeight="19.0" prefWidth="137.0" text="Update delivery here">
+               <font>
+                  <Font size="13.0" />
+               </font>
+            </Label>
+            <Label layoutX="584.0" layoutY="33.0" prefHeight="56.0" prefWidth="211.0" text="     Check Delivery" textFill="BLUE">
+               <font>
+                  <Font size="23.0" />
+               </font>
+            </Label>
          </children>
       </Pane>
    </children>

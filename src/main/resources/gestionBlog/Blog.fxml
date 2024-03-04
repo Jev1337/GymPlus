@@ -16,7 +16,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="808.0" prefWidth="1156.0" styleClass="bodyBackground" stylesheets="@../assets/css/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.BlogController.BlogController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="1156.0" styleClass="bodyBackground" stylesheets="@../assets/css/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.BlogController.BlogController">
     <top>
         <HBox alignment="CENTER" prefHeight="60.0" prefWidth="906.0" style="-fx-spacing: 10;" styleClass="navbarBackground" stylesheets="@../assets/css/style.css" BorderPane.alignment="CENTER_RIGHT">
             <children>
@@ -41,15 +41,19 @@
         </HBox>
     </top>
     <center>
-        <HBox prefHeight="420.0" prefWidth="906.0" BorderPane.alignment="CENTER">
+        <HBox alignment="TOP_CENTER" prefHeight="420.0" prefWidth="906.0" BorderPane.alignment="CENTER">
             <children>
-                <Pane prefHeight="200.0" prefWidth="200.0" styleClass="bodyBackground" HBox.hgrow="ALWAYS" />
-                <ScrollPane prefWidth="621.0" styleClass="bodyBackground" stylesheets="@../assets/css/style.css">
+                <Pane layoutX="10.0" layoutY="10.0" minHeight="520.0" prefHeight="520.0" prefWidth="250.0" styleClass="bodyBackground" HBox.hgrow="ALWAYS">
+               <padding>
+                  <Insets left="10.0" right="10.0" />
+               </padding>
+               </Pane>
+                <ScrollPane minHeight="520.0" prefHeight="520.0" prefWidth="621.0" styleClass="bodyBackground" stylesheets="@../assets/css/style.css">
                     <HBox.margin>
                         <Insets top="10.0" />
                     </HBox.margin>
                     <content>
-                        <VBox alignment="TOP_CENTER" prefHeight="429.0" prefWidth="568.0" spacing="10.0" styleClass="bodyBackground">
+                        <VBox alignment="TOP_CENTER" spacing="10.0" styleClass="bodyBackground">
                             <children>
                                 <VBox alignment="TOP_CENTER" prefHeight="190.0" prefWidth="400.0" spacing="10.0" styleClass="postBackground" stylesheets="@../assets/css/style.css">
                                     <children>
@@ -118,8 +122,17 @@
                             </padding>
                         </VBox>
                     </content>
+               <padding>
+                  <Insets right="20.0" />
+               </padding>
                 </ScrollPane>
-                <Pane layoutX="10.0" layoutY="10.0" prefHeight="420.0" prefWidth="152.0" styleClass="bodyBackground" HBox.hgrow="ALWAYS" />
+                <Pane layoutX="10.0" layoutY="10.0" minHeight="520.0" prefHeight="520.0" prefWidth="250.0" styleClass="bodyBackground" HBox.hgrow="ALWAYS">
+               <padding>
+                  <Insets left="10.0" right="10.0" />
+               </padding>
+               <children>
+                  <Button layoutX="108.0" layoutY="35.0" mnemonicParsing="false" onAction="#addUserBtn" text="Button" />
+               </children></Pane>
             </children>
         </HBox>
     </center>

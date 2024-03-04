@@ -46,8 +46,6 @@
             <artifactId>font-awesome</artifactId>
             <version>6.4.0</version>
         </dependency>
-
-
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
@@ -73,7 +71,6 @@
             <artifactId>password4j</artifactId>
             <version>1.7.3</version>
         </dependency>
-
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-media</artifactId>
@@ -168,6 +165,7 @@
             <artifactId>jakarta.mail</artifactId>
             <version>2.0.1</version>
         </dependency>
+
         <dependency>
             <groupId>org.freemarker</groupId>
             <artifactId>freemarker</artifactId>
@@ -205,7 +203,7 @@
             <artifactId>restfb</artifactId>
             <version>3.23.0</version>
         </dependency>
-            
+
         <dependency>
             <groupId>sheltekio.javalibs</groupId>
             <artifactId>icmp4j</artifactId>
@@ -230,6 +228,16 @@
             <groupId>org.twitter4j</groupId>
             <artifactId>twitter4j-core</artifactId>
             <version>4.0.7</version>
+        </dependency>
+        <dependency>
+            <groupId>com.jfoenix</groupId>
+            <artifactId>jfoenix</artifactId>
+            <version>9.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.vdurmont</groupId>
+            <artifactId>emoji-java</artifactId>
+            <version>5.1.1</version>
         </dependency>
 
     </dependencies>

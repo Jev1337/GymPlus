@@ -201,7 +201,7 @@ CREATE TABLE `objectif` (
 --
 
 CREATE TABLE `planning` (
-  `id_Planning` int(11) NOT NULL AUTO_INCREMENT,
+  `id_Planning` int(11) NOT NULL,
   `idObjectif` int(11) DEFAULT NULL,
   `TrainingProg` text DEFAULT NULL,
   `FoodProg` text DEFAULT NULL
@@ -369,6 +369,7 @@ ALTER TABLE `objectif`
 --
 ALTER TABLE `planning`
   ADD PRIMARY KEY (`id_Planning`),
+  MODIFY `id_Planning` int(11) NOT NULL AUTO_INCREMENT,
   ADD KEY `idObjectif` (`idObjectif`);
 
 --

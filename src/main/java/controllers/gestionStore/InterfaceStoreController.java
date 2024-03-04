@@ -265,6 +265,7 @@ public class InterfaceStoreController implements Initializable {
     private facture fc = new facture();
     private final FactureService factureService = new FactureService();
     private final LivraisonService LivraisonService = new LivraisonService();
+    //String pathPhoto = "file:/D:/projet_PI/GymPlus/src/assets/imageProduit/";
     String pathPhoto = "file:///D:/projet_PI/GymPlus/src/assets/imageProduit/";
 
 
@@ -340,7 +341,10 @@ public class InterfaceStoreController implements Initializable {
         for (produit p : produits)
         {
             String photo = p.getPhoto();
-            ImageView imageView = new ImageView(new Image(pathPhoto + photo));
+            ImageView imageView = new ImageView(new Image((new File("src/assets/imageProduit/" +p.getPhoto()).toURI().toString())));
+            //ImageView imageView = new ImageView();
+            //imageView.setImage(new Image(new File("src/assets/imageProduit/" +p.getPhoto()).toURI().toString()));
+
 
             Label nameLabel = new Label(p.getName());
             Label priceLabel = new Label(String.valueOf(p.getPrix()));
@@ -462,6 +466,8 @@ public class InterfaceStoreController implements Initializable {
             //Image imageP = new Image("file:///D:/projet_PI/GymPlus/imageProduit/" + photo);
             //Image imageP = new Image("file:///D:/projet_PI/GymPlus/src/assets/imageProduit/" + photo);
             Image imageP = new Image(pathPhoto + photo);
+            //ImageView imageView = new ImageView(new Image((new File("src/assets/imageProduit/" +p.getPhoto()).toURI().toString())));
+
 
 
             ImageView imageView = new ImageView(imageP);
@@ -559,11 +565,13 @@ public class InterfaceStoreController implements Initializable {
 
         String photo = p.getPhoto();
         ImageView imageView = new ImageView(new Image(pathPhoto + photo));
+        //ImageView imageView = new ImageView(new Image((new File("src/assets/imageProduit/" +p.getPhoto()).toURI().toString())));
+
 
         Label nameLabel = new Label("name Product :" + p.getName());
-        Label idProduitLabel = new Label(" id Product :" + String.valueOf(p.getIdProduit()));
-        Label stockLabel = new Label("stock :" + String.valueOf(p.getStock()));
-        Label limitLabel = new Label("limit :" + String.valueOf(p.getSeuil()));
+        Label idProduitLabel = new Label(" id Product :" + p.getIdProduit());
+        Label stockLabel = new Label("stock :" + p.getStock());
+        Label limitLabel = new Label("limit :" + p.getSeuil());
 
         VBox productBox = new VBox();
         productBox.getChildren().addAll(imageView, idProduitLabel, nameLabel, stockLabel, limitLabel);
@@ -903,17 +911,38 @@ public class InterfaceStoreController implements Initializable {
         GetAllProduit.setVisible(true);
     }
 
-//    public String a ="Latitude: 55.26315789473682, Longitude: -75.28846153846153, lieu :Baie-d'Hudson" ;
+//    public String a ="Latitude: 55.26315789473682, Longitude: -75.28846153846153, lieu :Baie Hudson" ;
 //    public String b = "Latitude: -22.5, Longitude:-151.44230769230768, lieu :Rurutu";
 //    public String c = "Latitude: 40.26315789473685, Longitude:19.90384615384616, lieu :kurvelesh";
-    public String a ="Baie-Hudson" ;
-    public String b = "Rurutu";
-    public String c = "kurvelesh";
+//    public String d = "Latitude: -23.684210526315795, Longitude:-51.05769230769229, lieu :Londrina";
+//    public String e = "Latitude: -6.315789473684205, Longitude:-57.980769230769226, lieu :Jacareacanga";
+//    public String f = "Latitude: -16.578947368421055, Longitude:-70.96153846153847, lieu :Omate";
+//    public String g = "Latitude: 4.73684210526315, Longitude:-70.09615384615384, lieu :Cumaribo";
+//    public String h = "Latitude: -90868421052631575, Longitude:-75.28846153846153, lieu :Codo del Pozuzo";
+//    public String i = "Latitude: -28.815789473684212, Longitude:32.019230769230774, lieu :Richards Bay";
+//    public String j = "Latitude: 12.631578947368425, Longitude:-14.711538461538481, lieu :Sumbudo";
+//    public String k = "Latitude: -22.5, Longitude:-48.461553846153848, lieu :Barra Bonita";
+//    public String l = "Latitude: -9.078947368421055, Longitude:-68.36538461538461, lieu :Boca do Acre";
+//    public String m = "Latitude: -5.131578947368411, Longitude:-71.82692307692308, lieu :Atlantia do Norte";
+
+    public String a ="kurvelesh" ;
+    public String b = "Omate";
+    public String c = "Londrina";
+    public String d = "Barra Bonita";
+    public String e = "Cumaribo";
+    public String f = "Codo del Pozuzo";
+    public String g = "Richards Bay";
+    public String h = "Atlantia do Norte";
     List<String> list = new ArrayList<>();
     public Livraison ajouter() throws SQLException {
         list.add(a);
         list.add(b);
         list.add(c);
+        list.add(d);
+        list.add(e);
+        list.add(f);
+        list.add(g);
+        list.add(h);
 
         Random rand = new Random();
         String location = list.get(rand.nextInt(list.size()));
@@ -1084,6 +1113,8 @@ public class InterfaceStoreController implements Initializable {
 
                 //Image imageP = new Image("file:///D:/projet_PI/GymPlus/imageProduit/" + photo);
                 Image imageP = new Image(pathPhoto + photo);
+                //ImageView imageView = new ImageView(new Image((new File("src/assets/imageProduit/" +p.getPhoto()).toURI().toString())));
+
 
                 ImageView imageView = new ImageView(imageP);
 
@@ -1780,18 +1811,7 @@ public class InterfaceStoreController implements Initializable {
     void updateEtat(ActionEvent event) throws SQLException {
 
         Livraison selectedLivraison = getAllLivTab.getSelectionModel().getSelectedItem();
-        System.out.println("id Livraison selectionner " + selectedLivraison);
-
-        String lieu = selectedLivraison.getLieu();
-
-        // Ajouter des vérifications pour chaque lieu et ajouter le marqueur correspondant
-        if (lieu.equals("Baie-d'Hudson")) {
-            addMarkerToMap("55.26315789473682", "-75.28846153846153", lieu);
-        } else if (lieu.equals("Rurutu")) {
-            addMarkerToMap("-22.5", "-151.44230769230768", lieu);
-        } else if (lieu.equals("kurvelesh")) {
-            addMarkerToMap("40.26315789473685", "19.90384615384616", lieu);
-        }
+        //System.out.println("id Livraison selectionner " + selectedLivraison);
 
         try
         {
@@ -1821,6 +1841,45 @@ public class InterfaceStoreController implements Initializable {
             alert.show();
         }
     }
+
+    @FXML
+    void BtnCheckPlaceStaff(ActionEvent event) {
+
+        Livraison selectedLivraison = getAllLivTab.getSelectionModel().getSelectedItem();
+        System.out.println("id Livraison selectionner " + selectedLivraison);
+
+        String lieu = selectedLivraison.getLieu();
+
+        // Ajouter des vérifications pour chaque lieu et ajouter le marqueur correspondant
+        if (lieu.equals("Baie Hudson")) {
+            addMarkerToMap("55.26315789473682", "-75.28846153846153", lieu);
+        } else if (lieu.equals("Rurutu")) {
+            addMarkerToMap("-22.5", "-151.44230769230768", lieu);
+        } else if (lieu.equals("kurvelesh")) {
+            addMarkerToMap("40.26315789473685", "19.90384615384616", lieu);
+        } else if (lieu.equals("Londrina")) {
+            addMarkerToMap("-23.684210526315795", "-51.05769230769229", lieu);
+        } else if (lieu.equals("Jacareacanga")) {
+            addMarkerToMap("-6.315789473684205", "-57.980769230769226", lieu);
+        } else if (lieu.equals("Omate")) {
+            addMarkerToMap("-16.578947368421055", "-70.96153846153847", lieu);
+        } else if (lieu.equals("Cumaribo")) {
+            addMarkerToMap("4.73684210526315", "-70.09615384615384", lieu);
+        } else if (lieu.equals("Codo del Pozuzo")) {
+            addMarkerToMap("-90868421052631575", "-75.28846153846153", lieu);
+        } else if (lieu.equals("Richards Bay")) {
+            addMarkerToMap("-28.815789473684212", "32.019230769230774", lieu);
+        } else if (lieu.equals("Sumbudo")) {
+            addMarkerToMap("12.631578947368425", "-14.711538461538481", lieu);
+        } else if (lieu.equals("Barra Bonita")) {
+            addMarkerToMap("-22.5", "-48.461553846153848", lieu);
+        } else if (lieu.equals("Boca do Acre")) {
+            addMarkerToMap("-9.078947368421055", "-68.36538461538461", lieu);
+        } else if (lieu.equals("Atlantia do Norte")) {
+            addMarkerToMap("-5.131578947368411", "-71.82692307692308", lieu);
+        }
+    }
+
 
 
 

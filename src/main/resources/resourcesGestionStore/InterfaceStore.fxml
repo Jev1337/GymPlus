@@ -259,7 +259,7 @@
             <ComboBox fx:id="comboPaiement" layoutX="428.0" layoutY="168.0" onAction="#selectPaiement" prefHeight="25.0" prefWidth="116.0" styleClass="bleu-Background" stylesheets="@store.css" />
             <WebView fx:id="WebViewMap" layoutX="691.0" layoutY="213.0" onMouseClicked="#selectville" prefHeight="416.0" prefWidth="455.0" />
             <Label fx:id="textMap" layoutX="809.0" layoutY="651.0" prefHeight="43.0" prefWidth="191.0" text="Lieu" visible="false" />
-            <Label fx:id="villeLabel" layoutX="604.0" layoutY="165.0" prefHeight="31.0" prefWidth="541.0" text="Lieu choisi" />
+            <Label fx:id="villeLabel" layoutX="604.0" layoutY="165.0" prefHeight="31.0" prefWidth="541.0" text="Lieu choisi" visible="false" />
          </children></Pane>
       <Pane fx:id="GetAllFacture" layoutX="-5.0" prefHeight="773.0" prefWidth="1176.0" styleClass="white-Background" stylesheets="@store.css" visible="false">
          <children>
@@ -565,9 +565,6 @@
                            <bumpInput>
                               <Shadow />
                            </bumpInput>
-                           <light>
-                              <Light.Distant />
-                           </light>
                         </Lighting>
                      </effect>
                   </ComboBox>
@@ -649,17 +646,17 @@
                   </Button>
                </children>
             </VBox>
-            <TableView fx:id="getAllLivTab" layoutX="250.0" layoutY="122.0" prefHeight="315.0" prefWidth="484.0">
+            <TableView fx:id="getAllLivTab" layoutX="250.0" layoutY="127.0" prefHeight="315.0" prefWidth="499.0">
               <columns>
-                <TableColumn fx:id="ColIdLivraison" prefWidth="75.0" text="id Delevery" />
-                <TableColumn fx:id="ColIdFacture" prefWidth="75.0" text="id Invoice" />
-                  <TableColumn fx:id="ColClient" prefWidth="93.0" text="Client" />
-                  <TableColumn fx:id="ColLieu" prefWidth="121.0" text="Place" />
-                  <TableColumn fx:id="ColEtat" prefWidth="118.0" text="State" />
+                <TableColumn fx:id="ColIdLivraison" prefWidth="82.0" text="id Delevery" />
+                <TableColumn fx:id="ColIdFacture" prefWidth="82.0" text="id Invoice" />
+                  <TableColumn fx:id="ColClient" prefWidth="88.0" text="Client" />
+                  <TableColumn fx:id="ColLieu" prefWidth="120.0" text="Place" />
+                  <TableColumn fx:id="ColEtat" prefWidth="126.0" text="State" />
               </columns>
             </TableView>
-            <TextField fx:id="updateEtatFX" layoutX="795.0" layoutY="506.0" onAction="#updateEtat" text="Delivered" />
-            <Label layoutX="516.0" layoutY="509.0" prefHeight="19.0" prefWidth="137.0" text="Update delivery here">
+            <TextField fx:id="updateEtatFX" layoutX="549.0" layoutY="511.0" onAction="#updateEtat" text="Delivered" />
+            <Label layoutX="312.0" layoutY="514.0" prefHeight="19.0" prefWidth="137.0" text="Update delivery here">
                <font>
                   <Font size="13.0" />
                </font>
@@ -669,7 +666,8 @@
                   <Font size="23.0" />
                </font>
             </Label>
-            <WebView fx:id="webWiewMapStaff" layoutX="769.0" layoutY="122.0" prefHeight="314.0" prefWidth="389.0" />
+            <WebView fx:id="webWiewMapStaff" layoutX="769.0" layoutY="127.0" prefHeight="314.0" prefWidth="389.0" />
+            <Button layoutX="769.0" layoutY="89.0" mnemonicParsing="false" onAction="#BtnCheckPlaceStaff" text="Check Place" />
          </children>
       </Pane>
    </children>

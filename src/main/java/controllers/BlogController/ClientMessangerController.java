@@ -51,11 +51,11 @@ public class ClientMessangerController {
             @Override
             public void run() {
                 try{
-                    socket = new Socket("localhost", 3001);
+                    socket = new Socket("localhost", 9999);
                     dataInputStream = new DataInputStream(socket.getInputStream());
                     dataOutputStream = new DataOutputStream(socket.getOutputStream());
                     System.out.println("Client connected");
-                    ServerMessangerController.receiveMessage(clientName+" joined.");
+                    //ServerMessangerController.receiveMessage(clientName+" joined.");
 
                     while (socket.isConnected()){
                         String receivingMsg = dataInputStream.readUTF();
@@ -78,10 +78,10 @@ public class ClientMessangerController {
 
     }
 
-    public void shutdown() {
+   /* public void shutdown() {
         // cleanup code here...
         ServerMessangerController.receiveMessage(clientName+" left.");
-    }
+    }*/
 
     private void emoji() {
         // Create the EmojiPicker

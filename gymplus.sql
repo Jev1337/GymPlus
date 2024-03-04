@@ -369,6 +369,7 @@ ALTER TABLE `objectif`
 --
 ALTER TABLE `planning`
   ADD PRIMARY KEY (`id_Planning`),
+  MODIFY `id_Planning` int(11) NOT NULL AUTO_INCREMENT,
   ADD KEY `idObjectif` (`idObjectif`);
 
 --

@@ -1509,7 +1509,7 @@ public class AdminDashboardController {
             Pane pane_st = FXMLLoader.load(getClass().getResource("/resourcesGestionStore/InterfaceStore.fxml"));
             storeId.getChildren().setAll(pane_st);
         } catch (IOException e) {
-            System.err.println(e.getMessage());
+            e.printStackTrace();
         }
         String tts = Advapi32Util.registryGetStringValue(WinReg.HKEY_CURRENT_USER, "Software\\GymPlus", "tts");
         if (tts != null && tts.equals("true")) {

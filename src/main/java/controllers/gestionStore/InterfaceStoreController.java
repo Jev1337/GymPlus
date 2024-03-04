@@ -266,7 +266,10 @@ public class InterfaceStoreController implements Initializable {
     private final FactureService factureService = new FactureService();
     private final LivraisonService LivraisonService = new LivraisonService();
     //String pathPhoto = "file:/D:/projet_PI/GymPlus/src/assets/imageProduit/";
-    String pathPhoto = "file:///D:/projet_PI/GymPlus/src/assets/imageProduit/";
+    //String pathPhoto = "file:///D:/projet_PI/GymPlus/src/assets/imageProduit/";
+
+    String pathPhoto = new File("src/assets/imageProduit/").toURI().toString();
+
 
 
     //*****GetAllProduit

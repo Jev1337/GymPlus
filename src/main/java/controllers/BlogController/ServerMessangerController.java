@@ -34,7 +34,7 @@ public class ServerMessangerController {
 
     public void initialize(){
         staticVBox = vBox;
-        receiveMessage("Sever Starting..");
+        //receiveMessage("Sever Starting..");
         vBox.heightProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observableValue, Number oldValue, Number newValue) {
@@ -42,17 +42,17 @@ public class ServerMessangerController {
             }
         });
 
-        new Thread(() -> {
+       /* new Thread(() -> {
             try {
                 server = Server.getInstance();
                 server.makeSocket();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }).start();
+        }).start();*/
 
-        receiveMessage("Sever Running..");
-        receiveMessage("Waiting for User..");
+        //receiveMessage("Sever Running..");
+        //receiveMessage("Waiting for User..");
     }
 
     private void sendMsg(String msgToSend) {
@@ -107,7 +107,7 @@ public class ServerMessangerController {
         });
     }
 
-    public void addButtonOnAction(ActionEvent actionEvent) throws IOException {
+    /*public void addButtonOnAction(ActionEvent actionEvent) throws IOException {
         Stage stage = new Stage();
         stage.initModality(Modality.WINDOW_MODAL);
         stage.initOwner(pane.getScene().getWindow());
@@ -121,5 +121,5 @@ public class ServerMessangerController {
         stage.centerOnScreen();
         stage.setResizable(false);
         stage.show();
-    }
+    }*/
 }

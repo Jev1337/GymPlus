@@ -12,16 +12,25 @@ import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import entities.gestionSuivi.Objectif;
 import entities.gestionSuivi.Planning;
+import jakarta.mail.Multipart;
+import jakarta.mail.Session;
+import jakarta.mail.Transport;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeBodyPart;
+import jakarta.mail.internet.MimeMessage;
+import jakarta.mail.internet.MimeMultipart;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.HorizontalDirection;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ToggleButton;
@@ -43,6 +52,7 @@ import java.time.LocalTime;
 import java.time.Period;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -388,32 +398,27 @@ System.out.println("eyy");
                 t.playFromStart();
             }
         }
-
         var cal = new Calendar(LocalDate.now());
         cal.setTopNode(new Clock());
         cal.setShowWeekNumbers(true);
         CalendarVbox.getChildren().add(cal);
-
-
         PanePlansDone.setOnMouseEntered(event -> PanePlansDone.setStyle("-fx-background-color: lightblue;"));
         PanePlansDone.setOnMouseExited(event -> PanePlansDone.setStyle("-fx-background-color: lightgray;"));
         PaneInProgress.setOnMouseEntered(event -> PaneInProgress.setStyle("-fx-background-color: lightblue;"));
         PaneInProgress.setOnMouseExited(event -> PaneInProgress.setStyle("-fx-background-color: lightgray;"));
 
     }
-
-
-
     @FXML
     void VboxPlansDone(MouseEvent event) {
         displayListePlanning();
     }
-
+    
     @FXML
     void VboxPlansInProgress(MouseEvent event) {
         displayListeObjectif();
 
     }
+
 
 
 

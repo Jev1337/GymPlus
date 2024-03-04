@@ -535,6 +535,7 @@ public class ObjectifController  implements Initializable {
         RealTimeTrackerButton.setOnAction((E) -> {
             Animations.wobble(RealTimeTrackerButton).playFromStart();
             try {
+                scrollpanWeb.setVisible(false);
                 PaneMiediaPlayer.setVisible(false);
                  PaneChatBot.setVisible(false);
                 ScrollBmi_MacrosCal.setVisible(false);

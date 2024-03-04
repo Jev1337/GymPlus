@@ -49,9 +49,7 @@ public class ExericesController {
        // FXMLLoader loader = new FXMLLoader(getClass().getResource("/gestionSuivi/WebView.fxml"));
        // Node node = loader.load();
        // ScrollPane webPanel = (ScrollPane) node.lookup("#scrollpanWeb");
-
         objectifController.getWebViewTrue();
-
         WebViewController webViewController = new WebViewController();
         webViewController.loadPageExercices(url);
     }

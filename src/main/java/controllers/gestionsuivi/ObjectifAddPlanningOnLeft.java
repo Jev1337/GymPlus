@@ -10,6 +10,15 @@ import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import entities.gestionSuivi.Objectif;
 import entities.gestionSuivi.Planning;
+import jakarta.activation.DataHandler;
+import jakarta.mail.MessagingException;
+import jakarta.mail.Multipart;
+import jakarta.mail.Session;
+import jakarta.mail.Transport;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeBodyPart;
+import jakarta.mail.internet.MimeMessage;
+import jakarta.mail.internet.MimeMultipart;
 import javafx.animation.KeyFrame;
 import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
@@ -23,6 +32,7 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
@@ -31,6 +41,7 @@ import javafx.util.Duration;
 import services.gestionSuivi.ObjectifService;
 import services.gestionSuivi.PlanningService;
 
+import javax.sql.DataSource;
 import java.awt.*;
 import java.io.File;
 import java.net.URI;
@@ -39,6 +50,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.sql.SQLException;
+import java.util.Properties;
 import java.util.ResourceBundle;
 
 public class ObjectifAddPlanningOnLeft implements Initializable {
@@ -222,6 +234,12 @@ public class ObjectifAddPlanningOnLeft implements Initializable {
         progrssBar2.setVisible(true);
     }
 
+
+
+
+
+
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         var normalBtn = new Button(null, new FontAwesomeIconView(FontAwesomeIcon.BACKWARD));
@@ -278,7 +296,7 @@ public class ObjectifAddPlanningOnLeft implements Initializable {
                         planningController.displayListePlanning();
                         planningController.makePaneAddInvisible();
                         planningController.makePaneAddingInvisble();
-
+                      //  endEmailWithPDF("benammar.fares@esprit.tn", "String subject", "String body", "aaa") ;
                         success();
                         ToogleButton.setSelected(false);
                     }

@@ -19,6 +19,7 @@ public class UserAuthMainFX extends Application {
     @Override
     public void start(javafx.stage.Stage primaryStage) throws Exception {
         System.load(System.getProperty("user.dir")+"\\opencv\\x64\\" + Core.NATIVE_LIBRARY_NAME + ".dll");
+        primaryStage.getIcons().add(new javafx.scene.image.Image(getClass().getResourceAsStream("/assets/images/GymplusLogo.png")));
         try{
             String theme = Advapi32Util.registryGetStringValue(WinReg.HKEY_CURRENT_USER, "Software\\GymPlus", "theme");
             if(theme.equals("dark")){

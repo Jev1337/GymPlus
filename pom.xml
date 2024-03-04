@@ -42,13 +42,6 @@
             <version>21.0.2</version>
         </dependency>
         <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-web</artifactId>
-            <version>20.0.2</version>
-        </dependency>
-
-
-        <dependency>
             <groupId>com.microsoft.cognitiveservices.speech</groupId>
             <artifactId>client-sdk</artifactId>
             <version>1.35.0</version>

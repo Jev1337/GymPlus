@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="733.0" prefWidth="1093.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionsuivi.RealTimeTracker">
+   <children>
+      <Pane layoutX="35.0" layoutY="48.0" prefHeight="664.0" prefWidth="1025.0" stylesheets="@../assets/images/style.css">
+         <styleClass>
+            <String fx:value="border-table" />
+            <String fx:value="degrade-diagonal2" />
+         </styleClass>
+         <effect>
+            <DropShadow />
+         </effect>
+         <children>
+            <Text fill="#154d6e" layoutX="55.0" layoutY="86.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Heart Beat Sounds">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Text>
+            <ProgressBar fx:id="progressiveStart" layoutX="251.0" layoutY="315.0" prefHeight="16.0" prefWidth="261.0" progress="0.0" visible="false" />
+            <LineChart fx:id="ChartHearrate" layoutX="27.0" layoutY="326.0" prefHeight="287.0" prefWidth="793.0">
+              <xAxis>
+                <CategoryAxis side="BOTTOM" />
+              </xAxis>
+              <yAxis>
+                <NumberAxis side="LEFT" />
+              </yAxis>
+            </LineChart>
+            <ImageView fitHeight="32.0" fitWidth="42.0" layoutX="18.0" layoutY="300.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../assets/images/Heart%20Monitor.png" />
+               </image>
+            </ImageView>
+            <LineChart fx:id="RateChart" layoutX="54.0" layoutY="79.0" prefHeight="249.0" prefWidth="757.0">
+              <xAxis>
+                <CategoryAxis side="BOTTOM" />
+              </xAxis>
+              <yAxis>
+                <NumberAxis side="LEFT" />
+              </yAxis>
+            </LineChart>
+            <ProgressBar fx:id="progbuton" layoutX="251.0" layoutY="75.0" prefHeight="16.0" prefWidth="261.0" progress="0.0" visible="false" />
+            <Text fill="#154d6e" layoutX="57.0" layoutY="328.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Heart Beat Sounds">
+               <font>
+                  <Font name="System Italic" size="20.0" />
+               </font>
+            </Text>
+            <ImageView fitHeight="42.0" fitWidth="60.0" layoutX="12.0" layoutY="58.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../assets/images/SoundRate.png" />
+               </image>
+            </ImageView>
+            <Pane layoutY="24.0" prefHeight="32.0" prefWidth="1025.0" styleClass="degrade-diagonal" stylesheets="@../assets/images/style.css">
+               <effect>
+                  <DropShadow />
+               </effect>
+               <children>
+                  <Circle fill="#ff2313" layoutX="16.0" layoutY="14.0" radius="9.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" />
+                  <Circle fill="#3affa6" layoutX="40.0" layoutY="14.0" radius="9.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+                  <ImageView fitHeight="42.0" fitWidth="99.0" layoutX="157.0" layoutY="-7.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../assets/images/Pulse.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="42.0" fitWidth="99.0" layoutX="194.0" layoutY="-7.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../assets/images/Pulse.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="42.0" fitWidth="99.0" layoutX="233.0" layoutY="-7.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../assets/images/Pulse.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="42.0" fitWidth="99.0" layoutX="271.0" layoutY="-7.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../assets/images/Pulse.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="42.0" fitWidth="99.0" layoutX="307.0" layoutY="-7.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../assets/images/Pulse.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="42.0" fitWidth="99.0" layoutX="346.0" layoutY="-7.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../assets/images/Pulse.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="42.0" fitWidth="99.0" layoutX="384.0" layoutY="-7.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../assets/images/Pulse.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="42.0" fitWidth="99.0" layoutX="422.0" layoutY="-7.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../assets/images/Pulse.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="42.0" fitWidth="99.0" layoutX="460.0" layoutY="-7.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../assets/images/Pulse.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="42.0" fitWidth="99.0" layoutX="498.0" layoutY="-7.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../assets/images/Pulse.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="42.0" fitWidth="99.0" layoutX="537.0" layoutY="-7.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../assets/images/Pulse.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="42.0" fitWidth="99.0" layoutX="574.0" layoutY="-7.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../assets/images/Pulse.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="42.0" fitWidth="99.0" layoutX="614.0" layoutY="-7.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../assets/images/Pulse.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="42.0" fitWidth="99.0" layoutX="653.0" layoutY="-7.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../assets/images/Pulse.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="42.0" fitWidth="99.0" layoutX="692.0" layoutY="-7.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../assets/images/Pulse.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="42.0" fitWidth="99.0" layoutX="732.0" layoutY="-7.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../assets/images/Pulse.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="42.0" fitWidth="99.0" layoutX="770.0" layoutY="-7.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../assets/images/Pulse.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="42.0" fitWidth="99.0" layoutX="808.0" layoutY="-7.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../assets/images/Pulse.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="42.0" fitWidth="99.0" layoutX="845.0" layoutY="-7.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../assets/images/Pulse.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="42.0" fitWidth="99.0" layoutX="885.0" layoutY="-7.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../assets/images/Pulse.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="42.0" fitWidth="99.0" layoutX="926.0" layoutY="-7.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../assets/images/Pulse.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="42.0" fitWidth="99.0" layoutX="118.0" layoutY="-7.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../assets/images/Pulse.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="42.0" fitWidth="99.0" layoutX="81.0" layoutY="-8.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../assets/images/Pulse.png" />
+                     </image>
+                  </ImageView>
+                  <Circle fill="#ffee3b" layoutX="67.0" layoutY="14.0" radius="9.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+                  <ImageView fitHeight="42.0" fitWidth="99.0" layoutX="965.0" layoutY="-7.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../assets/images/Pulse.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </Pane>
+            <Pane layoutY="610.0" prefHeight="42.0" prefWidth="1025.0" styleClass="degrade-diagonal" stylesheets="@../assets/images/style.css">
+               <effect>
+                  <DropShadow />
+               </effect>
+               <children>
+                  <Button fx:id="SttartB" layoutX="888.0" layoutY="4.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="123.0" text="Start Diagnostic">
+                     <effect>
+                        <DropShadow />
+                     </effect></Button>
+                  <Pane layoutX="6.0" layoutY="6.0" prefHeight="30.0" prefWidth="180.0" stylesheets="@../assets/images/style.css">
+                     <effect>
+                        <DropShadow />
+                     </effect>
+                     <styleClass>
+                        <String fx:value="degrade-diagonal2" />
+                        <String fx:value="border-table" />
+                     </styleClass>
+                     <children>
+                        <Text layoutX="81.0" layoutY="17.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Steps to launch" wrappingWidth="98.0" />
+                        <Circle fill="#ffee3b" layoutX="24.0" layoutY="14.0" radius="8.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+                        <Circle fill="#ff3d3d" layoutX="45.0" layoutY="14.0" radius="8.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+                        <Circle fill="#45c350" layoutX="69.0" layoutY="14.0" radius="8.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+                     </children>
+                  </Pane>
+                  <Pane layoutX="209.0" layoutY="7.0" prefHeight="30.0" prefWidth="196.0" stylesheets="@../assets/images/style.css">
+                     <effect>
+                        <DropShadow />
+                     </effect>
+                     <styleClass>
+                        <String fx:value="degrade-diagonal2" />
+                        <String fx:value="border-table" />
+                     </styleClass>
+                     <children>
+                        <Text layoutX="35.0" layoutY="17.0" strokeType="OUTSIDE" strokeWidth="0.0" text="On the right of the heart" wrappingWidth="161.77734375" />
+                        <Circle fill="#ffee3b" layoutX="19.0" layoutY="14.0" radius="9.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+                     </children>
+                  </Pane>
+                  <Pane layoutX="414.0" layoutY="7.0" prefHeight="30.0" prefWidth="196.0" stylesheets="@../assets/images/style.css">
+                     <styleClass>
+                        <String fx:value="degrade-diagonal2" />
+                        <String fx:value="border-table" />
+                     </styleClass>
+                     <children>
+                        <Text layoutX="39.0" layoutY="17.0" strokeType="OUTSIDE" strokeWidth="0.0" text="On the left of the heart" wrappingWidth="150.00000000000006" />
+                        <Circle fill="#ff3d3d" layoutX="19.0" layoutY="14.0" radius="9.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+                     </children>
+                     <effect>
+                        <DropShadow />
+                     </effect>
+                  </Pane>
+                  <Pane layoutX="631.0" layoutY="6.0" prefHeight="30.0" prefWidth="230.0" stylesheets="@../assets/images/style.css">
+                     <styleClass>
+                        <String fx:value="degrade-diagonal2" />
+                        <String fx:value="border-table" />
+                     </styleClass>
+                     <children>
+                        <Text layoutX="29.0" layoutY="18.0" strokeType="OUTSIDE" strokeWidth="0.0" text="On the right of the stomach" wrappingWidth="186.76171875" />
+                        <Circle fill="#45c350" layoutX="19.0" layoutY="14.0" radius="9.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+                     </children>
+                     <effect>
+                        <DropShadow />
+                     </effect>
+                  </Pane>
+               </children>
+            </Pane>
+            <Pane layoutX="819.0" layoutY="288.0" prefHeight="75.0" prefWidth="187.0" stylesheets="@../assets/images/style.css">
+               <styleClass>
+                  <String fx:value="border-table" />
+                  <String fx:value="degrade-diagonal2" />
+               </styleClass>
+               <effect>
+                  <DropShadow />
+               </effect>
+               <children>
+                  <Text fill="#154d6e" layoutX="67.0" layoutY="26.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Bpm rate " underline="true">
+                     <font>
+                        <Font name="System Bold Italic" size="15.0" />
+                     </font>
+                  </Text>
+                  <Text fx:id="BpmTextField" layoutX="75.0" layoutY="47.0" strokeType="OUTSIDE" strokeWidth="0.0" text="........................." wrappingWidth="75.0" />
+                  <ImageView fitHeight="30.0" fitWidth="32.0" layoutX="21.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../assets/images/SoundRate.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </Pane>
+            <Pane layoutX="820.0" layoutY="484.0" prefHeight="83.0" prefWidth="187.0" stylesheets="@../assets/images/style.css">
+               <styleClass>
+                  <String fx:value="border-table" />
+                  <String fx:value="degrade-diagonal2" />
+               </styleClass>
+               <effect>
+                  <DropShadow />
+               </effect>
+               <children>
+                  <Text fill="#154d6e" layoutX="51.0" layoutY="33.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Heart Sound Rate" underline="true">
+                     <font>
+                        <Font name="System Bold Italic" size="15.0" />
+                     </font>
+                  </Text>
+                  <Text fx:id="hearRateSound" layoutX="51.0" layoutY="61.0" strokeType="OUTSIDE" strokeWidth="0.0" text="..............................." wrappingWidth="94.32861328125" />
+                  <ImageView fitHeight="30.0" fitWidth="32.0" layoutX="16.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../assets/images/SoundRate.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </Pane>
+            <Separator layoutX="78.0" layoutY="304.0" prefHeight="0.0" prefWidth="725.0" />
+            <Pane layoutX="812.0" layoutY="95.0" prefHeight="69.0" prefWidth="196.0" stylesheets="@../assets/images/style.css">
+               <effect>
+                  <DropShadow />
+               </effect>
+               <styleClass>
+                  <String fx:value="degrade-diagonal2" />
+                  <String fx:value="border-table" />
+               </styleClass>
+               <children>
+                  <ImageView fitHeight="49.0" fitWidth="52.0" layoutX="2.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../assets/images/Calories.png" />
+                     </image>
+                     <effect>
+                        <DropShadow />
+                     </effect>
+                  </ImageView>
+                  <Text fx:id="caloriesTextField" layoutX="50.0" layoutY="48.0" strokeType="OUTSIDE" strokeWidth="0.0" text="..........................................." wrappingWidth="139.0" />
+                  <Text fill="#154d6e" layoutX="71.0" layoutY="28.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Calories " underline="true">
+                     <font>
+                        <Font name="System Bold Italic" size="15.0" />
+                     </font>
+                  </Text>
+               </children>
+            </Pane>
+            <ProgressBar fx:id="progbuton1" layoutX="512.0" layoutY="75.0" prefHeight="16.0" prefWidth="288.0" progress="0.0" visible="false" />
+            <ProgressBar fx:id="progressiveStart1" layoutX="511.0" layoutY="315.0" prefHeight="16.0" prefWidth="268.0" progress="0.0" visible="false" />
+            <Pane layoutX="819.0" layoutY="386.0" prefHeight="75.0" prefWidth="187.0" stylesheets="@../assets/images/style.css">
+               <styleClass>
+                  <String fx:value="border-table" />
+                  <String fx:value="degrade-diagonal2" />
+               </styleClass>
+               <effect>
+                  <DropShadow />
+               </effect>
+               <children>
+                  <Text fill="#154d6e" layoutX="56.0" layoutY="22.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Average Bpm" underline="true">
+                     <font>
+                        <Font name="System Bold Italic" size="15.0" />
+                     </font>
+                  </Text>
+                  <Text fx:id="AverageBpmField" layoutX="75.0" layoutY="51.0" strokeType="OUTSIDE" strokeWidth="0.0" text="......................." wrappingWidth="75.0" />
+                  <ImageView fitHeight="30.0" fitWidth="32.0" layoutX="18.0" layoutY="2.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../assets/images/SoundRate.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </Pane>
+            <Pane layoutX="820.0" layoutY="188.0" prefHeight="83.0" prefWidth="187.0" stylesheets="@../assets/images/style.css">
+               <styleClass>
+                  <String fx:value="border-table" />
+                  <String fx:value="degrade-diagonal2" />
+               </styleClass>
+               <effect>
+                  <DropShadow />
+               </effect>
+               <children>
+                  <Text fill="#154d6e" layoutX="51.0" layoutY="33.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Total Calories" underline="true">
+                     <font>
+                        <Font name="System Bold Italic" size="15.0" />
+                     </font>
+                  </Text>
+                  <Text fx:id="totalCalsFields" layoutX="46.0" layoutY="57.0" strokeType="OUTSIDE" strokeWidth="0.0" text="..........................................." wrappingWidth="139.0" />
+                  <ImageView fitHeight="42.0" fitWidth="42.0" layoutX="4.0" layoutY="2.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../assets/images/Calories.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </Pane>
+         </children>
+      </Pane>
+      <ImageView fitHeight="76.0" fitWidth="75.0" layoutX="12.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../assets/images/HeartRate.png" />
+         </image>
+         <effect>
+            <DropShadow />
+         </effect>
+      </ImageView>
+      <Text fill="#154d6e" layoutX="99.0" layoutY="35.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Calories Monitor">
+         <font>
+            <Font name="System Bold Italic" size="24.0" />
+         </font>
+      </Text>
+   </children>
+</AnchorPane>

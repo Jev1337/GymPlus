@@ -12,7 +12,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="342.0" prefWidth="455.0" stylesheets="@../assets/images/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionsuivi.MediaPlayerController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="455.0" stylesheets="@../assets/images/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionsuivi.MediaPlayerController">
     <center>
         <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" styleClass="degrade-diagonal2" stylesheets="@../assets/images/style.css" BorderPane.alignment="CENTER">
             <children>
@@ -29,7 +29,7 @@
                         <Font size="40.0" />
                     </font>
                 </Label>
-                <Label fx:id="chooseMusic" onMouseClicked="#chooseMusic" text="Choose your music">
+                <Label fx:id="chooseMusic" onMouseClicked="#chooseMusic" text="Choose your music" textFill="#2757b2" underline="true">
                     <font>
                         <Font size="15.0" />
                     </font>

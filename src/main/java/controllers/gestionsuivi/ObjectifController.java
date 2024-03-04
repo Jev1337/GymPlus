@@ -15,10 +15,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.Pagination;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -69,23 +66,14 @@ public class ObjectifController  implements Initializable {
 
 
 
-    private void refreshNodes()
-    {
+    private void refreshNodes() throws IOException {
         Pane1.getChildren().clear();
+        Pane1.setVisible(true);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/gestionSuivi/AddingObjectif.fxml"));
+        Node node = loader.load();
+        Pane1.getChildren().add(node);
 
-        Node[] nodes = new Node[15];
 
-        for(int i = 0; i<1; i++)
-        {
-            try {
-                nodes[i] = (Node) FXMLLoader.load(getClass().getResource("/gestionSuivi/AddingObjectif.fxml"));
-                Pane1.getChildren().add(nodes[i]);
-
-            } catch (IOException ex) {
-                Logger.getLogger(ObjectifController.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
-        }
     }
 
 
@@ -103,6 +91,9 @@ public class ObjectifController  implements Initializable {
 
     @FXML
     private ScrollPane ScrollPanelExerciceGen;
+
+    @FXML
+    private ScrollPane ScrollAffichage;
 
     public void refreshNodeCaloriesFx() throws IOException {
         caloriesPrompted.getChildren().clear();
@@ -155,11 +146,13 @@ public class ObjectifController  implements Initializable {
 
     @FXML
     void SendSignalToAddfucntion(ActionEvent event) throws IOException {
+        PaneMiediaPlayer.setVisible(false);
         ScrollBmi_MacrosCal.setVisible(false);
         ScrollPanelExerciceGen.setVisible(false);
         scrollpanWeb.setVisible(false);
         PaneChatBot.setVisible(false);
-        Pane1.setVisible(true);
+        pnl_scroll2.setVisible(true);
+        ScrollAffichage.setVisible(true);
 
         PanePage1.setTranslateX(PanePage1.getWidth());
         PanePage1.setVisible(true);
@@ -191,20 +184,20 @@ public class ObjectifController  implements Initializable {
     private Button JoinButton;
 
 
+
+
     public void refreshNodesListeItems() throws IOException {
+        PaneMiediaPlayer.setVisible(false);
+        Pane1.setVisible(true);
         pnl_scroll2.getChildren().clear();
         ObjectifListController objectifListController = new ObjectifListController();
         ObservableList<Objectif> objectifList = objectifListController.getObjectifStatusList();
-
-
-
         for (Objectif objecitf : objectifList){
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/gestionSuivi/Item.fxml"));
                 Node node = loader.load();
                 ObjectifListController itemController = loader.getController();
                 itemController.setObjectif(objecitf);
-
                 itemController.buttonPanel();
                 itemController.scrollButton(objecitf);
                 pnl_scroll2.getChildren().add(node);
@@ -246,16 +239,24 @@ public class ObjectifController  implements Initializable {
 
 
     private void refreshNodesChatBot() throws IOException {
-        PaneChatBot.getChildren().clear();
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/gestionSuivi/chatBot.fxml"));
+        ScrollAffichage.setVisible(false);
+        PanePage1.setVisible(true);
+        PaneMiediaPlayer.setVisible(true);
+       FXMLLoader loader2 = new FXMLLoader(getClass().getResource("/gestionSuivi/MediaPLayer.fxml"));
+        Node node2 = loader2.load();
+        PaneMiediaPlayer.getChildren().add(node2);
+        PaneMiediaPlayer.setTranslateX(-PaneMiediaPlayer.getWidth());
+        PaneMiediaPlayer.setVisible(true);
+        TranslateTransition transition = new TranslateTransition(Duration.seconds(0.5), PaneMiediaPlayer);
+        transition.setToX(0);
+        transition.play();
+
+
+           FXMLLoader loader = new FXMLLoader(getClass().getResource("/gestionSuivi/chatBot.fxml"));
             Node node = loader.load();
-        PaneChatBot.getChildren().add(node);
-        PaneChatBot.setTranslateX(-PaneChatBot.getWidth());
         PaneChatBot.setVisible(true);
-        TranslateTransition transition2 = new TranslateTransition(Duration.seconds(0.5), PaneChatBot);
-        transition2.setToX(0);
-        transition2.play();
-            ChatControler chatControler = loader.getController() ;
+        PaneChatBot.getChildren().add(node);
+
         }
     @FXML
     private Pane PaneObjectif;
@@ -264,36 +265,42 @@ public class ObjectifController  implements Initializable {
     @FXML
     private Pane PaneMiediaPlayer;
 
-
+    @FXML
+    private HBox goBackToexercices;
 
 
     @FXML
     private VBox vboxWeb;
 
-    private void refreshNodesWeb()
-    {
+    private void refreshNodesWeb() throws IOException {
         vboxWeb.getChildren().clear();
 
-        Node[] nodes = new Node[1];
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/gestionSuivi/WebView.fxml"));
+            Node node = loader.load();
 
-        for(int i = 0; i<1; i++)
-        {
-            try {
-                nodes[i] = (Node) FXMLLoader.load(getClass().getResource("/gestionSuivi/WebView.fxml"));
-                vboxWeb.getChildren().add(nodes[i]);
+            FXMLLoader loader2 = new FXMLLoader(getClass().getResource("/gestionSuivi/ExerciesFx.fxml"));
+            Node nod2 = loader2.load();
+            ExericesController exericesController = loader2.getController();
+            exericesController.setExerciceControler(this);
+            vboxWeb.getChildren().add(node);
 
-            } catch (IOException ex) {
-                Logger.getLogger(ObjectifController.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        }catch (IOException ex){
+            Logger.getLogger(ObjectifController.class.getName()).log(Level.SEVERE, null, ex);
 
         }
     }
 
 
+    void getWebViewTrue () throws IOException {
+        goBackToexercices.setVisible(true);
+        refreshNodesWeb();
+        ScrollPanelExerciceGen.setVisible(false);
+        scrollpanWeb.setVisible(true);
+    }
 
 
-    @FXML
-    private HBox ScrollPageHbox;
+
     @FXML
     private HBox rechercheHbox2;
  @FXML
@@ -319,13 +326,15 @@ public class ObjectifController  implements Initializable {
 @FXML
     private Pane StatPane;
 
-@FXML
-private Pane PanePage1;
+    @FXML
+    private Pane PanePage1;
 
     @FXML
     private Pane FoodPanel;
 
 
+    @FXML
+    private Pane RealTimePan;
     @FXML
     private ScrollPane ScrollPannelFood;
 
@@ -333,17 +342,23 @@ private Pane PanePage1;
     private ScrollPane scrollpanWeb;
     @FXML
     private ScrollPane ScrollBmi_MacrosCal;
+    @FXML
+    private Separator seperateur;
 
-    public void refreshNodeMediaPlayer() throws IOException {
-        PaneMiediaPlayer.getChildren().clear();
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/gestionSuivi/MediaPLayer.fxml"));
+    public void plrefreshpaneRealTimePan() throws IOException {
+        RealTimePan.getChildren().clear();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/gestionSuivi/RealimeFx.fxml"));
         Node node = loader.load();
-        PaneMiediaPlayer.getChildren().add(node);
-        PaneMiediaPlayer.setTranslateX(-PaneMiediaPlayer.getWidth());
-        PaneMiediaPlayer.setVisible(true);
-        TranslateTransition transition2 = new TranslateTransition(Duration.seconds(0.5), PaneChatBot);
+        RealTimePan.getChildren().add(node);
+        RealTimePan.setTranslateX(-RealTimePan.getWidth());
+        RealTimePan.setVisible(true);
+        TranslateTransition transition2 = new TranslateTransition(Duration.seconds(0.5), RealTimePan);
         transition2.setToX(0);
         transition2.play();
+    }
+
+    public void refreshNodeMediaPlayer() throws IOException {
+
     }
 
 
@@ -369,11 +384,28 @@ private Pane PanePage1;
     }
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        try {
-            refreshNodeMediaPlayer();
+
+       try {
+            refreshNodes();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+
+        var normalBtn3 = new Button(null, new FontAwesomeIconView(FontAwesomeIcon.BACKWARD));
+        normalBtn3.getStyleClass().addAll(Styles.BUTTON_CIRCLE);
+        goBackToexercices.getChildren().add(normalBtn3);
+        normalBtn3.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                ScrollPanelExerciceGen.setVisible(true);
+                scrollpanWeb.setVisible(false);
+
+            }
+        });
+
+
+
         //Styling add button
 
         PaneObjectif.setOnMouseEntered(event -> PaneObjectif.setStyle("-fx-background-color: lightblue;"));
@@ -434,15 +466,7 @@ private Pane PanePage1;
         RealTimeTrackerButton.setMnemonicParsing(true);
 
 
-        var pg = new Pagination(8, 0);
-        pg.setMaxPageIndicatorCount(8);
-        pg.getStyleClass().add(Pagination.STYLE_CLASS_BULLET);
-        pg.setPageFactory(index -> {
-            var label = new Label("Page #" + (index + 1));
-            label.setStyle("-fx-font-size: 2em;");
-            return new BorderPane(label);
-        });
-        ScrollPageHbox.getChildren().add(pg);
+
 
         var normalBtn = new Button(null, new FontAwesomeIconView(FontAwesomeIcon.BACKWARD));
         normalBtn.getStyleClass().addAll(Styles.BUTTON_CIRCLE);
@@ -459,6 +483,7 @@ private Pane PanePage1;
 
             }
         });
+
 
 
         var normalBtn2 = new Button(null, new FontAwesomeIconView(FontAwesomeIcon.BACKWARD));
@@ -478,28 +503,54 @@ private Pane PanePage1;
         });
 
         // styling assitant button
-        ButtonAssistaant.getStyleClass().addAll(
+       ButtonAssistaant.getStyleClass().addAll(
                 Styles.BUTTON_OUTLINED, Styles.ACCENT
         );
         ButtonAssistaant.setMnemonicParsing(true);
         ButtonAssistaant.setOnAction((E) -> {
             Animations.wobble(ButtonAssistaant).playFromStart();
             try {
+                RealTimePan.setVisible(false);
+                scrollpanWeb.setVisible(false);
+                Pane1.setVisible(false);
+               ScrollBmi_MacrosCal.setVisible(false);
+                ScrollPannelFood.setVisible(false);
+               ScrollPanelExerciceGen.setVisible(false);
+                PaneMiediaPlayer.setTranslateX(PaneMiediaPlayer.getWidth());
+                PaneMiediaPlayer.setVisible(true);
+
+                TranslateTransition transition3 = new TranslateTransition(Duration.seconds(0.5), PaneMiediaPlayer);
+                transition3.setToX(0);
+                transition3.play();
+
+                refreshNodesChatBot();
+
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+
+
+        RealTimeTrackerButton.setOnAction((E) -> {
+            Animations.wobble(RealTimeTrackerButton).playFromStart();
+            try {
+                PaneMiediaPlayer.setVisible(false);
+                 PaneChatBot.setVisible(false);
                 ScrollBmi_MacrosCal.setVisible(false);
                 ScrollPannelFood.setVisible(false);
                 ScrollPanelExerciceGen.setVisible(false);
-                PaneMiediaPlayer.setVisible(false);
                 PanePage1.setTranslateX(PanePage1.getWidth());
-                PanePage1.setVisible(true);
-                TranslateTransition transition3 = new TranslateTransition(Duration.seconds(0.5), PanePage1);
-                transition3.setToX(0);
-                transition3.play();
-                Pane1.setTranslateX(-Pane1.getWidth());
+                ScrollAffichage.setVisible(false);
+                seperateur.setVisible(false);
                 Pane1.setVisible(false);
-                TranslateTransition transition = new TranslateTransition(Duration.seconds(0.5), Pane1);
+                PanePage1.setTranslateX(-PanePage1.getWidth());
+                PanePage1.setVisible(true);
+
+                TranslateTransition transition = new TranslateTransition(Duration.seconds(0.5), PanePage1);
                 transition.setToX(0);
                 transition.play();
-                refreshNodesChatBot();
+                plrefreshpaneRealTimePan();
 
 
             } catch (IOException e) {
@@ -512,14 +563,16 @@ private Pane PanePage1;
 
         GetExercicesButton.setOnAction((E) -> {
             Animations.wobble(GetExercicesButton).playFromStart();
-            try {
+            try {                PaneMiediaPlayer.setVisible(false);
+                RealTimePan.setVisible(false);
+
                 scrollpanWeb.setVisible(false);
                 ScrollBmi_MacrosCal.setVisible(false);
                 ScrollPannelFood.setVisible(false);
                 PanePage1.setVisible(false);
                 Pane1.setVisible(false);
                 ScrollPannelFood.setVisible(false);
-
+                PaneChatBot.setVisible(false);
                 ScrollPanelExerciceGen.setTranslateX(-ScrollPanelExerciceGen.getWidth());
                 ScrollPanelExerciceGen.setVisible(true);
                 TranslateTransition transition = new TranslateTransition(Duration.seconds(0.5), ScrollPanelExerciceGen);
@@ -536,20 +589,22 @@ private Pane PanePage1;
         //Action on page google
         GetSocialMediaButon.setOnAction((E) -> {
             Animations.wobble(GetSocialMediaButon).playFromStart();
-            try {
+            try {                PaneMiediaPlayer.setVisible(false);
+                RealTimePan.setVisible(false);
+
                 ScrollBmi_MacrosCal.setVisible(false);
                 ScrollPannelFood.setVisible(false);
                 PanePage1.setVisible(false);
                 Pane1.setVisible(false);
                 ScrollPannelFood.setVisible(false);
                 ScrollPanelExerciceGen.setVisible(false);
-
+                PaneChatBot.setVisible(false);
                 scrollpanWeb.setTranslateX(-scrollpanWeb.getWidth());
                 scrollpanWeb.setVisible(true);
                 TranslateTransition transition = new TranslateTransition(Duration.seconds(0.5), scrollpanWeb);
                 transition.setToX(0);
                 transition.play();
-                refreshNodeExercicesGenerator();
+                refreshNodesWeb();
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -558,14 +613,16 @@ private Pane PanePage1;
         //Action lel BMI W MACROS CALCULATOR
         GetBmiButton.setOnAction((E) -> {
             Animations.wobble(GetBmiButton).playFromStart();
-            try {
+            try {                PaneMiediaPlayer.setVisible(false);
+                RealTimePan.setVisible(false);
+
                 scrollpanWeb.setVisible(false);
                 ScrollPannelFood.setVisible(false);
                 PanePage1.setVisible(false);
                 Pane1.setVisible(false);
                 ScrollPannelFood.setVisible(false);
                 ScrollPanelExerciceGen.setVisible(false);
-
+                PaneChatBot.setVisible(false);
                 ScrollBmi_MacrosCal.setTranslateX(-ScrollBmi_MacrosCal.getWidth());
                 ScrollBmi_MacrosCal.setVisible(true);
                 TranslateTransition transition = new TranslateTransition(Duration.seconds(0.5), ScrollBmi_MacrosCal);
@@ -582,9 +639,11 @@ private Pane PanePage1;
 //Macros Action Button
         GetMacros.setOnAction((E) -> {
             Animations.wobble(GetMacros).playFromStart();
-            try {
-                scrollpanWeb.setVisible(false);
+            try {                PaneMiediaPlayer.setVisible(false);
+                RealTimePan.setVisible(false);
 
+                scrollpanWeb.setVisible(false);
+                PaneChatBot.setVisible(false);
                 ScrollPannelFood.setVisible(false);
                 PanePage1.setVisible(false);
                 Pane1.setVisible(false);
@@ -606,9 +665,11 @@ private Pane PanePage1;
 //ACTION ON MEALS GENERATOR
         DietPlanButton.setOnAction((E) -> {
             Animations.wobble(DietPlanButton).playFromStart();
-            try {
-                scrollpanWeb.setVisible(false);
+            try {                PaneMiediaPlayer.setVisible(false);
+                RealTimePan.setVisible(false);
 
+                scrollpanWeb.setVisible(false);
+                PaneChatBot.setVisible(false);
                 ScrollBmi_MacrosCal.setVisible(false);
                 PanePage1.setVisible(false);
                 Pane1.setVisible(false);
@@ -628,21 +689,8 @@ private Pane PanePage1;
         //**************//
 
 
-    /*    try {
-            refreshNodeExercicesGenerator();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
 
 
-        try {
-            refreshNodeCaloriesFx();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }*/
-
-        refreshNodesWeb();
-            refreshNodes();
 
         try {
             refreshNodesListeItems();
@@ -652,11 +700,7 @@ private Pane PanePage1;
 
 
 
-       /* try {
-            refreshBurnedCaloriesController();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }*/
+
 
 
     }

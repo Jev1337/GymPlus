@@ -80,21 +80,16 @@ public class BurnedCaloriesController implements Initializable {
 
     @FXML
     private TextField ageField;
-
     @FXML
     private TextField heightField;
-
     @FXML
     private VBox toogleVbox;
-
     @FXML
     private TextField weightField;
-
-
-
-
     @FXML
     private BarChart<String, Number> barChart;
+
+
 
 public void BurnedCaloriesFromActivity(int age,double weight, double height) throws IOException, InterruptedException {
 
@@ -143,9 +138,9 @@ public void BurnedCaloriesFromActivity(int age,double weight, double height) thr
     @FXML
     private Pane Pane2;
     @FXML
-    private Pane Pane3;
+    private Pane Pane33;
     @FXML
-    private Pane Pane4;
+    private Pane Pane44;
 
     @FXML
     private Pane PaaneForm;
@@ -201,7 +196,6 @@ public  void MacrosAmout(int age,String gender,double height,double weight,int l
                  double balancedCarbs = balancedNode.get("carbs").asDouble();
                  setBalancedPie(balancedProtein, balancedFat, balancedCarbs);
              }
-
              if (item.has("lowfat")) {
                  JsonNode lowfatNode = item.get("lowfat");
                  System.out.println("lowfatNode: " + lowfatNode);
@@ -210,7 +204,6 @@ public  void MacrosAmout(int age,String gender,double height,double weight,int l
                  double lowfatCarbs = lowfatNode.get("carbs").asDouble();
                  setLowFatePie(lowfatProtein, lowfatFat, lowfatCarbs);
              }
-
              if (item.has("lowcarbs")) {
                  JsonNode lowcarbsNode = item.get("lowcarbs");
                  System.out.println("lowcarbsNode: " + lowcarbsNode);
@@ -315,7 +308,7 @@ private VBox LeftVbox;
     @FXML
     private PieChart BalancedPie;
 
-private   String goal ;
+private String goal ;
 private String gender;
 
     @FXML
@@ -331,23 +324,23 @@ private String gender;
     @FXML
     private TextField heightField2;
     @FXML
-private Button GetMacrosButton;
+    private Button GetMacrosButton;
 
 
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        Pane1.setOnMouseEntered(event -> Pane1.setStyle("-fx-background-color: lightgreen;"));
+        Pane1.setOnMouseEntered(event -> Pane1.setStyle("-fx-background-color: lightblue;"));
         Pane1.setOnMouseExited(event -> Pane1.setStyle("-fx-background-color: lightgray;"));
-        Pane2.setOnMouseEntered(event -> Pane2.setStyle("-fx-background-color: lightgreen;"));
+        Pane2.setOnMouseEntered(event -> Pane2.setStyle("-fx-background-color: lightblue;"));
         Pane2.setOnMouseExited(event -> Pane2.setStyle("-fx-background-color: lightgray;"));
-        Pane3.setOnMouseEntered(event -> Pane3.setStyle("-fx-background-color: lightgreen;"));
-        Pane3.setOnMouseExited(event -> Pane3.setStyle("-fx-background-color: lightgray;"));
-        Pane4.setOnMouseEntered(event -> Pane4.setStyle("-fx-background-color: lightgreen;"));
-        Pane4.setOnMouseExited(event -> Pane4.setStyle("-fx-background-color: lightgray;"));
-        CalsPanel.setOnMouseEntered(event -> CalsPanel.setStyle("-fx-background-color: lightgreen;"));
+        Pane33.setOnMouseEntered(event -> Pane33.setStyle("-fx-background-color: lightblue;"));
+        Pane33.setOnMouseExited(event -> Pane33.setStyle("-fx-background-color: lightgray;"));
+        Pane44.setOnMouseEntered(event -> Pane44.setStyle("-fx-background-color: lightblue;"));
+        Pane44.setOnMouseExited(event -> Pane44.setStyle("-fx-background-color: lightgray;"));
+        CalsPanel.setOnMouseEntered(event -> CalsPanel.setStyle("-fx-background-color: lightblue;"));
         CalsPanel.setOnMouseExited(event -> CalsPanel.setStyle("-fx-background-color: lightgray;"));
-        PaaneForm.setOnMouseEntered(event -> PaaneForm.setStyle("-fx-background-color: lightgreen;"));
+        PaaneForm.setOnMouseEntered(event -> PaaneForm.setStyle("-fx-background-color: lightblue;"));
         PaaneForm.setOnMouseExited(event -> PaaneForm.setStyle("-fx-background-color: lightgray;"));
         GetMacrosButton.getStyleClass().addAll(
                 Styles.BUTTON_OUTLINED, Styles.SUCCESS

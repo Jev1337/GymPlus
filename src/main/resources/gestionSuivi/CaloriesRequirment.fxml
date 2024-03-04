@@ -211,12 +211,12 @@
                   <Text fx:id="CarbText2" layoutX="122.0" layoutY="94.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="73.0" />
                </children>
             </Pane>
-            <Pane layoutX="508.0" layoutY="463.0" prefHeight="285.0" prefWidth="202.0" styleClass="degrade-diagonal2" stylesheets="@../assets/images/style.css">
+            <Pane fx:id="Pane33" layoutX="508.0" layoutY="463.0" prefHeight="285.0" prefWidth="202.0" styleClass="degrade-diagonal2" stylesheets="@../assets/images/style.css">
                <effect>
                   <DropShadow />
                </effect>
                <children>
-                  <ImageView fx:id="Pane3" fitHeight="285.0" fitWidth="200.0" layoutX="1.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="285.0" fitWidth="200.0" layoutX="1.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../assets/images/panelsBNackground.jpg" />
                      </image>
@@ -249,12 +249,12 @@
                   <Text fx:id="CarbText3" layoutX="128.0" layoutY="93.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="73.0" />
                </children>
             </Pane>
-            <Pane layoutX="753.0" layoutY="463.0" prefHeight="285.0" prefWidth="202.0" styleClass="degrade-diagonal2" stylesheets="@../assets/images/style.css">
+            <Pane fx:id="Pane44" layoutX="753.0" layoutY="463.0" prefHeight="285.0" prefWidth="202.0" styleClass="degrade-diagonal2" stylesheets="@../assets/images/style.css">
                <effect>
                   <DropShadow />
                </effect>
                <children>
-                  <ImageView fx:id="Paen4" fitHeight="285.0" fitWidth="200.0" layoutX="1.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="285.0" fitWidth="200.0" layoutX="1.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../assets/images/panelsBNackground.jpg" />
                      </image>
@@ -308,8 +308,8 @@
                         <Font name="System Italic" size="14.0" />
                      </font>
                   </Text>
-                  <TextField fx:id="heightField2" layoutX="325.0" layoutY="109.0" prefHeight="25.0" prefWidth="73.0" promptText="height" />
-                  <ImageView fitHeight="44.0" fitWidth="38.0" layoutX="282.0" layoutY="98.0" pickOnBounds="true" preserveRatio="true">
+                  <TextField fx:id="heightField2" layoutX="331.0" layoutY="97.0" prefHeight="25.0" prefWidth="73.0" promptText="height" />
+                  <ImageView fitHeight="44.0" fitWidth="38.0" layoutX="287.0" layoutY="86.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../assets/images/Lengthen.png" />
                      </image>
@@ -351,7 +351,7 @@
                   </ImageView>
                   <Separator layoutX="267.0" layoutY="34.0" orientation="VERTICAL" prefHeight="108.0" prefWidth="0.0" />
                   <Separator layoutX="420.0" layoutY="49.0" orientation="VERTICAL" prefHeight="108.0" prefWidth="0.0" />
-                  <Button fx:id="GetMacrosButton" layoutX="578.0" layoutY="120.0" mnemonicParsing="false" text="Get Macros" />
+                  <Button fx:id="GetMacrosButton" layoutX="584.0" layoutY="72.0" mnemonicParsing="false" text="Get Macros" />
                </children>
                <styleClass>
                   <String fx:value="degrade-diagonal2" />

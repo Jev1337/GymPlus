@@ -201,7 +201,7 @@ CREATE TABLE `objectif` (
 --
 
 CREATE TABLE `planning` (
-  `id_Planning` int(11) NOT NULL,
+  `id_Planning` int(11) NOT NULL AUTO_INCREMENT,
   `idObjectif` int(11) DEFAULT NULL,
   `TrainingProg` text DEFAULT NULL,
   `FoodProg` text DEFAULT NULL

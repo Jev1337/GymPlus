@@ -33,16 +33,14 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.*;
 import javafx.util.Duration;
+import netscape.javascript.JSObject;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.json.JSONException;
 import org.json.JSONObject;
-import services.gestionStore.DetailFactureService;
-import services.gestionStore.FactureService;
-import services.gestionStore.PanierService;
-import services.gestionStore.ProduitService;
+import services.gestionStore.*;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -94,6 +92,12 @@ public class InterfaceStoreController implements Initializable {
     private ComboBox<String> boxMontantFX;
     @FXML
     private TextField searchFX;
+    @FXML
+    private Button BtnLivraisonFX;
+    @FXML
+    private Label getAlldelevFX;
+    @FXML
+    private Pane Livraison_pane;
 
     //*****Check Stock
     @FXML
@@ -184,6 +188,11 @@ public class InterfaceStoreController implements Initializable {
     private Label nomClientFX;
     @FXML
     private ComboBox<String> comboPaiement;
+    @FXML
+    private WebView WebViewMap;
+    @FXML
+    private Label villeLabel = new Label();
+
 
 
     //*****GetAllFacture
@@ -225,6 +234,25 @@ public class InterfaceStoreController implements Initializable {
     private TableColumn<detailfacture, Integer> nameProdCol;
     private final DetailFactureService dfS = new DetailFactureService();
 
+    //*****Livraison
+    @FXML
+    private TableView<Livraison> getAllLivTab;
+    @FXML
+    private TableColumn<Livraison, Integer> ColClient;
+    @FXML
+    private TableColumn<Livraison, String> ColEtat;
+    @FXML
+    private TableColumn<Livraison, String> ColIdFacture;
+    @FXML
+    private TableColumn<Livraison, Integer> ColIdLivraison;
+    @FXML
+    private TableColumn<Livraison, String> ColLieu;
+    @FXML
+    private TextField updateEtatFX;
+    @FXML
+    private WebView webWiewMapStaff;
+
+
 
     //*****Var
     FileChooser filePhoto = new FileChooser();
@@ -236,10 +264,26 @@ public class InterfaceStoreController implements Initializable {
     }
     private facture fc = new facture();
     private final FactureService factureService = new FactureService();
+    private final LivraisonService LivraisonService = new LivraisonService();
+    //String pathPhoto = "file:/D:/projet_PI/GymPlus/src/assets/imageProduit/";
     String pathPhoto = "file:///D:/projet_PI/GymPlus/src/assets/imageProduit/";
 
 
     //*****GetAllProduit
+
+    @FXML
+    void BtnLivraison(ActionEvent event) {
+        GetAllProduit.setVisible(false);
+        Livraison_pane.setVisible(true);
+        chargerTableLivraison();
+        chargerMap(webWiewMapStaff);
+    }
+
+    @FXML
+    void ExitFromDelevery(ActionEvent event) {
+        Livraison_pane.setVisible(false);
+        GetAllProduit.setVisible(true);
+    }
 
     @FXML
     void ConsulterPanier(ActionEvent event) {
@@ -277,7 +321,7 @@ public class InterfaceStoreController implements Initializable {
         try {
             ProduitService prodService = new ProduitService();
 
-            ObservableList<produit> produits = FXCollections.observableArrayList(prodService.getLatestProducts(3));
+            ObservableList<produit> produits = FXCollections.observableArrayList(prodService.getLatestProducts(4));
 
             afficherRecentyAddedHbox(produits);
 
@@ -297,13 +341,20 @@ public class InterfaceStoreController implements Initializable {
         for (produit p : produits)
         {
             String photo = p.getPhoto();
-            ImageView imageView = new ImageView(new Image(pathPhoto + photo));
+            ImageView imageView = new ImageView(new Image((new File("src/assets/imageProduit/" +p.getPhoto()).toURI().toString())));
+            //ImageView imageView = new ImageView();
+            //imageView.setImage(new Image(new File("src/assets/imageProduit/" +p.getPhoto()).toURI().toString()));
+
 
             Label nameLabel = new Label(p.getName());
             Label priceLabel = new Label(String.valueOf(p.getPrix()));
 
             VBox productBox = new VBox();
             productBox.getChildren().addAll(imageView, nameLabel, priceLabel);
+
+            // Ajouter un espacement entre chaque produit
+            HBox.setMargin(productBox, new Insets(0, 0, 0, 10)); // Ajoute une marge à gauche de 10 pixels
+
 
             // gestionnaire d'événements quand je clik sur photo
             final int productId = p.getIdProduit();
@@ -312,7 +363,7 @@ public class InterfaceStoreController implements Initializable {
                 GetOneProduit.setVisible(true);
 
                 loadProductDetails(productId);
-                System.out.println("rania****" + productId);
+//                System.out.println("rania****" + productId);
 
             });
 
@@ -400,7 +451,7 @@ public class InterfaceStoreController implements Initializable {
     public void gridAff(ObservableList<produit> produits)
     {
         // Nombre de produits par colonne
-        int produitsParLigne = 4;
+        int produitsParLigne = 3;
 
         // Ajout data dans GridPane
         int row = 0;
@@ -415,6 +466,8 @@ public class InterfaceStoreController implements Initializable {
             //Image imageP = new Image("file:///D:/projet_PI/GymPlus/imageProduit/" + photo);
             //Image imageP = new Image("file:///D:/projet_PI/GymPlus/src/assets/imageProduit/" + photo);
             Image imageP = new Image(pathPhoto + photo);
+            //ImageView imageView = new ImageView(new Image((new File("src/assets/imageProduit/" +p.getPhoto()).toURI().toString())));
+
 
 
             ImageView imageView = new ImageView(imageP);
@@ -512,11 +565,13 @@ public class InterfaceStoreController implements Initializable {
 
         String photo = p.getPhoto();
         ImageView imageView = new ImageView(new Image(pathPhoto + photo));
+        //ImageView imageView = new ImageView(new Image((new File("src/assets/imageProduit/" +p.getPhoto()).toURI().toString())));
+
 
         Label nameLabel = new Label("name Product :" + p.getName());
-        Label idProduitLabel = new Label(" id Product :" + String.valueOf(p.getIdProduit()));
-        Label stockLabel = new Label("stock :" + String.valueOf(p.getStock()));
-        Label limitLabel = new Label("limit :" + String.valueOf(p.getSeuil()));
+        Label idProduitLabel = new Label(" id Product :" + p.getIdProduit());
+        Label stockLabel = new Label("stock :" + p.getStock());
+        Label limitLabel = new Label("limit :" + p.getSeuil());
 
         VBox productBox = new VBox();
         productBox.getChildren().addAll(imageView, idProduitLabel, nameLabel, stockLabel, limitLabel);
@@ -524,10 +579,38 @@ public class InterfaceStoreController implements Initializable {
         imageView.setOnMouseClicked(event -> {
             stock_pane.setVisible(false);
             UpdateProduit.setVisible(true);
+            hboxStock.getChildren().clear();
+            ChargerProd(p.getIdProduit());
         });
 
         hboxStock.getChildren().add(productBox);
 
+    }
+
+    private void ChargerProd( int id)
+    {
+        try {
+            ProduitService produitService = new ProduitService();
+
+            produit p = produitService.getOne(id);
+
+            String categorie = p.getCategorie();
+            Categorie_Combo1.setValue(categorie);
+            NameFX2.setText(p.getName());
+            PrixFX1.setText(String.valueOf(p.getPrix()));
+            StockFX1.setText(String.valueOf(p.getStock()));
+            SeuilFX1.setText(String.valueOf(p.getSeuil()));
+            descriptionFx1.setText(p.getDescription());
+            PhotoPath1.setText(p.getPhoto());
+            PromoFX1.setText(String.valueOf(p.getPromo()));
+
+        } catch (SQLException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erreur");
+            alert.setHeaderText("Erreur lors du chargement des détails du produit");
+            alert.setContentText("Une erreur s'est produite lors du chargement des détails du produit.");
+            alert.showAndWait();
+        }
     }
 
     @FXML
@@ -828,20 +911,38 @@ public class InterfaceStoreController implements Initializable {
         GetAllProduit.setVisible(true);
     }
 
-//    public String a ="Latitude: 55.26315789473682, Longitude: -75.28846153846153, lieu :Baie-d'Hudson" ;
-    public String a ="Baie-Hudson" ;
-
+//    public String a ="Latitude: 55.26315789473682, Longitude: -75.28846153846153, lieu :Baie Hudson" ;
 //    public String b = "Latitude: -22.5, Longitude:-151.44230769230768, lieu :Rurutu";
 //    public String c = "Latitude: 40.26315789473685, Longitude:19.90384615384616, lieu :kurvelesh";
-    public String b = "Rurutu";
-    public String c = "kurvelesh";
+//    public String d = "Latitude: -23.684210526315795, Longitude:-51.05769230769229, lieu :Londrina";
+//    public String e = "Latitude: -6.315789473684205, Longitude:-57.980769230769226, lieu :Jacareacanga";
+//    public String f = "Latitude: -16.578947368421055, Longitude:-70.96153846153847, lieu :Omate";
+//    public String g = "Latitude: 4.73684210526315, Longitude:-70.09615384615384, lieu :Cumaribo";
+//    public String h = "Latitude: -90868421052631575, Longitude:-75.28846153846153, lieu :Codo del Pozuzo";
+//    public String i = "Latitude: -28.815789473684212, Longitude:32.019230769230774, lieu :Richards Bay";
+//    public String j = "Latitude: 12.631578947368425, Longitude:-14.711538461538481, lieu :Sumbudo";
+//    public String k = "Latitude: -22.5, Longitude:-48.461553846153848, lieu :Barra Bonita";
+//    public String l = "Latitude: -9.078947368421055, Longitude:-68.36538461538461, lieu :Boca do Acre";
+//    public String m = "Latitude: -5.131578947368411, Longitude:-71.82692307692308, lieu :Atlantia do Norte";
+
+    public String a ="kurvelesh" ;
+    public String b = "Omate";
+    public String c = "Londrina";
+    public String d = "Barra Bonita";
+    public String e = "Cumaribo";
+    public String f = "Codo del Pozuzo";
+    public String g = "Richards Bay";
+    public String h = "Atlantia do Norte";
     List<String> list = new ArrayList<>();
-
-
     public Livraison ajouter() throws SQLException {
         list.add(a);
         list.add(b);
         list.add(c);
+        list.add(d);
+        list.add(e);
+        list.add(f);
+        list.add(g);
+        list.add(h);
 
         Random rand = new Random();
         String location = list.get(rand.nextInt(list.size()));
@@ -850,18 +951,9 @@ public class InterfaceStoreController implements Initializable {
         int IdderniereFacture = factureService.getDerniereFacture().getIdFacture();
         l.setIdFacture(IdderniereFacture);
         l.setIdClient(GlobalVar.getUser().getId());
-//        if(!villeLabel.getText().isEmpty()) {
-//            l.setLieu(villeLabel.getText());
-//        }
-//        else
-//        {
-            villeLabel.setText(location);
-            l.setLieu(villeLabel.getText());
-//            System.out.println("lieu a: " + villeLabel.getText());
-//        l.setLieu("Rurutu");
+        villeLabel.setText(location);
+        l.setLieu(villeLabel.getText());
         l.setEtat("en cours");
-
-        System.out.println("jawekkk behyyyyy");
 
         return l;
     }
@@ -888,11 +980,6 @@ public class InterfaceStoreController implements Initializable {
             e.printStackTrace();
         }
     }
-
-    @FXML
-    private WebView WebViewMap;
-    @FXML
-    private Label villeLabel = new Label();
 
     private static String getCityName(double latitude, double longitude) {
         String cityName = "Unknown";
@@ -931,9 +1018,9 @@ public class InterfaceStoreController implements Initializable {
     }
 
 
-    public void chargerMap()
+    public void chargerMap(WebView web)
     {
-        WebEngine webEngine = WebViewMap.getEngine();
+        WebEngine webEngine = web.getEngine();
         webEngine.loadContent("<html><head>"
                 + "<meta charset=\"UTF-8\">"
                 + "<title>Map</title>"
@@ -948,6 +1035,7 @@ public class InterfaceStoreController implements Initializable {
                 + "var marker; map.on('click', function (e) { if (marker) { map.removeLayer(marker); } marker = L.marker(e.latlng).addTo(map); "
                 + "document.getElementById('latitude').value = e.latlng.lat;"
                 + "document.getElementById('longitude').value = e.latlng.lng;});"
+                + "function addMarker(lat, lng, lieu) { var marker = L.marker([lat, lng]).addTo(map); marker.bindPopup(lieu).openPopup(); }"
                 + "</script>"
                 + "</body></html>");
     }
@@ -996,7 +1084,7 @@ public class InterfaceStoreController implements Initializable {
         nomClientFX.setText(String.valueOf(MonPanier.getMonPanier().getId()));
         TotalPanierFX.setText(String.valueOf(MonPanier.getMonPanier().calculerPrixTotalFacture()));
 
-        chargerMap();
+        chargerMap(WebViewMap);
 
         try {
 
@@ -1025,6 +1113,8 @@ public class InterfaceStoreController implements Initializable {
 
                 //Image imageP = new Image("file:///D:/projet_PI/GymPlus/imageProduit/" + photo);
                 Image imageP = new Image(pathPhoto + photo);
+                //ImageView imageView = new ImageView(new Image((new File("src/assets/imageProduit/" +p.getPhoto()).toURI().toString())));
+
 
                 ImageView imageView = new ImageView(imageP);
 
@@ -1658,6 +1748,141 @@ public class InterfaceStoreController implements Initializable {
         }
     }
 
+    //*****Livraison
+    public void chargerTableLivraison()
+    {
+        try
+        {
+            ObservableList<Livraison> livraisons = FXCollections.observableArrayList(LivraisonService.getAll());
+
+            getAllLivTab.setItems(livraisons);
+
+            // colonne TableView
+            ColIdLivraison.setCellValueFactory(new PropertyValueFactory<>("idLivraison"));
+            ColIdFacture.setCellValueFactory(new PropertyValueFactory<>("idFacture"));
+            ColClient.setCellValueFactory(new PropertyValueFactory<>("idClient"));
+            ColLieu.setCellValueFactory(new PropertyValueFactory<>("Lieu"));
+            ColEtat.setCellValueFactory(new PropertyValueFactory<>("etat"));
+
+            ColEtat.setCellFactory(column -> new TableCell<Livraison, String>() {
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+
+                    if (item == null || empty) {
+                        setText(null);
+                        setStyle(""); // Assurez-vous de réinitialiser le style si la cellule est vide
+                    } else {
+                        setText(item);
+
+                        // Définir le style en fonction de la valeur de l'état
+                        if ("en cours".equals(item.toLowerCase())) {
+                            setTextFill(Color.RED); // Texte en rouge pour "en cours"
+                        } else if ("delivered".equals(item.toLowerCase())) {
+                            setTextFill(Color.GREEN); // Texte en vert pour "delivered"
+                        } else {
+                            // Réinitialiser le style par défaut si l'état n'est ni "en cours" ni "delivered"
+                            setTextFill(Color.BLACK); // Vous pouvez choisir une autre couleur par défaut si nécessaire
+                        }
+                    }
+                }
+            });
+
+        }
+        catch (SQLException e)
+        {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erreur");
+            alert.setHeaderText("Erreur lors du chargement des Livraisons");
+            alert.setContentText("Une erreur s'est produite lors du chargement des Livraisons depuis la base de données.");
+            alert.showAndWait();
+        }
+    }
+
+    // Méthode pour ajouter un marqueur à la carte
+    public void addMarkerToMap(String latitude, String longitude, String lieu) {
+        WebEngine webEngine = webWiewMapStaff.getEngine();
+        JSObject window = (JSObject) webEngine.executeScript("window");
+        window.call("addMarker", latitude, longitude, lieu);
+    }
+
+    Livraison l = new Livraison();
+    @FXML
+    void updateEtat(ActionEvent event) throws SQLException {
+
+        Livraison selectedLivraison = getAllLivTab.getSelectionModel().getSelectedItem();
+        //System.out.println("id Livraison selectionner " + selectedLivraison);
+
+        try
+        {
+            l.setEtat(updateEtatFX.getText());
+            String etatLiv = updateEtatFX.getText();
+
+            int x = selectedLivraison.getIdLivraison();
+
+            Livraison l = new Livraison(x , etatLiv);
+
+
+            LivraisonService.update(l);
+
+
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Info");
+            alert.setContentText("Livraison updated!");
+            alert.show();
+
+            chargerTableLivraison();
+
+        } catch (SQLException e)
+        {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setContentText(e.getMessage());
+            alert.show();
+        }
+    }
+
+    @FXML
+    void BtnCheckPlaceStaff(ActionEvent event) {
+
+        Livraison selectedLivraison = getAllLivTab.getSelectionModel().getSelectedItem();
+        System.out.println("id Livraison selectionner " + selectedLivraison);
+
+        String lieu = selectedLivraison.getLieu();
+
+        // Ajouter des vérifications pour chaque lieu et ajouter le marqueur correspondant
+        if (lieu.equals("Baie Hudson")) {
+            addMarkerToMap("55.26315789473682", "-75.28846153846153", lieu);
+        } else if (lieu.equals("Rurutu")) {
+            addMarkerToMap("-22.5", "-151.44230769230768", lieu);
+        } else if (lieu.equals("kurvelesh")) {
+            addMarkerToMap("40.26315789473685", "19.90384615384616", lieu);
+        } else if (lieu.equals("Londrina")) {
+            addMarkerToMap("-23.684210526315795", "-51.05769230769229", lieu);
+        } else if (lieu.equals("Jacareacanga")) {
+            addMarkerToMap("-6.315789473684205", "-57.980769230769226", lieu);
+        } else if (lieu.equals("Omate")) {
+            addMarkerToMap("-16.578947368421055", "-70.96153846153847", lieu);
+        } else if (lieu.equals("Cumaribo")) {
+            addMarkerToMap("4.73684210526315", "-70.09615384615384", lieu);
+        } else if (lieu.equals("Codo del Pozuzo")) {
+            addMarkerToMap("-90868421052631575", "-75.28846153846153", lieu);
+        } else if (lieu.equals("Richards Bay")) {
+            addMarkerToMap("-28.815789473684212", "32.019230769230774", lieu);
+        } else if (lieu.equals("Sumbudo")) {
+            addMarkerToMap("12.631578947368425", "-14.711538461538481", lieu);
+        } else if (lieu.equals("Barra Bonita")) {
+            addMarkerToMap("-22.5", "-48.461553846153848", lieu);
+        } else if (lieu.equals("Boca do Acre")) {
+            addMarkerToMap("-9.078947368421055", "-68.36538461538461", lieu);
+        } else if (lieu.equals("Atlantia do Norte")) {
+            addMarkerToMap("-5.131578947368411", "-71.82692307692308", lieu);
+        }
+    }
+
+
+
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -1678,9 +1903,20 @@ public class InterfaceStoreController implements Initializable {
 
             BtnStock.setVisible(false);
             stockProductFX.setVisible(false);
+
         }
 
-        //comboBox categorie
+        if (GlobalVar.getUser().getRole().equals("client"))
+        {
+            BtnLivraisonFX.setVisible(false);
+            BtnLivraisonFX.setManaged(false);
+            getAlldelevFX.setVisible(false);
+            getAlldelevFX.setVisible(false);
+
+        }
+
+
+            //comboBox categorie
         ObservableList<String> list_categorie = FXCollections.observableArrayList("Food", "equipement", "vetement" , "All");
         boxCategorieFX.setItems(list_categorie);
 

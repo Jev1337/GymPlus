@@ -346,6 +346,10 @@ public class StaffDashboardController {
     @FXML
     private Pane PlanningPan;
 
+
+    @FXML
+    private Pane StorePane;
+
     @FXML
     private CheckBox dark_cb;
 
@@ -1298,6 +1302,8 @@ public class StaffDashboardController {
             affichage_events_adstaff.getChildren().setAll(pane);
             Pane pane_event= FXMLLoader.load(getClass().getResource("/gestionequipement/equipement.fxml"));
             EquipmentIdAdminStaff.getChildren().setAll(pane_event);
+            Pane pane_Store= FXMLLoader.load(getClass().getResource("/resourcesGestionStore/InterfaceStore.fxml"));
+            StorePane.getChildren().setAll(pane_Store);
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }

@@ -81,7 +81,7 @@
                                                 <Font name="Open Sans Regular" size="12.0" />
                                              </font>
                                           </Label>
-                                          <FontAwesomeIconView glyphName="TASKS" layoutX="27.0" layoutY="73.0" size="36">
+                                          <FontAwesomeIconView glyphName="SITEMAP" layoutX="27.0" layoutY="73.0" size="36">
                                              <cursor>
                                                 <Cursor fx:constant="HAND" />
                                              </cursor>
@@ -155,7 +155,7 @@
                                                 <Font name="Open Sans Regular" size="12.0" />
                                              </font>
                                           </Label>
-                                          <FontAwesomeIconView glyphName="TASKS" layoutX="27.0" layoutY="73.0" size="36">
+                                          <FontAwesomeIconView glyphName="COGS" layoutX="27.0" layoutY="73.0" size="36">
                                              <cursor>
                                                 <Cursor fx:constant="HAND" />
                                              </cursor>
@@ -190,7 +190,7 @@
                                                 <Font name="Open Sans Regular" size="12.0" />
                                              </font>
                                           </Label>
-                                          <FontAwesomeIconView glyphName="TASKS" layoutX="27.0" layoutY="73.0" size="36">
+                                          <FontAwesomeIconView glyphName="MONEY" layoutX="27.0" layoutY="73.0" size="36">
                                              <cursor>
                                                 <Cursor fx:constant="HAND" />
                                              </cursor>
@@ -225,7 +225,7 @@
                                                 <Font name="Open Sans Regular" size="12.0" />
                                              </font>
                                           </Label>
-                                          <FontAwesomeIconView glyphName="TASKS" layoutX="27.0" layoutY="73.0" size="36">
+                                          <FontAwesomeIconView glyphName="CALENDAR" layoutX="27.0" layoutY="73.0" size="36">
                                              <cursor>
                                                 <Cursor fx:constant="HAND" />
                                              </cursor>

@@ -3,15 +3,10 @@
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import java.net.URL?>
 <?import javafx.scene.Cursor?>
-<?import javafx.scene.chart.CategoryAxis?>
-<?import javafx.scene.chart.LineChart?>
-<?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
@@ -113,12 +108,12 @@
                                     </Label>
                                     <Pane layoutX="47.0" layoutY="69.0" prefHeight="124.0" prefWidth="280.0" styleClass="pane">
                                        <children>
-                                          <Label layoutX="81.0" layoutY="25.0" style="-fx-font-size: 12;" text="Weekly Progress">
+                                          <Label layoutX="81.0" layoutY="25.0" style="-fx-font-size: 12;" text="Total months subscribed">
                                              <font>
                                                 <Font name="Open Sans Regular" size="12.0" />
                                              </font>
                                           </Label>
-                                          <FontAwesomeIconView glyphName="TASKS" layoutX="27.0" layoutY="73.0" size="36">
+                                          <FontAwesomeIconView glyphName="CHEVRON_UP" layoutX="27.0" layoutY="73.0" size="36">
                                              <cursor>
                                                 <Cursor fx:constant="HAND" />
                                              </cursor>
@@ -139,41 +134,91 @@
                                                 </LinearGradient>
                                              </fill>
                                           </FontAwesomeIconView>
-                                          <Label layoutX="81.0" layoutY="45.0" style="-fx-font-size: 24;" text="42%">
+                                          <Label fx:id="total_months" layoutX="81.0" layoutY="45.0" style="-fx-font-size: 24;" text="42%">
                                              <font>
                                                 <Font name="Open Sans Regular" size="24.0" />
                                              </font>
                                           </Label>
-                                          <ProgressBar layoutX="19.0" layoutY="122.0" prefHeight="2.0" prefWidth="241.0" progress="0.46" style="-color-progress-bar-track: white; -color-progress-bar-fill: linear-gradient(to right, #00aaff, #00688b);" />
                                        </children>
                                     </Pane>
                                     <Pane layoutX="690.0" layoutY="69.0" prefHeight="291.0" prefWidth="431.0" styleClass="pane">
                                        <children>
-                                          <LineChart fx:id="stat_linechart" layoutX="11.0" layoutY="65.0" prefHeight="219.0" prefWidth="409.0">
-                                            <xAxis>
-                                              <CategoryAxis side="BOTTOM" />
-                                            </xAxis>
-                                            <yAxis>
-                                              <NumberAxis side="LEFT" />
-                                            </yAxis>
-                                          </LineChart>
-                                          <Label layoutX="46.0" layoutY="14.0" style="-fx-font-size: 18;" text="Plan List">
+                                          <Label layoutX="64.0" layoutY="23.0" style="-fx-font-size: 18;" text="Latest GymPlus News:">
                                              <font>
                                                 <Font name="Open Sans Regular" size="17.0" />
                                              </font>
                                           </Label>
-                                          <Label layoutX="46.0" layoutY="42.0" text="Lorem ipsum dolor sit amet, consectetur" />
-                                          <ComboBox fx:id="stat_combobox" layoutX="318.0" layoutY="15.0" onAction="#stat_combobox_act" prefHeight="36.0" prefWidth="91.0" />
+                                          <FontAwesomeIconView glyphName="FILE" layoutX="28.0" layoutY="45.0" size="26">
+                                             <cursor>
+                                                <Cursor fx:constant="HAND" />
+                                             </cursor>
+                                             <fill>
+                                                <LinearGradient endX="1.0" endY="1.0">
+                                                   <stops>
+                                                      <Stop>
+                                                         <color>
+                                                            <Color green="0.6666666865348816" blue="1.0" />
+                                                         </color>
+                                                      </Stop>
+                                                      <Stop offset="1.0">
+                                                         <color>
+                                                            <Color green="0.40784314274787903" blue="0.545098066329956" />
+                                                         </color>
+                                                      </Stop>
+                                                   </stops>
+                                                </LinearGradient>
+                                             </fill>
+                                          </FontAwesomeIconView>
+                                          <Label layoutX="51.0" layoutY="69.0" text="• Fixed problems with the UI">
+                                             <font>
+                                                <Font name="Open Sans Regular" size="16.0" />
+                                             </font>
+                                          </Label>
+                                          <Label layoutX="51.0" layoutY="91.0" text="• Improved performance">
+                                             <font>
+                                                <Font name="Open Sans Regular" size="16.0" />
+                                             </font>
+                                          </Label>
+                                          <Label layoutX="51.0" layoutY="113.0" text="• Added heartbeat sensors">
+                                             <font>
+                                                <Font name="Open Sans Regular" size="16.0" />
+                                             </font>
+                                          </Label>
+                                          <Label layoutX="51.0" layoutY="135.0" text="• Added new features">
+                                             <font>
+                                                <Font name="Open Sans Regular" size="16.0" />
+                                             </font>
+                                          </Label>
+                                          <Label layoutX="51.0" layoutY="157.0" text="• Better Design">
+                                             <font>
+                                                <Font name="Open Sans Regular" size="16.0" />
+                                             </font>
+                                          </Label>
+                                          <Label layoutX="51.0" layoutY="179.0" text="• Added feedback">
+                                             <font>
+                                                <Font name="Open Sans Regular" size="16.0" />
+                                             </font>
+                                          </Label>
+                                          <Label layoutX="51.0" layoutY="201.0" text="• New togglable dark mode">
+                                             <font>
+                                                <Font name="Open Sans Regular" size="16.0" />
+                                             </font>
+                                          </Label>
+                                          <Label layoutX="51.0" layoutY="223.0" text="• You can disable TTS in the settings">
+                                             <font>
+                                                <Font name="Open Sans Regular" size="16.0" />
+                                             </font>
+                                          </Label>
                                        </children>
                                     </Pane>
                                     <Pane layoutX="368.0" layoutY="69.0" prefHeight="124.0" prefWidth="280.0" styleClass="pane">
                                        <children>
-                                          <Label layoutX="81.0" layoutY="25.0" text="Your Total Events">
+                                          <Label layoutX="81.0" layoutY="25.0" text="Total Events Joined">
                                              <font>
                                                 <Font name="Open Sans Regular" size="12.0" />
                                              </font>
                                           </Label>
-                                          <FontAwesomeIconView glyphName="TASKS" layoutX="27.0" layoutY="73.0" size="36">
+                                          <FontAwesomeIconView glyphName="CALENDAR" layoutX="27.0" layoutY="73.0" size="36">
                                              <cursor>
                                                 <Cursor fx:constant="HAND" />
                                              </cursor>
@@ -199,17 +244,16 @@
                                                 <Font name="Open Sans Regular" size="24.0" />
                                              </font>
                                           </Label>
-                                          <ProgressBar layoutX="19.0" layoutY="122.0" prefHeight="2.0" prefWidth="241.0" progress="0.8" style="-color-progress-bar-track: white; -color-progress-bar-fill: linear-gradient(to right, #00aaff, #00688b);" />
                                        </children>
                                     </Pane>
                                     <Pane layoutX="47.0" layoutY="234.0" prefHeight="124.0" prefWidth="280.0" styleClass="pane">
                                        <children>
-                                          <Label layoutX="81.0" layoutY="25.0" text="Daily Cycling">
+                                          <Label layoutX="81.0" layoutY="25.0" text="Today's Bang for the Buck">
                                              <font>
                                                 <Font name="Open Sans Regular" size="12.0" />
                                              </font>
                                           </Label>
-                                          <FontAwesomeIconView glyphName="TASKS" layoutX="27.0" layoutY="73.0" size="36">
+                                          <FontAwesomeIconView glyphName="CREDIT_CARD" layoutX="27.0" layoutY="73.0" size="36">
                                              <cursor>
                                                 <Cursor fx:constant="HAND" />
                                              </cursor>
@@ -230,48 +274,11 @@
                                                 </LinearGradient>
                                              </fill>
                                           </FontAwesomeIconView>
-                                          <Label layoutX="81.0" layoutY="45.0" style="-fx-font-size: 24;" text="230 km">
+                                          <Label layoutX="81.0" layoutY="45.0" style="-fx-font-size: 24;" text="GP 2">
                                              <font>
                                                 <Font name="Open Sans Regular" size="24.0" />
                                              </font>
                                           </Label>
-                                          <ProgressBar layoutX="19.0" layoutY="122.0" prefHeight="2.0" prefWidth="241.0" progress="0.9" style="-color-progress-bar-track: white; -color-progress-bar-fill: linear-gradient(to right, #00aaff, #00688b);" />
-                                       </children>
-                                    </Pane>
-                                    <Pane layoutX="368.0" layoutY="234.0" prefHeight="124.0" prefWidth="280.0" styleClass="pane">
-                                       <children>
-                                          <Label layoutX="81.0" layoutY="25.0" text="Morning Yoga">
-                                             <font>
-                                                <Font name="Open Sans Regular" size="12.0" />
-                                             </font>
-                                          </Label>
-                                          <FontAwesomeIconView glyphName="TASKS" layoutX="27.0" layoutY="73.0" size="36">
-                                             <cursor>
-                                                <Cursor fx:constant="HAND" />
-                                             </cursor>
-                                             <fill>
-                                                <LinearGradient endX="1.0" endY="1.0">
-                                                   <stops>
-                                                      <Stop>
-                                                         <color>
-                                                            <Color green="0.6666666865348816" blue="1.0" />
-                                                         </color>
-                                                      </Stop>
-                                                      <Stop offset="1.0">
-                                                         <color>
-                                                            <Color green="0.40784314274787903" blue="0.545098066329956" />
-                                                         </color>
-                                                      </Stop>
-                                                   </stops>
-                                                </LinearGradient>
-                                             </fill>
-                                          </FontAwesomeIconView>
-                                          <Label layoutX="81.0" layoutY="45.0" style="-fx-font-size: 24;" text="18:34:00">
-                                             <font>
-                                                <Font name="Open Sans Regular" size="24.0" />
-                                             </font>
-                                          </Label>
-                                          <ProgressBar layoutX="19.0" layoutY="122.0" prefHeight="2.0" prefWidth="241.0" progress="1.0" style="-color-progress-bar-track: white; -color-progress-bar-fill: linear-gradient(to right, #00aaff, #00688b);" />
                                        </children>
                                     </Pane>
                                     <Pane layoutX="47.0" layoutY="407.0" prefHeight="603.0" prefWidth="1074.0" styleClass="pane">

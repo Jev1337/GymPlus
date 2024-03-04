@@ -49,6 +49,12 @@ import javafx.scene.chart.BarChart;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -78,8 +84,11 @@ import services.gestionuser.AdminService;
 import services.gestionuser.ClientService;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.sql.Date;
@@ -109,6 +118,8 @@ public class UserDashboardController {
         }
     }
 
+    @FXML
+    private Label total_months;
 
     @FXML
     private Pane blogId = new Pane();
@@ -394,11 +405,6 @@ public class UserDashboardController {
     @FXML
     private Button shop_btn;
 
-    @FXML
-    private ComboBox<String> stat_combobox;
-
-    @FXML
-    private LineChart<String, Number> stat_linechart;
 
     @FXML
     private Button subscription_btn;
@@ -973,7 +979,6 @@ public class UserDashboardController {
     public void initialize() {
         fadeInRightAnimation.setNode(UserHomePane);
         fadeInRightAnimation.play();
-        stat_combobox.getItems().addAll(FXCollections.observableArrayList("Abonnements", "Clients", "Staff"));
         initProfile();
         initCharts();
         setFitToWidthAll();
@@ -989,6 +994,12 @@ public class UserDashboardController {
         samwebview.getEngine().getLoadWorker().stateProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == Worker.State.SUCCEEDED) {
                 if (!samwebview.getEngine().getLocation().contains("embed/mSymAF0uGK8")) {
+                    String url = samwebview.getEngine().getLocation();
+                    try {
+                        Desktop.getDesktop().browse(new URI(url));
+                    } catch (IOException | URISyntaxException e) {
+                        e.printStackTrace();
+                    }
                     samwebview.getEngine().executeScript("window.location.href = 'https://www.youtube.com/embed/mSymAF0uGK8'");
                 }
             }
@@ -1248,22 +1259,7 @@ public class UserDashboardController {
 
 
     private void initCharts(){
-        XYChart.Series<String,Number> series = new XYChart.Series<>();
-        series.getData().add(new XYChart.Data<>("Jan", 100));
-        series.getData().add(new XYChart.Data<>("Feb", 200));
-        series.getData().add(new XYChart.Data<>("Mar", 50));
-        series.getData().add(new XYChart.Data<>("Apr", 75));
-        series.getData().add(new XYChart.Data<>("May", 110));
-        series.getData().add(new XYChart.Data<>("Jun", 300));
-        series.getData().add(new XYChart.Data<>("Jul", 111));
-        series.getData().add(new XYChart.Data<>("Aug", 30));
-        series.getData().add(new XYChart.Data<>("Sep", 75));
-        series.getData().add(new XYChart.Data<>("Oct", 55));
-        series.getData().add(new XYChart.Data<>("Nov", 225));
-        series.getData().add(new XYChart.Data<>("Dec", 99));
-        series.setName("Lorem");
-        stat_linechart.getData().add(series);
-
+        total_months.setText(String.valueOf(abonnementService.getTotalMonths(GlobalVar.getUser().getId())));
     }
 
     private void errorAlert(String title, String header, String message){
@@ -1320,7 +1316,8 @@ public class UserDashboardController {
         content.add(textArea, 0, 1);
 
         alert.getDialogPane().setExpandableContent(content);
-        alert.initOwner(UserHomePane.getScene().getWindow());
+        if (UserHomePane != null && UserHomePane.getScene() != null && UserHomePane.getScene().getWindow() != null)
+            alert.initOwner(UserHomePane.getScene().getWindow());
         alert.showAndWait();
     }
     private void sendSms(String phone) {

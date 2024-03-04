@@ -122,7 +122,7 @@
                   <Label layoutX="239.0" layoutY="102.0" prefHeight="20.0" prefWidth="147.0" text="Date maintenance" />
                   <Label layoutX="32.0" layoutY="188.0" prefHeight="20.0" prefWidth="65.0" text="Status" />
                   <ComboBox fx:id="add_ide" layoutX="31.0" layoutY="135.0" prefHeight="36.0" prefWidth="181.0" />
-                  <DatePicker fx:id="add_date" layoutX="239.0" layoutY="135.0" />
+                  <DatePicker fx:id="add_date" editable="false" layoutX="239.0" layoutY="135.0" />
                   <ImageView fitHeight="232.0" fitWidth="232.0" layoutX="704.0" layoutY="37.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../assets/images/maint.png" />
@@ -161,7 +161,7 @@
                   <Font name="Open Sans Regular" size="16.0" />
                </font>
             </Label>
-            <Pane fx:id="ModifyMaintPane" layoutX="42.0" layoutY="74.0" prefHeight="316.0" prefWidth="1084.0" visible="false">
+            <Pane fx:id="ModifyMaintPane" layoutX="42.0" layoutY="74.0" prefHeight="316.0" prefWidth="1084.0" styleClass="pane" visible="false">
                <children>
                   <Label layoutX="19.0" layoutY="26.0" prefHeight="27.0" prefWidth="217.0" style="-fx-font-size: 18;" text="Modify Maintenance">
                      <font>
@@ -176,7 +176,7 @@
                   </Button>
                   <Label layoutX="41.0" layoutY="75.0" prefHeight="20.0" prefWidth="147.0" text="Date maintenance" />
                   <Label layoutX="39.0" layoutY="162.0" prefHeight="20.0" prefWidth="95.0" text="Status / Details" />
-                  <DatePicker fx:id="add_date1" layoutX="39.0" layoutY="103.0" />
+                  <DatePicker fx:id="add_date1" editable="false" layoutX="39.0" layoutY="103.0" />
                   <ImageView fitHeight="232.0" fitWidth="232.0" layoutX="709.0" layoutY="34.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../assets/images/maint.png" />

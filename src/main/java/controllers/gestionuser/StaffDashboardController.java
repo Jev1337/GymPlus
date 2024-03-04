@@ -1662,8 +1662,9 @@ public class StaffDashboardController {
         content.setMaxWidth(Double.MAX_VALUE);
         content.add(new Label("Full stacktrace:"), 0, 0);
         content.add(textArea, 0, 1);
-
-        alert.initOwner(StaffInfoPane.getScene().getWindow());
+        if (StaffInfoPane != null && StaffInfoPane.getScene() != null && StaffInfoPane.getScene().getWindow() != null) {
+            alert.initOwner(StaffInfoPane.getScene().getWindow());
+        }
         alert.getDialogPane().setExpandableContent(content);
         alert.showAndWait();
     }

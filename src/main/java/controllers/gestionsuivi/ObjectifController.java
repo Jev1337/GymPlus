@@ -153,7 +153,7 @@ public class ObjectifController  implements Initializable {
         PaneChatBot.setVisible(false);
         pnl_scroll2.setVisible(true);
         ScrollAffichage.setVisible(true);
-
+        RealTimePan.setVisible(false);
         PanePage1.setTranslateX(PanePage1.getWidth());
         PanePage1.setVisible(true);
         TranslateTransition transition3 = new TranslateTransition(Duration.seconds(0.5), PanePage1);

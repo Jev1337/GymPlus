@@ -4,6 +4,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.effect.DropShadow?>
@@ -17,11 +18,12 @@
 <?import javafx.scene.paint.LinearGradient?>
 <?import javafx.scene.paint.Stop?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="519.0" prefWidth="429.0" stylesheets="@../assets/images/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionsuivi.ChatControler">
+<AnchorPane prefHeight="600.0" prefWidth="642.0" styleClass="degrade-diagonal2" stylesheets="@../assets/images/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionsuivi.ChatControler">
    <children>
-      <TextArea fx:id="textFieldPrompt" layoutX="14.0" layoutY="457.0" prefHeight="41.0" prefWidth="354.0" promptText="Ask me anything" stylesheets="@../assets/images/style.css" />
-      <Pane layoutX="23.0" layoutY="41.0" prefHeight="412.0" prefWidth="372.0" stylesheets="@../assets/images/style.css">
+      <TextArea fx:id="textFieldPrompt" layoutX="143.0" layoutY="531.0" prefHeight="41.0" prefWidth="334.0" promptText="Ask me anything" stylesheets="@../assets/images/style.css" />
+      <Pane layoutX="125.0" layoutY="56.0" prefHeight="459.0" prefWidth="502.0" stylesheets="@../assets/images/style.css">
          <styleClass>
             <String fx:value="degrade-diagonal" />
             <String fx:value="border-table" />
@@ -29,22 +31,17 @@
          <effect>
             <DropShadow height="35.66" radius="15.862499999999997" spread="0.07" width="29.79" />
          </effect>
-      </Pane>
-      <Pane layoutX="38.0" layoutY="57.0" prefHeight="381.0" prefWidth="346.0" styleClass="border-table" stylesheets="@../assets/images/style.css">
          <children>
-            <ImageView fitHeight="391.0" fitWidth="346.0" layoutX="-2.0" layoutY="-2.0" opacity="0.88" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="415.0" fitWidth="486.0" layoutX="18.0" layoutY="17.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../assets/images/coverforchat.jpg" />
+                  <Image url="@../assets/images/robot.jpg" />
                </image>
-               <effect>
-                  <DropShadow />
-               </effect>
             </ImageView>
-            <ScrollPane layoutX="-3.0" layoutY="-4.0" stylesheets="@../assets/images/style.css">
+            <ScrollPane layoutX="9.0" layoutY="16.0" prefHeight="415.0" prefWidth="357.0" stylesheets="@../assets/images/style.css">
                <content>
-                  <VBox fx:id="PromptingVbox" prefHeight="363.0" prefWidth="327.0" styleClass="border-table" stylesheets="@../assets/images/style.css">
+                  <VBox fx:id="PromptingVbox" prefHeight="391.0" prefWidth="337.0" style="-fx-translate-x: 8; -fx-translate-y: 10;" styleClass="border-table" stylesheets="@../assets/images/style.css">
                      <children>
-                        <ImageView fitHeight="51.0" fitWidth="56.0" layoutX="30.0" layoutY="29.0" pickOnBounds="true" preserveRatio="true" translateX="150.0" translateY="120.0" x="30.0">
+                        <ImageView fitHeight="51.0" fitWidth="56.0" layoutX="30.0" layoutY="29.0" pickOnBounds="true" preserveRatio="true" translateX="150.0" translateY="120.0" visible="false" x="30.0">
                            <image>
                               <Image url="@../assets/images/ChatGPT.png" />
                            </image>
@@ -52,7 +49,7 @@
                               <Glow />
                            </effect>
                         </ImageView>
-                        <Label text="How can I help you today ?">
+                        <Label text="How can I help you today ?" visible="false">
                            <VBox.margin>
                               <Insets bottom="30.0" left="60.0" top="130.0" />
                            </VBox.margin>
@@ -104,8 +101,8 @@
             </ScrollPane>
          </children>
       </Pane>
-      <Button fx:id="SearchButton" layoutX="373.0" layoutY="457.0" mnemonicParsing="false" onAction="#chatGPT" opacity="0.68" prefHeight="41.0" prefWidth="47.0" stylesheets="@../assets/images/style.css" />
-      <ImageView fitHeight="29.0" fitWidth="21.0" layoutX="386.0" layoutY="467.0" pickOnBounds="true" preserveRatio="true">
+      <Button fx:id="SearchButton" layoutX="486.0" layoutY="533.0" mnemonicParsing="false" onAction="#chatGPT" opacity="0.68" prefHeight="41.0" prefWidth="72.0" stylesheets="@../assets/images/style.css" />
+      <ImageView fitHeight="20.0" fitWidth="20.0" layoutX="512.0" layoutY="544.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../assets/images/Refresh.png" />
          </image>
@@ -113,38 +110,7 @@
             <Glow />
          </effect>
       </ImageView>
-      <Label layoutX="59.0" layoutY="17.0" text="ChatBot Assistance">
-         <font>
-            <Font name="System Bold Italic" size="18.0" />
-         </font>
-         <textFill>
-            <LinearGradient endX="1.0" endY="1.0" startX="1.0">
-               <stops>
-                  <Stop>
-                     <color>
-                        <Color red="0.21150000393390656" green="0.26566189527511597" blue="0.4699999988079071" />
-                     </color>
-                  </Stop>
-                  <Stop offset="0.006711409395973154">
-                     <color>
-                        <Color red="0.21150000393390656" green="0.26566189527511597" blue="0.4699999988079071" />
-                     </color>
-                  </Stop>
-                  <Stop offset="1.0">
-                     <color>
-                        <Color red="0.28393030166625977" green="0.5137102007865906" blue="0.7763158082962036" />
-                     </color>
-                  </Stop>
-               </stops>
-            </LinearGradient>
-         </textFill>
-      </Label>
-      <ImageView fitHeight="53.0" fitWidth="54.0" layoutX="6.0" layoutY="11.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../assets/images/ChatGPT.png" />
-         </image>
-      </ImageView>
-      <Label layoutX="347.0" layoutY="18.0" prefHeight="13.0" prefWidth="65.0" text="version++" underline="true">
+      <Label layoutX="550.0" layoutY="28.0" prefHeight="13.0" prefWidth="65.0" text="version++" underline="true">
          <font>
             <Font name="System Bold Italic" size="9.0" />
          </font>
@@ -173,24 +139,77 @@
                   </Stop>
                   <Stop offset="1.0">
                      <color>
-                        <Color red="0.3365618884563446" green="0.4921722710132599" blue="0.8552631735801697" />
+                        <Color red="0.33725491166114807" green="0.4941176474094391" blue="0.8549019694328308" />
                      </color>
                   </Stop>
                </stops>
             </LinearGradient>
          </textFill>
       </Label>
-      <ImageView fitHeight="20.0" fitWidth="21.0" layoutX="392.0" layoutY="17.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="20.0" fitWidth="21.0" layoutX="523.0" layoutY="28.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../assets/images/Privacy Policy.png" />
          </image>
       </ImageView>
+      <Button fx:id="vocalSendButton" layoutX="562.0" layoutY="533.0" mnemonicParsing="false" onMouseClicked="#SpeechTotext" prefHeight="41.0" prefWidth="58.0" stylesheets="@../assets/images/style.css" />
+      <ImageView fitHeight="33.0" fitWidth="33.0" layoutX="575.0" layoutY="538.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../assets/images/microphone (1).png" />
+         </image>
+      </ImageView>
+      <Text layoutX="167.0" layoutY="41.0" strokeType="OUTSIDE" strokeWidth="0.0" text="ChatBot Assistance" underline="true" wrappingWidth="153.1796875">
+         <font>
+            <Font name="System Bold Italic" size="16.0" />
+         </font>
+         <fill>
+            <LinearGradient endX="1.0" endY="1.0" startX="1.0">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color red="0.21150000393390656" green="0.26566189527511597" blue="0.4699999988079071" />
+                     </color>
+                  </Stop>
+                  <Stop offset="0.006711409395973154">
+                     <color>
+                        <Color red="0.21150000393390656" green="0.26566189527511597" blue="0.4699999988079071" />
+                     </color>
+                  </Stop>
+                  <Stop offset="0.5080414143067604">
+                     <color>
+                        <Color red="0.29410332441329956" green="0.47429338097572327" blue="0.8947368264198303" />
+                     </color>
+                  </Stop>
+                  <Stop offset="0.9966442953020134">
+                     <color>
+                        <Color red="0.6973684430122375" green="0.6166544556617737" blue="0.6166544556617737" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color red="0.33725491166114807" green="0.4941176474094391" blue="0.8549019694328308" />
+                     </color>
+                  </Stop>
+               </stops>
+            </LinearGradient>
+         </fill>
+         <effect>
+            <Glow />
+         </effect>
+      </Text>
+      <Pane prefHeight="600.0" prefWidth="105.0" styleClass="degrade-diagonal" stylesheets="@../assets/images/style.css">
+         <children>
+            <Text fill="WHITE" layoutX="44.0" layoutY="32.0" strokeType="OUTSIDE" strokeWidth="0.0" text="GMP">
+               <font>
+                  <Font name="System Bold Italic" size="24.0" />
+               </font>
+            </Text>
+            <ImageView fitHeight="41.0" fitWidth="44.0" layoutX="3.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../assets/images/ChatGPT.png" />
+               </image>
+            </ImageView>
+         </children>
+      </Pane>
+      <ProgressBar fx:id="progressivBarVocal" layoutX="561.0" layoutY="521.0" prefHeight="12.0" prefWidth="65.0" progress="0.0" visible="false" />
    </children>
-   <styleClass>
-      <String fx:value="degrade-diagonal2" />
-      <String fx:value="border-table" />
-   </styleClass>
-   <effect>
-      <DropShadow height="70.35" radius="32.5975" spread="0.27" width="62.04" />
-   </effect>
 </AnchorPane>

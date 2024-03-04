@@ -4,25 +4,36 @@ import animatefx.animation.*;
 import atlantafx.base.controls.Notification;
 import atlantafx.base.theme.Styles;
 import atlantafx.base.util.Animations;
+import com.itextpdf.html2pdf.ConverterProperties;
+import com.itextpdf.html2pdf.HtmlConverter;
 import entities.gestionequipements.Equipements_details;
 import entities.gestionequipements.Maintenances;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import entities.gestionuser.Admin;
+import jakarta.mail.*;
+import jakarta.mail.internet.MimeBodyPart;
+import jakarta.mail.internet.MimeMessage;
+import jakarta.mail.internet.MimeMultipart;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
+import javafx.stage.FileChooser;
 import javafx.util.Duration;
 import services.gestionequipements.EquipementService;
 
+import java.io.*;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
+import java.util.Objects;
+import java.util.Properties;
 
 import services.gestionequipements.MaintenancesService;
+import services.gestionuser.AdminService;
+
 
 public class EquipementController {
 
@@ -169,8 +180,6 @@ public class EquipementController {
             alert.setContentText(e.getMessage());
             alert.showAndWait();
         }
-
-
     }
 
 
@@ -348,8 +357,7 @@ public class EquipementController {
                 throw new IllegalArgumentException("Status must not be empty.");
             }
 
-
-
+            sendEquipMailAdmins(ide);
             MaintenancesService.add(new Maintenances(ide, sqlAddDate.toString(), status));
             notify("Maintenance added successfully!");
             getAllMaint();
@@ -421,6 +429,43 @@ public class EquipementController {
     @FXML
     void deleteMaint(ActionEvent event) {
         try {
+            if (selectedMaint == null) {
+                throw new IllegalArgumentException("No maintenance selected");
+            }
+
+            File file = new File("src/assets/html/attestation.html");
+            String content = new String(java.nio.file.Files.readAllBytes(file.toPath()));
+            content = content.replace("{E1}", EquipementService.getEquipementById(selectedMaint.getIde()).getName());
+            content = content.replace("{E2}", String.valueOf(java.time.temporal.ChronoUnit.DAYS.between(LocalDate.parse(selectedMaint.getDate_maintenance()), LocalDate.now())));
+            content = content.replace("{E3}", String.valueOf(java.time.temporal.ChronoUnit.DAYS.between(LocalDate.parse(selectedMaint.getDate_maintenance()), LocalDate.now()) * 100));
+            content = content.replace("{E4}", LocalDate.now().toString());
+            content = content.replace("{E5}", String.valueOf(selectedMaint.getIdm()));
+
+            File newFile = new File("src/assets/html/attestation" + selectedMaint.getIdm() + ".html");
+            FileWriter writer = new FileWriter(newFile);
+            writer.write(content);
+            writer.close();
+            ConverterProperties properties = new ConverterProperties();
+
+            properties.setBaseUri("src/assets/html/");
+            properties.setCharset("UTF-8");
+            properties.setImmediateFlush(true);
+            properties.setCreateAcroForm(true);
+
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Save PDF");
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF", "*.pdf"));
+            fileChooser.setInitialFileName("attestation" + selectedMaint.getIdm());
+            File file1 = fileChooser.showSaveDialog(gotoequip_btn.getScene().getWindow());
+            if (file1 == null) {
+                throw new IllegalArgumentException("No file selected");
+            }
+            HtmlConverter.convertToPdf(new FileInputStream("src/assets/html/attestation" + selectedMaint.getIdm() + ".html"), new FileOutputStream(file1), properties);
+            java.awt.Desktop.getDesktop().open(file1);
+            newFile.delete();
+
+
+
             MaintenancesService.delete(selectedMaint.getIdm());
             notify("Maintenance deleted successfully!");
             getAllMaint();
@@ -576,6 +621,9 @@ public class EquipementController {
                     throw new IllegalArgumentException("Life Span must not be empty");
                 }
 
+                if (!selectedEquipement.getEtat().equals("Bad") && statemod_cb.getValue().equals("Bad")){
+                    sendEquipMailAdmins(selectedEquipement.getId());
+                }
                 EquipementService eventDetailsService = new EquipementService();
                 Equipements_details equipementsDetails = new Equipements_details();
                 equipementsDetails.setId(selectedEquipement.getId());

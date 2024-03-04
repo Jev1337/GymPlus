@@ -3,7 +3,6 @@
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import java.net.URL?>
 <?import javafx.scene.Cursor?>
-<?import javafx.scene.chart.BarChart?>
 <?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
@@ -27,6 +26,7 @@
 <?import javafx.scene.paint.Stop?>
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.web.WebView?>
 
 <AnchorPane fx:id="mainPane" prefHeight="720.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionuser.UserDashboardController">
    <children>
@@ -104,7 +104,7 @@
                      <children>
                         <ScrollPane fx:id="UserHomePane" prefHeight="646.0" prefWidth="1155.0" style="-fx-border-color: transparent;">
                            <content>
-                              <Pane prefHeight="757.0" prefWidth="1153.0">
+                              <Pane prefHeight="1058.0" prefWidth="1153.0">
                                  <children>
                                     <Label layoutX="33.0" layoutY="14.0" style="-fx-text-fill: linear-gradient(to right, #00aaff, #00688b);" text="Client / Home">
                                        <font>
@@ -274,21 +274,35 @@
                                           <ProgressBar layoutX="19.0" layoutY="122.0" prefHeight="2.0" prefWidth="241.0" progress="1.0" style="-color-progress-bar-track: white; -color-progress-bar-fill: linear-gradient(to right, #00aaff, #00688b);" />
                                        </children>
                                     </Pane>
-                                    <Pane layoutX="47.0" layoutY="416.0" prefHeight="243.0" prefWidth="1074.0" styleClass="pane">
+                                    <Pane layoutX="47.0" layoutY="407.0" prefHeight="603.0" prefWidth="1074.0" styleClass="pane">
                                        <children>
-                                          <BarChart fx:id="stat_barchart" layoutX="7.0" layoutY="26.0" prefHeight="209.0" prefWidth="1060.0">
-                                            <xAxis>
-                                              <CategoryAxis side="BOTTOM" />
-                                            </xAxis>
-                                            <yAxis>
-                                              <NumberAxis side="LEFT" />
-                                            </yAxis>
-                                          </BarChart>
-                                          <Label layoutX="50.0" layoutY="8.0" style="-fx-font-size: 18;" text="Calories Chart">
+                                          <Label layoutX="72.0" layoutY="24.0" style="-fx-font-size: 18;" text="Recommended Video of the Week">
                                              <font>
                                                 <Font name="Open Sans Regular" size="17.0" />
                                              </font>
                                           </Label>
+                                          <WebView fx:id="samwebview" layoutX="28.0" layoutY="63.0" prefHeight="516.0" prefWidth="1019.0" />
+                                          <FontAwesomeIconView glyphName="YOUTUBE" layoutX="35.0" layoutY="46.0" size="26">
+                                             <cursor>
+                                                <Cursor fx:constant="HAND" />
+                                             </cursor>
+                                             <fill>
+                                                <LinearGradient endX="1.0" endY="1.0">
+                                                   <stops>
+                                                      <Stop>
+                                                         <color>
+                                                            <Color green="0.6666666865348816" blue="1.0" />
+                                                         </color>
+                                                      </Stop>
+                                                      <Stop offset="1.0">
+                                                         <color>
+                                                            <Color green="0.40784314274787903" blue="0.545098066329956" />
+                                                         </color>
+                                                      </Stop>
+                                                   </stops>
+                                                </LinearGradient>
+                                             </fill>
+                                          </FontAwesomeIconView>
                                        </children>
                                     </Pane>
                                  </children>

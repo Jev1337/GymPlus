@@ -994,6 +994,7 @@ public class AdminDashboardController {
     void close_btn_act(ActionEvent event) {
         Stage stage = (Stage) close_btn.getScene().getWindow();
         stage.close();
+        System.exit(0);
     }
     @FXML
     void minimize_btn_act(ActionEvent event) {
@@ -1170,7 +1171,6 @@ public class AdminDashboardController {
             try {
                 if(user.getId() != GlobalVar.getUser().getId()) {
                     userprofile_imageview.setImage(null);
-                    user_imageview.setImage(null);
                 }
                 File file = new File("src/assets/profileuploads/" +user.getPhoto());
                 file.delete();
@@ -1186,6 +1186,7 @@ public class AdminDashboardController {
     public void deleteaccmanage_btn(ActionEvent actionEvent) {
         deleteAcc(managedSelectedUser);
         switchToPane(AdminUserManagementPane);
+        initUserList();
     }
 
     public void saveaccmanage_btn_act(ActionEvent actionEvent) {

@@ -1,12 +1,19 @@
 package controllers.gestionuser;
 
-import animatefx.animation.*;
+import animatefx.animation.FadeIn;
+import animatefx.animation.FadeInRight;
+import animatefx.animation.FadeOutRight;
 import atlantafx.base.controls.Notification;
+import atlantafx.base.controls.RingProgressIndicator;
+import atlantafx.base.theme.PrimerDark;
+import atlantafx.base.theme.PrimerLight;
 import atlantafx.base.theme.Styles;
 import atlantafx.base.util.Animations;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.sun.jna.platform.win32.Advapi32Util;
+import com.sun.jna.platform.win32.WinReg;
 import com.twilio.Twilio;
 import com.twilio.rest.verify.v2.service.Verification;
 import com.twilio.rest.verify.v2.service.VerificationCheck;
@@ -19,7 +26,15 @@ import de.micromata.paypal.data.ShippingPreference;
 import de.micromata.paypal.data.Transaction;
 import entities.gestionuser.Abonnement;
 import entities.gestionuser.Client;
+import jakarta.mail.Message;
+import jakarta.mail.Multipart;
+import jakarta.mail.Session;
+import jakarta.mail.Transport;
+import jakarta.mail.internet.MimeBodyPart;
+import jakarta.mail.internet.MimeMessage;
+import jakarta.mail.internet.MimeMultipart;
 import javafx.animation.*;
+import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
@@ -34,12 +49,6 @@ import javafx.scene.chart.BarChart;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
-import javafx.scene.control.Button;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -62,8 +71,10 @@ import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.objdetect.CascadeClassifier;
 import org.opencv.objdetect.Objdetect;
 import org.opencv.videoio.VideoCapture;
+import services.gestionevents.BlackListedService;
 import services.gestionuser.AbonnementDetailsService;
 import services.gestionuser.AbonnementService;
+import services.gestionuser.AdminService;
 import services.gestionuser.ClientService;
 
 import javax.imageio.ImageIO;
@@ -74,6 +85,8 @@ import java.nio.file.StandardCopyOption;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Properties;
 
 public class UserDashboardController {
 
@@ -85,6 +98,17 @@ public class UserDashboardController {
     private final Notification msg = new Notification();
     private final FadeOutRight fadeOutRightAnimation = new FadeOutRight();
     private final FadeInRight fadeInRightAnimation = new FadeInRight();
+    private BlackListedService black_listed= new BlackListedService();
+    private List<Integer> blpeople;
+
+    {
+        try {
+            blpeople = black_listed.blpeople();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
     @FXML
     private Pane blogId = new Pane();
@@ -97,6 +121,8 @@ public class UserDashboardController {
 
     @FXML
     private Pane subscribed_pane;
+    @FXML
+    private Pane storeId;
 
     @FXML
     private Pane unsubscribed_pane;
@@ -112,6 +138,85 @@ public class UserDashboardController {
 
     @FXML
     private ImageView barcode_imageview;
+
+    @FXML
+    private Button checkver_btn;
+
+    @FXML
+    private TextArea feedback_ta;
+
+    @FXML
+    private void checkver_btn_act(ActionEvent event){
+        try{
+            checkver_btn.setDisable(true);
+            OkHttpClient client = new OkHttpClient().newBuilder()
+                    .build();
+            Request request = new Request.Builder()
+                    .url("https://grandelation.com/api/gymplus/checkver")
+                    .method("GET", null)
+                    .addHeader("User-Agent", "Moyasar Payment Gateway")
+                    .build();
+            Response response = client.newCall(request).execute();
+            JSONObject jsonObject = new JSONObject(response.body().string());
+            if (jsonObject.getString("version").equals("1.0")){
+                notify("You are using the latest version of GymPlus!");
+            }else{
+                notify("A new version of GymPlus is available! Please update to the latest version.");
+            }
+            checkver_btn.setDisable(false);
+
+        }catch (Exception e){
+            stackTraceAlert(e);
+        }
+    }
+
+    @FXML
+    private void sendfeedback_btn_act(ActionEvent event){
+        try {
+            if (!validateText(feedback_ta.getText())) {
+                return;
+            }
+            String mail = "gymplus-noreply@grandelation.com";
+            String password = "yzDvS_UoSL7b";
+            List<String> emails = new AdminService().getAllAdminsEmails();
+            String to = String.join(",", emails);
+            String subject = "Maintenance Alert";
+            //the body will be "index.html" inside src/assets/html
+            File file = new File("src/assets/html/feedback.html");
+            String body = "";
+            body = new String(java.nio.file.Files.readAllBytes(file.toPath()));
+            body = body.replace("{E1}", String.valueOf(GlobalVar.getUser().getEmail()));
+            body = body.replace("{E2}", feedback_ta.getText());
+            String host = "mail.grandelation.com";
+
+            Properties props = new Properties();
+            props.put("mail.smtp.host", host);
+            props.put("mail.debug", "true");
+            props.put("mail.smtp.auth", "true");
+            props.put("mail.smtp.ssl.enable", "true");
+            props.put("mail.smtp.port", "465");
+
+            Session session = Session.getInstance(props, null);
+            MimeMessage msg = new MimeMessage(session);
+            msg.setFrom(mail);
+            msg.setRecipients(Message.RecipientType.TO, to);
+            msg.setSubject(subject);
+            msg.setSentDate(new java.util.Date());
+            MimeBodyPart mimeBodyPart = new MimeBodyPart();
+            mimeBodyPart.setContent(body, "text/html");
+            Multipart multipart = new MimeMultipart();
+            multipart.addBodyPart(mimeBodyPart);
+            msg.setContent(multipart);
+
+            Transport.send(msg, mail, password);
+            notify("Feedback has been sent successfully!");
+        }catch (Exception e){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setContentText(e.getMessage());
+            alert.showAndWait();
+        }
+    }
 
     @FXML
     void settings_btn_clicked(MouseEvent event) {
@@ -303,7 +408,11 @@ public class UserDashboardController {
     @FXML
     private Pane ObjectifPan;
 
+    @FXML
+    private CheckBox dark_cb;
 
+    @FXML
+    private CheckBox tts_cb;
 
     @FXML
     private ImageView user_imageview;
@@ -317,7 +426,29 @@ public class UserDashboardController {
     @FXML
     private ImageView faceid_change;
     @FXML
-    void faceid_change_clicked(){
+    private Label total_events;
+
+    @FXML
+    private void dark_cb_act(ActionEvent event){
+        if (dark_cb.isSelected()){
+            Advapi32Util.registrySetStringValue(WinReg.HKEY_CURRENT_USER, "Software\\GymPlus", "theme", "dark");
+            Application.setUserAgentStylesheet(new PrimerDark().getUserAgentStylesheet());
+        }else{
+            Advapi32Util.registrySetStringValue(WinReg.HKEY_CURRENT_USER, "Software\\GymPlus", "theme", "light");
+            Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
+        }
+    }
+
+    @FXML
+    private void tts_cb_act(ActionEvent event){
+        if (tts_cb.isSelected()){
+            Advapi32Util.registrySetStringValue(WinReg.HKEY_CURRENT_USER, "Software\\GymPlus", "tts", "true");
+        }else{
+            Advapi32Util.registrySetStringValue(WinReg.HKEY_CURRENT_USER, "Software\\GymPlus", "tts", "false");
+        }
+    }
+    @FXML
+    private void faceid_change_clicked(){
         setFaceID();
     }
     String faceId = "";
@@ -510,10 +641,27 @@ public class UserDashboardController {
 
     @FXML
     void event_btn_act(ActionEvent event) {
-        //if user not subscribed it redirects him to the siubscription pane
         try {
             if (!abonnementService.isUserSubscribed(GlobalVar.getUser().getId())) {
                 switchToPane(UserSubscriptionPane);
+                return;
+            }
+            // Check if user is blacklisted
+            if(blpeople.contains(GlobalVar.getUser().getId())) {
+                // Get the number of remaining days in the ban
+                String remainingDays = black_listed.remainingDays(GlobalVar.getUser().getId());
+
+                // Create an alert
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Access Denied");
+                alert.setHeaderText(null);
+                alert.setContentText("You are blacklisted and cannot join any event. You have " + remainingDays + " remaining in your ban.");
+
+                // Show the alert and wait for the user to close it
+                alert.showAndWait();
+
+                // Redirect the user to the home pane
+                switchToPane(UserHomePane);
                 return;
             }
         } catch (SQLException e) {
@@ -525,18 +673,34 @@ public class UserDashboardController {
 
     @FXML
     void event_btn_clicked(MouseEvent event) {
-        {
-            //if user not subscribed it redirects him to the siubscription pane
-            try {
-                if (!abonnementService.isUserSubscribed(GlobalVar.getUser().getId())) {
-                    switchToPane(UserSubscriptionPane);
-                    return;
-                }
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
+        //if user not subscribed it redirects him to the subscription pane
+        try {
+            if (!abonnementService.isUserSubscribed(GlobalVar.getUser().getId())) {
+                switchToPane(UserSubscriptionPane);
+                return;
             }
-            switchToPane(UserEventPane);
+            // Check if user is blacklisted
+            if(blpeople.contains(GlobalVar.getUser().getId())) {
+                // Get the number of remaining days in the ban
+                String remainingDays = black_listed.remainingDays(GlobalVar.getUser().getId());
+
+                // Create an alert
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Access Denied");
+                alert.setHeaderText(null);
+                alert.setContentText("You are blacklisted and cannot join any event. You have " + remainingDays + " remaining in your ban.");
+
+                // Show the alert and wait for the user to close it
+                alert.showAndWait();
+
+                // Redirect the user to the home pane
+                switchToPane(UserHomePane);
+                return;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
+        switchToPane(UserEventPane);
     }
 
     @FXML
@@ -747,6 +911,10 @@ public class UserDashboardController {
                 });
                 alert.showAndWait();
                 if (webView.getEngine().getLocation().contains("success")) {
+//                    String paymentId = paymentCreated.getId();
+//                    paymentCreated = PayPalConnector.getPaymentDetails(paypalConfig, paymentId);
+//                    String payerId = paymentCreated.getPayer().getPayerInfo().getPayerId();
+//                    PayPalConnector.executePayment(paypalConfig, paymentId, payerId);
                     alert.close();
                     return true;
                 }else {
@@ -799,10 +967,8 @@ public class UserDashboardController {
 
     private double xOffset = 0;
     private double yOffset = 0;
+
     public void initialize() {
-        Media media = new Media(new File(getClass().getResource("/assets/sounds/welcome.mp3").getFile()).toURI().toString());
-        MediaPlayer mediaPlayer = new MediaPlayer(media);
-        mediaPlayer.play();
         fadeInRightAnimation.setNode(UserHomePane);
         fadeInRightAnimation.play();
         stat_combobox.getItems().addAll(FXCollections.observableArrayList("Abonnements", "Clients", "Staff"));
@@ -814,28 +980,36 @@ public class UserDashboardController {
         notify("Successfully Logged In as " + GlobalVar.getUser().getUsername() + "!");
         initSubsciption();
         initGPPrices();
-        try {
-            Pane pane= FXMLLoader.load(getClass().getResource("/gestionBlog/Blog.fxml"));
-            blogId.getChildren().setAll(pane);
-        } catch (IOException e) {
-            stackTraceAlert(e);
+        String theme = Advapi32Util.registryGetStringValue(WinReg.HKEY_CURRENT_USER, "Software\\GymPlus", "theme");
+        String nb_events= clientService.get_nb_events(GlobalVar.getUser().getId());
+        total_events.setText(nb_events);
+        if (theme != null && theme.equals("dark")) {
+            dark_cb.setSelected(true);
         }
         try {
-            Pane pane_event= FXMLLoader.load(getClass().getResource("/gestionevents/event.fxml"));
-            usereventpane_id.getChildren().setAll(pane_event);
+            Pane pane1= FXMLLoader.load(getClass().getResource("/resourcesGestionStore/InterfaceStore.fxml"));
+            storeId.getChildren().setAll(pane1);
+            Pane pane2= FXMLLoader.load(getClass().getResource("/gestionBlog/Blog.fxml"));
+            blogId.getChildren().setAll(pane2);
+            Pane pane3= FXMLLoader.load(getClass().getResource("/gestionevents/event.fxml"));
+            usereventpane_id.getChildren().setAll(pane3);
+            Pane pane4= FXMLLoader.load(getClass().getResource("/gestionSuivi/objectif1.fxml"));
+            ObjectifPan.getChildren().setAll(pane4);
         } catch (IOException e) {
-            stackTraceAlert(e);
+            System.err.println(e.getMessage());
         }
-        try {
-            Pane pane_Objectif= FXMLLoader.load(getClass().getResource("/gestionSuivi/objectif1.fxml"));
-            ObjectifPan.getChildren().setAll(pane_Objectif);
-        } catch (IOException e) {
-            stackTraceAlert(e);
+        String tts = Advapi32Util.registryGetStringValue(WinReg.HKEY_CURRENT_USER, "Software\\GymPlus", "tts");
+        if (tts != null && tts.equals("true")) {
+            tts_cb.setSelected(true);
+            playWelcome();
         }
-
-
     }
 
+    private void playWelcome(){
+        Media media = new Media(new File(getClass().getResource("/assets/sounds/welcome.mp3").getFile()).toURI().toString());
+        MediaPlayer mediaPlayer = new MediaPlayer(media);
+        mediaPlayer.play();
+    }
     @FXML
     private Label gp1_label;
     @FXML
@@ -1162,7 +1336,7 @@ public class UserDashboardController {
             Twilio.init(account_sid, auth_token);
             Verification verification = Verification.creator(
                             verify_sid,
-                            "+216"+phone,
+                            "whatsapp:+216"+phone,
                             "whatsapp")
                     .create();
             System.out.println(verification.getStatus());
@@ -1188,4 +1362,6 @@ public class UserDashboardController {
         }
         return false;
     }
+
+
 }

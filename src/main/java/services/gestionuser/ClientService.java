@@ -177,9 +177,10 @@ public class ClientService implements IService<Client> {
             e.printStackTrace();
         }
 
-        return 0;}
+        return 0;
+    }
 
-        public List<Client> getNonSubscribedUserList() throws SQLException {
+    public List<Client> getNonSubscribedUserList() throws SQLException {
         List<Client> clients = new ArrayList<>();
         String query = "SELECT * FROM user WHERE role = 'client' AND id NOT IN (SELECT user_id FROM abonnement WHERE dateFinAb > NOW())";
         Statement st = connection.createStatement();
@@ -228,6 +229,7 @@ public class ClientService implements IService<Client> {
         }
         return null;
     }
+
     public void updatePassword(int id, String password) throws SQLException {
         String query = "UPDATE user SET password = ? WHERE id = ?";
         PreparedStatement pst = connection.prepareStatement(query);
@@ -235,4 +237,21 @@ public class ClientService implements IService<Client> {
         pst.setInt(2, id);
         pst.executeUpdate();
     }
+
+    public String get_nb_events(int id) {
+        try {
+            String query = "SELECT COUNT(*) as nb_events FROM event_participants WHERE user_id = ?";
+            PreparedStatement pst = connection.prepareStatement(query);
+            pst.setInt(1, id);
+            ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+                return rs.getString("nb_events");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+    }
+        return "0";
+    }
+
+
 }

@@ -18,6 +18,17 @@
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
+
+        <repository>
+            <id>central</id>
+            <name>Maven Central Repository</name>
+            <url>https://repo.maven.apache.org/maven2</url>
+        </repository>
+        <repository>
+            <id>ical4j-repo</id>
+            <url>https://maven.aliyun.com/repository/public</url>
+        </repository>
+
     </repositories>
     <dependencies>
         <dependency>
@@ -78,13 +89,6 @@
             <artifactId>password4j</artifactId>
             <version>1.7.3</version>
         </dependency>
-
-        <dependency>
-            <groupId>com.github.javafaker</groupId>
-            <artifactId>javafaker</artifactId>
-            <version>1.0.2</version>
-        </dependency>
-
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-media</artifactId>
@@ -95,6 +99,25 @@
             <artifactId>javase</artifactId>
             <version>2.7.0</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.pdfbox</groupId>
+            <artifactId>pdfbox</artifactId>
+            <version>2.0.24</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-web</artifactId>
+            <version>21.0.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.stripe</groupId>
+            <artifactId>stripe-java</artifactId>
+            <version>24.18.0</version>
+        </dependency>
+
         <dependency>
             <groupId>org.openpnp</groupId>
             <artifactId>opencv</artifactId>
@@ -131,6 +154,11 @@
             <version>10.0.0</version>
         </dependency>
         <dependency>
+            <groupId>net.dreamlu</groupId>
+            <artifactId>mica-captcha</artifactId>
+            <version>3.2.2</version>
+        </dependency>
+        <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-swing</artifactId>
             <version>11</version>
@@ -146,11 +174,89 @@
             <version>5.2.5</version>
         </dependency>
         <dependency>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>html2pdf</artifactId>
+            <version>5.0.3</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>jakarta.mail</artifactId>
+            <version>2.0.1</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.freemarker</groupId>
             <artifactId>freemarker</artifactId>
             <version>2.3.32</version>
         </dependency>
+        <dependency>
+            <groupId>net.sf.opencsv</groupId>
+            <artifactId>opencsv</artifactId>
+            <version>2.3</version>
+        </dependency>
 
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <version>6.1.4</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.javafaker</groupId>
+            <artifactId>javafaker</artifactId>
+            <version>1.0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>net.java.dev.jna</groupId>
+            <artifactId>jna-platform</artifactId>
+            <version>5.14.0</version>
+        </dependency>
+        <dependency>
+                <groupId>net.sf.biweekly</groupId>
+                <artifactId>biweekly</artifactId>
+                <version>0.6.4</version>
+            </dependency>
+        <dependency>
+            <groupId>com.restfb</groupId>
+            <artifactId>restfb</artifactId>
+            <version>3.23.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>sheltekio.javalibs</groupId>
+            <artifactId>icmp4j</artifactId>
+            <version>1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.controlsfx</groupId>
+            <artifactId>controlsfx</artifactId>
+            <version>11.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.kordamp.ikonli</groupId>
+            <artifactId>ikonli-javafx</artifactId>
+            <version>12.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.kordamp.ikonli</groupId>
+            <artifactId>ikonli-feather-pack</artifactId>
+            <version>12.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.twitter4j</groupId>
+            <artifactId>twitter4j-core</artifactId>
+            <version>4.0.7</version>
+        </dependency>
+        <dependency>
+            <groupId>com.jfoenix</groupId>
+            <artifactId>jfoenix</artifactId>
+            <version>9.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.vdurmont</groupId>
+            <artifactId>emoji-java</artifactId>
+            <version>5.1.1</version>
+        </dependency>
 
     </dependencies>
     <build>

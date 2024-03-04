@@ -1,37 +1,38 @@
 package controllers.gestionevents;
 
 import animatefx.animation.FadeInLeft;
-import animatefx.animation.FadeInRight;
 import animatefx.animation.FadeOutLeft;
-import animatefx.animation.FadeOutRight;
-import controllers.gestionuser.GlobalVar;
+import atlantafx.base.theme.Styles;
 import entities.gestionevents.Event_details;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-
-import javafx.scene.control.TableColumn;
-import javafx.util.Callback;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.util.Callback;
+import org.kordamp.ikonli.feather.Feather;
+import org.kordamp.ikonli.javafx.FontIcon;
 import services.gestionevents.Event_detailsService;
 import services.gestionevents.Event_participantsService;
 import utils.MyDatabase;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class eventbController {
@@ -68,9 +69,12 @@ public class eventbController {
 
     @FXML
     private TableColumn<Event_details, String> event_typecol;
-    @FXML private TableColumn<ObservableList<String>, String> username_id;
-    @FXML private TableColumn<ObservableList<String>, String> firstname_id;
-    @FXML private TableColumn<ObservableList<String>, String> lastname_id;
+    @FXML
+    private TableColumn<ObservableList<String>, String> username_id;
+    @FXML
+    private TableColumn<ObservableList<String>, String> firstname_id;
+    @FXML
+    private TableColumn<ObservableList<String>, String> lastname_id;
 
     @FXML
     private TextField eventdate_id1;
@@ -119,17 +123,53 @@ public class eventbController {
     @FXML
     private Button editeventconfirm_id1;
     @FXML
+    private Button editeventconfirm_id;
+    @FXML
     private Pane ajout_event;
     @FXML
-    private Button edit_participant;
-    @FXML
-    private Button confirm_edit_parts;
+    private Pane title_events;
+
+
+
+
     @FXML
     private Label event_name_label;
     @FXML
     private ComboBox<String> combo_box_users;
     @FXML
     private Pane edit_participant_pane;
+    @FXML
+    private TableView<Event_details> tableevents_id1;
+    @FXML
+    private TableColumn<Event_details, String> event_idcol1;
+    @FXML
+    private TableColumn<Event_details, String> event_namecol1;
+    @FXML
+    private TableColumn<Event_details, String> event_typecol1;
+    @FXML
+    private TableColumn<Event_details, String> event_datecol1;
+    @FXML
+    private TableColumn<Event_details, String> event_durationcol1;
+    @FXML
+    private TableColumn<Event_details, String> event_spotscol1;
+    @FXML
+    private TableColumn<Event_details, String> event_ratecol1;
+    @FXML
+    private Button finished_events_btn;
+    @FXML
+    private Pane finished_events;
+    @FXML
+    private Button back_toeve;
+
+    @FXML
+    private Pane BlackListed;
+    @FXML
+    private Button manage_users_btn;
+
+    @FXML
+    private Button back_to_aff_btn;
+    @FXML
+    private AnchorPane blp;
 
 
 
@@ -144,6 +184,7 @@ public class eventbController {
             e.printStackTrace();
         }
     }
+
     @FXML
     void add_event(ActionEvent event) {
         eventdate_id.getEditor().setDisable(true);
@@ -179,7 +220,7 @@ public class eventbController {
                 return;
             }
             //check length
-            if (eventname_id.getText().length() < 4 ) {
+            if (eventname_id.getText().length() < 4) {
                 showAlert(Alert.AlertType.ERROR, "Name must be at least 4 characters.");
                 return;
             }
@@ -204,8 +245,7 @@ public class eventbController {
                 showAlert(Alert.AlertType.ERROR, "Number of places should be > 0.");
                 return;
             }
-            if(nbPlaces>100)
-            {
+            if (nbPlaces > 100) {
                 showAlert(Alert.AlertType.ERROR, "Number of places should be < 100.");
                 return;
             }
@@ -248,13 +288,14 @@ public class eventbController {
             eventdate_id1.clear();
             eventduree_id.clear();
             eventspots_id.clear();
-            delete_passed_events(eventDetailsService.getAll());
+            // delete_passed_events(eventDetailsService.getAll());
             afficher();
             afficher1();
         } catch (Exception e) {
             showAlert(Alert.AlertType.ERROR, "An unexpected error occurred: " + e.getMessage());
         }
     }
+
     private void showAlert(Alert.AlertType alertType, String message) {
         Alert alert = new Alert(alertType);
         alert.setContentText(message);
@@ -265,38 +306,45 @@ public class eventbController {
     @FXML
     void delete_event(ActionEvent event) {
         try {
-            ajout_event.setVisible(true);
             Event_detailsService eventDetailsService = new Event_detailsService();
+            Event_participantsService event_Participants = new Event_participantsService();
             Event_details selectedEvent = tableevents_id.getSelectionModel().getSelectedItem();
             if (selectedEvent == null) {
                 selectedEvent = eventList.getSelectionModel().getSelectedItem();
             }
             if (selectedEvent != null) {
-                eventDetailsService.delete(selectedEvent.getId());
-                delete_passed_events(eventDetailsService.getAll());
-                //all the participants in the event will have their points decrease by 100
-                Event_participantsService event_Participants = new Event_participantsService();
-                List<String> participants = event_Participants.getParticipants(selectedEvent.getId());
-                for (int i = 0; i < participants.size(); i += 3) {
-                    int user_id = Integer.parseInt(participants.get(i));
-                    int points = get_points(user_id);
-                    update_user_pts(user_id, points - 100);
+                // Get the list of participants of the selected event
+                List<Integer> participants = event_Participants.getParticipantsId(selectedEvent.getId());
+                // Loop over the list of participants and update their points
+                for (int userId : participants) {
+                    int points = get_points(userId);
+                    update_user_pts(userId, points - 100);
                 }
-
+                eventDetailsService.delete(selectedEvent.getId());
+                fill_points();
                 afficher();
                 afficher1();
                 fillParticipants();
                 fillParticipants1();
 
-                // Hide the editevent_id pane and show the ajout_event pane without animation
-                editevent_id.setVisible(false);
-                ajout_event.setVisible(true);
+                // Hide the editevent_id pane and show the ajout_event pane with animation
+                FadeOutLeft f = new FadeOutLeft(editevent_id);
+                f.setOnFinished((e) -> {
+                    editevent_id.setVisible(false);
+                    editevent_id.toBack(); // send the edit pane to the back
+                    FadeInLeft f2 = new FadeInLeft(ajout_event);
+                    ajout_event.setOpacity(0);
+                    ajout_event.setVisible(true);
+                    ajout_event.toFront(); // bring the add pane to the front
+                    f2.play();
+                });
+                f.play();
             } else {
                 System.out.println("No event selected");
             }
-        }catch (SQLException e) {
-                e.printStackTrace();
-            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
     /*@FXML
     void edit_partc(ActionEvent event){
@@ -341,12 +389,12 @@ public class eventbController {
         });
         f.play();
     }
+
     @FXML
     void edit_event(ActionEvent event) {
         Event_details selectedEvent = tableevents_id.getSelectionModel().getSelectedItem();
-        if(selectedEvent==null)
-        {
-            selectedEvent=eventList.getSelectionModel().getSelectedItem();
+        if (selectedEvent == null) {
+            selectedEvent = eventList.getSelectionModel().getSelectedItem();
         }
         if (selectedEvent != null) {
             editeventname_id.setText(selectedEvent.getName());
@@ -375,6 +423,7 @@ public class eventbController {
             System.out.println("No event selected");
         }
     }
+
     @FXML
     void show_table(ActionEvent event) {
         if (table_view.isSelected()) {
@@ -388,14 +437,15 @@ public class eventbController {
     }
 
     public void afficher1() {
-
-
-
         try {
-            delete_passed_events(eventDetailsService.getAll());
-            List<Event_details> events = eventDetailsService.getAll();
-            ObservableList<Event_details> data = FXCollections.observableArrayList(events);
-
+            List<Event_details> allEvents = eventDetailsService.getAll();
+            List<Event_details> events = new ArrayList<>();
+            for (Event_details event : allEvents) {
+                LocalDateTime eventDateTime = LocalDateTime.parse(event.getEvent_date(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                if (eventDateTime.isAfter(LocalDateTime.now())) {
+                    events.add(event);
+                }
+            }
             // Set a custom cell factory for your ListView
             eventList.setCellFactory(param -> new ListCell<Event_details>() {
                 @Override
@@ -412,7 +462,7 @@ public class eventbController {
                         Label nameLabel = new Label("Name: " + item.getName());
                         Label typeLabel = new Label("Type: " + item.getType());
                         Label dateLabel = new Label("Date: " + item.getEvent_date());
-                        Label durationLabel = new Label("Duration: " + item.getDuree()+" minutes");
+                        Label durationLabel = new Label("Duration: " + item.getDuree() + " minutes");
                         Label spotsLabel = new Label("Spots: " + item.getNb_places() + "/" + item.getNb_total());
 
                         vbox.getChildren().addAll(nameLabel, typeLabel, dateLabel, durationLabel, spotsLabel);
@@ -423,18 +473,23 @@ public class eventbController {
                 }
             });
 
-            eventList.setItems(data);
+            eventList.setItems(FXCollections.observableArrayList(events));
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
     public void afficher() {
-
         try {
+            List<Event_details> allEvents = eventDetailsService.getAll();
+            List<Event_details> events = new ArrayList<>();
+            for (Event_details event : allEvents) {
+                LocalDateTime eventDateTime = LocalDateTime.parse(event.getEvent_date(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                if (eventDateTime.isAfter(LocalDateTime.now())) {
+                    events.add(event);
+                }
+            }
 
-                delete_passed_events(eventDetailsService.getAll());
-
-            List<Event_details> events = eventDetailsService.getAll();
             ObservableList<Event_details> data = FXCollections.observableArrayList(events);
             event_idcol.setCellValueFactory(new PropertyValueFactory<>("id"));
             event_namecol.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -466,12 +521,11 @@ public class eventbController {
             tableevents_id.setItems(data);
         } catch (Exception e) {
             e.printStackTrace();
-
-
         }
     }
+
     // a function to delete the events that the time has passed
-    public void delete_passed_events(List<Event_details> events) {
+   /* public void delete_passed_events(List<Event_details> events) {
         try {
             for (Event_details event : events) {
                 LocalDateTime eventDateTime = LocalDateTime.parse(event.getEvent_date(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
@@ -482,12 +536,12 @@ public class eventbController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
+    }*/
     @FXML
     void edit_event_confirm(ActionEvent event) {
         try {
             Event_details selectedEvent = tableevents_id.getSelectionModel().getSelectedItem();
-            if(selectedEvent == null) {
+            if (selectedEvent == null) {
                 selectedEvent = eventList.getSelectionModel().getSelectedItem();
             }
             if (selectedEvent != null) {
@@ -507,7 +561,7 @@ public class eventbController {
                     return;
                 }
                 //check length
-                if (editeventname_id.getText().length() < 4 ) {
+                if (editeventname_id.getText().length() < 4) {
                     showAlert(Alert.AlertType.ERROR, "Name must be at least 4 characters.");
                     return;
                 }
@@ -580,46 +634,46 @@ public class eventbController {
     }
 
 
+    void fillParticipants() {
+        Event_details selectedEvent = tableevents_id.getSelectionModel().getSelectedItem();
 
-        void fillParticipants () {
-            Event_details selectedEvent = tableevents_id.getSelectionModel().getSelectedItem();
-
-            Event_participantsService event_Participants = new Event_participantsService();
-            if (selectedEvent != null) {
-                try {
-                    List<String> participants = event_Participants.getParticipants(selectedEvent.getId());
-                    if (participants.isEmpty() || participants == null) {
-                        ListParticipants_id.setVisible(false);
-                        kick_id.setVisible(false);
-                    } else {
-                        kick_id.setVisible(true);
-                        ObservableList<ObservableList<String>> data = FXCollections.observableArrayList();
-                        for (int i = 0; i < participants.size(); i += 3) {
-                            ObservableList<String> row = FXCollections.observableArrayList();
-                            row.add(participants.get(i));
-                            row.add(participants.get(i + 1));
-                            row.add(participants.get(i + 2));
-                            data.add(row);
-                        }
-
-                        username_id.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().get(0)));
-                        firstname_id.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().get(1)));
-                        lastname_id.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().get(2)));
-
-                        ListParticipants_id.setItems(data);
-                        ListParticipants_id.setVisible(true);
-                        kick_id.setVisible(true);
+        Event_participantsService event_Participants = new Event_participantsService();
+        if (selectedEvent != null) {
+            try {
+                List<String> participants = event_Participants.getParticipants(selectedEvent.getId());
+                if (participants.isEmpty() || participants == null) {
+                    ListParticipants_id.setVisible(false);
+                    kick_id.setVisible(false);
+                } else {
+                    kick_id.setVisible(true);
+                    ObservableList<ObservableList<String>> data = FXCollections.observableArrayList();
+                    for (int i = 0; i < participants.size(); i += 3) {
+                        ObservableList<String> row = FXCollections.observableArrayList();
+                        row.add(participants.get(i));
+                        row.add(participants.get(i + 1));
+                        row.add(participants.get(i + 2));
+                        data.add(row);
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
+
+                    username_id.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().get(0)));
+                    firstname_id.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().get(1)));
+                    lastname_id.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().get(2)));
+
+                    ListParticipants_id.setItems(data);
+                    ListParticipants_id.setVisible(true);
+                    kick_id.setVisible(true);
                 }
-            } else {
-                ListParticipants_id.setVisible(false);
-                kick_id.setVisible(false);
-            System.out.println("No event selected");
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+        } else {
+            ListParticipants_id.setVisible(false);
+            kick_id.setVisible(false);
+            System.out.println("No event selected");
         }
-    void fillParticipants1 () {
+    }
+
+    void fillParticipants1() {
         Event_details selectedEvent = eventList.getSelectionModel().getSelectedItem();
 
         Event_participantsService event_Participants = new Event_participantsService();
@@ -657,8 +711,10 @@ public class eventbController {
             System.out.println("No event selected");
         }
     }
+
     void update_user_pts(int id, int points) {
         try {
+
             update_user_ptsStatement.setInt(1, points);
             update_user_ptsStatement.setInt(2, id);
             update_user_ptsStatement.executeUpdate();
@@ -666,124 +722,339 @@ public class eventbController {
             e.printStackTrace();
         }
     }
+    void update_user_pts_via_username(String username, int points) {
+        try{
+            String query = "UPDATE user SET event_points = ? WHERE username = ?";
+            PreparedStatement ps = MyDatabase.getInstance().getConnection().prepareStatement(query);
+            ps.setInt(1, points);
+            ps.setString(2, username);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+        }
+    }
 
     @FXML
-        void kick_user (ActionEvent event){
-            Event_details selectedEvent = tableevents_id.getSelectionModel().getSelectedItem();
-            if(selectedEvent==null)
-            {
-                selectedEvent=eventList.getSelectionModel().getSelectedItem();
-            }
-            if (selectedEvent != null) {
-                Event_participantsService event_Participants = new Event_participantsService();
-                ObservableList<String> selectedParticipant = ListParticipants_id.getSelectionModel().getSelectedItem();
-                if (selectedParticipant != null) {
-                    try {
-                        event_Participants.delete(selectedEvent.getId(), selectedParticipant.get(0));
+    void kick_user(ActionEvent event) {
+        Event_details selectedEvent = tableevents_id.getSelectionModel().getSelectedItem();
+        if (selectedEvent == null) {
+            selectedEvent = eventList.getSelectionModel().getSelectedItem();
+        }
+        if (selectedEvent != null) {
+            Event_participantsService event_Participants = new Event_participantsService();
+            ObservableList<String> selectedParticipant = ListParticipants_id.getSelectionModel().getSelectedItem();
+            if (selectedParticipant != null) {
+                try {
+                    event_Participants.delete(selectedEvent.getId(), selectedParticipant.get(0));
 
-                        //change points in database
-                        update_user_pts(GlobalVar.getUser().getId(), GlobalVar.getUser().getEvent_points()-100);
+                    //change points in database
+                    String selectedUserusername = selectedParticipant.get(0);
+                    int points = get_points_by_username(selectedUserusername);
+                    update_user_pts_via_username(selectedUserusername, points - 100);
 
-
-
-                        //spots +1
-                        eventDetailsService.updatespots(selectedEvent.getId());
-                        fillParticipants();
-                        afficher();
-                        afficher1();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    System.out.println("No participant selected");
+                    //spots +1
+                    eventDetailsService.updatespots(selectedEvent.getId());
+                    fillParticipants();
+                    fill_points();
+                    afficher();
+                    afficher1();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             } else {
-                System.out.println("No event selected");
+                System.out.println("No participant selected");
+            }
+        } else {
+            System.out.println("No event selected");
+        }
+    }
+
+    @FXML
+    void initialize() {
+        delete_id.setText("Delete");
+        delete_id.setGraphic(new FontIcon(Feather.TRASH));
+        delete_id.getStyleClass().add(Styles.DANGER);
+        delete_id.setContentDisplay(ContentDisplay.RIGHT);
+        delete_id.setMnemonicParsing(true);
+        ajouter_id.setText("Add");
+        ajouter_id.setGraphic(new FontIcon(Feather.PLUS)); // Set the icon to a plus icon
+        ajouter_id.getStyleClass().add(Styles.SUCCESS);
+        ajouter_id.setMnemonicParsing(true);
+        edit_id.setText("Edit");
+        edit_id.setGraphic(new FontIcon(Feather.EDIT)); // Set the icon to a pen icon
+        edit_id.getStyleClass().add(Styles.ACCENT);
+        edit_id.setMnemonicParsing(true);
+        editeventconfirm_id.setText("Edit");
+        editeventconfirm_id.setGraphic(new FontIcon(Feather.EDIT)); // Set the icon to a pen icon
+        editeventconfirm_id.getStyleClass().add(Styles.ACCENT);
+        editeventconfirm_id.setMnemonicParsing(true);
+        editeventconfirm_id1.setText("Cancel");
+        editeventconfirm_id1.setGraphic(new FontIcon(Feather.X)); // Set the icon to a pen icon
+        editeventconfirm_id1.getStyleClass().add(Styles.DANGER);
+        editeventconfirm_id1.setMnemonicParsing(true);
+
+
+
+        back_toeve.setText("Back");
+        back_toeve.setGraphic(new FontIcon(Feather.ARROW_LEFT)); // Set the icon to a pen icon
+        back_toeve.getStyleClass().add(Styles.ACCENT);
+        back_toeve.setMnemonicParsing(true);
+        finished_events_btn.setText("Finished events");
+        finished_events_btn.setGraphic(new FontIcon(Feather.CALENDAR)); // Set the icon to a pen icon
+        finished_events_btn.getStyleClass().add(Styles.ACCENT);
+        finished_events_btn.setMnemonicParsing(true);
+        manage_users_btn.setText("Manage users");
+        manage_users_btn.setGraphic(new FontIcon(Feather.USERS)); // Set the icon to a pen icon
+        manage_users_btn.getStyleClass().add(Styles.ACCENT);
+        manage_users_btn.setMnemonicParsing(true);
+        back_to_aff_btn.setText("Back");
+        back_to_aff_btn.setGraphic(new FontIcon(Feather.ARROW_LEFT)); // Set the icon to a pen icon
+        back_to_aff_btn.getStyleClass().add(Styles.ACCENT);
+        back_to_aff_btn.setMnemonicParsing(true);
+
+        String style = "-fx-color-cell-bg-selected: -fx-color-accent-emphasis;" +
+                "-fx-color-cell-fg-selected: -fx-color-fg-emphasis;" +
+                "-fx-color-cell-bg-selected-focused: -fx-color-accent-emphasis;" +
+                "-fx-color-cell-fg-selected-focused: -fx-color-fg-emphasis;";
+
+        list_points.setStyle(style);
+
+        list_points.getSelectionModel().selectFirst();
+        list_points.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
+        ListParticipants_id.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
+        ListParticipants_id.setStyle(style);
+        ListParticipants_id.getSelectionModel().selectFirst();
+        tableevents_id1.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
+        tableevents_id1.setStyle(style);
+        tableevents_id1.getSelectionModel().selectFirst();
+        tableevents_id.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
+        tableevents_id.setStyle(style);
+        tableevents_id.getSelectionModel().selectFirst();
+
+
+
+        eventList.setStyle(style);
+        eventList.getSelectionModel().selectFirst();
+
+
+
+        try {
+            Pane pane= FXMLLoader.load(getClass().getResource("/gestionevents/blacklisted.fxml"));
+            BlackListed.getChildren().setAll(pane);
+
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+        }
+        afficher();
+        afficher1();
+        fill_points();
+        show_passed_events();
+        ListParticipants_id.setVisible(false);
+        kick_id.setVisible(false);
+        eventdate_id.getEditor().setDisable(true);
+        editeventdate_id.getEditor().setDisable(true);
+
+        tableevents_id.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) {
+                fillParticipants();
+
+
+            }
+        });
+        eventList.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) {
+                fillParticipants1();
+            }
+        });
+    }
+
+    public int get_points(int user_id) throws SQLException {
+        getPointsStatement.setInt(1, user_id);
+        ResultSet rs = getPointsStatement.executeQuery();
+        if (rs.next()) {
+            return rs.getInt("event_points");
+        }
+        return 0;
+    }
+    public int get_points_by_username(String username) throws SQLException {
+        String query = "SELECT event_points FROM user WHERE username = ?";
+        PreparedStatement ps = MyDatabase.getInstance().getConnection().prepareStatement(query);
+        ps.setString(1, username);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            return rs.getInt("event_points");
+        }
+        return 0;
+    }
+
+
+
+
+
+
+
+
+
+    public String get_username(int user_id) throws SQLException {
+        getUsernameStatement.setInt(1, user_id);
+        ResultSet rs = getUsernameStatement.executeQuery();
+        if (rs.next()) {
+            return rs.getString("username");
+        }
+        return "";
+    }
+
+    @FXML
+    void fill_points() {
+        try {
+
+            Connection connection = MyDatabase.getInstance().getConnection();
+            PreparedStatement stmt = connection.prepareStatement("SELECT id FROM user WHERE role='client'");
+            ResultSet rs = stmt.executeQuery();
+
+
+            ObservableList<ObservableList<String>> data = FXCollections.observableArrayList();
+
+
+            while (rs.next()) {
+
+                int userId = rs.getInt("id");
+
+
+                String username = get_username(userId);
+                int points = get_points(userId);
+
+
+                ObservableList<String> row = FXCollections.observableArrayList();
+
+
+                row.add(username);
+                row.add(String.valueOf(points));
+
+
+                data.add(row);
             }
 
+            username_id1.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().get(0)));
+            points_id1.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().get(1)));
+
+            list_points.setItems(data);
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
         }
+    }
 
-        @FXML
-        void initialize () {
-            afficher();
-            afficher1();
-            fill_points();
-            ListParticipants_id.setVisible(false);
-            kick_id.setVisible(false);
-            eventdate_id.getEditor().setDisable(true);
-            editeventdate_id.getEditor().setDisable(true);
+    public void show_passed_events() {
+        //show events with the ratings the rating is the average of the ratings of the participants in that event use the method eget_event_rate
+        try {
+            List<Event_details> events = eventDetailsService.getAll_past();
+            ObservableList<Event_details> data = FXCollections.observableArrayList(events);
+            event_idcol1.setCellValueFactory(new PropertyValueFactory<>("id"));
+            event_namecol1.setCellValueFactory(new PropertyValueFactory<>("name"));
+            event_typecol1.setCellValueFactory(new PropertyValueFactory<>("type"));
+            event_datecol1.setCellValueFactory(new PropertyValueFactory<>("event_date"));
+            event_durationcol1.setCellValueFactory(new PropertyValueFactory<>("duree"));
+            event_durationcol1.setCellFactory(column -> {
+                return new TableCell<Event_details, String>() {
+                    @Override
+                    protected void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (item == null || empty) {
+                            setText(null);
+                        } else {
+                            setText(item + " minutes");
+                        }
+                    }
+                };
+            });
 
-            tableevents_id.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-                if (newSelection != null) {
-                    fillParticipants();
-
-
+            event_spotscol1.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Event_details, String>, ObservableValue<String>>() {
+                @Override
+                public ObservableValue<String> call(TableColumn.CellDataFeatures<Event_details, String> param) {
+                    Event_details event = param.getValue();
+                    int participants = event.getNb_total() - event.getNb_places();
+                    return new SimpleStringProperty(String.valueOf(participants));
                 }
             });
-            eventList.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-                if (newSelection != null) {
-                    fillParticipants1();
+            //get the event rate from the event participants by get_event_rate
+            event_ratecol1.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Event_details, String>, ObservableValue<String>>() {
+                @Override
+                public ObservableValue<String> call(TableColumn.CellDataFeatures<Event_details, String> param) {
+                    Event_details event = param.getValue();
+                    int rate = 0;
+                    try {
+                        rate = eventDetailsService.get_event_rate(event.getId());
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                    return new SimpleStringProperty(String.valueOf(rate));
                 }
             });
+            tableevents_id1.setItems(data);
+        } catch (Exception e) {
+            e.printStackTrace();
+
         }
-
-        public int get_points ( int user_id) throws SQLException {
-            getPointsStatement.setInt(1, user_id);
-            ResultSet rs = getPointsStatement.executeQuery();
-            if (rs.next()) {
-                return rs.getInt("event_points");
-            }
-            return 0;
-        }
-        public String get_username ( int user_id) throws SQLException {
-            getUsernameStatement.setInt(1, user_id);
-            ResultSet rs = getUsernameStatement.executeQuery();
-            if (rs.next()) {
-                return rs.getString("username");
-            }
-            return "";
-        }
-
-        @FXML
-        void fill_points () {
-            try {
-
-                Connection connection = MyDatabase.getInstance().getConnection();
-                PreparedStatement stmt = connection.prepareStatement("SELECT id FROM user WHERE role='client'");
-                ResultSet rs = stmt.executeQuery();
+    }
 
 
-                ObservableList<ObservableList<String>> data = FXCollections.observableArrayList();
+    @FXML
+    void go_to_finished(ActionEvent event) {
+        FadeOutLeft f = new FadeOutLeft(affichage_events_adstaff);
+        f.setOnFinished((e) -> {
+            affichage_events_adstaff.setVisible(false);
+            affichage_events_adstaff.toBack();
+            FadeInLeft f2 = new FadeInLeft(finished_events);
+            finished_events.setOpacity(0);
+            finished_events.setVisible(true);
+            finished_events.toFront();
+            f2.play();
+        });
+        f.play();
+    }
+    @FXML
+    public void gobackto_eve(ActionEvent event)  {
+        FadeOutLeft f = new FadeOutLeft(finished_events);
+        f.setOnFinished((e) -> {
+            finished_events.setVisible(false);
+            finished_events.toBack(); // send the add pane to the back
+            FadeInLeft f2 = new FadeInLeft(affichage_events_adstaff);
+            affichage_events_adstaff.setOpacity(0);
+            affichage_events_adstaff.setVisible(true);
+            affichage_events_adstaff.toFront(); // bring the edit pane to the front
+            f2.play();
+        });
+        f.play();
+    }
 
+    @FXML
+    public void go_tomanage(ActionEvent event) {
+        FadeOutLeft f = new FadeOutLeft(affichage_events_adstaff);
+        f.setOnFinished((e) -> {
+            affichage_events_adstaff.setVisible(false);
+            affichage_events_adstaff.toBack();
+            FadeInLeft f2 = new FadeInLeft(blp);
+            blp.setOpacity(0);
+            blp.setVisible(true);
+            blp.toFront();
+            f2.play();
+        });
+        f.play();
+    }
 
-                while (rs.next()) {
-
-                    int userId = rs.getInt("id");
-
-
-                    String username = get_username(userId);
-                    int points = get_points(userId);
-
-
-                    ObservableList<String> row = FXCollections.observableArrayList();
-
-
-                    row.add(username);
-                    row.add(String.valueOf(points));
-
-
-                    data.add(row);
-                }
-
-                username_id1.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().get(0)));
-                points_id1.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().get(1)));
-
-                list_points.setItems(data);
-
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
-        }
-
+    @FXML
+    public void back_to_aff(ActionEvent event){
+        FadeOutLeft f = new FadeOutLeft(blp);
+        f.setOnFinished((e) -> {
+            blp.setVisible(false);
+            blp.toBack();
+            FadeInLeft f2 = new FadeInLeft(affichage_events_adstaff);
+            affichage_events_adstaff.setOpacity(0);
+            affichage_events_adstaff.setVisible(true);
+            affichage_events_adstaff.toFront();
+            f2.play();
+        });
+        f.play();
+    }
 
 }

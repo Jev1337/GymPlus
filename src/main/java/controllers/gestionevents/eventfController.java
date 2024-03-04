@@ -5,37 +5,59 @@ import animatefx.animation.FadeOutRight;
 import atlantafx.base.controls.Notification;
 import atlantafx.base.theme.Styles;
 import atlantafx.base.util.Animations;
+import biweekly.Biweekly;
+import biweekly.ICalendar;
+import biweekly.component.VEvent;
 import controllers.gestionuser.GlobalVar;
 import entities.gestionevents.Event_details;
 import entities.gestionevents.Event_participants;
-import javafx.animation.FadeTransition;
+import jakarta.activation.DataHandler;
+import jakarta.activation.DataSource;
+import jakarta.mail.Message;
+import jakarta.mail.Multipart;
+import jakarta.mail.Session;
+import jakarta.mail.Transport;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeBodyPart;
+import jakarta.mail.internet.MimeMessage;
+import jakarta.mail.internet.MimeMultipart;
+import jakarta.mail.util.ByteArrayDataSource;
 import javafx.animation.KeyFrame;
-import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.stage.FileChooser;
 import javafx.util.Duration;
 import net.glxn.qrgen.core.image.ImageType;
 import net.glxn.qrgen.javase.QRCode;
+import org.controlsfx.control.Rating;
+import org.kordamp.ikonli.feather.Feather;
+import org.kordamp.ikonli.javafx.FontIcon;
 import services.gestionevents.Event_detailsService;
 import services.gestionevents.Event_participantsService;
 import utils.MyDatabase;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URLEncoder;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -46,7 +68,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-
+import java.util.Properties;
 
 public class eventfController {
     private final ObservableList<Event_details> event_details = FXCollections.observableArrayList();
@@ -61,6 +83,7 @@ public class eventfController {
 
     @FXML
     private TableColumn<Event_details, String> durationc;
+
 
     @FXML
     private TextField search_id;
@@ -80,7 +103,8 @@ public class eventfController {
 
     @FXML
     private Label countdownLabel;
-
+    @FXML
+    private Button rewards;
     private Timeline timeline;
     @FXML
     private AnchorPane mainPane;
@@ -120,8 +144,20 @@ public class eventfController {
     private CheckBox myevents;
     @FXML
     private ImageView image_cover_event;
-
-
+    @FXML
+    private Button history_btn;
+    @FXML
+    private Pane history;
+    @FXML
+    private ListView<Event_details> list_events1;
+    @FXML
+    private Button rate;
+    @FXML
+    private Button back_btn;
+    @FXML
+    private Button backtoeventpane1;
+    @FXML
+    private Pane title_events;
 
 
     public eventfController() {
@@ -144,21 +180,72 @@ public class eventfController {
 
     @FXML
     void initialize() {
+        join_id.setText("Join");
+        join_id.setGraphic(new FontIcon(Feather.LOG_IN));
+        join_id.getStyleClass().addAll(Styles.BUTTON_OUTLINED, Styles.SUCCESS);
+        join_id.setMnemonicParsing(true);
+
+        history_btn.getStyleClass().addAll(
+                Styles.BUTTON_OUTLINED, Styles.ACCENT
+
+        );
+        history_btn.setMnemonicParsing(true);
+        history_btn.setGraphic(new FontIcon(Feather.CLOCK));
+        rewards.getStyleClass().addAll(
+                Styles.BUTTON_OUTLINED, Styles.ACCENT
+
+        );
+        rewards.setMnemonicParsing(true);
+        rewards.setGraphic(new FontIcon(Feather.GIFT));
+        String style = "-fx-color-cell-bg-selected: -color-accent-emphasis;" +
+                "-fx-color-cell-fg-selected: -color-fg-emphasis;" +
+                "-fx-color-cell-bg-selected-focused: -color-accent-emphasis;" +
+                "-fx-color-cell-fg-selected-focused: -color-fg-emphasis;";
+
+        list_events.setStyle(style);
+        list_events.getSelectionModel().selectFirst();
+        list_events1.setStyle(style);
+        list_events1.getSelectionModel().selectFirst();
+
+        events.setText("Back");
+        events.setGraphic(new FontIcon(Feather.ARROW_LEFT));
+        events.getStyleClass().add(Styles.ACCENT);
+        events.setMnemonicParsing(true);
+        backtoeventpane1.setText("Back");
+        backtoeventpane1.setGraphic(new FontIcon(Feather.ARROW_LEFT));
+        backtoeventpane1.getStyleClass().add(Styles.ACCENT);
+        backtoeventpane1.setMnemonicParsing(true);
+
+        rate.setText("Rate");
+        rate.setGraphic(new FontIcon(Feather.STAR));
+        rate.getStyleClass().add(Styles.ACCENT);
+        rate.setMnemonicParsing(true);
+
+
+        Button[] buttons = {bag_btn, whey_btn, belt_btn};
+
+        for (Button button : buttons) {
+            button.setGraphic(new FontIcon(Feather.GIFT));
+            button.getStyleClass().addAll(Styles.BUTTON_OUTLINED, Styles.SUCCESS);
+            button.setMnemonicParsing(true);
+        }
         try {
             System.out.println("Points: " + GlobalVar.getUser().getEvent_points());
             afficher();
             afficher1();
+            afficher_history();
             points_label.setText("Points: " + GlobalVar.getUser().getEvent_points());
         } catch (SQLException e) {
             e.printStackTrace();
         }
         startCountdown();
     }
+
     @FXML
     public void switchtomyevents(ActionEvent actionEvent) {
         if (myevents.isSelected()) {
 
-            List<Event_details> events = eventDetailsService.getEventsByUserId(GlobalVar.getUser().getId());
+            List<Event_details> events = eventDetailsService.getEventsByUserId_now(GlobalVar.getUser().getId());
             //change image_cover_event to anothe image
             image_cover_event.setImage(new javafx.scene.image.Image("file:src/main/resources/assets/images/myevents.png"));
             event_details.clear();
@@ -187,8 +274,10 @@ public class eventfController {
             spotsc.setCellFactory(column -> {
                 return new TableCell<Event_details, Integer>() {
                     private ProgressBar bar = new ProgressBar();
+
                     {
                         bar.setPrefWidth(100);
+                        bar.setStyle("-fx-accent: -color-fg-default;");
 
                     }
 
@@ -216,8 +305,15 @@ public class eventfController {
                     }
                 };
             });
+
+
+
+
+
+
+
             //list too
-            List<Event_details> events2 = eventDetailsService.getEventsByUserId(GlobalVar.getUser().getId());
+            List<Event_details> events2 = eventDetailsService.getEventsByUserId_now(GlobalVar.getUser().getId());
             ObservableList<Event_details> event_details2 = FXCollections.observableArrayList(events2);
             list_events.setItems(event_details2);
             list_events.setCellFactory(param -> new ListCell<Event_details>() {
@@ -226,15 +322,16 @@ public class eventfController {
                     super.updateItem(item, empty);
                     if (empty || item == null || item.getName() == null) {
                         setText(null);
-                    } else{
+                    } else {
                         // Create a custom layout for each item
                         VBox vbox = new VBox();
                         Label nameLabel = new Label("Name: " + item.getName());
                         Label typeLabel = new Label("Type: " + item.getType());
                         Label dateLabel = new Label("Date: " + item.getEvent_date());
-                        Label durationLabel = new Label("Duration: " + item.getDuree());
+                        Label durationLabel = new Label("Duration: " + item.getDuree()+" minutes");
                         //add the progress bar to the list view
                         ProgressBar bar = new ProgressBar();
+                        bar.setStyle("-fx-accent: -color-fg-default;");
                         bar.setPrefWidth(100);
                         int totalSpots = item.getNb_total();
                         int availableSpots = totalSpots - item.getNb_places();
@@ -261,8 +358,9 @@ public class eventfController {
             }
         }
     }
+
     void afficher() throws SQLException {
-        List<Event_details> events = eventDetailsService.getAll();
+        List<Event_details> events = eventDetailsService.getAll_now();
         event_details.clear();
         event_details.addAll(events);
         ScrollPane scrollPane = new ScrollPane();
@@ -290,8 +388,10 @@ public class eventfController {
         spotsc.setCellFactory(column -> {
             return new TableCell<Event_details, Integer>() {
                 private ProgressBar bar = new ProgressBar();
+
                 {
                     bar.setPrefWidth(100);
+                    bar.setStyle("-fx-accent: -color-fg-default;");
 
                 }
 
@@ -321,9 +421,10 @@ public class eventfController {
         });
 
     }
+
     public void afficher1() throws SQLException {
-       //afficher les events dans une list view list_events
-        List<Event_details> events = eventDetailsService.getAll();
+        //afficher les events dans une list view list_events
+        List<Event_details> events = eventDetailsService.getAll_now();
         ObservableList<Event_details> event_details = FXCollections.observableArrayList(events);
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setContent(list_events);
@@ -334,15 +435,16 @@ public class eventfController {
                 super.updateItem(item, empty);
                 if (empty || item == null || item.getName() == null) {
                     setText(null);
-                } else{
+                } else {
                     // Create a custom layout for each item
                     VBox vbox = new VBox();
                     Label nameLabel = new Label("Name: " + item.getName());
                     Label typeLabel = new Label("Type: " + item.getType());
                     Label dateLabel = new Label("Date: " + item.getEvent_date());
-                    Label durationLabel = new Label("Duration: " + item.getDuree()+" minutes");
+                    Label durationLabel = new Label("Duration: " + item.getDuree() + " minutes");
                     //add the progress bar to the list view
                     ProgressBar bar = new ProgressBar();
+                    bar.setStyle("-fx-accent: -color-fg-default;");
                     bar.setPrefWidth(100);
                     int totalSpots = item.getNb_total();
                     int availableSpots = totalSpots - item.getNb_places();
@@ -355,11 +457,12 @@ public class eventfController {
                     setGraphic(vbox);
                 }
 
-                }
+            }
 
         });
 
     }
+
     @FXML
     void switch_to_table(ActionEvent event) {
         if (check_table.isSelected()) {
@@ -389,7 +492,7 @@ public class eventfController {
         incrementSpotsStatement.executeUpdate();
     }
 
-    public void delete_passed_events(List<Event_details> events) {
+    /*public void delete_passed_events(List<Event_details> events) {
         try {
             for (Event_details event : events) {
                 LocalDateTime eventDateTime = LocalDateTime.parse(event.getEvent_date(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
@@ -400,15 +503,13 @@ public class eventfController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
+    }*/
     @FXML
     public void join_event(ActionEvent actionEvent) throws SQLException {
-
-
-
         Event_details selectedEvent = event_detailsTableView.getSelectionModel().getSelectedItem();
-        if(selectedEvent==null)
-        {selectedEvent=list_events.getSelectionModel().getSelectedItem();}
+        if (selectedEvent == null) {
+            selectedEvent = list_events.getSelectionModel().getSelectedItem();
+        }
 
         int id = 0;
         Date nextEventDate = getNextEventDate(0);
@@ -417,7 +518,7 @@ public class eventfController {
         if (selectedEvent != null) {
             //check the date must be greater than the current date +1 hour
             if (check_event_date_and_time_passed(selectedEvent.getId())) {
-                delete_passed_events(event_details);
+                //delete_passed_events(event_details);
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error");
                 alert.setHeaderText("Event date and time has passed");
@@ -444,9 +545,10 @@ public class eventfController {
 
             if (hasUserJoinedEvent(selectedEvent.getId(), GlobalVar.getUser().getId())) {
 
+
                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                 alert.setTitle("Error");
-                alert.setHeaderText("You are already a participant in this event");
+                alert.setHeaderText("You are a participant in this event");
                 alert.setContentText(" Are you sure you want to leave?");
                 Optional<ButtonType> result = alert.showAndWait();
                 if (result.get() == ButtonType.OK) {
@@ -465,6 +567,7 @@ public class eventfController {
                     return;
                 }
             }
+
             System.out.println("Join event: " + name + ", " + type + ", " + date + ", " + duration);
             try {
                 PreparedStatement stmt = connection.prepareStatement("SELECT id FROM event_details WHERE name = ? AND type = ? AND event_date = ? AND duree = ? AND nb_places = ?");
@@ -498,6 +601,15 @@ public class eventfController {
             eventParticipantsService.add(ev);
             decrementSpots(id);
 
+            // After the user has joined the event, generate the iCalendar data
+            String icsData = generateICalendarData(selectedEvent);
+
+            // Generate the QR code from the iCalendar data
+            ByteArrayOutputStream qrCode = QRCode.from(icsData).to(ImageType.PNG).stream();
+
+            // Display the QR code in an alert
+            displayQRCodeAlert(qrCode, selectedEvent);
+
             afficher();
             afficher1();
 
@@ -511,8 +623,65 @@ public class eventfController {
             alert.showAndWait();
 
         }
+    }
+
+    private String generateICalendarData(Event_details event) {
+        ICalendar ical = new ICalendar();
+        VEvent vEvent = new VEvent();
+        vEvent.setSummary(event.getName());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime dateTime = LocalDateTime.parse(event.getEvent_date(), formatter);
+        vEvent.setDateStart(Date.from(dateTime.atZone(ZoneId.systemDefault()).toInstant()));
+        int durationInMinutes = Integer.parseInt(event.getDuree());
+        LocalDateTime endDateTime = dateTime.plusMinutes(durationInMinutes);
+        vEvent.setDateEnd(Date.from(endDateTime.atZone(ZoneId.systemDefault()).toInstant()));
+
+        // Set the location of the event
+        vEvent.setLocation("GymPlus");
+
+        ical.addEvent(vEvent);
+        return Biweekly.write(ical).go();
+    }
+
+    private void displayQRCodeAlert(ByteArrayOutputStream qrCode, Event_details event) {
+        try {
+            // Convert the ByteArrayOutputStream to a javafx.scene.image.Image
+            ByteArrayInputStream bis = new ByteArrayInputStream(qrCode.toByteArray());
+            Image image = new Image(bis);
+
+            // Create an ImageView to display the image
+            ImageView imageView = new ImageView(image);
+
+            // Set the dimensions of the ImageView
+            imageView.setFitWidth(300); // Set the width to 300
+            imageView.setFitHeight(300); // Set the height to 300
+
+            // Create an Alert to display the ImageView
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("QR Code");
+            alert.setHeaderText("Scan this QR code to add the event to your calendar");
+            alert.setGraphic(imageView);
+
+            // Create a "Share on Twitter" button
+            ButtonType shareOnTwitterButton = new ButtonType("Share on Twitter");
+
+            // Add the "Share on Twitter" button to the alert
+            alert.getButtonTypes().add(shareOnTwitterButton);
+
+            // Add an event filter to handle the "Share on Twitter" button click
+            alert.getDialogPane().lookupButton(shareOnTwitterButton).addEventFilter(ActionEvent.ACTION, eventFilter -> {
+                // Create a Twitter post
+                createTwitterPost(event);
 
 
+                eventFilter.consume();
+            });
+
+
+            alert.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     boolean check_event_date_and_time_passed(int event_id) {
@@ -578,6 +747,9 @@ public class eventfController {
     }
 
     private void updateCountdown() {
+        if(GlobalVar.getUser() == null) {
+            return;
+        }
         Date nextEventDate = getNextEventDate(GlobalVar.getUser().getId());
         if (nextEventDate != null) {
             Date now = new Date();
@@ -609,7 +781,7 @@ public class eventfController {
                 super.updateItem(item, empty);
                 if (empty || item == null || item.getName() == null) {
                     setText(null);
-                } else{
+                } else {
                     // Create a custom layout for each item
                     VBox vbox = new VBox();
                     Label nameLabel = new Label("Name: " + item.getName());
@@ -618,6 +790,7 @@ public class eventfController {
                     Label durationLabel = new Label("Duration: " + item.getDuree());
                     //add the progress bar to the list view
                     ProgressBar bar = new ProgressBar();
+                    bar.setStyle("-fx-accent: -color-fg-default;");
                     bar.setPrefWidth(100);
                     int totalSpots = item.getNb_total();
                     int availableSpots = totalSpots - item.getNb_places();
@@ -696,7 +869,6 @@ public class eventfController {
                 update_user_pts(GlobalVar.getUser().getId(), GlobalVar.getUser().getEvent_points());
                 points_label.setText("Points: " + GlobalVar.getUser().getEvent_points());
 
-
                 String details = "User ID: " + GlobalVar.getUser().getId() +
                         "\nFirst Name: " + GlobalVar.getUser().getFirstname() +
                         "\nLast Name: " + GlobalVar.getUser().getLastname() +
@@ -707,41 +879,11 @@ public class eventfController {
                                 .to(ImageType.PNG)
                                 .stream();
 
+                // Convert the QR code image to a DataSource
+                DataSource qrCodeDataSource = new ByteArrayDataSource(bout.toByteArray(), "image/png");
 
-                ByteArrayInputStream bin = new ByteArrayInputStream(bout.toByteArray());
-                javafx.scene.image.Image qrImage = null;
-                try {
-                    qrImage = SwingFXUtils.toFXImage(ImageIO.read(bin), null);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-
-                Alert qrCodeAlert = new Alert(Alert.AlertType.INFORMATION);
-                qrCodeAlert.setTitle("Congratulations");
-                qrCodeAlert.setHeaderText("You have successfully claimed GymPlus Whey Protein");
-
-                ImageView qrImageView = new ImageView(qrImage);
-                qrCodeAlert.setGraphic(qrImageView);
-                ButtonType saveButtonType = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
-                qrCodeAlert.getButtonTypes().setAll(saveButtonType, ButtonType.CANCEL);
-                Optional<ButtonType> qrResult = qrCodeAlert.showAndWait();
-                if (qrResult.get() == saveButtonType) {
-                    FileChooser fileChooser = new FileChooser();
-                    fileChooser.setTitle("Save Image");
-                    FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("PNG files (*.png)", "*.png");
-                    fileChooser.getExtensionFilters().add(extFilter);
-                    File file = fileChooser.showSaveDialog(null);
-                    if (file != null) {
-                        try {
-                            ImageIO.write(SwingFXUtils.fromFXImage(qrImage, null), "png", file);
-                        } catch (IOException ex) {
-                            System.out.println(ex.getMessage());
-                        }
-                    }
-                }
-
-                qrCodeAlert.showAndWait();
+                // Send the QR code via email
+                sendEmailWithQRCode(GlobalVar.getUser().getEmail(), "Congratulations", "You have successfully claimed GymPlus Whey Protein get it by scanning it in the gym reception", qrCodeDataSource);
             }
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -765,7 +907,6 @@ public class eventfController {
                 update_user_pts(GlobalVar.getUser().getId(), GlobalVar.getUser().getEvent_points());
                 points_label.setText("Points: " + GlobalVar.getUser().getEvent_points());
 
-
                 String details = "User ID: " + GlobalVar.getUser().getId() +
                         "\nFirst Name: " + GlobalVar.getUser().getFirstname() +
                         "\nLast Name: " + GlobalVar.getUser().getLastname() +
@@ -776,41 +917,11 @@ public class eventfController {
                                 .to(ImageType.PNG)
                                 .stream();
 
+                // Convert the QR code image to a DataSource
+                DataSource qrCodeDataSource = new ByteArrayDataSource(bout.toByteArray(), "image/png");
 
-                ByteArrayInputStream bin = new ByteArrayInputStream(bout.toByteArray());
-                javafx.scene.image.Image qrImage = null;
-                try {
-                    qrImage = SwingFXUtils.toFXImage(ImageIO.read(bin), null);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                // Display QR code in an alert
-                Alert qrCodeAlert = new Alert(Alert.AlertType.INFORMATION);
-                qrCodeAlert.setTitle("Congratulations");
-                qrCodeAlert.setHeaderText("You have successfully claimed GymPlus Weightlifting Belt");
-
-                ImageView qrImageView = new ImageView(qrImage);
-                qrCodeAlert.setGraphic(qrImageView);
-                ButtonType saveButtonType = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
-                qrCodeAlert.getButtonTypes().setAll(saveButtonType, ButtonType.CANCEL);
-                Optional<ButtonType> qrResult = qrCodeAlert.showAndWait();
-                if (qrResult.get() == saveButtonType) {
-                    FileChooser fileChooser = new FileChooser();
-                    fileChooser.setTitle("Save Image");
-                    FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("PNG files (*.png)", "*.png");
-                    fileChooser.getExtensionFilters().add(extFilter);
-                    File file = fileChooser.showSaveDialog(null);
-                    if (file != null) {
-                        try {
-                            ImageIO.write(SwingFXUtils.fromFXImage(qrImage, null), "png", file);
-                        } catch (IOException ex) {
-                            System.out.println(ex.getMessage());
-                        }
-                    }
-                }
-
-                qrCodeAlert.showAndWait();
+                // Send the QR code via email
+                sendEmailWithQRCode(GlobalVar.getUser().getEmail(), "Congratulations", "You have successfully claimed GymPlus Weightlifting Belt get it by scanning it in the gym reception ", qrCodeDataSource);
             }
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -820,6 +931,68 @@ public class eventfController {
             alert.showAndWait();
         }
     }
+
+    public void sendEmailWithQRCode(String to, String subject, String body, DataSource qrCodeDataSource) {
+        new Thread(() -> {
+            try {
+                String from = "gymplus-noreply@grandelation.com";
+                String password = "yzDvS_UoSL7b";
+                String host = "mail.grandelation.com";
+
+                // Setup mail server
+                Properties props = new Properties();
+                props.put("mail.smtp.host", host);
+                props.put("mail.debug", "true");
+                props.put("mail.smtp.auth", "true");
+                props.put("mail.smtp.ssl.enable", "true");
+                props.put("mail.smtp.port", "465");
+
+                // Get the Session object.
+                Session session = Session.getInstance(props, null);
+
+                // Create a default MimeMessage object.
+                MimeMessage message = new MimeMessage(session);
+
+                // Set From: header field of the header.
+                message.setFrom(new InternetAddress(from));
+
+                // Set To: header field of the header.
+                message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+
+                // Set Subject: header field
+                message.setSubject(subject);
+
+                // Create a multipart message
+                Multipart multipart = new MimeMultipart();
+
+                // Create the message part
+                MimeBodyPart messageBodyPart = new MimeBodyPart();
+
+                // Now set the actual message
+                messageBodyPart.setText(body);
+
+                // Set text message part
+                multipart.addBodyPart(messageBodyPart);
+
+                // Part two is attachment
+                MimeBodyPart attachment = new MimeBodyPart();
+                attachment.setDataHandler(new DataHandler(qrCodeDataSource));
+                attachment.setFileName("qr-code.png");
+                multipart.addBodyPart(attachment);
+
+                // Send the complete message parts
+                message.setContent(multipart);
+
+                // Send message
+                Transport.send(message, from, password);
+
+                System.out.println("Sent message successfully....");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }).start();
+    }
+
 
     @FXML
     public void claim_bag(ActionEvent actionEvent) {
@@ -834,7 +1007,6 @@ public class eventfController {
                 GlobalVar.getUser().setEvent_points(GlobalVar.getUser().getEvent_points() - 2000);
                 update_user_pts(GlobalVar.getUser().getId(), GlobalVar.getUser().getEvent_points());
                 points_label.setText("Points: " + GlobalVar.getUser().getEvent_points());
-
 
                 String details = "User ID: " + GlobalVar.getUser().getId() +
                         "\nFirst Name: " + GlobalVar.getUser().getFirstname() +
@@ -854,6 +1026,11 @@ public class eventfController {
                     e.printStackTrace();
                 }
 
+                // Convert the QR code image to a DataSource
+                DataSource qrCodeDataSource = new ByteArrayDataSource(bout.toByteArray(), "image/png");
+
+                // Send the QR code via email
+                sendEmailWithQRCode(GlobalVar.getUser().getEmail(), "Congratulations", "You have successfully claimed GymPlus Bag get it by scanning it in the gym reception ", qrCodeDataSource);
 
                 Alert qrCodeAlert = new Alert(Alert.AlertType.INFORMATION);
                 qrCodeAlert.setTitle("Congratulations");
@@ -861,24 +1038,6 @@ public class eventfController {
 
                 ImageView qrImageView = new ImageView(qrImage);
                 qrCodeAlert.setGraphic(qrImageView);
-                ButtonType saveButtonType = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
-                qrCodeAlert.getButtonTypes().setAll(saveButtonType, ButtonType.CANCEL);
-                Optional<ButtonType> qrResult = qrCodeAlert.showAndWait();
-                if (qrResult.get() == saveButtonType) {
-                    FileChooser fileChooser = new FileChooser();
-                    fileChooser.setTitle("Save Image");
-                    FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("PNG files (*.png)", "*.png");
-                    fileChooser.getExtensionFilters().add(extFilter);
-                    File file = fileChooser.showSaveDialog(null);
-                    if (file != null) {
-                        try {
-                            ImageIO.write(SwingFXUtils.fromFXImage(qrImage, null), "png", file);
-                        } catch (IOException ex) {
-                            System.out.println(ex.getMessage());
-                        }
-                    }
-                }
-
                 qrCodeAlert.showAndWait();
             }
         } else {
@@ -890,10 +1049,130 @@ public class eventfController {
         }
     }
 
+    @FXML
+    void go_to_history(ActionEvent event) {
 
+            FadeOutRight f = new FadeOutRight(event_pane);
+            f.setOnFinished((e) -> {
+                event_pane.setVisible(false);
+                FadeInRight f2 = new FadeInRight(history);
+                history.setOpacity(0);
+                history.setVisible(true);
+                f2.play();
+            });
+            f.play();
+
+    }
+
+    public void afficher_history() throws SQLException {
+        //show the events that the user participated in the past using getPastEventsByUserId
+        List<Event_details> events = eventDetailsService.getPastEventsByUserId(GlobalVar.getUser().getId());
+        ObservableList<Event_details> event_details = FXCollections.observableArrayList(events);
+        list_events1.setItems(event_details);
+        list_events1.setCellFactory(param -> new ListCell<Event_details>() {
+            @Override
+            protected void updateItem(Event_details item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null || item.getName() == null) {
+                    setText(null);
+                } else {
+                    // Create a custom layout for each item
+                    VBox vbox = new VBox();
+                    Label nameLabel = new Label("Name: " + item.getName());
+                    Label typeLabel = new Label("Type: " + item.getType());
+                    Label dateLabel = new Label("Date: " + item.getEvent_date());
+                    Label durationLabel = new Label("Duration: " + item.getDuree());
+                    vbox.getChildren().addAll(nameLabel, typeLabel, dateLabel, durationLabel);
+                    setGraphic(vbox);
+                }
+
+            }
+
+        });
+    }
+    @FXML
+    public void rate_event(ActionEvent actionEvent) {
+        Event_details selectedEvent = list_events1.getSelectionModel().getSelectedItem();
+        if (selectedEvent != null) {
+            Dialog<Integer> dialog = new Dialog<>();
+            dialog.setTitle("Rate Event");
+            dialog.setHeaderText("Rate " + selectedEvent.getName());
+
+            Rating ratingControl = new Rating();
+            ratingControl.setMax(5);
+            dialog.getDialogPane().setContent(ratingControl);
+
+            // Create a custom ButtonType for confirmation
+            ButtonType confirmButtonType = new ButtonType("Confirm", ButtonBar.ButtonData.OK_DONE);
+            dialog.getDialogPane().getButtonTypes().addAll(confirmButtonType, ButtonType.CANCEL);
+
+            dialog.setResultConverter(dialogButton -> {
+                if (dialogButton == confirmButtonType) {
+                    return (int) ratingControl.getRating();
+                }
+                return null;
+            });
+
+            Optional<Integer> result = dialog.showAndWait();
+            if (result.isPresent()) {
+                int rating = result.get();
+                Event_participantsService eventParticipantsService = new Event_participantsService();
+                Event_participants eventParticipants = eventParticipantsService.getByEventIdAndUserId(selectedEvent.getId(), GlobalVar.getUser().getId());
+                eventParticipants.setRate(rating);
+                try {
+                    eventParticipantsService.update(eventParticipants);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Success");
+                alert.setHeaderText("Rating submitted");
+                alert.setContentText("Thank you for rating " + selectedEvent.getName());
+                alert.showAndWait();
+            }
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("No event selected");
+            alert.setContentText("Please select an event to rate");
+            alert.showAndWait();
+        }
+    }
+    public void createTwitterPost(Event_details event) {
+        String message = "I just joined the event " + event.getName() + " on " + event.getEvent_date() + "! Join me there!";
+        try {
+            String urlEncodedMessage = URLEncoder.encode(message, "UTF-8");
+            String url = "https://twitter.com/intent/tweet?text=" + urlEncodedMessage;
+
+            if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+                Desktop.getDesktop().browse(new URI(url));
+            }
+        } catch (IOException | URISyntaxException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void back_toeventsss(ActionEvent event){
+        FadeOutRight f = new FadeOutRight(history);
+        f.setOnFinished((e) -> {
+            history.setVisible(false);
+            FadeInRight f2 = new FadeInRight(event_pane); // Apply the animation to event_pane
+            event_pane.setOpacity(0);
+            event_pane.setVisible(true);
+            f2.play();
+        });
+        f.play();
+    }
 
 
 }
+
+
+
+
+
+
 
 
 

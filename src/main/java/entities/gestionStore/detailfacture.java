@@ -1,5 +1,9 @@
 package entities.gestionStore;
 
+import services.gestionStore.ProduitService;
+
+import java.sql.SQLException;
+
 public class detailfacture {
 
     private int idFacture;
@@ -8,7 +12,8 @@ public class detailfacture {
     private float prixVenteUnitaire;
     private int quantite;
     private float tauxRemise;
-    private float prixtotalArticle;
+    private float prixTotalArticle;
+
 
     public int getIdFacture() {
         return idFacture;
@@ -59,11 +64,11 @@ public class detailfacture {
     }
 
     public float getPrixtotalArticle() {
-        return prixtotalArticle;
+        return prixTotalArticle;
     }
 
     public void setPrixtotalArticle(float prixtotalArticle) {
-        this.prixtotalArticle = prixtotalArticle;
+        this.prixTotalArticle = prixtotalArticle;
     }
 
     public detailfacture() {
@@ -76,7 +81,7 @@ public class detailfacture {
         this.prixVenteUnitaire = prixVenteUnitaire;
         this.quantite = quantite;
         this.tauxRemise = tauxRemise;
-        this.prixtotalArticle = prixtotalArticle;
+        this.prixTotalArticle = prixtotalArticle;
     }
 
     public detailfacture(int idFacture, int idDetailFacture, int idProduit, int quantite, float tauxRemise) {
@@ -96,7 +101,14 @@ public class detailfacture {
                 ", prixVenteUnitaire=" + prixVenteUnitaire +
                 ", quantite=" + quantite +
                 ", tauxRemise=" + tauxRemise +
-                ", prixtotalArticle=" + prixtotalArticle +
+                ", prixtotalArticle=" + prixTotalArticle +
                 '}';
+    }
+
+
+    public produit getProduit() throws SQLException
+    {
+        ProduitService produitService = new ProduitService();
+        return produitService.getProduitById(idProduit);
     }
 }

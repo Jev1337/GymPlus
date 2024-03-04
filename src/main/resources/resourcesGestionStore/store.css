@@ -1,0 +1,33 @@
+.round-layout{
+    -fx-border-radius: 50;
+    -fx-border-color: #DFE9F5;
+}
+
+.bleu-Background{
+    -fx-background-color: #DFE9F5;
+}
+
+.white-Background{
+    -fx-background-color: #fff;
+}
+
+.table-view {
+    -fx-background-color: #DFE9F5;
+    -fx-table-cell-border-color: transparent;
+}
+
+.button{
+    -fx-border-radius: 50px; /* rayon des coins */
+    -fx-background-radius: 50px; /* rayon des coins */
+    -fx-background-color: #DFE9F5;
+}
+
+.custom-spinner .increment-arrow-button,
+.custom-spinner .decrement-arrow-button {
+    -fx-background-color: #0000FF; /* Couleur de fond des flèches */
+    -fx-background-insets: 0; /* Supprimer les marges internes */
+}
+
+.custom-spinner .spinner-arrow {
+    -fx-background-color: #0000FF; /* Couleur de fond de l'indicateur */
+}

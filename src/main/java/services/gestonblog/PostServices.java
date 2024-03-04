@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class PostServices implements IService{
+public class PostServices implements IService {
     private final Connection connection;
 
     public PostServices() {
@@ -21,7 +21,7 @@ public class PostServices implements IService{
     public void add(Object o) throws SQLException {
         Post p = (Post) o;
         if (!Objects.equals(p.getPhoto(), "") || !Objects.equals(p.getContent(), "")) {
-            String sql = "insert into post (id_post, user_id, mode, content, date, photo, likes) values (" + p.getId_post() + ", " + p.getUser_id() + ", '" + p.getMode() + "', '" + p.getContent() + "', '" + p.getDate() + "', '" + p.getPhoto() + "', " + p.getLikes() + ");";
+            String sql = "insert into post (id_post, user_id, mode, content, date, photo, likes, nbComnts) values (" + p.getId_post() + ", " + p.getUser_id() + ", '" + p.getMode() + "', '" + p.getContent() + "', '" + p.getDate() + "', '" + p.getPhoto() + "', " + p.getLikes() + ", " + p.getNbComnts() + ");";
             Statement st = connection.createStatement();
             st.executeUpdate(sql);
         }
@@ -44,34 +44,22 @@ public class PostServices implements IService{
         ps.executeUpdate();
     }
 
-    public void addNbLikes(Object o) throws SQLException {
+    public void updateNbLikes(Object o) throws SQLException {
         Post p = (Post) o;
         String sql = "UPDATE post set likes = ? where id_post = ?";
         PreparedStatement ps = connection.prepareStatement(sql);
-        ps.setInt(1, p.getLikes() + 1);
+        ps.setInt(1, p.getLikes());
         ps.setInt(2, p.getId_post());
         ps.executeUpdate();
     }
 
-    public void minNbLikes(Object o) throws SQLException {
+    public void updateNbComnts(Object o) throws SQLException {
         Post p = (Post) o;
-        String sql = "UPDATE post set likes = ? where id_post = ?";
+        String sql = "UPDATE post set nbComnts = ? where id_post = ?";
         PreparedStatement ps = connection.prepareStatement(sql);
-        ps.setInt(1, p.getLikes() - 1);
+        ps.setInt(1, p.getNbComnts());
         ps.setInt(2, p.getId_post());
         ps.executeUpdate();
-    }
-
-    public int getNbLikesById(int id) throws SQLException {
-        int likes = 0;
-        String sql = "select * from post where id_post = ?";
-        PreparedStatement ps = connection.prepareStatement(sql);
-        ps.setInt(1, id);
-        ResultSet rs = ps.executeQuery();
-        if (rs.next()) {
-            likes = rs.getInt("likes");
-        }
-        return likes;
     }
 
     @Override
@@ -89,6 +77,7 @@ public class PostServices implements IService{
             p.setDate(rs.getDate("date"));
             p.setPhoto(rs.getString("photo"));
             p.setLikes(rs.getInt("likes"));
+            p.setNbComnts(rs.getInt("nbComnts"));
             posts.add(p);
         }
         return posts;

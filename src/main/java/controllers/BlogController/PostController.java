@@ -25,7 +25,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
-import java.nio.file.Files;
 import services.gestionuser.ClientService;
 import services.gestonblog.CommentaireService;
 import services.gestonblog.PostServices;
@@ -33,7 +32,6 @@ import services.gestonblog.PostServices;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Files;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -47,13 +45,10 @@ public class PostController implements Initializable {
 
     @FXML
     private Label captionTxt;
-
     @FXML
     private ImageView imgPost;
-
     @FXML
     private ImageView imgProfile;
-
     @FXML
     private Label nbComnts;
     @FXML
@@ -80,25 +75,33 @@ public class PostController implements Initializable {
     private String date = LocalDate.now().toString();
     private boolean isClicked = false;
     private boolean isShown = false;
+    public static int comnts = 0;
     private final PostServices ps = new PostServices();
     private final CommentaireService cs = new CommentaireService();
     private final ClientService us = new ClientService();
+    private CommentTemplateController commentTemplateController = new CommentTemplateController();
+    private static BlogController blogController;
+
+    public void setBlogController(BlogController bc) {
+        PostController.blogController = bc;
+    }
 
     //*************************************POST HANDLER*************************************
     @FXML
     public void addLike() {
         isClicked = !isClicked;
-        Post p = getPost();
+        int likes = post.getLikes();
         try {
             if (isClicked) {
                 likeBtn.setTextFill(Paint.valueOf("#005bee"));
-                ps.addNbLikes(p);
-                nbLikes.setText(ps.getNbLikesById(post.getId_post()) + " Likes");
+                post.setLikes(likes+1);
+                nbLikes.setText(post.getLikes() + " Likes");
             } else {
-                ps.minNbLikes(p);
+                post.setLikes(likes-1);
                 likeBtn.setTextFill(Paint.valueOf("#616770"));
-                nbLikes.setText(ps.getNbLikesById(post.getId_post()) + " Likes");
+                nbLikes.setText(post.getLikes() + " Likes");
             }
+            ps.updateNbLikes(post);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -111,7 +114,7 @@ public class PostController implements Initializable {
             loader.setLocation(getClass().getResource("/gestionBlog/UpdatePost.fxml"));
             loadUpdate = loader.load();
             UpdatePostController upc = loader.getController();
-            upc.getData(getPost());
+            upc.getData(post);
             ScaleTransition st = new ScaleTransition(Duration.millis(100), loadUpdate);
             st.setInterpolator(Interpolator.EASE_IN);
             st.setFromX(0);
@@ -137,6 +140,10 @@ public class PostController implements Initializable {
         try {
             cs.deleteComntsByPostId(post.getId_post());
             ps.delete(post.getId_post());
+            blogController.getAllFromDB();
+            Alert a = new Alert(Alert.AlertType.INFORMATION);
+            a.setContentText("post is deleted!");
+            a.showAndWait();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -149,11 +156,12 @@ public class PostController implements Initializable {
         post = p;
         captionTxt.setText(post.getContent());
         nbLikes.setText(post.getLikes() + " Likes");
-        nbComnts.setText(post.getLikes() + " Comments");
-        Image imgP = new Image(new File("src/assets/profileuploads/"+post.getPhoto()).toURI().toString());
+        comnts = post.getNbComnts();
+        nbComnts.setText(comnts + " Comments");
+        Image imgP = new Image(new File("src/assets/profileuploads/" + post.getPhoto()).toURI().toString());
         imgPost.setImage(imgP);
         dateTxt.setText(post.getDate().toString());
-        if (post.getUser_id() != GlobalVar.getUser().getId()){
+        if (post.getUser_id() != GlobalVar.getUser().getId()) {
             editPost.setVisible(false);
             editPost.setManaged(false);
         }
@@ -185,15 +193,19 @@ public class PostController implements Initializable {
     //*************************************CMNTS HANDLER*************************************
 
     public void getAllComments(int idPost) {
+        if (!comntsList.getChildren().isEmpty()){
+            comntsList.getChildren().remove(0,comntsList.getChildren().size());
+        }
         try {
             List<Commentaire> commentaireList = new ArrayList<>(cs.getAllCommentsByPostId(idPost));
             for (Commentaire commentaire : commentaireList) {
                 FXMLLoader fxmlLoader = new FXMLLoader();
                 fxmlLoader.setLocation(getClass().getResource("/gestionBlog/commentTemplate.fxml"));
                 VBox vBox = fxmlLoader.load();
-                CommentTemplateController commentTemplateController = fxmlLoader.getController();
-                commentTemplateController.setComment(commentaire);
+                commentTemplateController = fxmlLoader.getController();
+                commentTemplateController.setComment(commentaire, post);
                 comntsList.getChildren().add(vBox);
+                nbComnts.setText(comnts + " Comments");
             }
         } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -208,10 +220,10 @@ public class PostController implements Initializable {
         Commentaire commentaire = new Commentaire(GlobalVar.getUser().getId(), post.getId_post(), comntContent.getText(), java.sql.Date.valueOf(date), 0);
         try {
             cs.add(commentaire);
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Info");
-            alert.setContentText("post added");
-            alert.show();
+            comnts++;
+            nbComnts.setText(comnts + " Comments");
+            post.setNbComnts(comnts);
+            ps.updateNbComnts(post);
             if (!comntListContainer.isVisible()) {
                 comntListContainer.setVisible(true);
                 comntListContainer.setManaged(true);
@@ -243,6 +255,7 @@ public class PostController implements Initializable {
             comntsList.getChildren().remove(0, comntsList.getChildren().size());
             getAllComments(post.getId_post());
         }
+        commentTemplateController.setPostController(this);
     }
 
     @Override

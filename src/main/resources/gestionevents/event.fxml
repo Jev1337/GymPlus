@@ -5,10 +5,12 @@
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.effect.Glow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -18,19 +20,35 @@
 <?import javafx.scene.paint.Stop?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="mainPane" prefHeight="779.0" prefWidth="1153.0" style="-fx-background-color: linear-gradient(to bottom right, lightgray, floralwhite);;" stylesheets="@event.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionevents.eventfController">
-    <stylesheets>
-        <URL value="@event.css" />
-    </stylesheets>
+<AnchorPane fx:id="mainPane" prefHeight="835.0" prefWidth="1153.0" style="-fx-background-color: -color-bg-subtle;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionevents.eventfController">
     <children>
-        <Pane fx:id="event_points" layoutX="59.0" layoutY="44.0" prefHeight="730.0" prefWidth="1051.0" style="-fx-background-radius: 20; -fx-background-color: light gray;" visible="false">
+        <Pane fx:id="event_points" layoutX="59.0" layoutY="44.0" prefHeight="730.0" prefWidth="1051.0" styleClass="pane">
             <children>
-                <Label layoutX="335.0" layoutY="34.0" prefHeight="96.0" prefWidth="382.0" text="Reward  Hub" textAlignment="CENTER">
+                <Label layoutX="332.0" layoutY="32.0" prefHeight="96.0" prefWidth="382.0" text="Reward  Hub" textAlignment="CENTER">
                     <font>
                         <Font size="66.0" />
                     </font>
+               <effect>
+                  <Glow />
+               </effect>
+               <textFill>
+                  <LinearGradient endX="1.0" endY="1.0" startX="0.8560605911594449">
+                     <stops>
+                        <Stop>
+                           <color>
+                              <Color green="0.2582908570766449" blue="1.0" />
+                           </color>
+                        </Stop>
+                        <Stop offset="1.0">
+                           <color>
+                              <Color red="0.20713450014591217" green="0.34558284282684326" blue="0.7263157963752747" />
+                           </color>
+                        </Stop>
+                     </stops>
+                  </LinearGradient>
+               </textFill>
                 </Label>
-                <Pane fx:id="whey_pane" layoutX="107.0" layoutY="150.0" prefHeight="497.0" prefWidth="242.0" style="-fx-background-color: lightblue; -fx-background-radius: 60;">
+                <Pane fx:id="whey_pane" layoutX="107.0" layoutY="150.0" prefHeight="497.0" prefWidth="242.0" styleClass="subpane">
                     <children>
                         <ImageView fitHeight="239.0" fitWidth="254.0" layoutX="2.0" layoutY="229.0" pickOnBounds="true" preserveRatio="true">
                             <image>
@@ -47,13 +65,13 @@
                                 <Font size="20.0" />
                             </font>
                         </Label>
-                        <Button fx:id="whey_btn" layoutX="82.0" layoutY="159.0" mnemonicParsing="false" onAction="#claim_whey" style="-fx-background-radius: 40; -fx-background-color: turquoise;" text="Claim">
+                        <Button fx:id="whey_btn" layoutX="82.0" layoutY="159.0" mnemonicParsing="false" onAction="#claim_whey" styleClass="rounded" text="Claim">
                      <font>
                         <Font size="24.0" />
                      </font></Button>
                     </children>
                 </Pane>
-                <Pane fx:id="belt_pane" layoutX="418.0" layoutY="147.0" prefHeight="497.0" prefWidth="242.0" style="-fx-background-color: lightblue; -fx-background-radius: 60;">
+                <Pane fx:id="belt_pane" layoutX="425.0" layoutY="156.0" prefHeight="497.0" prefWidth="242.0" styleClass="subpane">
                     <children>
                         <Label layoutX="32.0" layoutY="34.0" text="GymPlus Belt">
                             <font>
@@ -65,7 +83,7 @@
                                 <Font size="20.0" />
                             </font>
                         </Label>
-                        <Button fx:id="belt_btn" layoutX="79.0" layoutY="163.0" mnemonicParsing="false" onAction="#claim_belt" style="-fx-background-radius: 40; -fx-background-color: turquoise;" text="Claim">
+                        <Button fx:id="belt_btn" layoutX="79.0" layoutY="163.0" mnemonicParsing="false" onAction="#claim_belt" styleClass="rounded" text="Claim">
                      <font>
                         <Font size="24.0" />
                      </font></Button>
@@ -76,7 +94,7 @@
                   </ImageView>
                     </children>
                 </Pane>
-                <Pane fx:id="bag_pane" layoutX="737.0" layoutY="155.0" prefHeight="497.0" prefWidth="242.0" style="-fx-background-color: lightblue; -fx-background-radius: 60;">
+                <Pane fx:id="bag_pane" layoutX="737.0" layoutY="155.0" prefHeight="497.0" prefWidth="242.0" styleClass="subpane">
                     <children>
                         <Label layoutX="39.0" layoutY="14.0" prefHeight="61.0" prefWidth="171.0" text="GymPlus Bag">
                             <font>
@@ -88,7 +106,7 @@
                                 <Font size="20.0" />
                             </font>
                         </Label>
-                        <Button fx:id="bag_btn" layoutX="79.0" layoutY="149.0" mnemonicParsing="false" onAction="#claim_bag" style="-fx-background-radius: 40; -fx-background-color: turquoise;" text="Claim">
+                        <Button fx:id="bag_btn" layoutX="79.0" layoutY="149.0" mnemonicParsing="false" onAction="#claim_bag" styleClass="rounded" text="Claim">
                      <font>
                         <Font size="24.0" />
                      </font></Button>
@@ -99,12 +117,12 @@
                   </ImageView>
                     </children>
                 </Pane>
-            <Button fx:id="events" layoutX="872.0" layoutY="54.0" mnemonicParsing="false" onAction="#back_to_events" text="&lt;- Events" />
+            <Button fx:id="events" layoutX="27.0" layoutY="18.0" mnemonicParsing="false" onAction="#back_to_events" text="&lt;- Events" />
             </children></Pane>
-        <Pane fx:id="event_pane" layoutX="70.0" layoutY="56.0" prefHeight="723.0" prefWidth="1027.0" style="-fx-background-radius: 10; -fx-background-color: lightgreen4;">
+        <Pane fx:id="event_pane" layoutX="70.0" layoutY="56.0" prefHeight="723.0" prefWidth="1077.0" visible="false">
             <children>
-                <Label fx:id="countdownLabel" layoutX="374.0" layoutY="563.0" prefHeight="52.0" prefWidth="336.0" />
-                <Button fx:id="join_id" layoutX="403.0" layoutY="625.0" mnemonicParsing="false" onAction="#join_event" prefHeight="62.0" prefWidth="162.0" text="Join">
+                <Label fx:id="countdownLabel" layoutX="345.0" layoutY="127.0" prefHeight="52.0" prefWidth="336.0" />
+                <Button fx:id="join_id" layoutX="307.0" layoutY="596.0" mnemonicParsing="false" onAction="#join_event" prefHeight="5.0" prefWidth="124.0" text="Join" textAlignment="CENTER">
                     <font>
                         <Font size="30.0" />
                     </font>
@@ -124,7 +142,7 @@
                   <DropShadow />
                </effect>
                 </TableView>
-                <Label layoutX="43.0" layoutY="165.0" text="Search">
+                <Label layoutX="64.0" layoutY="163.0" text="Search">
                <font>
                   <Font name="System Bold" size="21.0" />
                </font>
@@ -144,20 +162,23 @@
                      </stops>
                   </LinearGradient>
                </textFill></Label>
-                <TextField fx:id="search_id" layoutX="42.0" layoutY="194.0" onKeyTyped="#search" promptText="Search For Events">
+                <TextField fx:id="search_id" layoutX="65.0" layoutY="193.0" onKeyTyped="#search" promptText="Search For Events">
                <effect>
                   <DropShadow />
                </effect></TextField>
-            <Button fx:id="rewards" layoutX="881.0" layoutY="656.0" mnemonicParsing="false" onAction="#go_to_rewards" prefHeight="44.0" prefWidth="136.0" text="Rewards -&gt;">
+            <Button fx:id="rewards" layoutX="931.0" layoutY="658.0" mnemonicParsing="false" onAction="#go_to_rewards" prefHeight="44.0" prefWidth="136.0" text="Rewards -&gt;">
                <effect>
                   <DropShadow />
-               </effect></Button>
-            <ListView fx:id="list_events" layoutX="306.0" layoutY="244.0" prefHeight="312.0" prefWidth="333.0">
+               </effect>
+               <font>
+                  <Font size="14.0" />
+               </font></Button>
+            <ListView fx:id="list_events" layoutX="65.0" layoutY="245.0" prefHeight="312.0" prefWidth="620.0" style="-fx-background-radius: 20;">
                <effect>
                   <DropShadow />
                </effect></ListView>
-            <CheckBox fx:id="check_table" layoutX="372.0" layoutY="210.0" mnemonicParsing="false" onAction="#switch_to_table" text="Table" />
-            <ImageView fx:id="image_cover_event" fitHeight="190.0" fitWidth="1174.0" layoutX="-73.0" layoutY="-58.0" pickOnBounds="true" preserveRatio="true">
+            <CheckBox fx:id="check_table" layoutX="372.0" layoutY="210.0" mnemonicParsing="false" onAction="#switch_to_table" text="Table" visible="false" />
+            <ImageView fx:id="image_cover_event" fitHeight="190.0" fitWidth="1168.0" layoutX="-73.0" layoutY="-58.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../assets/images/eventsclient.png" />
                </image>
@@ -165,7 +186,7 @@
                   <DropShadow />
                </effect>
             </ImageView>
-                <Label fx:id="points_label" layoutX="831.0" layoutY="156.0" prefHeight="36.0" prefWidth="187.0" textFill="#f2f2f2">
+                <Label fx:id="points_label" layoutX="831.0" layoutY="156.0" prefHeight="36.0" prefWidth="187.0" styleClass="subpane" textFill="#f2f2f2">
                <font>
                   <Font size="27.0" />
                </font>
@@ -173,8 +194,34 @@
                   <DropShadow />
                </effect>
             </Label>
-            <CheckBox fx:id="myevents" layoutX="612.0" layoutY="210.0" mnemonicParsing="false" onAction="#switchtomyevents" text="my events" />
+            <CheckBox fx:id="myevents" layoutX="324.0" layoutY="212.0" mnemonicParsing="false" onAction="#switchtomyevents" text="my events" />
+            <Button fx:id="history_btn" layoutX="-34.0" layoutY="665.0" mnemonicParsing="false" onAction="#go_to_history" prefHeight="39.0" prefWidth="93.0" text="History" />
+            <ImageView fitHeight="234.0" fitWidth="342.0" layoutX="731.0" layoutY="267.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../assets/images/sport-sports-png-transparent-images-30-removebg-preview.png" />
+               </image>
+            </ImageView>
             </children>
         </Pane>
+      <Pane fx:id="history" prefHeight="779.0" prefWidth="1153.0" style="-fx-background-color: -color-bg-default;" visible="false">
+         <children>
+            <ScrollPane layoutX="396.0" layoutY="113.0">
+               <content>
+                  <ListView fx:id="list_events1" prefHeight="312.0" prefWidth="333.0">
+                     <effect>
+                        <DropShadow />
+                     </effect>
+                  </ListView>
+               </content>
+            </ScrollPane>
+            <Button fx:id="rate" layoutX="525.0" layoutY="485.0" mnemonicParsing="false" onAction="#rate_event" text="Rate" />
+            <Button fx:id="backtoeventpane1" mnemonicParsing="false" onAction="#back_toeventsss" text="Button" />
+         </children>
+      </Pane>
+      <Pane layoutX="1.0" layoutY="772.0" prefHeight="63.0" prefWidth="1154.0" style="-fx-background-color: linear-gradient(to right, #00aaff, #00627f);" />
     </children>
+   <stylesheets>
+      <URL value="@../assets/css/dashboard.css" />
+      <URL value="@event.css" />
+   </stylesheets>
 </AnchorPane>

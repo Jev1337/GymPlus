@@ -367,6 +367,57 @@ public class EquipementController {
 
     }
 
+    private void sendEquipMailAdmins(int ide) {
+        try {
+            String mail = "gymplus-noreply@grandelation.com";
+            String password = "yzDvS_UoSL7b";
+            List<String> emails = new AdminService().getAllAdminsEmails();
+            String to = String.join(",", emails);
+            String subject = "Maintenance Alert";
+            //the body will be "index.html" inside src/assets/html
+            File file = new File("src/assets/html/index.html");
+            String body = "";
+            body = new String(java.nio.file.Files.readAllBytes(file.toPath()));
+            body = body.replace("{E1}", String.valueOf(ide));
+            String host = "mail.grandelation.com";
+
+            Properties props = new Properties();
+            props.put("mail.smtp.host", host);
+            props.put("mail.debug", "true");
+            props.put("mail.smtp.auth", "true");
+            props.put("mail.smtp.ssl.enable", "true");
+            props.put("mail.smtp.port", "465");
+
+            Session session = Session.getInstance(props, null);
+            MimeMessage msg = new MimeMessage(session);
+            msg.setFrom(mail);
+            msg.setRecipients(Message.RecipientType.TO, to);
+            msg.setSubject(subject);
+            msg.setSentDate(new Date());
+
+            Multipart multipart = new MimeMultipart();
+            MimeBodyPart htmlPart = new MimeBodyPart();
+            htmlPart.setContent(body, "text/html");
+            multipart.addBodyPart(htmlPart);
+
+            MimeBodyPart attachment = new MimeBodyPart();
+            attachment.attachFile("src/assets/html/assets/image-5.png");
+            attachment.setContentID("<image-5>");
+            attachment.setDisposition(MimeBodyPart.INLINE);
+            multipart.addBodyPart(attachment);
+
+            msg.setContent(multipart);
+
+            Transport.send(msg, mail, password);
+
+        }catch (Exception e){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setContentText(e.getMessage());
+            alert.showAndWait();
+        }
+    }
+
     @FXML
     void deleteMaint(ActionEvent event) {
         try {

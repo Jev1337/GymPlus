@@ -24,6 +24,7 @@ import javafx.scene.text.TextFlow;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import clientMessanger.Client;
+import serverMessanger.Server;
 import services.gestonblog.PostServices;
 import java.io.File;
 import java.io.IOException;
@@ -49,7 +50,18 @@ public class BlogController {
     private Label photo_tf;
     @FXML
     private Text username;
-
+    @FXML
+    private Label clientName;
+    @FXML
+    private Label clientName1;
+    @FXML
+    private Label clientName2;
+    @FXML
+    private Label clientName3;
+    @FXML
+    private Label clientName4;
+    private String nameClient;
+    private Server server;
     private final PostServices ps = new PostServices();
     private final UpdatePostController updatePostController = new UpdatePostController();
     private PostController pc = new PostController();
@@ -131,24 +143,42 @@ public class BlogController {
         }
     }
 
-    @FXML
-    public void addUserBtn() throws IOException {
+    void showMessages(String name) throws IOException {
         Stage primaryStage = new Stage();
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gestionBlog/ClientForm.fxml"));
 
         ClientMessangerController controller = new ClientMessangerController();
-        controller.setClientName(GlobalVar.getUser().getUsername()); // Set the parameter
+        controller.setClientName(name); // Set the parameter
         fxmlLoader.setController(controller);
 
         primaryStage.setScene(new Scene(fxmlLoader.load()));
         primaryStage.setTitle("Client");
         primaryStage.setResizable(false);
         primaryStage.centerOnScreen();
-        primaryStage.setOnCloseRequest(windowEvent -> {
+        /*primaryStage.setOnCloseRequest(windowEvent -> {
             controller.shutdown();
-        });
+        });*/
         primaryStage.show();
-
+    }
+    @FXML
+    public void addUserBtn() throws IOException {
+        showMessages(clientName.getText());
+    }
+    @FXML
+    public void addUserBtn1() throws IOException {
+        showMessages(clientName1.getText());
+    }
+    @FXML
+    public void addUserBtn2() throws IOException {
+        showMessages(clientName2.getText());
+    }
+    @FXML
+    public void addUserBtn3() throws IOException {
+        showMessages(clientName3.getText());
+    }
+    @FXML
+    public void addUserBtn4() throws IOException {
+        showMessages(clientName4.getText());
     }
     public void initialize() {
 
@@ -164,5 +194,14 @@ public class BlogController {
         updatePostController.setBlogControllerUpdate(this);
         //Messanger Handler: Client
         clientMessangerController.setClientName(GlobalVar.getUser().getUsername());
+        new Thread(() -> {
+            try {
+                server = Server.getInstance();
+                server.makeSocket();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }).start();
+
     }
 }

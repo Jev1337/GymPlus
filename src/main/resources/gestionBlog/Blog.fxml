@@ -126,12 +126,121 @@
                   <Insets right="20.0" />
                </padding>
                 </ScrollPane>
+            <Pane prefWidth="1.0" style="-fx-background-color: #DDDDDD;" />
                 <Pane layoutX="10.0" layoutY="10.0" minHeight="520.0" prefHeight="520.0" prefWidth="250.0" styleClass="bodyBackground" HBox.hgrow="ALWAYS">
                <padding>
                   <Insets left="10.0" right="10.0" />
                </padding>
                <children>
-                  <Button layoutX="108.0" layoutY="35.0" mnemonicParsing="false" onAction="#addUserBtn" text="Button" />
+                  <VBox alignment="TOP_CENTER" prefHeight="587.0" prefWidth="265.0">
+                     <children>
+                        <HBox alignment="CENTER_LEFT" onMouseClicked="#addUserBtn" prefHeight="66.0" prefWidth="266.0" spacing="20.0">
+                           <children>
+                              <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../assets/images/iyed.jpg" />
+                                 </image>
+                              </ImageView>
+                              <Label fx:id="clientName" text="Iyed">
+                                 <font>
+                                    <Font name="Segoe UI Semibold" size="14.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <padding>
+                              <Insets left="20.0" right="20.0" />
+                           </padding>
+                        </HBox>
+                        <Pane prefHeight="1.0" prefWidth="200.0" style="-fx-background-color: #DDDDDD;">
+                           <VBox.margin>
+                              <Insets left="10.0" right="10.0" />
+                           </VBox.margin>
+                        </Pane>
+                        <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="10.0" onMouseClicked="#addUserBtn1" prefHeight="66.0" prefWidth="266.0" spacing="20.0">
+                           <children>
+                              <ImageView fitHeight="40.0" fitWidth="40.0" onMouseClicked="#addUserBtn" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../assets/images/rania.jpg" />
+                                 </image>
+                              </ImageView>
+                              <Label fx:id="clientName1" text="Rania">
+                                 <font>
+                                    <Font name="Segoe UI Semibold" size="14.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <padding>
+                              <Insets left="20.0" right="20.0" />
+                           </padding>
+                        </HBox>
+                        <Pane layoutX="10.0" layoutY="76.0" prefHeight="1.0" prefWidth="200.0" style="-fx-background-color: #DDDDDD;">
+                           <VBox.margin>
+                              <Insets left="10.0" right="10.0" />
+                           </VBox.margin>
+                        </Pane>
+                        <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="76.0" onMouseClicked="#addUserBtn2" prefHeight="66.0" prefWidth="266.0" spacing="20.0">
+                           <children>
+                              <ImageView fitHeight="40.0" fitWidth="40.0" onMouseClicked="#addUserBtn" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../assets/images/arij.jpg" />
+                                 </image>
+                              </ImageView>
+                              <Label fx:id="clientName2" text="Arij">
+                                 <font>
+                                    <Font name="Segoe UI Semibold" size="14.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <padding>
+                              <Insets left="20.0" right="20.0" />
+                           </padding>
+                        </HBox>
+                        <Pane layoutX="10.0" layoutY="144.0" prefHeight="1.0" prefWidth="200.0" style="-fx-background-color: #DDDDDD;">
+                           <VBox.margin>
+                              <Insets left="10.0" right="10.0" />
+                           </VBox.margin>
+                        </Pane>
+                        <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="143.0" onMouseClicked="#addUserBtn3" prefHeight="66.0" prefWidth="266.0" spacing="20.0">
+                           <children>
+                              <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../assets/images/ELHOS.jpeg" />
+                                 </image>
+                              </ImageView>
+                              <Label fx:id="clientName3" text="Houssem">
+                                 <font>
+                                    <Font name="Segoe UI Semibold" size="14.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <padding>
+                              <Insets left="20.0" right="20.0" />
+                           </padding>
+                        </HBox>
+                        <Pane layoutX="10.0" layoutY="212.0" prefHeight="1.0" prefWidth="200.0" style="-fx-background-color: #DDDDDD;">
+                           <VBox.margin>
+                              <Insets left="10.0" right="10.0" />
+                           </VBox.margin>
+                        </Pane>
+                        <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="209.0" onMouseClicked="#addUserBtn4" prefHeight="66.0" prefWidth="266.0" spacing="20.0">
+                           <children>
+                              <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../assets/images/ilyes.jpg" />
+                                 </image>
+                              </ImageView>
+                              <Label fx:id="clientName4" text="Ilyes">
+                                 <font>
+                                    <Font name="Segoe UI Semibold" size="14.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <padding>
+                              <Insets left="20.0" right="20.0" />
+                           </padding>
+                        </HBox>
+                     </children>
+                  </VBox>
                </children></Pane>
             </children>
         </HBox>

@@ -155,6 +155,9 @@ public class EquipementController {
             String name = add_name.getText().trim();
             String description = add_desc.getText().trim();
             String lifeSpan = add_lp.getText().trim();
+            if (!lifeSpan.matches("[0-9]+")) {
+                throw new IllegalArgumentException("Life Span must be a number");
+            }
 
             // Check if name is empty
             if (name.isEmpty()) {
@@ -258,7 +261,7 @@ public class EquipementController {
                 hBox.setCursor(Cursor.HAND);
                 hBox.setSpacing(200);
                 hBox.setPrefHeight(50);
-                hBox.setStyle("-fx-background-color: #f4f4f4; -fx-border-color: transparent  linear-gradient(to right, #00aaff, #00688b)  linear-gradient(to right, #00aaff, #00688b)  linear-gradient(to right, #00aaff, #00688b);");
+                hBox.setStyle("-fx-background-color: -color-bg-inset; -fx-border-color: transparent  linear-gradient(to right, #00aaff, #00688b)  linear-gradient(to right, #00aaff, #00688b)  linear-gradient(to right, #00aaff, #00688b);");
                 var id = new Label("ID: " + equip.getId());
                 id.setStyle("-fx-font-weight: bold; -fx-font-size: 14px");
                 var name = new Label("Name: " + equip.getName());
@@ -283,19 +286,19 @@ public class EquipementController {
                     if (selectedEquipement != null && selectedEquipement.getId() == equip.getId()) {
                         hBox.setStyle("-fx-background-color: #2196f3; -fx-border-color: transparent  linear-gradient(to right, #00aaff, #00688b) linear-gradient(to right, #00aaff, #00688b) linear-gradient(to right, #00aaff, #00688b); -fx-border-radius: 5px;");
                     }else
-                        hBox.setStyle("-fx-background-color: #f4f4f4; -fx-border-color: transparent linear-gradient(to right, #00aaff, #00688b) linear-gradient(to right, #00aaff, #00688b) linear-gradient(to right, #00aaff, #00688b); -fx-border-radius: 5px;");
+                        hBox.setStyle("-fx-background-color: -color-bg-inset; -fx-border-color: transparent linear-gradient(to right, #00aaff, #00688b) linear-gradient(to right, #00aaff, #00688b) linear-gradient(to right, #00aaff, #00688b); -fx-border-radius: 5px;");
                 });
                 hBox.setOnMouseExited(e -> {
                     if (selectedEquipement != null && selectedEquipement.getId() == equip.getId()) {
                         hBox.setStyle("-fx-background-color: #2196f3; -fx-border-color: transparent linear-gradient(to right, #00aaff, #00688b) linear-gradient(to right, #00aaff, #00688b) linear-gradient(to right, #00aaff, #00688b);-fx-border-radius: 5px;");
                     }else
-                        hBox.setStyle("-fx-background-color: #f4f4f4; -fx-border-color: transparent linear-gradient(to right, #00aaff, #00688b) linear-gradient(to right, #00aaff, #00688b) linear-gradient(to right, #00aaff, #00688b); -fx-border-radius: 5px;");
+                        hBox.setStyle("-fx-background-color: -color-bg-inset; -fx-border-color: transparent linear-gradient(to right, #00aaff, #00688b) linear-gradient(to right, #00aaff, #00688b) linear-gradient(to right, #00aaff, #00688b); -fx-border-radius: 5px;");
                 });
                 hBox.setOnMouseClicked(e -> {
                     selectedEquipement = equip;
                     for(Node node : eqlist_vbox.getChildren()){
                         if (node instanceof HBox && node != hBox){
-                            node.setStyle("-fx-background-color: #f4f4f4; -fx-border-color: transparent linear-gradient(to right, #00aaff, #00688b) linear-gradient(to right, #00aaff, #00688b) linear-gradient(to right, #00aaff, #00688b);-fx-border-radius: 5px;");
+                            node.setStyle("-fx-background-color: -color-bg-inset; -fx-border-color: transparent linear-gradient(to right, #00aaff, #00688b) linear-gradient(to right, #00aaff, #00688b) linear-gradient(to right, #00aaff, #00688b);-fx-border-radius: 5px;");
                         }
                     }
                     hBox.setStyle("-fx-background-color: #2196f3; -fx-border-color: transparent linear-gradient(to right, #00aaff, #00688b) linear-gradient(to right, #00aaff, #00688b) linear-gradient(to right, #00aaff, #00688b); -fx-border-radius: 5px;");
@@ -349,6 +352,9 @@ public class EquipementController {
             LocalDate date = add_date.getValue();
             if (date == null) {
                 throw new IllegalArgumentException("Date must be selected.");
+            }
+            if (date.isAfter(LocalDate.now())) {
+                throw new IllegalArgumentException("Date must be before today.");
             }
             java.sql.Date sqlAddDate = java.sql.Date.valueOf(date);
 
@@ -514,7 +520,7 @@ public class EquipementController {
                 hBox.setCursor(Cursor.HAND);
                 hBox.setSpacing(200);
                 hBox.setPrefHeight(50);
-                hBox.setStyle("-fx-background-color: #f4f4f4; -fx-border-color: transparent  linear-gradient(to right, #00aaff, #00688b)  linear-gradient(to right, #00aaff, #00688b)  linear-gradient(to right, #00aaff, #00688b);");
+                hBox.setStyle("-fx-background-color: -color-bg-inset; -fx-border-color: transparent  linear-gradient(to right, #00aaff, #00688b)  linear-gradient(to right, #00aaff, #00688b)  linear-gradient(to right, #00aaff, #00688b);");
                 var idm = new Label("ID: " + maint.getIdm());
                 idm.setStyle("-fx-font-weight: bold; -fx-font-size: 14px");
                 var ide = new Label("Equipment ID: " + maint.getIde());
@@ -535,19 +541,19 @@ public class EquipementController {
                     if (selectedMaint != null && selectedMaint.getIdm() == maint.getIdm()) {
                         hBox.setStyle("-fx-background-color: #2196f3; -fx-border-color: transparent  linear-gradient(to right, #00aaff, #00688b) linear-gradient(to right, #00aaff, #00688b) linear-gradient(to right, #00aaff, #00688b);-fx-border-radius: 5px;");
                     }else
-                        hBox.setStyle("-fx-background-color: #f4f4f4; -fx-border-color: transparent linear-gradient(to right, #00aaff, #00688b) linear-gradient(to right, #00aaff, #00688b) linear-gradient(to right, #00aaff, #00688b); -fx-border-radius: 5px;");
+                        hBox.setStyle("-fx-background-color: -color-bg-inset; -fx-border-color: transparent linear-gradient(to right, #00aaff, #00688b) linear-gradient(to right, #00aaff, #00688b) linear-gradient(to right, #00aaff, #00688b); -fx-border-radius: 5px;");
                 });
                 hBox.setOnMouseExited(e -> {
                     if (selectedMaint != null && selectedMaint.getIdm() == maint.getIdm()){
                         hBox.setStyle("-fx-background-color: #2196f3; -fx-border-color: transparent linear-gradient(to right, #00aaff, #00688b) linear-gradient(to right, #00aaff, #00688b) linear-gradient(to right, #00aaff, #00688b);-fx-border-radius: 5px;");
                     }else
-                        hBox.setStyle("-fx-background-color: #f4f4f4; -fx-border-color: transparent linear-gradient(to right, #00aaff, #00688b) linear-gradient(to right, #00aaff, #00688b) linear-gradient(to right, #00aaff, #00688b); -fx-border-radius: 5px;");
+                        hBox.setStyle("-fx-background-color: -color-bg-inset; -fx-border-color: transparent linear-gradient(to right, #00aaff, #00688b) linear-gradient(to right, #00aaff, #00688b) linear-gradient(to right, #00aaff, #00688b); -fx-border-radius: 5px;");
                 });
                 hBox.setOnMouseClicked(e -> {
                     selectedMaint = maint;
                     for(Node node : maintlist_vbox.getChildren()){
                         if (node instanceof HBox && node != hBox){
-                            node.setStyle("-fx-background-color: #f4f4f4; -fx-border-color: transparent linear-gradient(to right, #00aaff, #00688b) linear-gradient(to right, #00aaff, #00688b) linear-gradient(to right, #00aaff, #00688b);-fx-border-radius: 5px;");
+                            node.setStyle("-fx-background-color: -color-bg-inset; -fx-border-color: transparent linear-gradient(to right, #00aaff, #00688b) linear-gradient(to right, #00aaff, #00688b) linear-gradient(to right, #00aaff, #00688b);-fx-border-radius: 5px;");
                         }
                     }
                     hBox.setStyle("-fx-background-color: #2196f3; -fx-border-color: transparent linear-gradient(to right, #00aaff, #00688b) linear-gradient(to right, #00aaff, #00688b) linear-gradient(to right, #00aaff, #00688b); -fx-border-radius: 5px;");
@@ -605,6 +611,9 @@ public class EquipementController {
                 String name = add_name1.getText().trim();
                 String description = add_desc1.getText().trim();
                 String lifeSpan = add_lp1.getText().trim();
+                if (!lifeSpan.matches("[0-9]+")) {
+                    throw new IllegalArgumentException("Life Span must be a number");
+                }
 
                 // Check if name is empty
                 if (name.isEmpty()) {
@@ -662,11 +671,15 @@ public class EquipementController {
         try {
             if (selectedMaint != null) {
                 LocalDate maintenanceDate = add_date1.getValue();
+
                 String status = add_status1.getText().trim();
 
-                // Check if maintenance date is empty
                 if (maintenanceDate == null) {
                     throw new IllegalArgumentException("Maintenance Date must not be empty");
+                }
+
+                if (maintenanceDate.isAfter(LocalDate.now())) {
+                    throw new IllegalArgumentException("Maintenance Date must not be in the future");
                 }
 
                 // Check if status is empty

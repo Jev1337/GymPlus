@@ -2241,8 +2241,8 @@ public class AdminDashboardController {
         content.setMaxWidth(Double.MAX_VALUE);
         content.add(new Label("Full stacktrace:"), 0, 0);
         content.add(textArea, 0, 1);
-
-        alert.initOwner(AdminInfoPane.getScene().getWindow());
+        if (AdminInfoPane != null && AdminInfoPane.getScene() != null && AdminInfoPane.getScene().getWindow() != null)
+            alert.initOwner(AdminInfoPane.getScene().getWindow());
         alert.getDialogPane().setExpandableContent(content);
         alert.showAndWait();
     }

@@ -155,4 +155,18 @@ public class AbonnementService implements IService<Abonnement> {
         }
         return income;
     }
+    public int getTotalMonths(int idUser){
+        String query = "SELECT SUM(IF(type = 'GP 1', 3, IF(type = 'GP 2', 6, 12))) as total FROM abonnement WHERE user_id = ?";
+        try {
+            PreparedStatement pst = connection.prepareStatement(query);
+            pst.setInt(1, idUser);
+            ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("total");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
 }

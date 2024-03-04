@@ -22,7 +22,7 @@
 
 <AnchorPane fx:id="mainPane" prefHeight="835.0" prefWidth="1153.0" style="-fx-background-color: -color-bg-subtle;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionevents.eventfController">
     <children>
-        <Pane fx:id="event_points" layoutX="59.0" layoutY="44.0" prefHeight="730.0" prefWidth="1051.0" styleClass="pane">
+        <Pane fx:id="event_points" layoutX="59.0" layoutY="44.0" prefHeight="730.0" prefWidth="1051.0" styleClass="pane" visible="false">
             <children>
                 <Label layoutX="332.0" layoutY="32.0" prefHeight="96.0" prefWidth="382.0" text="Reward  Hub" textAlignment="CENTER">
                     <font>
@@ -119,7 +119,7 @@
                 </Pane>
             <Button fx:id="events" layoutX="27.0" layoutY="18.0" mnemonicParsing="false" onAction="#back_to_events" text="&lt;- Events" />
             </children></Pane>
-        <Pane fx:id="event_pane" layoutX="70.0" layoutY="56.0" prefHeight="723.0" prefWidth="1077.0" visible="false">
+        <Pane fx:id="event_pane" layoutX="70.0" layoutY="56.0" prefHeight="723.0" prefWidth="1077.0">
             <children>
                 <Label fx:id="countdownLabel" layoutX="345.0" layoutY="127.0" prefHeight="52.0" prefWidth="336.0" />
                 <Button fx:id="join_id" layoutX="307.0" layoutY="596.0" mnemonicParsing="false" onAction="#join_event" prefHeight="5.0" prefWidth="124.0" text="Join" textAlignment="CENTER">

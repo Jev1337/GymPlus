@@ -111,9 +111,6 @@ public class AdminDashboardController {
     private Pane usermgmt_pane;
 
     @FXML
-    private ScrollPane AdminBlogPane;
-
-    @FXML
     private ScrollPane AdminEquipmentManagementPane;
 
     @FXML
@@ -163,9 +160,6 @@ public class AdminDashboardController {
 
     @FXML
     private Pane bars_pane;
-
-    @FXML
-    private Button blog_btn;
 
     @FXML
     private TableColumn<?, ?> cincol;
@@ -686,16 +680,6 @@ public class AdminDashboardController {
                 ));
         timeline.play();
         timeline.setOnFinished(e -> bars_btn.setDisable(false));
-    }
-
-    @FXML
-    void blog_btn_act(ActionEvent event) {
-        switchToPane(AdminBlogPane);
-    }
-
-    @FXML
-    void blog_btn_clicked(MouseEvent event) {
-        switchToPane(AdminBlogPane);
     }
 
 
@@ -1692,7 +1676,6 @@ public class AdminDashboardController {
     private void setFitToWidthAll(){
         AdminHomePane.setFitToWidth(true);
         AdminInfoPane.setFitToWidth(true);
-        AdminBlogPane.setFitToWidth(true);
         AdminEventPane.setFitToWidth(true);
         AdminSubscriptionPane.setFitToWidth(true);
         AdminEquipmentManagementPane.setFitToWidth(true);
@@ -1706,8 +1689,6 @@ public class AdminDashboardController {
             return AdminHomePane;
         if(AdminInfoPane.isVisible())
             return AdminInfoPane;
-        if(AdminBlogPane.isVisible())
-            return AdminBlogPane;
         if(AdminEventPane.isVisible())
             return AdminEventPane;
         if(AdminSubscriptionPane.isVisible())
@@ -1745,8 +1726,7 @@ public class AdminDashboardController {
         fadeInAnimation[4] = new FadeIn(subscription_btn);
         fadeInAnimation[5] = new FadeIn(users_btn);
         fadeInAnimation[6] = new FadeIn(event_btn);
-        fadeInAnimation[7] = new FadeIn(blog_btn);
-        fadeInAnimation[8] = new FadeIn(equipment_btn);
+        fadeInAnimation[7] = new FadeIn(equipment_btn);
     }
     private void visibleAll(){
         home_btn.setVisible(true);
@@ -1756,7 +1736,6 @@ public class AdminDashboardController {
         subscription_btn.setVisible(true);
         users_btn.setVisible(true);
         event_btn.setVisible(true);
-        blog_btn.setVisible(true);
         equipment_btn.setVisible(true);
     }
 
@@ -1768,7 +1747,6 @@ public class AdminDashboardController {
         subscription_btn.setVisible(false);
         users_btn.setVisible(false);
         event_btn.setVisible(false);
-        blog_btn.setVisible(false);
         equipment_btn.setVisible(false);
     }
     private void nullOpacityAll(){
@@ -1779,7 +1757,6 @@ public class AdminDashboardController {
         subscription_btn.setOpacity(0);
         users_btn.setOpacity(0);
         event_btn.setOpacity(0);
-        blog_btn.setOpacity(0);
         equipment_btn.setOpacity(0);
     }
 

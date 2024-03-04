@@ -103,8 +103,6 @@ public class ObjectifController  implements Initializable {
 
 
 
-        CaloriesGeneratorController caloriesGeneratorController = loader.getController();
-
     }
 
     public  void refreshNodeExercicesGenerator() throws IOException {
@@ -569,7 +567,6 @@ public class ObjectifController  implements Initializable {
 
                 scrollpanWeb.setVisible(false);
                 ScrollBmi_MacrosCal.setVisible(false);
-                ScrollPannelFood.setVisible(false);
                 PanePage1.setVisible(false);
                 Pane1.setVisible(false);
                 ScrollPannelFood.setVisible(false);
@@ -594,7 +591,7 @@ public class ObjectifController  implements Initializable {
                 RealTimePan.setVisible(false);
 
                 ScrollBmi_MacrosCal.setVisible(false);
-                ScrollPannelFood.setVisible(false);
+
                 PanePage1.setVisible(false);
                 Pane1.setVisible(false);
                 ScrollPannelFood.setVisible(false);
@@ -618,7 +615,6 @@ public class ObjectifController  implements Initializable {
                 RealTimePan.setVisible(false);
 
                 scrollpanWeb.setVisible(false);
-                ScrollPannelFood.setVisible(false);
                 PanePage1.setVisible(false);
                 Pane1.setVisible(false);
                 ScrollPannelFood.setVisible(false);
@@ -645,7 +641,6 @@ public class ObjectifController  implements Initializable {
 
                 scrollpanWeb.setVisible(false);
                 PaneChatBot.setVisible(false);
-                ScrollPannelFood.setVisible(false);
                 PanePage1.setVisible(false);
                 Pane1.setVisible(false);
                 ScrollPannelFood.setVisible(false);

@@ -74,11 +74,8 @@ public class CaloriesGeneratorController implements Initializable {
 
 
 
-    @FXML
-    private VBox translateVbox;
 
-    @FXML
-    private ToggleButton Tooglefr;
+
 
 
     public String translationApi(String query) throws IOException, InterruptedException {
@@ -218,33 +215,11 @@ public class CaloriesGeneratorController implements Initializable {
 
 
 
-    public  void translateButton(){
-            var toggle2 = new ToggleSwitch("French");
-        toggle2.selectedProperty().addListener((obs, old, val) -> {
-            toggle2.setText(val ? "en cours" : "French");
-            if (val) {
-           testVariable =1 ;
-             }
 
-            else{
-                testVariable = 0;
-                System.out.println("Toggle switch is NOT selected");
-
-        }
-
-            });
-
-        toggle2.setLabelPosition(HorizontalDirection.RIGHT);
-        toggle2.setSelected(false);
-
-        translateVbox.getChildren().add(toggle2);
-    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        translateVbox.getChildren().clear();
-translateButton();
 
 
     }

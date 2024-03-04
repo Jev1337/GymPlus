@@ -393,8 +393,6 @@ public class UserDashboardController {
 
     @FXML
     private Button shop_btn;
-    @FXML
-    private BarChart<String, Number> stat_barchart;
 
     @FXML
     private ComboBox<String> stat_combobox;
@@ -427,6 +425,9 @@ public class UserDashboardController {
     private ImageView faceid_change;
     @FXML
     private Label total_events;
+
+    @FXML
+    private WebView samwebview;
 
     @FXML
     private void dark_cb_act(ActionEvent event){
@@ -717,6 +718,7 @@ public class UserDashboardController {
     void close_btn_act(ActionEvent event) {
         Stage stage = (Stage) close_btn.getScene().getWindow();
         stage.close();
+        System.exit(0);
     }
     @FXML
     void minimize_btn_act(ActionEvent event) {
@@ -982,6 +984,15 @@ public class UserDashboardController {
         initGPPrices();
         String theme = Advapi32Util.registryGetStringValue(WinReg.HKEY_CURRENT_USER, "Software\\GymPlus", "theme");
         String nb_events= clientService.get_nb_events(GlobalVar.getUser().getId());
+        samwebview.getEngine().load("https://www.youtube.com/embed/mSymAF0uGK8");
+        //add event listener to prevent the webview from redirecting to another page 
+        samwebview.getEngine().getLoadWorker().stateProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == Worker.State.SUCCEEDED) {
+                if (!samwebview.getEngine().getLocation().contains("embed/mSymAF0uGK8")) {
+                    samwebview.getEngine().executeScript("window.location.href = 'https://www.youtube.com/embed/mSymAF0uGK8'");
+                }
+            }
+        });
         total_events.setText(nb_events);
         if (theme != null && theme.equals("dark")) {
             dark_cb.setSelected(true);
@@ -1253,21 +1264,6 @@ public class UserDashboardController {
         series.setName("Lorem");
         stat_linechart.getData().add(series);
 
-        XYChart.Series<String,Number> series2 = new XYChart.Series<>();
-        series2.getData().add(new XYChart.Data<>("Jan", 100));
-        series2.getData().add(new XYChart.Data<>("Feb", 200));
-        series2.getData().add(new XYChart.Data<>("Mar", 50));
-        series2.getData().add(new XYChart.Data<>("Apr", 75));
-        series2.getData().add(new XYChart.Data<>("May", 110));
-        series2.getData().add(new XYChart.Data<>("Jun", 300));
-        series2.getData().add(new XYChart.Data<>("Jul", 111));
-        series2.getData().add(new XYChart.Data<>("Aug", 30));
-        series2.getData().add(new XYChart.Data<>("Sep", 75));
-        series2.getData().add(new XYChart.Data<>("Oct", 55));
-        series2.getData().add(new XYChart.Data<>("Nov", 225));
-        series2.getData().add(new XYChart.Data<>("Dec", 99));
-        series2.setName("Ipsum");
-        stat_barchart.getData().add(series2);
     }
 
     private void errorAlert(String title, String header, String message){

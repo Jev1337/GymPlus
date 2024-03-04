@@ -558,6 +558,7 @@ public class AuthController {
     void close_btn_act(ActionEvent event) {
         Stage stage = (Stage) close_btn.getScene().getWindow();
         stage.close();
+        System.exit(0);
     }
     @FXML
     void minimize_btn_act(ActionEvent event) {

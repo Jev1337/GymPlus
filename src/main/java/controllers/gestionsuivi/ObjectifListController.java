@@ -188,8 +188,8 @@ public class ObjectifListController implements Initializable  {
                 // Add your code here to handle the action
             }
         });
-      //  toggle2.setLabelPosition(HorizontalDirection.RIGHT);
-        //toggle2.setSelected(false);
+      // toggle2.setLabelPosition(HorizontalDirection.RIGHT);
+        // toggle2.setSelected(false);
         deleteVbox.getChildren().add(toggle2);
 
     }

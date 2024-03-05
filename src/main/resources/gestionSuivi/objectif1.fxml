@@ -367,7 +367,7 @@
             </Text>
          </children>
       </Pane>
-      <Pane fx:id="Pane2Prog" layoutX="259.0" layoutY="332.0" prefHeight="93.0" prefWidth="211.0" stylesheets="@../assets/images/style.css">
+      <Pane fx:id="Pane2Prog" layoutX="259.0" layoutY="332.0" prefHeight="93.0" prefWidth="211.0" stylesheets="@../assets/images/style.css" visible="false">
          <styleClass>
             <String fx:value="border-table" />
             <String fx:value="degrade-diagonal2" />

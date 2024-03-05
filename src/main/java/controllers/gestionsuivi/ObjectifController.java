@@ -144,6 +144,7 @@ public class ObjectifController  implements Initializable {
 
     @FXML
     void SendSignalToAddfucntion(ActionEvent event) throws IOException {
+ScrollPannelFood.setVisible(false);
         PaneMiediaPlayer.setVisible(false);
         ScrollBmi_MacrosCal.setVisible(false);
         ScrollPanelExerciceGen.setVisible(false);
@@ -270,6 +271,26 @@ public class ObjectifController  implements Initializable {
     @FXML
     private VBox vboxWeb;
 
+    private void Web() throws IOException {
+        vboxWeb.getChildren().clear();
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/gestionSuivi/WebView.fxml"));
+            Node node = loader.load();
+
+            FXMLLoader loader2 = new FXMLLoader(getClass().getResource("/gestionSuivi/ExerciesFx.fxml"));
+            Node nod2 = loader2.load();
+            ExericesController exericesController = loader2.getController();
+            exericesController.setExerciceControler(this);
+            vboxWeb.getChildren().add(node);
+
+        }catch (IOException ex){
+            Logger.getLogger(ObjectifController.class.getName()).log(Level.SEVERE, null, ex);
+
+        }
+    }
+
+
     private void refreshNodesWeb() throws IOException {
         vboxWeb.getChildren().clear();
 
@@ -383,7 +404,13 @@ public class ObjectifController  implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-       try {
+        try {
+            refreshNodesWeb();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        try {
             refreshNodes();
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -529,6 +556,10 @@ public class ObjectifController  implements Initializable {
             }
         });
 
+        JoinButton.setOnAction((E) -> {
+            Animations.wobble(RealTimeTrackerButton).playFromStart();
+
+        });
 
         RealTimeTrackerButton.setOnAction((E) -> {
             Animations.wobble(RealTimeTrackerButton).playFromStart();

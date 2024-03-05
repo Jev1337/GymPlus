@@ -147,14 +147,21 @@ public class ExerciceGenController {
 
 
     public void exercicessGenerator(String muscles,String equipment) throws IOException {
-        if (muscles.isEmpty() || equipment.isEmpty()) {
-            System.out.println("Please select both muscle and equipment.");
+        if (muscles.isEmpty()) {
+            System.out.println("Please select a muscle.");
             return;
         }
 
         ExercicesVbox.getChildren().clear();
-        String uri = "https://work-out-api1.p.rapidapi.com/search?Muscles=" + muscles + "&Equipment=" + equipment;
+        String uri;
+        if (equipment.isEmpty()) {
+            uri = "https://work-out-api1.p.rapidapi.com/search?Muscles=" + muscles;
+        } else {
+            uri = "https://work-out-api1.p.rapidapi.com/search?Muscles=" + muscles + "&Equipment=" + equipment;
+        }
 
+
+        ExercicesVbox.getChildren().clear();
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(uri))
                 .header("X-RapidAPI-Key", "18ae9b5d60msh7e6247128682805p139e5djsna435480ded7c")

@@ -1,0 +1,131 @@
+.faq-content-box{
+	&.style-1{
+	    background: #F6F6F6;
+		padding:30px;
+		height: 100%;
+		display:flex;
+		flex-direction:column;
+		.dz-title{
+			font-family: var(--font-family-title);
+			font-size: 24px;
+			font-weight: 700;
+			margin-bottom:10px;
+		}
+		p{
+		font-size: 15px;
+		}
+		.faq-link {
+			margin-top:auto;
+			color:var(--title);
+			svg{
+				margin-right:8px;
+			}
+		}
+	}
+}
+.faq-head{
+	margin-bottom:40px;
+	.faq-head-section{
+		.title{
+			font-family: var(--font-family-title);
+			font-size: 45px;
+			font-style: italic;
+			font-weight: 900;
+			@include respond ('phone-land'){
+				font-size: 30px;
+			}
+		}
+		.text{
+			font-size: 15px;
+			font-style: normal;
+			font-weight: 400;
+		}
+	}
+}
+.get-in-touch {
+	.inner-content{
+		padding: 30px 35px;
+		position: relative;
+		z-index:1;
+		@include respond ('tab-port'){
+			background: var(--secondary);
+		}
+		.left-content{
+			display: flex;
+			align-items: center;
+			.pic{
+				width: 70px;
+				height: 70px;
+				@include respond ('phone-land'){
+					display:none;
+				}
+				img{
+					border-radius:50%;
+					border: 2px solid #FFF;
+				}
+			}
+			.info{
+				margin-left:15px;
+				@include respond ('phone-land'){
+					text-align: center;
+				}
+				.title{
+				    color: #fff;
+					font-weight: 500;
+					font-size: 26px;
+					@include respond ('phone'){
+						font-size: 20px;
+					}
+				}
+				.text{
+					font-size: 16px;
+					color:#fff;
+					margin-bottom:0;
+					@include respond ('phone-land'){
+						font-size:14px;
+						margin-bottom: 10px;
+					}
+				}
+			}
+		}
+		&:after{
+			content: "";
+			box-shadow: 0px 14px 30px 0px rgba(225, 50, 0, 0.1);
+			background-color: var(--secondary);
+			position: absolute;
+			left: 50%;
+			top: 0;
+			height:100%;
+			z-index: -1;
+			width: calc(100% + 25px);
+			transform: translateX(-50%) skewX(-12deg);
+			@include custommq ($max:1024px){
+				transform: translateX(-50%) skewX(-8deg);
+			}
+			@include respond ('tab-port'){
+				display:none;
+			}
+		}
+		&:before{
+			content: "";
+			box-shadow: 0px 14px 30px 0px rgba(225, 50, 0, 0.1);
+			background-color: var(--primary);
+			position: absolute;
+			left: 0;
+			top: -3px;
+			height: 61%;
+			z-index: -1;
+			width: calc(100% + 20px);
+			transform: skew(-15deg, -1deg);
+			@include respond ('tab-land'){
+				width: 100%;
+				left: 18px;
+				transform: skew(-7deg, -2deg);
+				top: 7px;
+			}
+			@include respond ('tab-port'){
+				display:none;
+			}
+		}
+	}
+}

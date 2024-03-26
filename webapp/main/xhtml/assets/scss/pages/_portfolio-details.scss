@@ -1,0 +1,62 @@
+//portfolio-detail
+.portfolio-single{
+	.head-section{
+		span{
+			color: var(--secondary);
+			background-color: var(--primary);
+			font-size: 14px;
+			font-weight: 500;
+			text-transform: capitalize;
+			padding:5px 7px;
+			margin-bottom:10px;
+			display: inline-block;
+		}
+		h1{
+			font-size: 45px;
+			font-style: italic;
+			font-weight: 700;
+			@include respond ('tab-port'){
+				font-size: 40px;
+			}
+			@include respond ('phone-land'){
+				margin-bottom:20px;
+			}
+			@include respond ('phone'){
+				font-size: 30px;
+			}
+		}
+	}
+}
+.portfolio-single-wrapper{
+	padding-top:65px;
+}
+.portfolio-nav{
+	ul{
+		display: flex;
+		width: 100%;
+		flex-wrap: wrap;
+		li{
+			width: 33%;
+			margin-bottom: 32px;
+			@include respond ('tab-land'){
+				margin-bottom:20px;
+			}
+			h6{
+				color: var(--secondry-color, #232323);
+				font-size: 18px;
+				font-weight: 700;
+				letter-spacing: 1.8px;
+				text-transform: uppercase;
+				margin-bottom:5px;
+			}
+			.text{
+				font-size: 16px;
+				font-weight: 400;
+				@include respond ('tab-port'){
+					font-size: 14px;
+					font-weight: 400;
+				}
+			}
+		}
+	}
+}

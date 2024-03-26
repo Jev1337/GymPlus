@@ -1,0 +1,258 @@
+//shopcheckout
+.shop-checkout{
+	.form-select{
+		padding:8px 0px;
+		border:none;
+		border-radius:0;
+	}
+	.form-group{
+		.form-check-input{
+			margin:10px 5px 0 0; 
+			border: 1px solid var(--secondary);
+			border-radius:0;
+			&:checked{
+				border-color:var(--primary);
+			}
+		}
+		.form-check-label{
+			font-weight: 500;
+			font-size: 14px;
+			color: #24262B;
+			margin-top:7px;
+		}
+	}
+	.label-title{
+		color: var(--secondary);
+		font-family: var(--font-family-base);
+		font-size: 14px;
+		font-weight: 500;
+		margin-bottom: 10px;
+	}
+	.form-check-input {
+		&.radio{
+			border: 1px solid var(--secondary);
+			&:checked{
+				border-color:var(--secondary);
+			}
+		}	
+	}
+	
+	.dz-accordion{
+		.accordion-item{
+			margin-bottom:15px;
+			.accordion-header{
+				background: #F2F2F2;
+				border:none;
+				border-radius:0;
+				.accordion-button{
+					font-family: var(--font-family-base);
+					font-size:14px;
+					&:not(.collapsed) .toggle-close:before {
+						transform: rotate(-90deg);
+					}
+					span{
+						color: var(--primary-text);
+					}
+					.toggle-close{
+						right:10px;
+						&:before {
+							color:var(--primary-text);
+							@include transitionSlow;
+							font-size:16px;
+							content:"\f107";
+							font-family: "Font Awesome 6 Free";
+							font-weight: 900;
+						}
+					}
+					&.collapsed {
+						.toggle-close{
+							&:before {
+								content:"\f107";
+							}
+						}	
+					}
+					&:not(.collapsed) {
+						border:none;
+						border-radius:0;
+						color:var(--title);
+						background:transparent;
+						box-shadow:none;
+					}
+				}
+			}
+			.accordion-body{
+				padding:20px 0;
+				border:0;
+				margin:0;
+			}
+		}
+	}
+}
+
+.order-detail{
+	padding:30px;
+	border: 1px solid #F2F2F2;
+	@include respond('phone'){
+		padding:15px;
+	}
+	.dz-accordion{
+		.accordion-item{
+			background:transparent;
+			.accordion-header{
+				background-color:transparent;
+				.accordion-button{
+					padding:0;
+					font-family: var(--font-family-title);
+					background-color:transparent;
+					box-shadow: none;
+					.form-check-input{
+						margin-right:10px;
+						margin-top:0px;
+						&.radio{
+							width:16px;
+							height:16px;
+						}
+						
+					}
+					.form-check-label{
+						font-family:  var(--font-family-base);
+						font-weight: 500;
+						font-size: 14px; 
+						color:var(--title);
+					}
+					img{
+						margin: 0 12px;
+					}
+					a{
+						font-weight: 400;
+						font-size: 12px;
+						text-decoration: underline;
+						color: #5E626F;
+						font-family:  var(--font-family-base);
+					}
+				}
+			}
+			.accordion-body{
+				padding: 8px 0;
+				border: 0;
+				p{
+					font-weight: 400;
+					font-size: 13px;
+				}
+			}
+		}
+	}
+	.text{
+		font-weight: 400;
+		font-size: 12px;
+		line-height: 20px;
+		padding-top:15px;
+		border-top: 1px solid #D7D7D7;
+		a{
+			text-decoration:underline;
+			color:var(--primary-text);
+		}
+	}
+	.form-group{
+		.form-check-input{
+			margin-right:10px;
+			&.square{
+				width:20px;
+				height:15px;
+			}
+			@include custommq($max: 1024px) {
+				&.square{
+					width:16px;
+					height:16px;
+				}
+			}
+		}
+		.form-check-label{
+			font-weight: 400;
+			font-size: 13px;
+			color: #5E626F;
+		}
+	}
+	table {
+		width:100%;
+		tr {
+			border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+			td {
+				padding: 12px 0;
+				font-weight: 500;
+				font-size: 16px;
+				line-height: 20px;
+				color:var(--title);
+				&.price{
+					text-align:end;
+				}
+				h6{
+					font-family:var(--font-family-base);
+				}
+			}
+			&.title{
+				border-bottom:none;
+				td{
+					padding-bottom:0;
+					padding-top:20px;
+				}
+			}
+			&.shipping{
+				td{
+					.custom-checkbox{
+						.form-check-label{
+							font-size:14px;
+							line-height:26px;
+							margin-left:10px;
+						}
+					}
+					&.price{
+						vertical-align:bottom;
+					}
+				}
+			}
+			&.total{
+				border-bottom:none;
+				td{
+					padding:24px 0;
+					&.price{
+						font-size: 24px;
+						font-weight:600;
+					}
+				}
+			}
+		}
+	}			  
+}
+.cart-item{
+	&.style-1{
+		display: flex;
+		align-items: center;
+		padding-bottom: 20px;
+		margin-bottom: 20px;
+		border-bottom:1px solid #F2F2F2;
+		.dz-media{
+			min-width:60px;
+			width:60px;
+			height:60px;
+		}
+		.dz-content{
+			margin-left: 15px;
+			width:100%;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			.title{
+				font-weight:500;
+				font-family: var(--font-family-base);
+			}
+			.price{
+				font-size:16px;
+				font-weight:500;
+				color: #24262B;
+			}
+		}
+		
+	}
+	
+}

@@ -1,0 +1,85 @@
+// Line Awesome
+@import url('../icons/font-awesome/css/all.min.css');
+@import url('../icons/flaticon/flaticon_powerzone.css');
+@import url('../icons/feather/css/iconfont.css');
+@import url('../icons/themify/themify-icons.css');
+
+
+// Font face rule (defining the custom font family)
+@font-face {
+	font-family: "Kuunari";
+	src: url("../fonts/kuunari-font/kuunari-black.otf") format("truetype");
+	font-weight: 900;
+}
+@font-face {
+	font-family: "Kuunari";
+	src: url("../fonts/kuunari-font/kuunari-bold.otf") format("truetype");
+	font-weight: bold;
+}
+@font-face {
+	font-family: "Kuunari";
+	src: url("../fonts/kuunari-font/kuunari-medium.otf") format("truetype");
+	font-weight: 500;
+}
+@font-face {
+	font-family: "Kuunari";
+	src: url("../fonts/kuunari-font/kuunari-regular.otf") format("truetype");
+	font-weight: normal;
+}
+@font-face {
+	font-family: "Kuunari";
+	src: url("../fonts/kuunari-font/kuunari-light.otf") format("truetype");
+	font-weight: 300;
+}
+@font-face {
+	font-family: "Kuunari";
+	src: url("../fonts/kuunari-font/kuunari-thin.otf") format("truetype");
+	font-weight: 100;
+}
+
+//@font-face {
+//	font-family: "Kuunari";
+//	src: 
+//		url("../fonts/kuunari-font/kuunari-black.otf") format("truetype"),
+//		url("../fonts/kuunari-font/kuunari-black-compressed.otf") format("truetype"),
+//		url("../fonts/kuunari-font/kuunari-black-compressed-italic.otf") format("truetype"),
+//		url("../fonts/kuunari-font/kuunari-black-condensed.otf") format("truetype"),
+//		url("../fonts/kuunari-font/kuunari-black-condensed-italic.otf") format("truetype"),
+//		url("../fonts/kuunari-font/kuunari-black-italic.otf") format("truetype"),
+//		url("../fonts/kuunari-font/kuunari-bold.otf") format("truetype"),
+//		url("../fonts/kuunari-font/kuunari-bold-compressed.otf") format("truetype"),
+//		url("../fonts/kuunari-font/kuunari-bold-compressed-italic.otf") format("truetype"),
+//		url("../fonts/kuunari-font/kuunari-bold-condensed.otf") format("truetype"),
+//		url("../fonts/kuunari-font/kuunari-bold-condensed-italic.otf") format("truetype"),
+//		url("../fonts/kuunari-font/kuunari-bold-italic.otf") format("truetype"),
+//		url("../fonts/kuunari-font/kuunari-extralight.otf") format("truetype"),
+//		url("../fonts/kuunari-font/kuunari-extralight-compressed.otf") format("truetype"),
+//		url("../fonts/kuunari-font/kuunari-extralight-compressed-italic.otf") format("truetype"),
+//		url("../fonts/kuunari-font/kuunari-extralight-condensed.otf") format("truetype"),
+//		url("../fonts/kuunari-font/kuunari-extralight-condensed-italic.otf") format("truetype"),
+//		url("../fonts/kuunari-font/kuunari-extralight-italic.otf") format("truetype"),
+//		url("../fonts/kuunari-font/kuunari-light.otf") format("truetype"),
+//		url("../fonts/kuunari-font/kuunari-light-compressed.otf") format("truetype"),
+//		url("../fonts/kuunari-font/kuunari-light-compressed-italic.otf") format("truetype"),
+//		url("../fonts/kuunari-font/kuunari-light-condensed.otf") format("truetype"),
+//		url("../fonts/kuunari-font/kuunari-light-condensed-italic.otf") format("truetype"),
+//		url("../fonts/kuunari-font/kuunari-light-italic.otf") format("truetype"),
+//		url("../fonts/kuunari-font/kuunari-medium.otf") format("truetype"),
+//		url("../fonts/kuunari-font/kuunari-medium-compressed.otf") format("truetype"),
+//		url("../fonts/kuunari-font/kuunari-medium-compressed-italic.otf") format("truetype"),
+//		url("../fonts/kuunari-font/kuunari-medium-condensed.otf") format("truetype"),
+//		url("../fonts/kuunari-font/kuunari-medium-condensed-italic.otf") format("truetype"),
+//		url("../fonts/kuunari-font/kuunari-medium-italic.otf") format("truetype"),
+//		url("../fonts/kuunari-font/kuunari-regular.otf") format("truetype"),
+//		url("../fonts/kuunari-font/kuunari-regular-compressed.otf") format("truetype"),
+//		url("../fonts/kuunari-font/kuunari-regular-compressed-italic.otf") format("truetype"),
+//		url("../fonts/kuunari-font/kuunari-regular-condensed.otf") format("truetype"),
+//		url("../fonts/kuunari-font/kuunari-regular-condensed-italic.otf") format("truetype"),
+//		url("../fonts/kuunari-font/kuunari-regular-italic.otf") format("truetype"),
+//		url("../fonts/kuunari-font/kuunari-thin.otf") format("truetype"),
+//		url("../fonts/kuunari-font/kuunari-thin-compressed.otf") format("truetype"),
+//		url("../fonts/kuunari-font/kuunari-thin-compressed-italic.otf") format("truetype"),
+//		url("../fonts/kuunari-font/kuunari-thin-condensed.otf") format("truetype"),
+//		url("../fonts/kuunari-font/kuunari-thin-condensed-italic.otf") format("truetype"),
+//		url("../fonts/kuunari-font/kuunari-thin-italic.otf") format("truetype");
+//}

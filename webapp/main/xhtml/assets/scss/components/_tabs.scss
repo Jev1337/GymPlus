@@ -1,0 +1,321 @@
+.dz-tabs {
+		&.style-1{
+		.nav-tabs{
+			margin-bottom: 30px;
+			justify-content:center;
+			border-bottom: 1px solid #D9D9D9;
+			
+			.nav-link{
+				display: inline-block;
+				padding: 15px 20px;
+				border: 0;
+				font-size: 15px;
+				font-weight:400;
+				color: #777777;
+				margin: 0 5px;
+				@include transitionMedium;
+				position: relative;
+				background-color: transparent;
+				
+				&:after{
+					content: "";
+					background-color: var(--primary-text);
+					width: 0;
+					height: 3px;
+					position: absolute;
+					bottom: -2px;
+					left: 50%;
+					@include transitionFast;
+					transform: translateX(-50%);
+				}
+				
+				&.active,
+				&:hover{
+					color:var(--primary-text);
+					&:after{
+						width: 100%;
+					}
+				}
+			}
+		}
+		@include respond ('tab-port'){
+			.nav-tabs{
+				.nav-link{
+					padding: 14px 12px;
+				}
+			}
+		}
+		@include respond ('phone'){
+			.nav-tabs{
+				margin-bottom: 20px;
+				
+				.nav-link{
+					padding: 12px 10px;
+				}
+			}
+		}
+	}
+	&.style-2{
+		.nav-pills{
+			margin-bottom: 30px;
+			justify-content:center;
+			border: none;
+			.nav-item{
+				padding: 5px;
+				
+				.nav-link{
+					background: var(--primary);
+					border-radius: 8px;
+					padding: 10px 24px;
+					
+					&.active,
+					&:hover{
+						background: var(--secondary);
+						border-color:transparent;
+						color:#fff;
+					}
+				}
+			}
+			@include respond ('phone'){
+				margin-bottom: 20px;
+			}
+		}
+	}
+	&.style-3{
+		.nav-pills{
+			margin-bottom: 30px;
+			justify-content:center;
+			border: none;
+			
+			.nav-item{
+				padding: 5px;
+				
+				.nav-link{	
+					border: 1px solid var(--primary-text);
+					border-radius: 8px;
+					padding: 10px 24px;
+					color: var(--primary);
+					
+					&.active, &:hover{
+						background: var(--primary);
+						color:#fff;
+					}
+				}
+			}
+			@include respond ('phone'){
+				margin-bottom: 20px;
+			}
+		}
+	}
+	&.style-4{
+		.nav-pills{
+			margin-bottom: 30px;
+			border-radius:20px;
+			border: none;
+			justify-content:center;
+			
+			.nav-item{
+				padding: 5px;
+				
+				.nav-link{	
+					border: 1px solid var(--primary);
+					color: var(--primary);
+					border-radius: 50px;
+					padding: 10px 24px;
+					
+					&.active,
+					&:hover{
+						background: var(--primary);
+						color:#fff;
+					}
+				}
+			}
+			@include respond ('phone'){
+				margin-bottom: 20px;
+			}
+		}
+	}
+	&.style-5{
+		.nav-tabs{
+			margin-bottom: 32px;
+			justify-content:center;
+			border-bottom:0;
+			
+			.nav-link{
+				display: inline-block;
+				padding: 18px 30px;
+				font-size: 15px;
+				font-weight:400;
+				color: #777777;
+				margin: 10px;
+				background-color:#fff;
+				position:relative;
+				cursor:pointer;
+				box-shadow: 0px 7px 29px 0px rgba(100, 100, 111, 0.2);
+				@include transitionMedium;
+				border-radius: var(--border-radius-base);
+				border: 2px solid #fff;
+				
+				img{
+					width: 45px;
+				}
+				.title{
+					display: block;
+					font-weight: 500;
+					margin-top: 10px;
+					color: $dark;
+				}
+				i{
+					display:block;
+					font-size:45px;
+					margin-bottom:10px;
+					color:var(--secondary);
+				}
+				&.active,
+				&:hover{
+					background-color:#fff;
+					border-color:transparent;
+					border: 2px solid var(--secondary);
+					
+					i{
+						color: var(--primary);
+					}
+				}
+			}
+			
+		}
+		@include respond ('phone-land'){
+			.nav-link{
+				width: 40%;
+				padding: 18px 20px;
+			}
+		}
+	}
+}
+.tab-content > .tab-pane.fade{
+	transition: all 0.2s;
+}
+
+
+.nav-tabs {
+	&.style-1 {
+		border: 0;
+		background: var(--gradient);
+		position: relative;
+		padding: 5px 7px;
+		margin-left: 20px;
+		display: inline-flex;
+	    transform: skewX(-10deg);
+	    box-shadow: 0px 10px 15px 0px rgba(255, 129, 57, 0.15);
+		&:after {
+			content: '';
+			position: absolute;
+			height: 100%;
+			width: 8px;
+			left: -18px;
+			top: 0;
+			background: var(--primary-dark);
+		}
+
+		.nav-link {
+			margin-bottom: 0;
+			font-size: 16px;
+			font-weight: 400;
+			border-radius: 0;
+			line-height: 25px;
+			padding: 10px 25px;
+			border:none;
+			color: var(--theme-text-color);
+		    isolation: unset;
+		    
+			span {
+		    	transform: skewX(10deg);
+		    	display: block;
+		    }
+			&.active{
+				color: #000;
+			}
+		}
+		
+		@include respond('tab-land'){
+			.nav-link {
+				line-height: 1.1;
+				padding: 10px 19px;
+			}
+		}
+		@include respond('tab-port'){
+			margin-left: 17px;
+			&:after {
+				left: -15px;
+			}
+			.nav-link {
+				font-size: 14px;
+				padding: 10px 16px;
+			}
+		}
+		&.dark {
+			background: var(--secondary);
+			box-shadow: none;
+			
+			.nav-link {
+				color: #fff;
+				
+				&.active{
+					color: #000;
+				}
+			}
+			&:after {
+				background: var(--secondary);
+			}
+		}
+		&.light {
+			background:#fff;
+			box-shadow: none;
+			
+			.nav-link {
+				color: var(--title);
+				
+				&.active{
+					color:#fff;
+					background:var(--secondary);
+				}
+			}
+			&:after {
+				background: #fff;
+			}
+		}
+	}
+	&.style-2{
+		border-bottom:0;
+		.nav-item{
+			margin-right:50px;
+			&:last-child{
+				margin-right:0;
+				@include respond('phone'){
+					margin-right: 30px;
+				}
+			}
+		}
+		.nav-link{
+			font-size:28px;
+			font-weight: 900;
+			letter-spacing: 2.8px;
+			text-transform: uppercase;
+			color:var(--title);
+			padding:0 0 10px 0;
+			font-family:var(--font-family-title);
+			line-height:1;
+			font-style: italic;
+			background:transparent;
+			border:0;
+			border-bottom: 5px solid rgba(0, 0, 0, 0.1);
+			&.active{
+				color: var(--primary);
+				border-bottom:5px solid var(--primary);
+			}
+			@include respond('phone'){
+				font-size: 20px;
+			}
+		}
+	}
+} 

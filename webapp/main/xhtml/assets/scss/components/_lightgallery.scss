@@ -1,0 +1,84 @@
+/* Light Gallery */
+.lg-actions .lg-next, 
+.lg-actions .lg-prev, 
+.lg-sub-html, 
+.lg-toolbar{
+    background-color: rgba(30, 30, 30, .6);
+    
+}
+
+.lg-outer {
+  z-index: 1000000;
+}
+.lg-outer{
+	.lg-toogle-thumb, 
+	.lg-thumb-outer,
+	.lg-img-wrap, 
+	.lg-item{
+		background-color: transparent;
+	}
+	.lg-thumb-item{
+		&.active,
+		&:hover{
+			border-color: var(--primary);			
+		}
+	}
+}
+.lg-backdrop {
+    background-color: rgba(30, 30, 30, 0.9);
+    z-index: 9999;
+}
+.lg-outer .lg-object {
+    border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+
+.lg-item {
+    cursor: pointer;
+    display: block;
+}
+.lg-outer .lg-toogle-thumb, 
+.lg-actions .lg-next, 
+.lg-actions .lg-prev, 
+.lg-toolbar .lg-icon,
+#lg-counter{
+    color: $white;
+}
+
+.lg-next,
+.lg-prev {
+  background-color: var(--light);
+  border-radius: 0;
+  color: #999;
+  padding: 10px 10px 10px; }
+  .lg-next:hover,
+  .lg-prev:hover {
+    background-color: var(--secondary);
+    color: #fff; 
+}
+
+.lg-outer .lg-thumb {
+  width: auto !important; 
+}
+
+.lg-outer .lg-thumb-item {
+  border-radius: 0px;
+  width: 70px !important;
+  height: 70px !important;
+  margin-right: 5px !important;
+}
+.lg-outer .lg-thumb-item.active, 
+.lg-outer .lg-thumb-item:hover {
+    border-color: var(--secondary); 
+}
+
+.lightimg {
+  cursor: pointer; 
+}
+
+.lightimg{
+	cursor: pointer;
+}
+.lg-progress-bar .lg-progress {
+    background-color: var(--primary);
+}

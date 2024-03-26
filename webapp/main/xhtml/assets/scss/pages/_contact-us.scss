@@ -1,0 +1,606 @@
+.contact-wraper1{
+	position: relative;
+		
+	.contact-info{
+		padding: 50px 30px;
+		.icon-md{
+			width: 50px;
+			height: 50px;
+			line-height: 50px;
+		}
+	}
+	.contact-area1{	
+		&.style-1{
+			position: absolute;
+			bottom: -189px;
+			right: 15%;
+			z-index: 999;
+		}
+		.wpcf7-spinner{
+			display: none;
+		}
+	}
+	@include respond ('tab-land'){
+		.contact-info{
+			padding: 50px 0px;
+		}
+	}
+	@include respond ('tab-port'){
+		background-position: center;
+		background-size: cover;
+		margin-bottom: 0;
+	
+		&:after{
+			content: none;
+		}
+		&:before{
+			height:100%;
+			width: 100%;
+		}
+		.contact-area1 {
+			margin-top: 0;
+			margin-bottom: 0;
+		}
+		.contact-info{
+			padding: 50px 0px 20px;
+		}
+	}
+}
+.contact-area1{
+	padding: 50px 40px;
+    background: #fff;
+    box-shadow: 0px 3px 29px 0px rgba(0, 0, 0, 0.07);
+    max-width: 520px;
+    margin-bottom: -215px;
+    position: relative;
+    z-index: 9;
+		&.style-1{
+			margin: 0 0 -215px auto;
+				@include respond ('tab-port'){
+					margin:0;
+				}
+		}
+		
+  	@include respond ('tab-land'){
+		padding:45px 35px;
+	}
+	@include respond ('tab-port'){
+		max-width:100%;
+	}
+  	@include respond ('phone'){
+  		padding: 25px;
+  	}
+}
+.map-iframe{
+    height: 450px;
+	@include respond ('phone'){
+	    height: 250px;
+	}
+}
+form{
+	.g-recaptcha {  
+		@include respond ('phone'){
+			transform: scale(0.7);
+			-moz-transform: scale(0.7);
+			-o-transform: scale(0.7);
+			-webkit-transform: scale(0.7);
+			transform-origin: 0 0;
+			-moz-transform-origin: 0 0;
+			-o-transform-origin: 0 0;
+			-webkit-transform-origin: 0 0;
+		}
+	}
+}
+body{
+	.working-location{
+		margin-bottom: 15px;
+		img{
+			border-radius:var(--border-radius-base);
+		}
+	}
+}
+.map{
+	position:relative;
+	z-index:1;
+	&:after{
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background: #24262B;
+		mix-blend-mode: color;
+		z-index: 0;
+		pointer-events:none;		
+	}	
+}
+
+.contact-info{
+	&.style-1{
+		margin-bottom:60px;
+		min-height: 335px;
+		padding-top: 30px;
+		.title{
+			font-weight: 700;
+			font-size: 60px;
+			letter-spacing: 6px;
+			color:#fff;
+			@include respond('tab-land'){
+				font-size:32px;
+			}
+			@include respond ('phone-land'){
+				font-size:28px;		
+			}
+			@include respond ('phone'){
+				font-size:32px;		
+			}
+		}
+		.text{
+			color: #fff;
+			font-weight: 400;
+			font-size: 24px;
+			margin-left: unset;
+			margin-right: unset;
+			max-width: 540px;
+			margin-bottom: 50px;
+			font-family: var(--font-family-base);
+			@include respond('tab-land'){
+				font-size:26px;
+				margin-bottom:30px;
+			}
+			@include respond ('phone-land'){
+				font-size: 22px;
+				margin-bottom: 15px;
+				width:100%;
+			}
+			@include respond ('phone'){
+				font-size:20px;		
+			}
+			span{
+				color:#FFF066;
+			}	
+		}
+		.contact-bottom{
+			display: flex;
+			flex-wrap: wrap;
+			border-top: 1px solid rgba(255, 255, 255, 0.10);
+			padding: 25px 0 0;
+			h3{
+				color:#fff;
+				font-weight: 700;
+				font-size: 24px;
+				letter-spacing: 2.4px;
+				text-transform: uppercase;
+				@include respond ('phone-land'){
+					font-size:22px;
+				}
+			}
+			.contact-left{
+				margin-right: 190px;
+				@include custommq($max:1199px, $min:1024px){
+					margin-right: 100px;					
+				}
+			}		
+			ul{
+				li{
+					font-weight: 400;
+					font-size: 16px;
+					@include respond ('phone-land'){
+						font-size:15px;
+					}
+					a{
+						color:#fff;
+					}
+				}
+			}
+		}
+		@include respond('phone-land'){
+			margin-bottom:40px;    
+			min-height: auto;
+		}
+		@include respond('phone'){
+			.contact-bottom{
+				.contact-left{
+					margin-right: 0;
+					flex: 1;
+				}	
+			}
+		}
+	}
+}
+.contact-heading{
+	h2{
+		font-weight: 700;
+		font-size: 72px;
+		@include respond('laptop'){
+			font-size:60px;
+		}
+		@include respond('tab-land'){
+			font-size:50px;	
+		}
+		@include respond('tab-port'){
+			font-size:40px;	
+		}
+		@include respond('phone'){
+			font-size:24px;
+		}	
+	}
+}
+
+.dz-text{
+	font-weight: 700;
+    font-size: 150px;
+    position: absolute;
+    bottom: 0;
+	right: 30px;
+    line-height: 1;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: rgba(0, 0, 0, 0.1);
+    color: transparent;
+    z-index: -1;
+	@include respond ('tab-port'){
+		font-size: 120px;
+		right: 20px;
+	}
+	@include respond ('phone-land'){
+		font-size: 100px;
+		right: 10px;
+	}
+	@include respond ('phone'){
+		font-size: 60px;
+		right: 0px;
+	}
+}
+.contact-bnr{
+	padding-top:220px;
+	padding-bottom:80px;
+	@include respond ('laptop'){
+		padding-top:200px;
+		padding-bottom:50px;
+	}	
+	@include respond ('tab-port'){
+		padding-top:130px;
+		padding-bottom:50px;
+	}
+	@include respond ('phone-land'){
+		padding-top:80px;
+		padding-bottom:40px;
+	}
+}
+
+.middle-border {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.contact-us2{
+	.map-fixed{
+		position: absolute;
+		left: 48vw;
+		height: 75%;
+		padding-right: 0;
+		top: 100px;
+		width: 76vw;
+		@include respond ('phone-land'){
+		    position: relative;
+			left: auto;
+			height: auto;
+			padding-right: 0;
+			top: auto;
+			width: 100%;
+			margin-bottom: 20px;
+		    padding: 0;
+		}
+		.contact-map{
+			position:relative;		
+			img{
+				width: 100%;
+			}
+		}
+		
+		.map-point{
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			.point{
+				display: block;
+				width: 8px;
+				height: 8px;
+				position: absolute;
+				border-radius: 50%;
+				background-color: #FFF;
+				i{
+					font-size: 18px;
+					color: #fff;
+					position: absolute;
+					top: -8px;
+					left: -3px;
+					opacity: 0;
+					@include transitionFast;
+				}
+				&.active{
+					background-color: #FFF066;
+					&:after{
+						background-color: rgba(255, 240, 102, 0.40);
+					}
+				}
+				&:after{
+					content: "";
+					position: absolute;
+					top: 50%;
+					left: 50%;
+					background-color: rgba(255, 255, 255, 0.40);
+					width: 40px;
+					height: 40px;
+					transform: translate(-50%, -50%) scale(1);
+					border-radius: 50%;
+					animation: 2s ease 0s infinite normal none running pointZoom;
+				}
+				&.point-1{
+					left: 13%;
+					top: 20%;
+				}
+				&.point-2{
+					left: 60%;
+					top: 15%;
+				}
+				&.point-3{
+					left: 50%;
+					top: 50%;
+				}
+			}
+		}
+	}
+	.dz-text{
+		font-weight: 700;
+		font-size: 190px;
+		position: absolute;
+		font-family: var(--font-family-title);
+		bottom: 0px;
+		right: 250px;
+		-webkit-text-stroke-width: 1px;
+		-webkit-text-stroke-color: rgba(255, 255, 255, 0.10);
+		color: transparent;
+		z-index: 1;
+		text-transform: uppercase;
+		@include respond ('tab-port'){
+			display:none;
+		}
+	}
+	.contact-area1{
+		margin-bottom: unset;
+	}
+	.contact-info.style-1 .contact-bottom .contact-left{
+		margin-right:100px;
+		@include respond ('tab-port'){
+			margin-right:40px;
+		}
+	}
+}
+
+
+@keyframes pointZoom {
+  0%{
+	transform: translate(-50%, -50%) scale(0);
+	opacity: 1;
+  }
+   75%{
+	transform: translate(-50%, -50%) scale(2);
+	opacity: 0;
+  }
+   100%{
+	transform: translate(-50%, -50%) scale(0);
+	opacity: 0;
+  }
+}
+
+// Contact Us 3 ====
+
+.locations-box{
+	position: relative;
+	&:after{
+		content: "";
+		position: absolute;
+		top: 0px;
+		right: 0px;
+		background: linear-gradient(rgba(0, 0, 0, 0) 0%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0) 100%);
+		width: 1px;
+		height: 100%;
+		opacity: 20%;	
+		@include respond('tab-port'){
+			top: auto;
+			bottom: 0px;
+			width: 100%;
+			height: 1px;
+			background: linear-gradient(270deg, rgba(0, 0, 0, 0) -1.52%, rgb(0, 0, 0) 59.42%, rgba(0, 0, 0, 0) 98.48%);
+		}
+	}
+	&:last-child{
+		&:after{
+			content: none;
+		}	
+	}
+	@include respond('tab-port'){
+		&:last-child{
+			margin-bottom: 0;
+			padding-bottom: 0;
+			&:after{
+				content: none;
+			}	
+		}
+	}
+	.locations-box-inner{
+		padding:20px;
+		@include respond('tab-port'){
+			padding:10px;
+		}
+		.country-media{
+			padding: 5px;
+			background: #f6f6f6;
+			display: flex;
+			align-items: center;
+			width: fit-content;
+			border-radius: 40px;
+			margin-bottom:20px;	
+			padding-right:30px;
+			.title{
+				font-size:18px;
+				font-weight:500;
+				margin-bottom:0;
+			}
+			img{
+				border-radius: 50%;
+				margin-right: 15px;
+				border: 2px solid #fff;
+			}
+		}
+
+		.dz-content{
+			.title{
+				font-size:22px;
+				font-weight:500;
+				margin-bottom:30px;
+			}
+			.contact-info{	
+				display: flex;
+				justify-content: space-between;
+				flex-wrap: wrap;
+				gap: 8px;
+				ul{
+					li{
+						color: var(--title);
+					}	
+				}	
+			}
+			@include custommq($max:1199px, $min:1024px){
+				.title{
+					font-size:20px;
+					margin-bottom:20px;
+				}
+			}
+		}
+	}
+}
+
+.contact-bx{
+	margin-top:60px;
+	span{
+		font-size:14px;
+		color:var(--primary);
+		font-family: var(--font-family-title);
+		font-weight: 500;
+		letter-spacing: 1.4px;
+		text-transform: uppercase;
+	}
+	.title{
+		color: #FFF;
+		font-size: 40px;
+		font-weight: 500;
+		text-transform: uppercase;
+		@include respond ('phone'){
+			font-size: 28px;
+		}
+	}
+}
+
+.map-iframe{
+	iframe{
+		width: 100%;
+	}
+	&.style-1{
+		iframe{
+			height:450px;
+			border: 10px solid #fff;
+			box-shadow: 0 0 50px rgba(0, 0, 0, 0.1);
+			
+			@include respond('tab-port'){
+				height:370px;			
+			}
+			@include respond('phone'){
+				height:320px;
+				border-width: 5px;
+			}
+		}
+	}
+	&.style-2{
+		position: relative;
+		height: 100%;
+		margin-bottom: 30px;
+		
+		iframe{
+			height: 100%;
+			position: absolute;
+			left: 0;
+			top: 0;
+		}
+		.contact-area1{
+			background-color: #fff;
+			padding: 50px;
+			border-radius: 20px;
+			box-shadow: 0 0 50px rgba(0, 0, 0, 0.1);
+			max-width: 480px;
+			position: relative;
+			z-index: 9;
+			margin-left: 50px;
+			.form-label{
+				color: var(--primary);
+			}
+			
+		}
+		@include respond('tab-port'){
+			.contact-info{
+				padding: 30px;
+				border-radius: 12px;
+				max-width: 350px;
+				margin-left: 20px;
+			}
+		}
+		@include respond('phone'){
+			padding: 0;
+			
+			.contact-info{
+				border-radius: 12px;
+				max-width: 100%;
+				margin: -50px 20px 0;
+			}
+			iframe{
+				height: 380px;
+				position: static;
+			}
+		}
+	}
+	&.style-3{
+	    height: 100%;
+		iframe{
+			height: 100%;
+		}
+		@include respond('phone-land'){
+			height: 450px;
+		}
+		@include respond('phone'){
+			height: 350px;
+		}
+	}
+}
+
+.map-iframe {
+	&.style-1{
+		position: relative;
+		z-index: 1;
+		&:after {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background: var(--primary);
+			mix-blend-mode: color;
+			z-index: 0;
+			opacity:0.4;
+			pointer-events: none;
+		}
+	}
+}

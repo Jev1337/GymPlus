@@ -1,0 +1,186 @@
+// style-2
+.site-footer{
+	&.style-2{
+		background-position: center;
+	    overflow: hidden;
+		@include respond('tab-port'){
+			 padding: 0 20px;
+		}
+		.footer-top{
+			padding:0;
+		}
+		.footer-title{
+			font-family: var(--font-family-title);
+			font-size: 35px;
+			font-weight: 900;
+			letter-spacing: 3.5px;
+			text-transform: uppercase;
+			@include respond('phone-land'){
+				font-size: 28px;
+			}
+		}
+		.widget{
+			padding: 60px 40px 30px 40px;
+			margin-bottom: 0;
+			height: 100%;
+			@include respond('laptop'){
+				padding: 30px;
+			}
+			@include respond('phone-land'){
+				padding:25px;
+			}
+			&.bg-secondary-light{
+				background: rgba(255,255,255,0.1);
+			}
+			.title{
+				color: var(--primary);
+				font-family: var(--font-family-title);
+				font-size: 14px;
+				font-weight: 700;
+				letter-spacing: 1.4px;
+				text-transform: uppercase;
+				display: block;
+				margin-bottom:3px;
+			}
+			.input-group{
+				.form-control {
+					&.form-control-light{
+						background: rgba(229,229,229,0.9);
+						&:placeholder{
+							color:#fff;
+						}
+					}
+				}
+			}
+			textarea,
+			input{
+				&::placeholder{
+					color:#fff;
+				}
+			}
+			.tagcloud{
+				a{
+					font-weight: 500;
+					background: #021420;
+					color: #fff;
+					padding: 5px 10px;
+					margin: 0 5px 5px 0;
+				}
+			}
+			&.recent-posts-entry{
+				ul li{
+					margin-bottom:20px;	
+				}
+				.exemple{
+					font-family: var(--font-family-base);
+					font-size: 16px;
+					font-weight: 500;
+					display: block;
+				}
+				svg{
+					margin-bottom:50px;
+				}
+			}		
+		}
+		.map-iframe{
+			height:100%;
+			position: relative;
+			z-index: 1;
+			&:after{
+				content: '';
+				position: absolute;
+				top: 0;
+				left: 0;
+				height: 100%;
+				width: 100%;
+				background: var(--secondary);
+				mix-blend-mode: color;
+				pointer-events: none;
+			}
+		}
+		
+		&.bg-secondary{
+			color:#fff;
+			.time,
+			.more-button,
+			.footer-title{
+				color:#fff;
+			}
+			.more-button{
+				background: #fff;
+				color:var(--secondary);
+			}
+			
+			.input-group{
+				.form-control {
+					&.form-control-light{
+						background: rgba(255, 255, 255, 0.1);
+						color:#fff;		
+						&::placeholder {
+							color: #fff !important;
+						}
+					}
+				}
+			}
+			.dz-social-icon{
+				&.style-1{
+					ul li a {
+						background-color: #fff;
+						color:var(--title);
+					}
+				} 
+			}
+		}
+	
+	}
+}
+
+.dz-social-icon{
+	&.style-1{
+		&.light{
+			ul li a {
+				background-color: #fff;
+				color:var(--title);
+			}
+		}
+	} 
+}
+.more-button {
+	color: #fff;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	background: var(--secondary);
+	padding: 20px 45px;
+	font-size: 16px;
+	font-weight: 700;
+	font-family: var(--font-family-title);
+	letter-spacing: 1.6px;
+	text-transform: uppercase;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width:100%;
+	@include respond('phone-land'){
+		padding: 10px 30px;
+	}
+}
+
+.submit-button{
+    position: absolute !important;
+    bottom: 0;
+    left: 0;
+    background: #00111D;
+    text-transform: uppercase;
+    font-size: 18px !important;
+    color: #fff;
+	padding:15px 25px !important;
+	&:hover{
+		background: #00111D;
+	}
+	@include respond('tab-port'){
+		padding:10px 15px !important;
+		font-size: 14px !important;
+	}
+}
+

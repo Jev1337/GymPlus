@@ -1,0 +1,331 @@
+.dz-card{
+	position:relative;
+	overflow:hidden;
+	&.style-1{
+		@include transitionMedium;
+		background-color:#fff;
+		.dz-meta{
+			ul{
+				li{
+					&.dz-date{
+						padding:15px 10px;
+						background-color:var(--secondary);
+						position: absolute;
+						left: 0;
+						top: 0;
+						margin: 0;
+						text-align: center;
+						margin-bottom: 10px;
+						color: #fff;
+						font-family: var(--font-family-title);
+						font-size: 16px;
+						font-weight: 500;
+						letter-spacing: 1.6px;
+						text-transform: uppercase;
+						display:block;
+						min-width:60px;
+						width:60px;
+						z-index:1;
+						span{
+							text-align: center;
+							font-family: var(--font-family-title);
+							font-size: 40px;
+							font-weight: 700;
+							letter-spacing: 4px;
+							text-transform: uppercase;
+							color: var(--primary);
+							line-height:1;
+						}
+						
+					}
+					&.dz-time{
+						padding:5px 7px;
+						background-color:var(--primary);
+						font-size: 13px;
+						font-weight: 500;
+						text-transform: capitalize;
+						line-height:1;
+						a{
+							color:var(--secondary);
+							i{
+							color:var(--secondary);
+							}		
+						}
+					}
+					&:after{
+						display:none;
+					}
+				}
+			}
+		}
+		.dz-media {
+			height:280px;
+			img{
+				object-fit:cover;
+			}
+		}
+		.dz-info{
+			position:static;
+			border: 1px solid rgba(0, 0, 0, 0.10);
+			padding:25px;
+			display:flex;
+			flex-direction:column;
+			.dz-title{
+				text-transform:capitalize;
+				font-weight: 700;
+				margin-bottom:7px;
+				letter-spacing: 1.2px;
+				line-height:1.3;
+			}
+			p{
+				font-size: 14px;
+				font-weight:400;
+				color:#666;
+			}
+			.read-btn{
+				font-style: italic;
+				font-weight: 500;
+				letter-spacing: 1.6px;
+				text-transform: uppercase;
+				font-family:var(--font-family-title);
+				color: #000;
+				margin-top:auto;
+			}
+			
+		}
+		&.blog-half {
+			.dz-media {
+				min-width: 270px;
+				width:270px;
+				height:auto;
+			}
+			.dz-info{
+				padding:25px 25px 17px 30px;
+				border-left:0;
+			}
+			@include respond('phone-land'){
+				display:block;
+				.dz-media{
+					width:100%;
+					min-width:100%;
+					height:280px;
+					img{
+						object-fit:cover;
+					}
+				}
+				.dz-info{
+					border-left:1px solid rgba(0, 0, 0, 0.10);
+					border-top:0;
+					padding:25px;
+				}
+			}
+		}
+	}
+	&.style-2{
+		background-color:#fff;
+		@include transitionMedium;
+		
+		.dz-info{
+			position:relative;
+			border: 1px solid rgba(0, 0, 0, 0.10);
+			padding:25px;
+			display:flex;
+			flex-direction:column;
+			
+			.dz-title{
+				text-transform: capitalize;
+				font-weight: 700;
+				margin-bottom: 7px;
+				letter-spacing: 1.2px;
+				line-height: 1.3;	
+			}
+			.read-btn{
+				margin-top: auto;
+			}
+		}
+		.dz-media {
+			height: 280px;
+			
+			img{
+				object-fit: cover;
+				@include transitionMedium;
+			}
+		}
+		&:hover{
+			.dz-media {
+				img{
+					transform: scale(1.1);
+					-moz-transform: scale(1.1);
+					-webkit-transform: scale(1.1);
+					-ms-transform: scale(1.1);
+					-o-transform: scale(1.1);
+				}
+			}	
+		}
+		&.blog-half{
+			.dz-media {
+				min-width: 240px;
+				width: 240px;
+				height: auto;
+			}
+			.dz-info{
+				padding: 30px;
+				border-left: 0;
+			}
+			@include respond('phone-land'){
+				display:block;
+				.dz-media{
+					width:100%;
+					min-width:100%;
+					height:280px;
+					img{
+						object-fit:cover;
+					}
+				}
+				.dz-info{
+					border-left:1px solid rgba(0, 0, 0, 0.10);
+					border-top:0;
+					padding:25px;
+				}
+			}
+		}
+	}
+	&.style-3{
+		position:relative;
+		z-index:1;
+		display:block;
+		overflow:hidden;
+		border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+		@include respond('tab-port'){
+			margin:15px 0;
+		}
+		.dz-content{
+			display:flex;
+			flex-direction:row;
+			-webkit-box-align: center;
+			align-items: center;
+			position:relative;
+			 @include respond('tab-port'){
+				display: flex;
+				flex-direction: column;
+				align-items: start;
+				gap: 5px;
+			 }
+			gap:95px;
+			.dz-date{
+				min-width:100px;
+				width:100px;
+				line-height: 1;
+				font-size: 60px;
+				font-weight: 700;
+				font-family: var(--font-family-title);
+				color: var(--title);
+				@include respond('phone-land'){
+					font-size:50px;
+				}
+				span{
+					color: var(--primary);
+					font-family: var(--font-family-base);
+					font-size: 16px;
+					font-weight: 500;
+					margin-left:5px;
+				}
+			}
+			.title{
+				font-size: 28px;
+				font-style: italic;
+				font-weight: 900;
+				text-transform: uppercase;
+				margin-bottom:0;
+				max-width:250px;
+				line-height:1.3;
+				@include respond('phone-land'){
+					font-size: 24px;
+					max-width:100%;
+				}
+			}
+			.dz-body{
+				display:flex;
+				flex-direction:row;
+				align-items:center;
+				@include transitionMedium;
+				justify-content:space-between;
+				.img-bx{
+					position:relative;
+					z-index:1;
+				}
+				p{
+					padding:40px 0;
+					color: var(--title);
+					font-size: 15px;
+					font-weight: 400;
+					opacity:1;
+					margin-bottom:0;
+					margin-right:125px;
+					line-height:1.8;
+					@include respond('tab-port'){
+						margin-right:0px;
+						padding:15px 0;
+					}
+					@include respond('phone-land'){
+						padding:10px 0;
+					}
+					
+				}
+				.dz-media{
+					position: absolute;
+					left: 0;
+					top: 0;
+					z-index: -1;
+					height: 100%;
+					width: 100%;
+					opacity: 0;
+					-webkit-transition: 0.4s;
+					transition: 0.4s;
+					&:after{
+						content: '';
+						position: absolute;
+						left: 0;
+						top: 0;
+						right: 0;
+						bottom: 0;
+						background: var(--rgba-primary-4);
+						opacity: 0.4;
+						-webkit-transition: 0.4s;
+						transition: 0.4s;
+					}
+					img{
+						width: 100%;
+						height: 100%;
+						object-fit: cover
+					}
+				}
+				.read-btn{
+					padding:0 13px;
+					i{
+						font-size:24px;
+						vertical-align:middle;
+					}
+				}
+			}
+		}
+		&:hover{
+			.dz-content{
+				.dz-body{
+					background:var(--primary);
+					p{
+						opacity:0;
+					}
+					.dz-media{
+						opacity:1;
+					}
+					.read-btn{
+						i{
+							color:#fff;
+						}
+					}
+				}
+			}
+		}
+	}
+}

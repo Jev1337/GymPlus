@@ -1,0 +1,81 @@
+:root{
+	
+	/* Primary */
+	--primary: #FCDE3B;
+	--primary-hover: #e7c728;
+	--primary-dark: #e7c728;
+	--primary-text: #e9ca23;
+	
+	/* Primary RGBA */
+	--rgba-primary-1: rgba(252,222,59,0.1);
+	--rgba-primary-2: rgba(252,222,59,0.2);
+	--rgba-primary-3: rgba(252,222,59,0.3);
+	--rgba-primary-4: rgba(252,222,59,0.4);
+	--rgba-primary-5: rgba(252,222,59,0.5);
+	--rgba-primary-05: rgba(252,222,59,0.05);
+	--rgba-primary-6: rgba(252,222,59,0.6);
+	--rgba-primary-7: rgba(252,222,59,0.7);
+	--rgba-primary-8: rgba(252,222,59,0.8);
+	--rgba-primary-9: rgba(252,222,59,0.9);
+	
+	/* Secondary RGBA */
+	--rgba-secondary-1: rgba(35,35,35,0.1);
+	--rgba-secondary-2: rgba(35,35,35,0.2);
+	--rgba-secondary-3: rgba(35,35,35,0.3);
+	--rgba-secondary-4: rgba(35,35,35,0.4);
+	--rgba-secondary-5: rgba(35,35,35,0.5);
+	--rgba-secondary-6: rgba(35,35,35,0.6);
+	--rgba-secondary-7: rgba(35,35,35,0.7);
+	--rgba-secondary-8: rgba(35,35,35,0.8);
+	--rgba-secondary-9: rgba(35,35,35,0.9);
+	
+	/* Other */
+	--secondary: #232323;
+	--theme-text-color: #000;
+	--title: #222222;
+	
+	/* Gradient */
+	--gradient: linear-gradient(89deg, #FCDE3B 1.12%, #f7d416 44%);
+	--gradient-1: linear-gradient(90deg, #FCDE3B 47.55%, #f7d416 100.15%);
+	--gradient-2: linear-gradient(90deg, #FCDE3B 0%, #f7d416 100%);	
+	
+	/* Box Shadow */
+	--primary-shadow: linear-gradient(90deg, #FCDE3B 47.55%, #f7d416 100.15%);
+	
+	/* extra variable */
+	--theme1-bg-pattern1: url(../images/pattern/theme/bg-pattern1.svg);
+	--theme1-bg-pattern2: url(../images/main-slider/slider2/background/bg1.png);
+	
+	--theme3-bg-color: #201916;
+	--theme3-secondary: #301f18;
+	--theme3-secondary2: #383836;	
+	--secondary-dark : #34353c;
+
+	
+	.dz-tabs.style-2 .nav-pills .nav-item .nav-link.active, .dz-tabs.style-2 .nav-pills .nav-item .nav-link:hover {
+		background: var(--secondary);
+		color:#fff;
+	}
+	.dz-accordion.accordion-primary .accordion-header .accordion-button:not(.collapsed),
+	.testimonial-2:hover p, .testimonial-2:hover .testimonial-name, 
+	.testimonial-2:hover .testimonial-position, .testimonial-2:hover .quotes-icon, 
+	.dz-team.style-2 .dz-position,
+	.dz-team.style-2 .dz-name,
+	.dz-team.style-3 .dz-name,
+	.site-filters.style-5 .filters li:hover a,
+	.site-filters.style-5 .filters li.active a,
+	.site-filters.style-3 .filters li:hover a, 
+	.site-filters.style-3 .filters li.active a,
+	.dz-tabs.style-3 .nav-pills .nav-item .nav-link.active, .dz-tabs.style-3 .nav-pills .nav-item .nav-link:hover{
+		color: var(--title);
+	}
+	.default-select .dropdown-menu .dropdown-item.active.selected {
+		color: var(--title) !important;
+	}
+	.dz-team.style-3 .dz-position {
+		color: var(--bs-body-color);
+	}
+	.btn-check:checked + .btn-outline-primary{
+		color:var(--title);
+	}
+}

@@ -1,0 +1,138 @@
+.counter-box {
+	//Style-1
+	&.style-1 {
+		.title{
+			font-size: 70px;
+			font-style: normal !important;
+			margin-bottom:0;
+			@include respond('tab-land'){
+				font-size: 60px ;
+			}
+			@include respond('tab-port'){
+				font-size: 45px ;
+			}
+			@include respond('phone'){
+				font-size: 40px;
+			}
+		}
+		.text{
+			font-size: 24px;
+			font-weight: 500;
+			font-family: Kuunari;
+			color: var(--title);
+			line-height: 1;
+			margin-bottom:0;
+			@include respond('tab-port'){
+				font-size: 20px;
+			}
+			@include respond('phone'){
+				font-size: 18px;
+			}
+		}
+	}
+	
+	//Style-2
+	&.style-2 {
+		.counter-r {
+			position: relative;
+			&:after {
+				content: '';
+				position: absolute;
+				top: 0;
+				right: 0;
+				height: 73px;
+				border-radius: 8px;
+			}
+			&:nth-child(2):after {
+				border: 1px dashed  #222222;
+			}
+			.title {
+				margin-bottom: 0;
+				font-weight: 700;
+				color: transparent;
+				font-size: 72px;
+				-webkit-text-stroke: 2px var(--primary);
+			}
+			.sub-title{
+				margin-bottom: 0;
+			}
+			@include respond('tab-port'){
+				.title{
+					font-size: 42px;
+				}
+			}
+		}
+	}
+	//Style-3
+	&.style-3 {
+		display: flex;
+		align-items: center;
+		.icon-bx{
+			margin-right: 20px;
+			
+			i{
+				font-size: 55px;
+				color:var(--primary);
+			}
+		}
+		.counter-r{
+			text-align: left;
+			
+			.title {
+				margin-bottom: 0;
+				font-weight: 700;
+			}
+			p{
+				margin-bottom: 0;	
+			}
+		}
+		@include respond('phone'){
+			justify-content:unset;
+			.icon-bx{
+				margin-right: 15px;
+				
+				i{
+					font-size: 42px;
+				}
+			}
+		}
+	}
+	//Style-4
+	&.style-4 {
+		background-color:var(--primary);
+		border-radius:6px;
+		.counter-r {
+			text-align: left;
+			padding: 50px 80px;
+			color: #fff;
+			
+			.title{
+				font-size: 70px;
+				margin-bottom: 0;
+				font-weight: 700;
+				color: #fff;
+			}
+			p {
+				margin-bottom: 0;
+				font-size: 30px;
+				max-width: 270px;
+				line-height: 1.4;
+			}
+		}
+		@media only screen and (max-width: 1200px) {
+			.counter-r {
+				padding:50px;
+			}
+		}
+		@include respond('tab-port'){
+			.counter-r {
+				.title{
+					font-size:55px;
+				}
+				p{
+					font-size:26px;
+				}
+			}
+		}
+	}
+}

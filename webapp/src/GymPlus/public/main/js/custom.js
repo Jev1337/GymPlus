@@ -671,13 +671,96 @@ var PowerZone = function(){
 	/* smartWizard ============ */
 	var smartWizard = function (){
 		if(($('#smartwizard').length > 0)){
+			// Leave step event is used for validating the forms
+			$("#smartwizard").on("leaveStep", function(e, anchorObject, currentStepIdx, nextStepIdx, stepDirection) {
+			
+                // Validate only on forward movement  
+                if (stepDirection == 'forward') {
+                  let form = document.getElementById('form-' + currentStepIdx);
+				 
+
+				if (form) {
+                    if (!form.checkValidity()) {
+                      form.classList.add('was-validated');
+                      $('#smartwizard').smartWizard("setState", [currentStepIdx], 'error');
+                      $("#smartwizard").smartWizard('fixHeight');
+                      return false;
+                    }
+                    $('#smartwizard').smartWizard("unsetState", [currentStepIdx], 'error');
+                  }
+
+				  if (currentStepIdx == 0)
+				  {
+					// get request to validate, to /api/sendSms?phone=...
+					//if code == 200, then we validate
+					req = new XMLHttpRequest();
+					req.open('GET', '/api/sendSms?phone=' + document.getElementById('user_numTel').value, false);
+					req.send(null);
+					if (req.status != 200)
+					{
+						document.getElementById("error").style.display = "block";
+						document.getElementById("error").innerHTML = "Error sending SMS, please try again later.";
+						setTimeout(function() {
+							$("#error").fadeOut().empty();
+						}, 3000);
+						form.classList.add('was-validated');
+						$('#smartwizard').smartWizard("setState", [currentStepIdx], 'error');
+						$("#smartwizard").smartWizard('fixHeight');
+						return false;
+					}
+				}else if (currentStepIdx == 1)
+				  {
+					// get request to validate, to /api/verifyPhone?phone=...&code=...
+					//if code == 200, then we validate
+					req = new XMLHttpRequest();
+					req.open('GET', '/api/verifyPhone?phone=' + document.getElementById('user_numTel').value + '&code=' + document.getElementById('code').value, false);
+					req.send(null);
+					if (req.status != 200)
+					{
+						document.getElementById("error").style.display = "block";
+						document.getElementById("error").innerHTML = "Error validating code, please try again.";
+						setTimeout(function() {
+							$("#error").fadeOut().empty();
+						}, 3000);
+						document.getElementById('code').value = '';
+						form.classList.add('was-validated');
+						$('#smartwizard').smartWizard("setState", [currentStepIdx], 'error');
+						$("#smartwizard").smartWizard('fixHeight');
+						return false;
+					}else
+					{
+						if (req.responseText == 'approved')
+						{
+							//do nothing
+						}else
+						{
+							document.getElementById("error").style.display = "block";
+							document.getElementById("error").innerHTML = "Invalid code, please try again.";
+							setTimeout(function() {
+								$("#error").fadeOut().empty();
+							}, 3000);
+							document.getElementById('code').value = '';
+							form.classList.add('was-validated');
+							$('#smartwizard').smartWizard("setState", [currentStepIdx], 'error');
+							$("#smartwizard").smartWizard('fixHeight');
+							return false;
+						}
+					}
+				  }
+                }
+            });
 			// Step show event
 			$("#smartwizard").on("showStep", function(e, anchorObject, stepNumber, stepDirection, stepPosition) {
+				
 			   //alert("You are on step "+stepNumber+" now");
+			   if (stepNumber == 2){
+				document.getElementById('form-0').submit();
+			   }
 			   if(stepPosition === 'first'){
 				   $("#prev-btn").addClass('disabled');
 			   }else if(stepPosition === 'final'){
 				   $("#next-btn").addClass('disabled');
+				   $("#prev-btn").addClass('disabled');
 			   }else{
 				   $("#prev-btn").removeClass('disabled');
 				   $("#next-btn").removeClass('disabled');

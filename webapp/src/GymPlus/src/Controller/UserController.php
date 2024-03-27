@@ -9,6 +9,8 @@ use App\Form\LoginType;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\User;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Twilio\Rest\Client;
+use App\Form\UserType;
 
 class UserController extends AbstractController
 {
@@ -76,6 +78,39 @@ class UserController extends AbstractController
         ]);
     }
 
+    #[Route('/api/sendSms', name: 'api_send_sms')]
+    public function sendSms(Request $request): Response
+    {
+        $phone = $request->query->get('phone');
+        if (!$phone) {
+            return new Response('Invalid Phone Number', 400);
+        }
+        $sid = "ACa0a9c02e124f285821fe62b736260421";
+        $token = "e8cd361a90ce0dbcd5485d5719f935fb";
+        $twilio = new Client($sid, $token);
+        $verification = $twilio->verify->v2->services("VA10dd8bfd053741ce7361fd967c83a1e6")
+                                   ->verifications
+                                   ->create("whatsapp:+216". $phone, "whatsapp");
+        return new Response($verification->status, 200);
+    }
+
+    #[Route('/api/verifyPhone', name: 'api_verify_phone')]
+    public function verifyPhone(Request $request): Response
+    {
+        $phone = $request->query->get('phone');
+        $code = $request->query->get('code');
+        if (!$phone || !$code) {
+            return new Response('Invalid Phone Number or Code', 400);
+        }
+        $sid = "ACa0a9c02e124f285821fe62b736260421";
+        $token = "e8cd361a90ce0dbcd5485d5719f935fb";
+        $twilio = new Client($sid, $token);
+        $verificationCheck = $twilio->verify->v2->services("VA10dd8bfd053741ce7361fd967c83a1e6")
+                                   ->verificationChecks
+                                   ->create(["to"=> "whatsapp:+216. " . $phone, "code" => $code]);
+        return new Response($verificationCheck->status, 200);
+    }
+
     
     #[Route('/auth/signup', name: 'app_signup')]
     public function signup(Request $request, SessionInterface $session): Response
@@ -88,9 +123,28 @@ class UserController extends AbstractController
                 return $this->redirectToRoute('app_dashboard');
             }
         }
+        $form = $this->createForm(UserType::class);
+        $form->handleRequest($request);
+        
+        if($form->isSubmitted() && $form->isValid()){
+            $data = $form->getData();
+            $user = new User();
+            
+            $user->setEmail($data->getEmail());
+            $user->setPassword(password_hash($data->getPassword(), PASSWORD_DEFAULT));
+            $user->setRole('client');
+            $user->setUsername($data->getUsername());
+            $user->setNumTel($data->getNumTel());
+            $user->setAdresse($data->getAdresse());
+            $user->setFaceidTs(new \DateTime());
+            $this->getDoctrine()->getManager()->persist($user);
+            $this->getDoctrine()->getManager()->flush();
+            return $this->redirectToRoute('app_login');
+        }
         return $this->render('main/signup.html.twig', [
             'controller_name' => 'UserController',
-            'user' => $session->get('user')
+            'user' => $session->get('user'),
+            'form' => $form->createView()
         ]);
     }
 

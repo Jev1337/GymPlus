@@ -5,71 +5,27 @@ namespace App\Entity;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\CommentaireRepository;
-/**
- * Commentaire
- *
- * @ORM\Table(name="commentaire", indexes={@ORM\Index(name="user_id", columns={"user_id"}), @ORM\Index(name="commentaire_ibfk_2", columns={"id_post"})})
- * @ORM\Entity
- */
 #[ORM\Entity(repositoryClass: CommentaireRepository::class)]
 class Commentaire
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id_comment", type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: "integer", nullable: false)]
-    private $idComment;
+    #[ORM\Column]
+    private ?int $idComment;
 
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="content", type="string", length=255, nullable=true)
-     */
-    #[ORM\Column(type: "string", length: 255, nullable: true)]
-    private $content;
+    #[ORM\Column]
+    private ?string $content;
 
-    /**
-     * @var \DateTime|null
-     *
-     * @ORM\Column(name="date", type="date", nullable=true)
-     */
-    #[ORM\Column(type: "date", nullable: true)]
-    private $date;
+    #[ORM\Column]
+    private ?\DateTime $date;
 
-    /**
-     * @var int|null
-     *
-     * @ORM\Column(name="likes", type="integer", nullable=true)
-     */
-    #[ORM\Column(type: "integer", nullable: true)]
-    private $likes;
+    #[ORM\Column]
+    private ?int $likes;
 
-    /**
-     * @var \User
-     *
-     * @ORM\ManyToOne(targetEntity="User")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-     * })
-     */
-    #[ORM\ManyToOne(inversedBy: "commentaires")]
+    #[ORM\ManyToOne(targetEntity: User::class)]
     private $user;
 
-    /**
-     * @var \Post
-     *
-     * @ORM\ManyToOne(targetEntity="Post")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="id_post", referencedColumnName="id_post")
-     * })
-     */
-    #[ORM\ManyToOne(inversedBy: "commentaires")]
+    #[ORM\ManyToOne(targetEntity: Post::class)]
     private $idPost;
 
     public function getIdComment(): ?int

@@ -2,144 +2,65 @@
 
 namespace App\Entity;
 
-use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-
-
+use App\Repository\UserRepository;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 class User
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id;
 
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="username", type="string", length=255, nullable=true)
-     */
-    #[ORM\Column(length: 255)]
+
+    #[ORM\Column]
     private ?string $username;
 
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="firstname", type="string", length=255, nullable=true)
-     */
-    #[ORM\Column( length: 255)]
+    #[ORM\Column]
     private ?string $firstname;
 
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="lastname", type="string", length=255, nullable=true)
-     */
-    #[ORM\Column(length: 255)]
+    #[ORM\Column]
     private ?string $lastname;
 
-    /**
-     * @var \DateTime|null
-     *
-     * @ORM\Column(name="date_naiss", type="date", nullable=true)
-     */
     #[ORM\Column]
-    private ?date $dateNaiss;
+    private ?\DateTimeInterface $dateNaiss;
 
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="password", type="string", length=255, nullable=true)
-     */
-    #[ORM\Column(length: 255)]
+    #[ORM\Column]
     private ?string $password;
 
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="email", type="string", length=255, nullable=true)
-     */
-    #[ORM\Column(length: 255)]
+    #[ORM\Column]
     private ?string $email;
 
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="role", type="string", length=255, nullable=true)
-     */
-    #[ORM\Column(length: 255)]
+    #[ORM\Column]
     private ?string $role;
 
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="num_tel", type="string", length=255, nullable=true)
-     */
-    #[ORM\Column(length: 255)]
+    #[ORM\Column]
     private ?string $numTel;
 
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="adresse", type="text", length=65535, nullable=true)
-     */
     #[ORM\Column]
     private ?string $adresse;
 
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="photo", type="text", length=65535, nullable=true)
-     */
-    #[ORM\Column(length: 65535)]
+    #[ORM\Column]
     private ?string $photo;
 
-    /**
-     * @var int|null
-     *
-     * @ORM\Column(name="event_points", type="integer", nullable=true)
-     */
     #[ORM\Column]
     private ?int $eventPoints;
 
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="faceid", type="string", length=255, nullable=true)
-     */
-    #[ORM\Column(length: 255)]
+    #[ORM\Column]
     private ?string $faceid;
 
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="faceid_ts", type="date", nullable=false, options={"default"="CURRENT_TIMESTAMP"})
-     */
-    #[ORM\Column(options: ["default" => "CURRENT_TIMESTAMP"])]
-    private ?date $faceidTs;
+    #[ORM\Column]
+    private ?\DateTimeInterface $faceidTs;
 
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     *
-     * @ORM\ManyToMany(targetEntity="EventDetails", mappedBy="user")
-     */
-    #[ORM\ManyToMany(mappedBy: "user")]
-    private $eventDetails = array();
 
-    /**
-     * Constructor
-     */
+    #[ORM\ManyToMany(targetEntity: EventDetails::class, inversedBy: "user")]
+    private Collection $eventDetails;
+
+    
     public function __construct()
     {
         $this->eventDetails = new \Doctrine\Common\Collections\ArrayCollection();
@@ -306,9 +227,6 @@ class User
         return $this;
     }
 
-    /**
-     * @return Collection<int, EventDetails>
-     */
     public function getEventDetails(): Collection
     {
         return $this->eventDetails;

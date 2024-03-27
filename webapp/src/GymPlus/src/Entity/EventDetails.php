@@ -8,94 +8,37 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\EventDetailsRepository;
 
-/**
- * EventDetails
- *
- * @ORM\Table(name="event_details")
- * @ORM\Entity
- */
 #[ORM\Entity(repositoryClass: EventDetailsRepository::class)]
 class EventDetails
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: "integer", nullable: false)]
-    private $id;
+    #[ORM\Column]
+    private ?int $id;
 
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="name", type="string", length=255, nullable=true)
-     */
-    #[ORM\Column(type: "string", length: 255, nullable: true)]
-    private $name;
+    #[ORM\Column]
+    private ?string $name;
 
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="type", type="string", length=255, nullable=true)
-     */
-    #[ORM\Column(type: "string", length: 255, nullable: true)]
-    private $type;
+    #[ORM\Column]
+    private ?string $type;
 
-    /**
-     * @var \DateTime|null
-     *
-     * @ORM\Column(name="event_date", type="datetime", nullable=true)
-     */
-    #[ORM\Column(type: "datetime", nullable: true)]
-    private $eventDate;
+    #[ORM\Column]
+    private ?\DateTime $eventDate;
 
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="duree", type="string", length=255, nullable=true)
-     */
-    #[ORM\Column(type: "string", length: 255, nullable: true)]
-    private $duree;
+    #[ORM\Column]
+    private ?string $duree;
 
-    /**
-     * @var int|null
-     *
-     * @ORM\Column(name="nb_places", type="integer", nullable=true)
-     */
-    #[ORM\Column(type: "integer", nullable: true)]
-    private $nbPlaces;
+    #[ORM\Column]
+    private ?int $nbPlaces;
 
-    /**
-     * @var int|null
-     *
-     * @ORM\Column(name="nb_total", type="integer", nullable=true)
-     */
-    #[ORM\Column(type: "integer", nullable: true)]
-    private $nbTotal;
+    #[ORM\Column]
+    private ?int $nbTotal;
 
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     *
-     * @ORM\ManyToMany(targetEntity="User", inversedBy="eventDetails")
-     * @ORM\JoinTable(name="event_participants",
-     *   joinColumns={
-     *     @ORM\JoinColumn(name="event_details_id", referencedColumnName="id")
-     *   },
-     *   inverseJoinColumns={
-     *     @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-     *   }
-     * )
-     */
-    #[ORM\ManyToMany(targetEntity: "User", inversedBy: "eventDetails")]
-    private $user = array();
+    #[ORM\ManyToMany(targetEntity: User::class)]
+    private Collection $user;
 
-    /**
-     * Constructor
-     */
+
     public function __construct()
     {
         $this->user = new \Doctrine\Common\Collections\ArrayCollection();
@@ -178,9 +121,6 @@ class EventDetails
         return $this;
     }
 
-    /**
-     * @return Collection<int, User>
-     */
     public function getUser(): Collection
     {
         return $this->user;

@@ -6,60 +6,24 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\FactureRepository;
 
-/**
- * Facture
- *
- * @ORM\Table(name="facture", indexes={@ORM\Index(name="FK_id", columns={"id"})})
- * @ORM\Entity
- */
 #[ORM\Entity(repositoryClass: FactureRepository::class)]
 class Facture
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="idFacture", type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: "integer", nullable: false)]
-    private $idfacture;
+    #[ORM\Column]
+    private ?int $idfacture;
 
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="dateVente", type="date", nullable=false, options={"default"="CURRENT_TIMESTAMP"})
-     */
-    #[ORM\Column(type: 'date', nullable: false, options: ['default' => 'CURRENT_TIMESTAMP'])]
-    private $datevente = 'CURRENT_TIMESTAMP';
+    #[ORM\Column]
+    private ?\DateTimeInterface $datevente;
 
-    /**
-     * @var float|null
-     *
-     * @ORM\Column(name="prixTatalPaye", type="float", precision=10, scale=0, nullable=true)
-     */
-    #[ORM\Column(type: 'float', precision: 10, scale: 0, nullable: true)]
-    private $prixtatalpaye;
+    #[ORM\Column]
+    private ?float $prixtatalpaye;
 
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="methodeDePaiement", type="string", length=255, nullable=true)
-     */
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private $methodedepaiement;
+    #[ORM\Column]
+    private ?string $methodedepaiement;
 
-    /**
-     * @var \User
-     *
-     * @ORM\ManyToOne(targetEntity="User")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="id", referencedColumnName="id")
-     * })
-     */
-    #[ORM\ManyToOne(inversedBy: "factures")]
+   #[ORM\ManyToOne(targetEntity: User::class)]
     private $id;
 
     public function getIdfacture(): ?int

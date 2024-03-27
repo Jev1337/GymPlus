@@ -5,104 +5,41 @@ namespace App\Entity;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ObjectifRepository;
-/**
- * Objectif
- *
- * @ORM\Table(name="objectif", indexes={@ORM\Index(name="userId", columns={"userId"}), @ORM\Index(name="coachId", columns={"CoachId"})})
- * @ORM\Entity
- */
+
 #[ORM\Entity(repositoryClass: ObjectifRepository::class)]
 class Objectif
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="idObjectif", type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: "integer", nullable: false)]
-    private $idobjectif;
+    #[ORM\Column]
+    private ?int $idobjectif;
 
-    /**
-     * @var float|null
-     *
-     * @ORM\Column(name="poidsObj", type="float", precision=10, scale=0, nullable=true)
-     */
-    #[ORM\Column(type: "float", precision: 10, scale: 0, nullable: true)]
-    private $poidsobj;
+    #[ORM\Column]
+    private ?float $poidsobj;
 
-    /**
-     * @var \DateTime|null
-     *
-     * @ORM\Column(name="dateD", type="date", nullable=true)
-     */
-    #[ORM\Column(type: "date", nullable: true)]
-    private $dated;
+    #[ORM\Column]
+    private ?\DateTimeInterface $dated;
 
-    /**
-     * @var \DateTime|null
-     *
-     * @ORM\Column(name="dateF", type="date", nullable=true)
-     */
-    #[ORM\Column(type: "date", nullable: true)]
-    private $datef;
+    #[ORM\Column]
+    private ?\DateTimeInterface $datef;
 
-    /**
-     * @var float|null
-     *
-     * @ORM\Column(name="PoidsAct", type="float", precision=10, scale=0, nullable=true)
-     */
-    #[ORM\Column(type: "float", precision: 10, scale: 0, nullable: true)]
-    private $poidsact;
+    #[ORM\Column]
+    private ?float $poidsact;
 
-    /**
-     * @var float|null
-     *
-     * @ORM\Column(name="Taille", type="float", precision=10, scale=0, nullable=true)
-     */
-    #[ORM\Column(type: "float", precision: 10, scale: 0, nullable: true)]
-    private $taille;
+    #[ORM\Column]
+    private ?float $taille;
 
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="Alergie", type="string", length=255, nullable=true)
-     */
-    #[ORM\Column(type: "string", length: 255, nullable: true)]
-    private $alergie;
+    #[ORM\Column]
+    private ?string $alergie;
 
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="TypeObj", type="string", length=255, nullable=true)
-     */
-    #[ORM\Column(type: "string", length: 255, nullable: true)]
-    private $typeobj;
+    #[ORM\Column]
+    private ?string $typeobj;
 
-    /**
-     * @var \User
-     *
-     * @ORM\ManyToOne(targetEntity="User")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="CoachId", referencedColumnName="id")
-     * })
-     */
-    #[ORM\ManyToOne(inversedBy: "objectifs")]
-    private $coachid;
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    private ?user $coachid;
 
-    /**
-     * @var \User
-     *
-     * @ORM\ManyToOne(targetEntity="User")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="userId", referencedColumnName="id")
-     * })
-     */
-    #[ORM\ManyToOne(inversedBy: "objectifs")]
-    private $userid;
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    private ?user $userid;
 
     public function getIdobjectif(): ?int
     {

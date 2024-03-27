@@ -6,53 +6,24 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\PlanningRepository;
 
-/**
- * Planning
- *
- * @ORM\Table(name="planning", indexes={@ORM\Index(name="idObjectif", columns={"idObjectif"})})
- * @ORM\Entity
- */
+
 #[ORM\Entity(repositoryClass: PlanningRepository::class)]
 class Planning
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id_Planning", type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: "integer", nullable: false)]
-    private $idPlanning;
+    #[ORM\Column]
+    private ?int $idPlanning;
 
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="TrainingProg", type="text", length=65535, nullable=true)
-     */
-    #[ORM\Column(type: "text", length: 65535, nullable: true)]
-    private $trainingprog;
+    #[ORM\Column]
+    private ?int $trainingprog;
 
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="FoodProg", type="text", length=65535, nullable=true)
-     */
-    #[ORM\Column(type: "text", length: 65535, nullable: true)]
-    private $foodprog;
+    #[ORM\Column]
+    private ?int $foodprog;
 
-    /**
-     * @var \Objectif
-     *
-     * @ORM\ManyToOne(targetEntity="Objectif")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idObjectif", referencedColumnName="idObjectif")
-     * })
-     */
-    #[ORM\ManyToOne(inversedBy: "plannings")]
-    private $idobjectif;
+
+    #[ORM\ManyToOne(targetEntity: Objectif::class)]
+    private ?Objectif $idobjectif;
 
     public function getIdPlanning(): ?int
     {

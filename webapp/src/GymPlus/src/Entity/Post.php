@@ -6,85 +6,34 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\PostRepository;
 
-/**
- * Post
- *
- * @ORM\Table(name="post", indexes={@ORM\Index(name="user_id", columns={"user_id"})})
- * @ORM\Entity
- */
 #[ORM\Entity(repositoryClass: PostRepository::class)]
 class Post
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id_post", type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: "integer", nullable: false)]
-    private $idPost;
+    #[ORM\Column]
+    private ?int $idPost;
 
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="mode", type="string", length=255, nullable=true)
-     */
-    #[ORM\Column(type: "string", length: 255, nullable: true)]
-    private $mode;
+    #[ORM\Column]
+    private ?string $mode;
 
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="content", type="string", length=255, nullable=true)
-     */
-    #[ORM\Column(type: "string", length: 255, nullable: true)]
-    private $content;
+    #[ORM\Column]
+    private ?string $content;
 
-    /**
-     * @var \DateTime|null
-     *
-     * @ORM\Column(name="date", type="date", nullable=true)
-     */
-    #[ORM\Column(type: "date", nullable: true)]
-    private $date;
+    #[ORM\Column]
+    private ?\DateTimeInterface $date;
 
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="photo", type="text", length=65535, nullable=true)
-     */
-    #[ORM\Column(type: "text", length: 65535, nullable: true)]
-    private $photo;
+    #[ORM\Column]
+    private ?string $photo;
 
-    /**
-     * @var int|null
-     *
-     * @ORM\Column(name="likes", type="integer", nullable=true)
-     */
-    #[ORM\Column(type: "integer", nullable: true)]
-    private $likes;
+    #[ORM\Column]
+    private ?int $likes;
 
-    /**
-     * @var int|null
-     *
-     * @ORM\Column(name="nbComnts", type="integer", nullable=true)
-     */
-    #[ORM\Column(name: "nbComnts", type: "integer", nullable: true)]
-    private $nbcomnts;
+    #[ORM\Column]
+    private ?int $nbcomnts;
 
-    /**
-     * @var \User
-     *
-     * @ORM\ManyToOne(targetEntity="User")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-     * })
-     */
-    #[ORM\ManyToOne(inversedBy: "posts")]
-    private $user;
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    private ?user $user;
 
     public function getIdPost(): ?int
     {

@@ -6,90 +6,38 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ProduitRepository;
 
-/**
- * Produit
- *
- * @ORM\Table(name="produit")
- * @ORM\Entity
- */
 #[ORM\Entity(repositoryClass: ProduitRepository::class)]
 class Produit
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="idProduit", type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: "integer", nullable: false)]
-    private $idproduit;
+    #[ORM\Column]
+    private ?int $idproduit;
 
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="name", type="string", length=255, nullable=true)
-     */
-    #[ORM\Column(type: "string", length: 255, nullable: true)]
-    private $name;
+    #[ORM\Column]
+    private ?string $name;
 
-    /**
-     * @var float|null
-     *
-     * @ORM\Column(name="prix", type="float", precision=10, scale=0, nullable=true)
-     */
-    #[ORM\Column(type: "float", precision: 10, scale: 0, nullable: true)]
-    private $prix;
+    #[ORM\Column]
+    private ?float $prix;
 
-    /**
-     * @var int|null
-     *
-     * @ORM\Column(name="stock", type="integer", nullable=true)
-     */
-    #[ORM\Column(type: "integer", nullable: true)]
-    private $stock;
+    #[ORM\Column]
+    private ?int $stock;
 
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="description", type="string", length=255, nullable=true)
-     */
-    #[ORM\Column(type: "string", length: 255, nullable: true)]
-    private $description;
+    #[ORM\Column]
+    private ?string $description;
 
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="categorie", type="string", length=255, nullable=true)
-     */
-    #[ORM\Column(type: "string", length: 255, nullable: true)]
-    private $categorie;
+    #[ORM\Column]
+    private ?string $categorie;
 
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="photo", type="text", length=65535, nullable=true)
-     */
-    #[ORM\Column(type: "text", length: 65535, nullable: true)]
-    private $photo;
 
-    /**
-     * @var int|null
-     *
-     * @ORM\Column(name="seuil", type="integer", nullable=true)
-     */
-    #[ORM\Column(type: "integer", nullable: true)]
-    private $seuil;
+    #[ORM\Column]
+    private ?string $photo;
 
-    /**
-     * @var float|null
-     *
-     * @ORM\Column(name="promo", type="float", precision=10, scale=0, nullable=true)
-     */
-    #[ORM\Column(type: "float", precision: 10, scale: 0, nullable: true)]
-    private $promo;
+    #[ORM\Column]
+    private ?int $seuil;
+
+    #[ORM\Column]
+    private ?float $promo;
 
     public function getIdproduit(): ?int
     {

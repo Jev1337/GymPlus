@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class UserController extends AbstractController
 {
-    #[Route('/dashboard', name: 'app_user')]
+    #[Route('/dashboard', name: 'app_dashboard')]
     public function dashboard(SessionInterface $session): Response
     {
         $user = $session->get('user');
@@ -45,7 +45,7 @@ class UserController extends AbstractController
             if ($user->getRole() == 'client') {
                 return $this->redirectToRoute('app_home');
             } else {
-                return $this->redirectToRoute('app_user');
+                return $this->redirectToRoute('app_dashboard');
             }
         }
         $form = $this->createForm(LoginType::class);
@@ -57,7 +57,7 @@ class UserController extends AbstractController
                 if(password_verify($data['password'], $user->getPassword())){
                     $session->set('user', $user);
                     if ($user->getRole() != 'client') {
-                        return $this->redirectToRoute('app_user');
+                        return $this->redirectToRoute('app_dashboard');
                     } else {
                         return $this->redirectToRoute('app_home');
                     }
@@ -85,7 +85,7 @@ class UserController extends AbstractController
             if ($user->getRole() == 'client') {
                 return $this->redirectToRoute('app_home');
             } else {
-                return $this->redirectToRoute('app_user');
+                return $this->redirectToRoute('app_dashboard');
             }
         }
         return $this->render('main/signup.html.twig', [

@@ -194,7 +194,7 @@ private Text caloriesTextField;
 
     @FXML
     private Text totalCalsFields;
-    private static final int THRESHOLD = 1970; // Set this to a suitable value for your sensor
+    private static final int THRESHOLD = 2000; // Set this to a suitable value for your sensor
     private static long lastBeatTime = 0;
 
     private static int count = 0;

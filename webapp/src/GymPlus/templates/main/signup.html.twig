@@ -1,0 +1,150 @@
+{% extends "main/base.html.twig" %}
+{% block content%}
+	<div class="page-content bg-white">
+		<!-- Banner  -->
+		<div class="dz-bnr-inr style-2" style="background-image: url('{{asset('images/banner/banner-2.png')}}')">
+			<div class="banner-gradient"></div>
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-8">
+						<div class="dz-bnr-inr-entry">
+							<h1>Appointment</h1>
+							<!-- Breadcrumb Row -->
+							<nav aria-label="breadcrumb" class="breadcrumb-row">
+								<ul class="breadcrumb">
+									<li class="breadcrumb-item"><a href="index.html">Home</a></li>
+									<li class="breadcrumb-item active" aria-current="page">Appointment</li>
+								</ul>
+							</nav>
+							<!-- Breadcrumb Row End -->
+						</div>
+					</div>
+				</div>	
+				<div class="banner-media">
+					<img src="{{asset('images/banner/pic1.png')}}" alt="/">
+				</div>
+			</div>	
+		</div>
+		<!-- Banner End -->
+		<!-- Have an account? Login-->
+		<a href="{{path('app_login')}}" class="btn btn-primary btn-lg btn-block">Have an account? Click here to Login</a>
+		<section class="appointment-page-1 content-inner-1">
+			<div class="container">
+				<div id="smartwizard" class="wizard-form">
+					<ul class="nav">
+						
+						<li class="nav-item">
+						  <a class="nav-link" href="#wizardStep1">
+							<span class="num">
+								<strong>1</strong>
+								<i class="fa-solid fa-check"></i>
+							</span>
+							Account Information
+						  </a>
+						</li>
+						<li class="nav-item">
+						  <a class="nav-link " href="#wizardStep2">
+							<span class="num">
+								<strong>2</strong>
+								<i class="fa-solid fa-check"></i>
+							</span>
+							Verification
+						  </a>
+						</li>
+						<li class="nav-item">
+						  <a class="nav-link " href="#wizardStep3">
+							<span class="num">
+								<strong>3</strong>
+								<i class="fa-solid fa-check"></i>
+							</span>
+							Done
+						  </a>
+						</li>
+					</ul>
+				 
+					<div class="tab-content">
+						
+						
+						<div id="wizardStep1" class="tab-pane" role="tabpanel" aria-labelledby="wizardStep3">
+							<h5 class="m-b5">Your New Account</h5>
+							<p class="m-b0">You are about to create a new account.</p>
+							<p class="m-b30">Please provide your details in the form below to proceed with your signup. You will confirm your phone number in the next step.</p>
+							
+							<form class="row">
+								<div class="col-md-4 col-lg-4 form-group">
+									<label class="form-label">Name</label>
+									<div class="input-group input-line">
+										<input class="form-control" placeholder="Your Name" type="text">
+									</div>
+								</div>
+								<div class="col-md-4 col-lg-4 form-group">
+									<label class="form-label">Phone</label>
+									<div class="input-group input-line">
+										<input class="form-control" placeholder="Phone No." type="text">
+									</div>
+								</div>
+								<div class="col-md-4 col-lg-4 form-group">
+									<label class="form-label">Email</label>
+									<div class="input-group input-line">
+										<input class="form-control" placeholder="support@email.com" type="email">
+									</div>
+								</div>
+							</form>
+						</div>
+						<div id="wizardStep1" class="tab-pane" role="tabpanel" aria-labelledby="wizardStep4">
+							<h5>Please tell us how you would like to pay:</h5>
+							<div class="form-check">
+								<input class="form-check-input" type="radio" name="exampleRadios" id="Radios1" value="option1" checked>
+								<label class="form-check-label" for="Radios1">
+									Default radio
+								</label>
+							</div>
+							<div class="form-check">
+								<input class="form-check-input" type="radio" name="exampleRadios" id="Radios2" value="option2">
+								<label class="form-check-label" for="Radios2">
+									Second default radio
+								</label>
+							</div>
+						</div>
+						<div id="wizardStep3" class="tab-pane" role="tabpanel" aria-labelledby="wizardStep5">
+							<div class="successful-box text-center">
+								<div class="successful-check"><i class="fa-solid fa-check"></i></div>
+								<h2>Successful</h2>									
+							</div>
+						</div>
+					</div>
+				</div>  
+			</div>
+		</section>
+		
+		
+		<!-- Call To Action -->
+		<section class="call-action style-2 bg-img-fix bg-primary">
+			<div class="container">
+				<div class="inner-content">
+					<div class="row justify-content-between align-items-center">
+						<div class="text-center text-lg-start col-xl-6 m-lg-b20 wow fadeInUp" data-wow-delay="0.2s" style="visibility: visible; animation-delay: 0.2s; animation-name: fadeInUp;">
+							<h2 class="title m-0"><span class="font-weight-400">Subscribe To Our </span>Newsletter</h2>
+						</div>
+						<div class="text-center text-lg-end col-xl-6 wow fadeInUp" data-wow-delay="0.4s" style="visibility: visible; animation-delay: 0.4s; animation-name: fadeInUp;">
+							<form class="dzSubscribe" action="{{asset('script/mailchamp.php')}}" method="post">
+								<div class="dzSubscribeMsg"></div>
+								<div class="form-group">
+									<div class="input-group mb-0"> 
+										<div class="input-skew">
+											<input name="dzEmail" required="required" type="email" class="form-control" placeholder="Your Email Address">
+										</div>
+										<div class="input-group-addon">
+											<button name="submit" value="Submit" type="submit" class="btn btn-secondary btn-lg btn-skew h-100"><span class="skew-inner"><span class="text">Subscribe Now</span></span></button>
+										</div>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		<!-- Call To Action -->
+		</div>
+{% endblock %}

@@ -1,0 +1,123 @@
+// Error Page 1
+.error-page-1{
+	position:relative;
+	height: 100vh;
+	min-height: 900px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    display: flex;
+    align-items: center;
+    .inner-content {
+    	padding-top: 100px;
+    }
+	&:after {
+		content: "";
+		position: absolute;
+		background-image: url(../images/background/bg9.png);
+		z-index: -2;
+		left: 0;
+		bottom: 0;
+		width: 100%;
+		height: 100%;
+		opacity: 0.9;
+	}
+	.dz_error {
+		position: relative;
+		display: inline-block;
+		font-size: 320px;
+		font-weight: 700;
+		height:300px;
+		margin-left: auto;
+		margin-right: auto;
+		color:#fff;
+		font-family: var(--font-family-title);
+		margin-bottom:25px;
+		line-height:1;
+		span{
+			line-height:1;
+			i{
+				font-size: 250px;
+				color:var(--primary);
+			}	
+		}
+		@include respond ('wide-desktop'){
+			font-size: 250px;
+			height:250px;
+			margin-bottom:10px;
+			span{
+				i{
+					font-size: 200px;
+				}	
+			}
+		}	
+		@include respond ('tab-port'){
+			font-size: 240px;
+			
+		}
+		@include respond ('phone-land'){
+			span{
+				i{
+					font-size: 180px;
+				}	
+			}
+		}
+		@include respond ('phone'){
+			font-size: 160px;
+			height:165px;
+			span{
+				i{
+					font-size: 125px;
+				}	
+			}
+		}
+		
+	}
+	.error-head {
+		font-size: 80px;
+		color:#fff;
+		font-weight: 700;
+		font-style: italic;
+		letter-spacing:1.6px;
+		@include respond ('tab-land'){
+			font-size: 55px;
+		}
+		@include respond ('phone-land'){
+			font-size: 45px;
+		}
+		@include respond ('phone'){
+			font-size: 35px;
+		}
+		
+	}
+	p{
+		color: #fff;
+		font-size: 18px;
+		font-weight: 500;
+		max-width: 505px;
+		margin-bottom: 30px;
+		margin-left: auto;
+		margin-right: auto;
+	}
+	@include respond('laptop'){
+		min-height: 750px;
+		.inner-content {
+	    	padding-top: 80px;
+	    }
+	}
+	@include respond('tab-port'){
+		.inner-content {
+	    	padding-top: 50px;
+	    }
+	}
+	@include respond('phone-land'){
+		.inner-content {
+	    	padding-top: 0px;
+	    }
+	}
+	@include respond('phone'){
+		.text{
+			font-size: 16px;
+			margin-bottom:15px;
+	    }
+	}
+}

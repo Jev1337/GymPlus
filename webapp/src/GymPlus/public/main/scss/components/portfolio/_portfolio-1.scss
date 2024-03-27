@@ -1,0 +1,184 @@
+.portfolio-bx{
+	.dz-box{
+		overflow:hidden;
+		border-radius:10px;
+		@include respond('tab-port'){
+			img{
+				width:100%;
+			}		
+		}
+	}
+}
+.dz-box {
+	&.style-1{
+		@include transitionMedium;
+		position: relative;
+		z-index: 99;
+		height: fit-content;
+		margin-bottom: 15px;
+		@include respond('tab-port'){
+			margin-bottom: 10px;
+		}
+		.dz-media{
+			@include transitionMedium;
+			z-index:1;
+			img{
+				height: 100%;
+				width:100%;
+				object-fit: cover;
+			}
+			.overlay-content{
+				position:absolute;
+			}
+		}
+		.dz-position{
+			font-size: 14px;
+			font-weight: 700;
+			color:var(--title);
+			letter-spacing: 1.4px;
+			text-transform: uppercase;
+			background: var(--primary);
+			width: fit-content;
+			padding: 5px 10px;
+			font-family: var(--font-family-title);
+			@include transitionMedium;
+			transform: translate(-100%, 0%);
+			display: block;
+		}
+		.dz-name{
+			font-size: 20px;
+			font-weight: 700;
+			color:var(--title);
+			letter-spacing: 2px;
+			text-transform: uppercase;
+			background:#fff;
+			width: fit-content;
+			padding: 10px;
+			font-family: var(--font-family-title);
+			@include transitionMedium;
+			transform: translate(0%, 130%);
+			margin:0;
+		}
+		.dz-content{
+			position: absolute;
+			@include transitionMedium;
+			overflow:hidden;
+			bottom:0;
+			z-index:9;
+			left: -25px;
+		}
+		&:hover,
+		&.active{
+			transform: rotate(-20deg);
+			filter: blur(0px);
+			z-index: 999999;
+			.dz-content{
+				overflow: visible;
+				.dz-position{
+					transform: translate(0%, 0%);
+				}
+				.dz-name{
+				    transform: translate(0%, 0%);
+				}
+			} 
+		}
+	}
+	&.style-3{
+		@include transitionMedium;
+		overflow: hidden;
+		box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.15);
+		.view-btn{
+			width: 75px;
+			height: 75px;
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			z-index: 1;
+			@include translateZ;
+			transition: background 0.5s ease;
+			-moz-transition: background 0.5s ease;
+			-webkit-transition: background 0.5s ease;
+			-ms-transition: background 0.5s ease;
+			-o-transition: background 0.5s ease;
+			transition-delay: 0.5s;
+			-moz-transition-delay: 0.5s;
+			-ms-transition-delay: 0.5s;
+			-o-transition-delay: 0.5s;
+			-webkit-transition-delay: 0.5s;
+			
+			&:after,	
+			&:before{
+				content:"";
+				position:absolute;
+				@include transitionMedium;
+				background:#fff;
+				opacity:0;
+			}	
+			&:after{
+				height:4px;
+				width:26px;
+				top: 50%;
+				left: 50%;
+				transform: translate(-500px, 50%);
+				-moz-transform: translate(-500px, 50%);
+				-webkit-transform: translate(-500px, 50%);
+				-ms-transform: translate(-500px, 50%);
+				-o-transform: translate(-500px, 50%);
+			}	
+			&:before{
+				height:26px;
+				width:4px;
+				left: 50%;
+				top: 50%;
+				transform: translate(-50%, -500px);
+				-moz-transform: translate(-50%, -500px);
+				-webkit-transform: translate(-50%, -500px);
+				-ms-transform: translate(-50%, -500px);
+				-o-transform: translate(-50%, -500px);
+			}
+		}
+		&:hover{
+			transform: scale(1.05);
+			-moz-transform: scale(1.05);
+			-webkit-transform: scale(1.05);
+			-ms-transform: scale(1.05);
+			-o-transform: scale(1.05);
+			z-index: 1;
+			box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.35);
+			
+			.view-btn{
+				background: var(--primary);
+				//transition: background 0.8s ease;
+				transition-delay: 0s;
+				&:after,	
+				&:before{
+					@include translateZ;
+					opacity:1;
+				}
+			}
+		}
+	}
+}
+
+
+.portfolio-slider-1 {
+	overflow: visible !important;
+	.swiper-wrapper{
+		flex-direction: row !important;
+		.swiper-slide {
+			transform: rotate(20deg);
+			margin:0 20px;
+			@include respond('tab-land'){
+				margin:0 15px;
+			}
+		}
+		&:hover{
+			.dz-box{
+				filter: blur(15px);
+				&:hover{
+					filter: blur(0px);	
+				}	
+			}
+		}
+	}
+}

@@ -1,0 +1,213 @@
+// Modal Box
+.inquiry-modal{
+	padding: 0 15px;
+	.modal-dialog{
+		max-width: 700px;
+		display: flex;
+		min-height: auto;
+		background-color: #fff;
+		align-items: stretch;
+		border-radius: var(--border-radius-base);
+		overflow: hidden;
+	}
+	.inquiry-adv{
+		flex: 0 0 50%;
+		max-width:50%;
+		@include respond('phone-land'){
+			display:none;
+		}
+		img{
+			height:100%;
+			object-fit:cover;
+			width:100%;
+		}
+	}
+	.modal-content{
+		border: 0;
+		border-radius: 0;
+		background: #fff;
+		padding: 30px;
+		flex: 0 0 50%;
+		max-width:50%;
+		@include respond('phone-land'){
+			flex: 0 0 100%;
+			max-width:100%;
+			padding: 20px;
+		}
+		.modal-header{
+			border:0;
+			padding:0;
+			display: block;
+			text-align: center;
+			
+			.modal-title{
+				font-size: 24px;
+				margin-bottom: 25px;
+				line-height: 1.3;
+				font-family: var(--font-family-title);
+				text-align: center;
+				width: 100%;
+			}
+			i{
+				color: var(--primary);
+				font-size: 54px;
+				line-height: 1;
+				display: inline-block;	
+			}
+		}
+		.modal-body{
+			padding:0;
+		}
+	}
+	.btn-close {
+		margin: 0;
+		position: absolute;
+		right: 5px;
+		top: 0px;
+		color: #000;
+		font-weight: 100;
+		text-shadow: none;
+		opacity: 1;
+		font-size: 40px;
+		padding: 0;
+		height: 40px;
+		line-height: 40px;
+		width: 40px;
+		border: 0;
+		background: transparent;
+	}
+}
+
+
+.subscribe-modal{
+	.modal-content{
+		min-width: 536px;
+		display: flex;
+		background-color: #fff;
+		align-items: stretch;
+		border-radius: var(--border-radius-base);
+		overflow: hidden;
+	 	.modal-body{
+			padding: 50px 40px;
+			.icon-box{
+				position: relative;
+				z-index: 1;
+				text-align: center;
+				margin-bottom: 35px;
+				&.bg-shape{
+					&:after{
+						content: "";
+						position: absolute;
+						background-color: var(--primary);
+						top: 50%;
+						left: 50%;
+						transform: translate(-50%, -50%);
+						width: 95px;
+						height: 95px;
+						border-radius: 50%;
+						z-index: -1;
+					}	
+				}
+			}
+			.dz-title{
+				font-size: 26px;
+				font-weight: 600;
+				color: #242424;
+				margin-bottom: 15px;
+			}
+			p{
+				color: rgba(0, 0, 0, 0.6);
+				max-width: 450px;
+				margin: 0 auto 25px;
+			}
+			.dzSubscribe{
+				.dzFormMsg, 
+				.dzSubscribeMsg{
+					position: static;
+					margin: 0 auto;
+				}
+				&.dz-ajax-overlay{
+					&:after{
+						transform: none;
+						height: 40%;
+						background-color: var(--secondary);
+					}
+				}
+			}
+			.input-group{
+				.form-control{
+					margin-bottom: 30px;
+					color: #242424;
+					width: 100%;
+					border-radius: 0;
+					height: 60px;
+					border-color: #b3b3b3;
+					&::placeholder{
+						color: rgba(0, 0, 0, 0.5);
+					}
+					&:focus{
+						border-color: var(--primary);
+					}
+				}
+			}
+			.btn{
+				box-shadow: 0px 4px 44px 0px rgba(6, 198, 209, 0.33);
+			}
+			.pattern1{
+				position: absolute;
+				top: 15px;
+				right: 0;
+				width: 100px;
+				height: 100px;
+				opacity: 0.5;
+				animation: move4 5s infinite;
+			}
+			.pattern2{
+				position: absolute;
+				bottom: 15px;
+				left: 0;
+				width: 100px;
+				height: 100px;
+				opacity: 0.5;
+				animation: move4 3.5s infinite;
+			}
+		}
+		@include respond ('phone'){
+			min-width: 300px;
+			.modal-body{
+				padding: 40px 20px;
+				.icon-box{
+					img{
+						width: 50px;
+						height: 50px;
+					}	
+					&.bg-shape{
+						&:after{
+							width: 85px;
+							height: 85px;
+						}
+					}
+				}
+				.dz-title{
+					font-size: 20px;
+				}
+				p{
+					margin: 0 auto 16px;
+					font-size: 14px;
+					max-width: 460px;
+				}
+				.input-group{
+					.form-control{
+						margin-bottom: 20px;
+						height: 45px;
+					}
+				}
+				.pattern1,
+				.pattern2{
+					width: 50px;
+					height: 50px;
+				}
+			}
+		}
+	}	
+}

@@ -1,0 +1,282 @@
+.registration-media{
+	text-align: right;
+	position: relative;
+	z-index: -1;
+	margin: auto;
+	margin-top: -90px;
+	
+	@include respond('laptop'){
+		margin-top:0;
+	}
+	
+	@include custommq($max:991px, $min:300px){
+		position: absolute;
+		margin-top: 0px;
+		right: 10%;
+		bottom: 0;
+	}
+
+	@include respond('phone'){
+		right: 5%;
+	}
+	
+	img{
+		@include respond('laptop'){
+			height: 600px;
+			width: 100%;
+			object-fit: contain;
+			object-position: bottom;
+		}
+		@include respond('tab-port'){
+			height: auto;
+		}
+		@include custommq($max:991px, $min:300px){
+			height: 280px;
+			object-fit: contain;
+		}
+		@include respond('phone-land'){
+			height:240px;
+		}
+	}
+}
+
+.end-side-content{
+	padding:150px 0;
+	display: flex;
+	flex-direction: column;
+	@include respond('laptop'){
+		padding:100px 0;
+	}
+	@include respond('tab-land'){
+		padding:60px 0;
+	}
+	@include respond('phone'){
+		padding:30px 20px;
+	}
+}
+
+.login-area{
+	border:1px solid var(--border-color);
+    padding: 80px;	
+	max-width:522px;
+	margin:auto;
+	background:var(--secondary);
+	width: 100%;
+	@include respond('tab-land'){
+		padding: 40px;	
+		max-width:430px;
+	}
+	@include respond('phone'){
+		padding: 30px;
+		max-width:100%;
+	}
+	form{
+		.label-title{
+			margin-bottom:10px;
+			font-weight: 500;
+			font-family:var(--font-family-base);
+			font-size: 14px;
+			color:#fff;
+		}
+	}
+	.title{
+		font-family:var(--font-family-title);
+		font-size: 40px;
+		font-weight: 700;
+		letter-spacing: 4px;
+		text-transform: uppercase;
+		color:#fff;
+		text-align:center;
+		@include respond('phone'){
+			font-size: 30px;
+		}
+	}
+	p{
+		@include respond('phone'){
+			font-size: 14px;
+		}
+	}
+	.form-check-input{
+		border-radius:1px;
+		margin-right:5px;
+	}
+	.form-check-label{
+		color:#fff;
+	}
+	.btn-link {
+		font-size: 14px;
+		text-align:center;
+		color:#fff;	
+		font-weight:500;
+		span{
+			color:var(--primary);
+		}
+	}
+	h4{
+		font-family: var(--font-family-base);
+		font-weight: 400;
+		font-size: 20px;
+	}
+	.secure-input {
+		position: relative;
+		z-index: 1;
+		.show-pass{
+			cursor: pointer;
+			position: absolute;
+			right: 0;
+			height: auto;
+			width: 40px;
+			top: 50%;
+			transform: translate(-20%, -50%);
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 18px;
+			i{
+				color:#000;
+			}
+			&:after{
+				content: "";
+				height: 2px;
+				width: 24px;
+				background-color: #000;
+				position: absolute;
+				border-radius: 5px;
+				transform: rotate(15deg);
+				opacity: 0;
+			}
+
+			&.active{
+				&:after{
+					opacity:1;
+				}
+			}
+		}
+	}
+}
+
+.login-slider{
+	height:100%;
+	.banner-login{
+		position:relative;
+		z-index:1;
+		height: 100%;
+		background-size: cover;
+		background-color: #fff;
+		@include respond('tab-port'){
+			height:100vh;
+		}
+		@include respond('phone-land'){
+			height:60vh;
+		}
+		.banner-content{
+			position:absolute;
+			bottom:120px;
+			padding: 0 30px 0 90px;
+			@include respond('laptop'){
+				padding: 0 30px 0 70px;
+			}
+			@include respond('tab-port'){
+				bottom:100px;
+				padding:0 90px 0 70px;
+			}
+			@include respond('phone-land'){
+				bottom:100px;
+				padding:0 50px 0 50px;
+			}
+			@include respond('phone'){
+				bottom:80px;
+				padding:0 30px 0 30px;
+			}
+			.title{
+				color: #fff;
+				font-family: var(--font-family-title);
+				font-size: 60px;
+				font-style: italic;
+				font-weight: 900;
+				max-width:625px;
+				@include respond('laptop'){
+					font-size: 50px;
+				}
+				@include respond('tab-land'){
+					font-size: 40px;
+				}
+				@include respond('phone-land'){
+					font-size: 28px;
+				}
+			}
+			.text{
+				color:#fff;
+				max-width:755px;
+				margin-bottom:20px;
+				@include respond('tab-land'){
+					font-size: 14px;
+				}
+				@include respond('phone-land'){
+					font-size: 13px;
+				}
+			}
+		}
+		&:after {
+			content: '';
+			position: absolute;
+			bottom: 0;
+			left: 0;
+			width: 100%;
+			height: 70%;
+			background: linear-gradient(180deg, rgba(0, 0, 0, 0.00) 0%, #000 100%);
+			z-index: -2;
+		}
+	}
+}
+
+.login-slider {
+	.num-pagination {
+		position: absolute;
+		bottom: 55px;
+		right: 20%;
+		.swiper-pagination-bullet {
+			color: #ffffff;
+			font-weight: 500;
+			font-size: 20px;
+			&.swiper-pagination-bullet-active {
+				transform: scale(1.5) translateY(-3px);
+			}
+		}
+		@include respond('tab-land'){
+			right:30%;
+		}
+		@include respond('phone-land'){
+			right:30%;
+		}
+		@include respond('phone'){
+			right:50%;
+			bottom:40px;
+		}
+	}
+	.main-btn {
+		position: absolute;
+		bottom: 60px;
+		left: 90px;
+		z-index: 1;
+		.btn-prev,
+		.btn-next{
+			margin:0 5px;
+			&.active,
+			&:hover{
+				background:#fff;
+				color:var(--title);
+			}
+		}
+		@include respond('laptop'){
+			left:70px;
+		}
+		@include respond('phone-land'){
+			left:50px;
+		}
+		@include respond('phone'){
+			left:30px;
+			bottom:40px;
+		}
+	}
+}

@@ -1,0 +1,192 @@
+.table-responsive-sm{
+    min-width: 50rem;
+}
+.table-responsive-md{
+    min-width: 60rem;
+}
+
+
+.table {
+    margin-bottom     : 0px;
+    font-weight       : 400;
+	
+	th{
+		color: var(--title);
+		font-weight: 600;
+	}
+    tr{
+        td,
+        th {
+            padding: 10px 20px; 
+			@include respond('phone'){
+				padding: 5px;
+			}
+        }
+    }
+}
+
+.table{
+	&.book-overview{
+		tr{
+			th{
+				color: $headings-color;
+				font-size: 16px;
+				font-weight: 500;
+				width: 200px;
+			}
+			
+		}
+	}
+}
+.table-striped {
+    thead {
+        tr {
+            th {
+                padding-bottom: 15px!important;
+            }
+        }
+    }
+
+    tbody tr:nth-of-type(#{$table-striped-order}) {
+        background-color: $body-bg;
+    }
+
+    tfoot{
+        border-top: 2px solid $border-color;
+        tr{
+            th{
+                padding-top: 10px;
+            }
+        }
+    }
+}
+.table > :not(:first-child) {
+    border-top: 1px solid #dee2e6;
+}
+
+.check-tbl{
+	width:100%;
+	border:1px solid rgba(0, 0, 0, 0.125);
+	vertical-align:middle;
+	border-width: 0 0 1px 0;
+	
+	thead{
+		th{
+			font-size: 16px;
+			font-weight: 500;
+			padding: 0px 20px 20px;
+			color: rgb(36, 38, 43);
+			&:first-child{
+				padding:0 0 20px;
+			}
+		}
+	}
+	tbody{
+		td{
+			padding: 20px;
+			font-weight: 500;
+			color: var(--body-color);
+			
+			img{
+				width: 80px;
+			}
+			&:first-child,
+			&:last-child {
+				padding: 20px 0px;
+			}
+		}
+	}
+	.product-item-close{ 
+		text-align: right;
+		a{
+			width: 40px;
+			height: 40px;
+			background: #F6F6F6;
+			display: inline-block;
+			color: var(--title);
+			text-align: center;
+			line-height: 40px;
+			border-radius: 100%;
+			i{
+				color: var(--title);
+				font-weight: 900;
+				vertical-align: middle;
+			}
+		}
+	}
+	.product-item-name,
+	.product-item-totle{
+		color:var(--secondary);
+		a{
+		color:var(--secondary);
+		}
+	}
+}
+
+.table-order{
+	border: 1px solid #e7e7e7;
+	tbody td img {
+		width: 45px;
+	}
+	tbody td {
+		padding: 10px;
+		font-size: 15px;
+	}
+	thead th {
+		font-size: 15px;
+		padding: 10px 10px;
+	}
+}
+
+
+
+/* time-table */
+.time-table {
+	table {
+		margin-bottom: 30px;
+		width: 100%;
+		.weight-info {
+			padding: 14px 20px;
+		}
+		thead {
+			tr{
+				background: rgba(0, 0, 0, 0.1);
+			}
+		}
+		tr{
+			&:nth-child(2n) {
+				background: rgba(0, 0, 0, 0.1);
+			}
+		}
+		
+		th,	
+		 td {
+			text-align: left;
+			padding: 10px 30px 10px 20px;
+			width: 50%;
+			height: 50px;
+		}
+		.day{
+			color: var(--primary);
+			font-family: var(--font-family-title);
+			font-size: 15px;
+			font-weight: 700;
+			letter-spacing: 1.5px;
+			text-transform: uppercase;
+		}
+		.time{
+			color: var(--title);
+			font-family: var(--font-family-title);
+			font-size: 20px;
+			font-weight: 500;
+			text-align:end;
+			@include respond('tab-land'){
+				padding: 10px;
+			}
+			@include respond('phone-land'){
+				font-size: 14px;
+			}
+		}
+	}
+}
+/* time-table */

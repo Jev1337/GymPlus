@@ -1,0 +1,10 @@
+.about-bx2{
+	.dz-media{
+	    height: 100%;
+		clip-path: polygon(10% 0, 100% 0, 100% 0, 100% 91%, 92% 100%, 0 100%, 0 100%, 0 9%);
+		img{
+			height:100%;
+			object-fit: cover;
+		}
+	}
+}

@@ -1,0 +1,319 @@
+#loading-area-2,
+#loading-area{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    z-index: 999999999;
+	background-position:center;
+	background-repeat:no-repeat;
+	background-size:80px;
+	display: flex;
+    justify-content: center;
+    align-items: center;
+	&.loading-page-1{
+		background-color: var(--secondary);
+		.loading-inner{
+			color: var(--primary);
+			font-family: var(--font-family-title);
+			font-size: 85px;
+			font-weight: 700;
+			text-align: center;
+			//display: flex;
+			
+			span{
+				display: inline-block;
+				opacity: 0;
+				transform: rotateX(-90deg);
+				position: relative;
+				top: -100px;
+				animation: dzTextAnimate 1.2s ease-in-out infinite;
+				margin: 0 -5px;
+				@include respond ('tab-land'){
+					margin: 0 -2px;
+				}
+				
+				&:nth-child(1){animation-delay: 1.2s;}
+				&:nth-child(2){animation-delay: 1.3s;}
+				&:nth-child(3){animation-delay: 1.4s;}
+				&:nth-child(4){animation-delay: 1.5s;}
+				&:nth-child(5){animation-delay: 1.6s;}
+				&:nth-child(6){animation-delay: 1.7s;}
+				&:nth-child(7){animation-delay: 1.8s;}
+				&:nth-child(8){animation-delay: 1.9s;}
+				&:nth-child(9){animation-delay: 2s;}
+				&:nth-child(10){animation-delay: 2.1s;}
+			}
+			@include respond ('tab-port'){
+				font-size: 48px;
+				span{
+					top: -50px;
+				}
+			}
+			@include respond ('phone'){
+				font-size: 36px;
+			}	
+		}
+		&:before{
+			content: '';
+			display: block;
+			position: absolute;
+			top: -100%;
+			left: -100%;
+			height: 300%;
+			width: 300%;
+			background-image: url(../images/dz-blink.png);
+			background-size: 900px;
+			animation: dzBlinkEffect 1.5s steps(15) infinite;
+			opacity: 0.4;
+		}
+	}
+	&.loading-page-2{
+		background-color: transparent;
+		&:before, 
+		&:after {
+			content: "";
+			position: absolute;
+			width: 100%;
+			height: 50%;
+			left: 0;
+			top: 0;
+			background: #000;
+			transition: all 1.5s;
+			transform-origin: left top;
+			z-index: -1; 
+		}
+		&.active{
+			&:after,
+			&:before{
+				height: 0px; 
+			}
+		}
+
+		&:before {
+			top: auto;
+			bottom: 0; 
+		}
+		.loading-inner{
+			position:relative;
+			visibility:visible;
+			z-index:1;
+			transform: translate(0px, 0px);
+			top: 0%;
+			transition:1s;
+			.loader {
+				position: relative;
+				display: block;
+				z-index: 9999;
+				opacity: 1;
+				width: 100px;
+				height: 100px;
+				border-radius: 50%;
+				transition: all 1s 1s ease;
+				border: 3px solid transparent;
+				border-top-color: #ffee62;
+				animation: spin 1.5s linear infinite;
+				&:before {
+					position: absolute;
+					content: '';
+					top: 6px;
+					left: 6px;
+					right: 6px;
+					bottom: 6px;
+					border-radius: 50%;
+					border: 3px solid transparent;
+					border-left-color: #bbf737;
+					animation: spin 2s linear infinite;
+				}
+				&:after {
+					position: absolute;
+					content: '';
+					top: 15px;
+					left: 15px;
+					right: 15px;
+					bottom: 15px;
+					border-radius: 50%;
+					border: 3px solid transparent;
+					border-right-color: #fff;
+					animation: spin 2.5s linear infinite;
+				}
+			}
+			.loder-section {
+				position: fixed;
+				top: 0;
+				width: 50%;
+				height: 100%;
+				z-index: 2;
+				&.left-section {
+					left: 0;
+					transition: 1s 1.4s ease;
+				}
+				&.right-section {
+					right: 0;
+					transition: 1s 1.4s ease;
+				}
+			}
+		}
+		
+		&.active,
+		&.show{
+			.loading-inner{
+				transform: translate(0px, -100%);
+				top: -50%;
+			}
+		}
+	}
+	&.loading-page-3{
+		background-color: transparent;
+		&:before, 
+		&:after {
+			content: "";
+			position: absolute;
+			width: 100%;
+			height: 50%;
+			left: 0;
+			top: 0;
+			background: #000;
+			transition: all 1.5s;
+			transform-origin: left top;
+			z-index: -1; 
+		}
+		&.active{
+			&:after,
+			&:before{
+				height: 0px; 
+			}
+			.animation-text{
+				opacity:0;
+			}
+		}
+		&:before {
+			top: auto;
+			bottom: 0; 
+		}
+		.animation-text{
+			height: 18rem;
+			@include respond ('tab-port'){
+				height:15rem;	
+			}
+			@include respond ('phone'){
+				height:10rem;	
+			}
+			text{
+				font-size:100px;
+			}
+		}	
+	}
+}
+
+@keyframes dzTextAnimate{
+	10%{
+		opacity: 0.5;
+	}
+	20%{
+		opacity: 1;
+		top: 0;
+		transform: rotateX(-360deg);
+	}
+	80%{
+		opacity: 1;
+		transform: rotateX(-360deg);
+		top: 0;
+	}
+	90%{
+		opacity: 0.5;
+	}
+	100%{
+		opacity: 0;
+		top: 100px;
+	}
+}
+
+@keyframes dzCircleBounceLeft{
+	0%{
+		left:20%;
+	}
+	50%{
+		left:50%;
+	}
+	100%{
+		left:20%;
+	}
+}
+@keyframes dzCircleBounceRight{
+	0%{
+		left:80%;
+	}
+	50%{
+		left:50%;
+	}
+	100%{
+		left:80%;
+	}
+}
+
+@keyframes letters-loading{
+	0%,
+	75%,
+	100% {
+		opacity: 0;
+		transform: rotateY(-90deg);
+	}
+	25%,
+	50% {
+		opacity: 1;
+		transform: rotateY(0deg);
+	}
+}
+@keyframes dzBlinkEffect{
+	0%,
+	100% {
+		transform: translate(0, 0);
+	}
+	8%{
+		transform: translate(-5%, -10%);
+	}
+	18%{
+		transform: translate(-15%, 5%);
+	}
+	27% {
+		transform: translate(7%, -25%);
+	}
+	42% {
+		transform: translate(-5%, 25%);
+	}
+	48% {
+		transform: translate(-15%, 10%);
+	}
+	55% {
+		transform: translate(15%, 0);
+	}
+	68% {
+		transform: translate(0, 15%);
+	}
+	82% {
+		transform: translate(3%, 25%);
+	}
+	92% {
+		transform: translate(-10%, 10%);
+	}
+}
+
+
+/*  */
+@keyframes spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(360deg);
+        -moz-transform: rotate(360deg);
+        -o-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}

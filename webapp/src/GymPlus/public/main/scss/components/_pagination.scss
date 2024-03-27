@@ -1,0 +1,486 @@
+.pagination{
+	li{
+		margin: 0;
+		.page-numbers,
+		.page-link{
+			min-width:40px;
+			height:40px;
+			line-height:40px;
+			border-radius: 0!important;
+			color: var(--secondary);
+			text-align: center;
+			border: 0;
+			margin:0 5px;
+			transition: all 0.5s;
+			font-size: 15px;
+			padding: 10px 15px;
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			font-weight: 400;
+			font-family:var(--font-family-base);
+			background-color:#fff;
+			span {
+			    display: inline-block;
+			}
+			&.current,
+			&.active,
+			&:hover{
+				color: #fff;
+				background-color:var(--secondary);
+			}
+		}
+		@include respond ('phone'){
+			margin: 0 5px;
+		}
+		.prev,
+		.next{
+			&.active,
+			&:hover{
+				background-color:var(--secondary);
+				color:#fff;
+			}
+		}
+	}
+	&.text-center{
+		justify-content: center;
+	}
+	&.rounded-0{
+		.page-item{
+			.page-link{
+				border-radius: 0;
+			}
+		}
+	}
+	&.style-1{
+		justify-content:end;
+	}	
+}
+
+.page{
+	margin-top: 10px;
+	align-items: center;
+	.page-text{
+		margin-bottom: 0;
+	}
+}
+
+.post-pagination{
+	&.style-1{
+		display:flex;
+		position:relative;
+		z-index:1;	
+		padding: 15px 30px 15px 30px;
+		border-top: 1px solid rgba(0, 0, 0, 0.10);
+		border-bottom: 1px solid rgba(0, 0, 0, 0.10);
+		@include respond ('phone-land'){
+			padding:15px;
+		}
+		@include respond ('phone'){
+			padding:10px 15px;
+		}
+		.post-prev,
+		.post-next{
+			width: 50%;
+			min-width: 50%;
+		}
+		.post-inner{
+			display: flex;
+			align-items: center;	
+		}
+		.post-next{
+			.post-inner{
+				justify-content: flex-end;
+				text-align: right;
+				.dz-info{
+					.title{
+						margin-left:auto;
+					}
+				}
+			}
+			.dz-media{
+				margin:0 !important;
+			}
+		}
+		.dz-media{
+			width: 80px;
+			min-width: 80px;
+			height: 80px;
+			@include respond ('phone-land'){
+				margin-right:10px !important;
+			}
+			@include respond ('phone'){
+				display:none;
+			}
+		}
+		
+		
+		.dz-info{
+			padding-right: 15px;
+				@include respond ('phone-land'){
+					padding-right:10px;
+				}
+			span{
+				color:var(--primary);
+				font-size:13px;
+				font-weight:500;
+			}
+			.title{
+			    font-size: 16px;
+				font-weight: 700;
+				letter-spacing: 1.6px;
+				color: var(--title);
+				text-transform: capitalize;
+				width: 70%;
+				line-height: 1.2;
+				margin-bottom: 10px;
+				@include respond ('phone-land'){
+					width:100%;	
+				}
+			}
+			
+			@include respond ('phone'){
+				padding-right: 0;			
+			}
+		}		
+		&:after{
+			content: "";
+			height: 75%;
+			width: 1px;
+			background: rgba(0, 0, 0, 0.10);
+			position:absolute;
+			left: 50%;
+			top: 50%;
+			transform: translate(-50%, -50%);
+		}
+		.post-button{
+			.btn-left,
+			.btn-right{
+				position:absolute;
+				top:35%;
+				i{
+					color:var(--bs-body-color);	
+				}
+			}
+			.btn-right{
+				right:0;
+			}
+			.btn-left{
+				left:0;
+			}
+		}
+	}
+}
+
+.pagination{
+	justify-content:center;
+	.page-link {
+		height: 45px;
+		min-width: 45px;
+		line-height: 45px;
+		padding: 0;
+		text-align: center;
+	}
+
+	&.pagination-md{
+		.page-item{
+			.page-link{
+				width: 30px;
+				height: 30px;
+				line-height: 30px;
+				font-size: 14px;
+				text-align:center;
+			}
+		}
+	}
+	&.pagination-sm{
+		.page-item{
+			.page-link{
+				padding: 12px;
+				min-width: 40px;
+				height: 40px;
+				line-height: 40px;
+				font-size: 14px;
+				text-align: center;
+			}
+		}
+	}
+	&.pagination-xs{
+		.page-item{
+			.page-link{
+				padding: 10px;
+				min-width: 32px;
+				height: 32px;
+				line-height: 32px;
+				font-size: 12px;
+				text-align: center;
+			}
+		}
+	}
+	&-primary{
+		.page-item{
+			.page-link{
+				background:var(--rgba-primary-1);
+				border-color:var(--rgba-primary-1);
+				color:#222222;
+					
+				&:hover,
+				&.active{
+					color: #fff;
+					background:var(--primary);
+					border-color:var(--primary);
+					box-shadow: 0 0.625rem 1.25rem 0rem rgba(255, 193, 180, 0.3);
+				}
+			}
+		}
+	}
+	&-danger{
+		.page-item{
+			.page-link{
+				background:$danger-light;
+				border-color:$danger-light;
+				color:$danger;
+				&:hover,
+				&.active{
+					background:$danger;
+					border-color:$danger;
+					color:$white;
+					box-shadow:0 0.625rem 1.25rem 0rem rgba($danger, 0.2);
+				}
+			}
+		}
+	}
+	&-info{
+		.page-item{
+			.page-link{
+				background:$info-light;
+				border-color:$info-light;
+				color:$info;
+				&:hover,
+				&.active{
+					background:$info;
+					border-color:$info;
+					color:$white;
+					box-shadow:0 0.625rem 1.25rem 0rem rgba($info, 0.2);
+				}
+			}
+		}
+	}
+	&-warning{
+		.page-item{
+			.page-link{
+				background:$warning-light;
+				border-color:$warning-light;
+				color:$warning;
+				&:hover,
+				&.active{
+					background:$warning;
+					border-color:$warning;
+					color:$white;
+					box-shadow:0 0.625rem 1.25rem 0rem rgba($warning, 0.2);
+				}
+			}
+		}
+	}
+	&-gutter{
+		.page-item{
+			margin-right: 15px;
+			@include respond('phone'){
+				margin-right: 10px;
+			}
+			.page-link{
+				border-radius: 6px !important;
+			}
+		}
+	}
+	&-circle{
+        .page-item{
+            margin-right: 7px;
+			
+			.page-link{
+				border: 1px solid var(--rgba-secondary-8);
+				border-radius: 50px !important;
+				line-height: 43px;
+				background: var(--rgba-secondary-8);
+				color: #fff;
+				text-align: center;
+				
+				&:hover{
+					color: $white;
+					background: var(--primary);
+				}
+			}	
+        }
+    }
+	&-square{
+        .page-item{
+            margin-right: 7px;
+			.page-link{
+			    border: 1px solid var(--rgba-secondary-8);
+				line-height: 43px;
+				background: var(--rgba-secondary-8);
+				color: #fff;
+				text-align: center;
+				
+				&:hover{
+					color:$white;
+					background:var(--primary);
+				}
+			}	
+        }
+    }
+	&.no-bg{
+		&.pagination-primary{
+			li:not(.active):hover .page-link{
+				background:var(--primary);
+				border-color:var(--primary);
+			}
+		}
+		&.pagination-danger{
+			li:not(.active):hover .page-link{
+				background:$danger;
+				border-color:$danger;
+			}
+			.page-link{	
+				&.current,
+				&.active,
+				&:hover{
+					background:$danger;
+				border-color:$danger;
+				}
+			}
+		}
+		&.pagination-info{
+			li:not(.active):hover .page-link{
+				background:$info;
+				border-color:$info;
+			}
+		}
+		&.pagination-warning{
+			li:not(.active):hover .page-link{
+				background:$warning;
+				border-color:$warning;
+			}
+		}
+	}
+
+
+	&.style-2{
+		.page-item {
+			.page-link {
+				z-index:1;
+				padding: 0;
+				width: 2.5rem;
+				height: 2.5rem;
+				border-radius:10px;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				font-size: 1rem;
+				box-shadow:0px 5px 25px rgba(0, 0 ,0 , 0.1);
+				margin-left: 7px;
+				color: #222222;
+				border:0;
+				
+				&:focus{
+					outline: 0;
+					box-shadow: none;
+				}
+			}
+
+			&:last-child .page-link{
+				margin-right: 0;
+			}
+
+		}
+
+		&.pagination-md{
+			.page-item{
+				.page-link{
+					width: 30px;
+					height: 30px;
+					line-height: 30px;
+					font-size: 14px;
+					text-align:center;
+				}
+			}
+		}
+		&.pagination-sm{
+			.page-item{
+				.page-link{
+					padding: 0;
+					width: 40px;
+					height: 40px;
+					line-height: 40px;
+					font-size: 12px;
+					text-align:center;
+				}
+			}
+		}
+		&.pagination-xs{
+			.page-item{
+				.page-link{
+					padding: 0;
+					width: 25px;
+					height: 25px;
+					line-height: 25px;
+					font-size: 10px;
+					text-align:center;
+				}
+			}
+		}
+	}
+}
+
+.post-pagination{
+	&.style-1{
+		display:flex;
+		position:relative;	
+		margin-top:15px;
+		.post-prev,
+		.post-next{
+			width: 50%;
+			min-width: 50%;
+		}
+		.post-inner{
+			display: flex;
+			align-items: center;	
+		}
+		.post-next{
+			.post-inner{
+				justify-content: flex-end;
+				text-align: right;
+			}
+		}
+		.dz-media{
+			width: 80px;
+			min-width: 80px;
+			height: 60px;
+			@include respond ('phone'){
+				display:none;
+			}
+		}
+		.dz-info{
+			padding-right: 15px;
+			span{
+				color:var(--secondary);
+				font-size:14px;
+				font-weight:400;
+			}
+			
+			@include respond ('phone'){
+				padding-right: 0;			
+			}
+		}		
+		&:after{
+			content: "";
+			height: 80%;
+			width: 1px;
+			background-color: #CCCCCC;
+			position:absolute;
+			left: 50%;
+			top: 50%;
+			transform: translate(-50%, -50%);
+		}
+	}
+}

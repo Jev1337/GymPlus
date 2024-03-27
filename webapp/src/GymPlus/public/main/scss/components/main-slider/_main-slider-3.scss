@@ -1,0 +1,97 @@
+.main-bnr-three{
+	position:relative;
+	overflow:hidden;
+	z-index:1;
+	.banner-inner{
+		height: 640px;
+		position: relative;
+		z-index: 1;
+		overflow: hidden;
+		padding-top: 99px;
+		background-blend-mode: color-dodge;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		@include respond ('tab-port'){
+			height:500px;
+			padding-top: 140px;
+		}
+		@include respond ('phone-land'){
+			padding-top: 140px;	
+		}
+		@include respond ('phone'){
+			padding-top: 100px;
+			padding-bottom: 50px;
+			height: 400px;
+		}
+		.banner-content{
+			.title{
+				font-style: italic;
+				text-transform: uppercase;
+				color:var(--title);
+			}
+			.para{
+				color:var(--title);
+				font-family: var(--font-family-title);
+				font-size: 28px;
+				font-style: italic;
+				font-weight: 400;
+				letter-spacing: 2.8px;
+				text-transform: uppercase;
+				margin-bottom:0;
+				@include respond ('phone'){
+					font-size:22px;	
+				}
+				span{
+					color:var(--primary);
+					font-weight: 600;
+				}
+			}
+			
+		}
+		.banner-media{
+			margin-bottom:70px;
+			@include respond ('tab-port'){
+				margin-bottom:50px;
+				img{
+					width:100px;	
+				}
+			}
+			@include respond ('phone-land'){
+				margin-bottom: 15px;
+				position: absolute;
+				right: 15%;
+				img{
+					width:50px;
+				}
+			}	
+		}
+		.side-line-content{
+			color: #FFF;
+			font-family:var(--font-family-title);
+			font-size: 18px;
+			font-weight: 500;
+			letter-spacing: 3.6px;
+			transform: rotate(-90deg);
+			text-transform: uppercase;
+			position: absolute;
+			right: -40px;
+			bottom: 105px;
+			margin-bottom:0;
+			line-height:1;
+			@include respond ('tab-port'){
+				right:-55px;
+				bottom: 80px;				
+			}
+			@include respond ('phone'){
+				display:none;
+			}
+			i{
+				font-size:24px;
+				font-weight: 500;
+				vertical-align: middle;
+			}
+		}
+	}
+}

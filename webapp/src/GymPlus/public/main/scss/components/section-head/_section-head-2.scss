@@ -1,0 +1,69 @@
+// Section Head
+.section-head{
+	&.style-2{
+		h2{
+			font-size: 2.8125rem;
+			
+			span{
+				color:var(--primary);	
+			}
+			@include respond('tab-land'){
+				font-size: 2.25rem;
+			}
+			@include respond('phone-land'){
+				font-size: 1.875rem;
+			}
+		}
+		.sub-title{
+			display: inline-flex;
+			align-items: center;
+	
+			&:before,
+			&:after{
+				content: "";
+				height: 1px;
+				width: 55px;
+				background-color: #000;
+				display: inline-block;
+				margin-right: 10px;
+				
+				@include respond('phone'){
+					width: 35px;
+				}
+			}
+			&:before{
+				margin-right: 10px;
+			}
+			&:after{
+				content:none;
+				margin-left: 10px;
+			}
+			&.text-primary{
+				&:before,
+				&:after{
+					background-color: var(--primary);
+				}
+			}
+			&.text-secondary{
+				&:before,
+				&:after{
+					background-color: var(--secondary);
+				}
+			}
+			&.text-white{
+				&:before,
+				&:after{
+					background-color: #fff;
+				}
+			}
+		}
+		&.text-end .sub-title{
+			&:before{
+				content: none;
+			}
+			&:after{
+				content: "";
+			}
+		}
+	}
+}

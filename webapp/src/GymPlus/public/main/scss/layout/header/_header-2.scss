@@ -1,0 +1,154 @@
+// site-header
+.site-header{
+	&.style-2{
+		.main-bar{
+			box-shadow: none;
+			background-color:transparent;
+		}
+		.extra-nav {
+			padding-left: 60px;
+			
+			#quik-search-btn {
+			    font-size: 16px;
+			    border-radius: 0;
+			    margin-right: 5px;
+				transform: skewX(-12deg);
+				
+				i{
+					transform: skewX(12deg);
+				}
+			}
+			@include custommq ($max:991px){
+				padding-left: 30px;
+				height: 85px;
+				
+				#quik-search-btn {
+					font-size: 16px;					
+				}
+			}
+			@include respond('tab-port'){
+				#quik-search-btn{
+					width: 42px;
+					height: 42px;
+					line-height: 42px;
+					
+					transform: unset;
+					
+					i{
+						transform: unset;
+					}
+				}
+			}
+			@include respond('phone-land'){
+				height: 75px;
+			}
+			@include respond('phone'){
+				height: 50px;
+			}
+		}
+		.appointment-btn{
+			@include custommq ($max:1191px){
+				display: none;
+			}
+		}
+		.logo-header{
+			img{
+			    max-width: 220px;
+			}
+			@include custommq ($max:1191px){
+				height: 85px;
+				img {
+					max-width: 180px;
+				}
+			}
+			@include respond('phone-land'){
+				height: 75px;
+			}
+		}
+		.navicon span {
+			background: #000;
+		}
+		.navbar-toggler{
+			&.open span{
+				@include respond('tab-port'){	
+					background: #fff;
+				}	
+			}
+			@include respond('tab-port'){
+				margin: 21px 0 18px 5px;
+			}
+			@include respond('phone-land'){
+				margin: 17px 0 16px 5px;
+			}
+		}
+		
+		// Header Nav
+		.header-nav{
+			.nav {
+				&>li {
+					&>a {
+						@include custommq ($min:992px){				
+							color: #fff;
+							
+							&:before {
+								content: "";
+								background-color: var(--primary);
+								position: absolute;
+								left: 0;
+								bottom: 0;
+								transform: translateY(4px);
+								height: 4px;
+								z-index: 1;
+								width: 100%;
+								@include transitionMedium;
+								opacity: 0; 
+							}
+						}
+					}
+					&.active,
+					&:hover{
+						&>a {
+							@include custommq ($min:992px){
+								color: var(--primary);
+								&:before {
+									transform: translateY(0);
+									opacity: 1; 
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		.top-bar{
+			background-color:transparent;
+			border-bottom:0;
+		}
+		.is-fixed {
+			.main-bar {
+			    box-shadow: 0px 14px 30px 0px rgba(0, 0, 0, 0.05);
+			    background-color: white;
+			    
+				.box-header:after {
+			    	box-shadow:none;
+			    }
+				.logo-header{
+					&.logo-white{
+						display: none;
+					}
+				}
+			}
+			.header-nav{
+				.nav {
+					&>li {
+						&>a {
+							@include respond('tab-port-min'){		
+								color: #000;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

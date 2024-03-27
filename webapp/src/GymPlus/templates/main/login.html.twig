@@ -8,7 +8,7 @@
 					<div class="swiper login-slider">
 						<div class="swiper-wrapper">
 							<div class="swiper-slide">
-								<div class="banner-login" style="background-image: url(assets/images/about/image-box/pic1.jpg)">
+								<div class="banner-login" style="background-image: url({{asset('main/images/about/image-box/pic1.jpg')}})">
 									<div class="banner-content">
 										<h2 class="title wow fadeInUp" data-wow-delay="0.4s">The Powerhouse Team Behind Your Transformation!</h2>
 										<p class="text wow fadeInUp" data-wow-delay="0.6s">Nunc vulputate urna ut erat posuere accumsan. Curabitur ut commodo mauris, ac volutpat dui. Nullam eget enim ut mi bibendum ultrices. Pellentesque non feugiat nisi.</p>
@@ -16,7 +16,7 @@
 								</div>
 							</div>
 							<div class="swiper-slide">
-								<div class="banner-login" style="background-image: url(assets/images/about/image-box/pic2.jpg)">
+								<div class="banner-login" style="background-image: url({{asset('main/images/about/image-box/pic2.jpg')}})">
 									<div class="banner-content">
 										<h2 class="title wow fadeInUp" data-wow-delay="0.4s">The Powerhouse Team Behind Your Transformation!</h2>
 										<p class="text wow fadeInUp" data-wow-delay="0.6s">Nunc vulputate urna ut erat posuere accumsan. Curabitur ut commodo mauris, ac volutpat dui. Nullam eget enim ut mi bibendum ultrices. Pellentesque non feugiat nisi.</p>
@@ -24,7 +24,7 @@
 								</div>
 							</div>
 							<div class="swiper-slide">
-								<div class="banner-login" style="background-image: url(assets/images/about/image-box/pic3.jpg)">
+								<div class="banner-login" style="background-image: url({{asset('main/images/about/image-box/pic3.jpg')}})">
 									<div class="banner-content">
 										<h2 class="title wow fadeInUp" data-wow-delay="0.4s">The Powerhouse Team Behind Your Transformation!</h2>
 										<p class="text wow fadeInUp" data-wow-delay="0.6s">Nunc vulputate urna ut erat posuere accumsan. Curabitur ut commodo mauris, ac volutpat dui. Nullam eget enim ut mi bibendum ultrices. Pellentesque non feugiat nisi.</p>
@@ -47,34 +47,47 @@
 					<div class="login-area sticky-top wow fadeInUp" data-wow-delay="0.4s">
 						<h2 class="title">Welcome Back</h2>
 						<p class="text-white text-center m-b25">Please login to your account</p>
+						{% for message in app.flashes('success') %}
+								<div class="alert alert-success">
+									<i class="fa-solid fa-check"></i>
+									{{ message }}
+								</div>
+							{% endfor %}
+							{% for message in app.flashes('error') %}
+								<div class="alert alert-danger">
+									<i class="fa-solid fa-times"></i>
+									{{ message }}
+								</div>
+							{% endfor %}
 						<div class="tab-content nav">
-							<form id="login" class="tab-pane active col-12">
-								<div class="m-b30">
-									<label class="label-title">Email Address</label>
-									<input name="dzName" required="" class="form-control" placeholder="Email Address" type="email">
-								</div>
-								<div class="m-b10">
-									<label class="label-title">Password</label>
-									<div class="secure-input ">
-										<input type="password" name="password" class="form-control dz-password" placeholder="Password">
-										<div class="show-pass">
-											<i class="eye-open fa-regular fa-eye"></i>
-										</div>
-									</div>
-								</div>
-								<div class="text-left d-flex align-items justify-content-between m-b30">
-									<a data-bs-toggle="tab" href="#forgot-password" class="m-l5">Forgot Password</a> 
-									<div class="custom-control custom-checkbox">
-										<input type="checkbox" class="form-check-input" id="basic_checkbox_1">
-										<label class="form-check-label" for="basic_checkbox_1">Remember Me</label>
-									</div>
-								</div>
-								<div class="text-center">
-									<button type="Submit" class="btn btn-primary m-b15 w-100">Submit</button>
-									<a href="javascript:void(0);" class="btn-link">Don’t have account?<span> Sign Up</span></a> 
-								</div>
-							</form>
 							
+							{{ form_start(form, {'attr': {'class': 'tab-pane active col-12', 'id': 'login'} }) }}
+							<div class="m-b30">
+								<label class="label-title">Email Address</label>
+								{{ form_widget(form.email, {'attr': {'class': 'form-control', 'placeholder': 'Email Address'}}) }}
+							</div>
+							<div class="m-b10">
+								<label class="label-title">Password</label>
+								<div class="secure-input">
+									{{ form_widget(form.password, {'attr': {'class': 'form-control dz-password', 'placeholder': 'Password'}}) }}
+									<div class="show-pass">
+										<i class="eye-open fa-regular fa-eye"></i>
+									</div>
+								</div>
+							</div>
+							<div class="text-left d-flex align-items justify-content-between m-b30">
+								<a data-bs-toggle="tab" href="#forgot-password" class="m-l5">Forgot Password</a> 
+								<div class="custom-control custom-checkbox">
+									<input type="checkbox" class="form-check-input" id="basic_checkbox_1">
+									<label class="form-check-label" for="basic_checkbox_1">Remember Me</label>
+								</div>
+							</div>
+							<div class="text-center">
+								{{ form_widget(form.submit, {'attr': {'class': 'btn btn-primary m-b15 w-100', 'value': 'Login'} } ) }}
+								<a href="javascript:void(0);" class="btn-link">Don’t have account?<span> Sign Up</span></a> 
+							</div>
+							<!-- Add other form fields here -->
+							{{ form_end(form) }}
 							<form id="forgot-password" class="tab-pane fade  col-12 text-center">
 								<h4 class="m-b5 text-white">Forget Password ?</h4>
 								<small class="font-weight-600 m-b20 d-block text-white">We will send you an email to reset your password. </small>

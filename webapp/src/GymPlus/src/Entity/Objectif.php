@@ -18,10 +18,10 @@ class Objectif
     private ?float $poidsobj;
 
     #[ORM\Column]
-    private ?\DateTimeInterface $dated;
+    private ?\DateTime $dated;
 
     #[ORM\Column]
-    private ?\DateTimeInterface $datef;
+    private ?\DateTime $datef;
 
     #[ORM\Column]
     private ?float $poidsact;
@@ -58,24 +58,24 @@ class Objectif
         return $this;
     }
 
-    public function getDated(): ?\DateTimeInterface
+    public function getDated(): ?\DateTime
     {
         return $this->dated;
     }
 
-    public function setDated(?\DateTimeInterface $dated): static
+    public function setDated(?\DateTime $dated): static
     {
         $this->dated = $dated;
 
         return $this;
     }
 
-    public function getDatef(): ?\DateTimeInterface
+    public function getDatef(): ?\DateTime
     {
         return $this->datef;
     }
 
-    public function setDatef(?\DateTimeInterface $datef): static
+    public function setDatef(?\DateTime $datef): static
     {
         $this->datef = $datef;
 

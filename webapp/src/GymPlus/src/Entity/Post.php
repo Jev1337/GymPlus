@@ -21,7 +21,7 @@ class Post
     private ?string $content;
 
     #[ORM\Column]
-    private ?\DateTimeInterface $date;
+    private ?\DateTime $date;
 
     #[ORM\Column]
     private ?string $photo;
@@ -64,12 +64,12 @@ class Post
         return $this;
     }
 
-    public function getDate(): ?\DateTimeInterface
+    public function getDate(): ?\DateTime
     {
         return $this->date;
     }
 
-    public function setDate(?\DateTimeInterface $date): static
+    public function setDate(?\DateTime $date): static
     {
         $this->date = $date;
 

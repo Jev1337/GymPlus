@@ -27,7 +27,7 @@ class User
     private ?string $lastname;
 
     #[ORM\Column]
-    private ?\DateTimeInterface $dateNaiss;
+    private ?\DateTime $dateNaiss;
 
     #[ORM\Column]
     private ?string $password;
@@ -54,7 +54,7 @@ class User
     private ?string $faceid;
 
     #[ORM\Column]
-    private ?\DateTimeInterface $faceidTs;
+    private ?\DateTime $faceidTs;
 
 
     #[ORM\ManyToMany(targetEntity: EventDetails::class, inversedBy: "user")]

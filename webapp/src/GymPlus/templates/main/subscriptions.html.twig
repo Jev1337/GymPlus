@@ -40,23 +40,26 @@
 						<div class="pricingtable-wrapper style-3 wow fadeInUp" data-wow-delay="0.4s">
 							<div class="pricingtable-inner">
 								<div class="pricingtable-price">
-									<div class="pricingtable-title">Basic Plan</div>
-									<div class="pricingtable-title premium">Popular Plan</div>
-									<h2 class="pricingtable-bx">$10<small>/ Per User Per Month</small></h2>
-									<p class="m-b20">Basic Feature For Up to 10 Users</p>
+									<div class="pricingtable-title">GP One</div>
+									<h2 class="pricingtable-bx">$20<small>/ Per User Per Month</small></h2>
+									<p class="m-b20">Basic Plan.</p>
 									<div class="pricingtable-button">
-										<a href="contact-us.html" class="btn btn-dark rounded-0 d-block m-b10"><span>Get Start</span></a>
-										<a href="contact-us.html" class="btn btn-outline-dark rounded-0 d-block"><span>Chat To Sales</span></a>
+										{% if user %}
+											<a href="{{path('app_buy', {'id': 1})}}" class="btn btn-dark rounded-0 d-block m-b10"><span>Buy Now</span></a>
+										{% else %}
+											<a href="{{path('app_login')}}" class="btn btn-dark rounded-0 d-block m-b10"><span>Buy Now</span></a>
+										{% endif %}
+										<a href="{{path('app_contact')}}" class="btn btn-outline-dark rounded-0 d-block"><span>Chat To Sales</span></a>
 									</div>
 								</div>
 								<div class="pricingtable-features">
 									<h6 class="pricingtable-sub-title">Features</h6>
-									<p class="text">Everything in Our Free Plan Plus......</p>
+									<p class="text">Everything in Our Free Plan Plus...</p>
 									<ul>
 										<li>Review Your Question</li>
 										<li>Work with Resources </li>
 										<li>Analysis of Your "I Have"</li>
-										<li>Analysis of Your "I Have"</li>
+										<li>Pool Access</li>
 										<li>Support & Mentoring</li>
 									</ul>
 								</div>
@@ -68,24 +71,24 @@
 						<div class="pricingtable-wrapper style-3 box-hover wow fadeInUp" data-wow-delay="0.6s">
 							<div class="pricingtable-inner">
 								<div class="pricingtable-price">
-									<div class="pricingtable-title">Business Plan</div>
+									<div class="pricingtable-title">GP Two</div>
 									<div class="pricingtable-title premium">Popular Plan</div>
-									<h2 class="pricingtable-bx">$20<small>/ Per User Per Month</small></h2>
-									<p class="m-b20">Growing Team Up to 20 Houres</p>
+									<h2 class="pricingtable-bx">$30<small>/ Per User Per Month</small></h2>
+									<p class="m-b20">More Time More Gain!</p>
 									<div class="pricingtable-button">
-										<a href="contact-us.html" class="btn btn-dark rounded-0 d-block m-b10"><span>Get Start</span></a>
-										<a href="contact-us.html" class="btn btn-outline-dark rounded-0 d-block"><span>Chat To Sales</span></a>
+										{% if user %}
+											<a href="{{path('app_buy', {'id': 2})}}" class="btn btn-dark rounded-0 d-block m-b10"><span>Buy Now</span></a>
+										{% else %}
+											<a href="{{path('app_login')}}" class="btn btn-dark rounded-0 d-block m-b10"><span>Buy Now</span></a>
+										{% endif %}
+										<a href="{{path('app_contact')}}" class="btn btn-outline-dark rounded-0 d-block"><span>Chat To Sales</span></a>
 									</div>
 								</div>
 								<div class="pricingtable-features">
 									<h6 class="pricingtable-sub-title">Features</h6>
-									<p class="text">Everything in Our Free Plan Plus......</p>
+									<p class="text">Everything in Our GP One Plan Plus...</p>
 									<ul>
-										<li>Review Your Question</li>
-										<li>Work with Resources </li>
-										<li>Analysis of Your "I Have"</li>
-										<li>Analysis of Your "I Have"</li>
-										<li>Support & Mentoring</li>
+										<li>Sona Access</li>
 									</ul>
 								</div>
 							</div>
@@ -96,24 +99,23 @@
 						<div class="pricingtable-wrapper style-3 wow fadeInUp" data-wow-delay="0.8s">
 							<div class="pricingtable-inner">
 								<div class="pricingtable-price">
-									<div class="pricingtable-title">Enterprise Plan</div>
-									<div class="pricingtable-title premium">Popular Plan</div>
-									<h2 class="pricingtable-bx">$90<small>/ Per User Per Month</small></h2>
-									<p class="m-b20">Advance Features + Unlimited User</p>
+									<div class="pricingtable-title">GP Three</div>
+									<h2 class="pricingtable-bx">$50<small>/ Per User Per Month</small></h2>
+									<p class="m-b20">Everything you need</p>
 									<div class="pricingtable-button">
-										<a href="contact-us.html" class="btn btn-dark rounded-0 d-block m-b10"><span>Get Start</span></a>
-										<a href="contact-us.html" class="btn btn-outline-dark rounded-0 d-block"><span>Chat To Sales</span></a>
+										{% if user %}
+											<a href="{{path('app_buy', {'id': 3})}}" class="btn btn-dark rounded-0 d-block m-b10"><span>Buy Now</span></a>
+										{% else %}
+											<a href="{{path('app_login')}}" class="btn btn-dark rounded-0 d-block m-b10"><span>Buy Now</span></a>
+										{% endif %}
+										<a href="{{path('app_contact')}}" class="btn btn-outline-dark rounded-0 d-block"><span>Chat To Sales</span></a>
 									</div>
 								</div>
 								<div class="pricingtable-features">
 									<h6 class="pricingtable-sub-title">Features</h6>
-									<p class="text">Everything in Our Free Plan Plus......</p>
+									<p class="text">Everything in Our GP Two Plan Plus...</p>
 									<ul>
-										<li>Review Your Question</li>
-										<li>Work with Resources </li>
-										<li>Analysis of Your "I Have"</li>
-										<li>Analysis of Your "I Have"</li>
-										<li>Support & Mentoring</li>
+										<li>SPA Access</li>
 									</ul>
 								</div>
 							</div>

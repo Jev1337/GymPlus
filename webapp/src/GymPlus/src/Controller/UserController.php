@@ -163,4 +163,28 @@ class UserController extends AbstractController
             'user' => $session->get('user')
         ]);
     }
+
+    #[Route('/contact', name: 'app_contact')]
+    public function contact(SessionInterface $session): Response
+    {
+        return $this->render('main/contact.html.twig', [
+            'controller_name' => 'UserController',
+            'user' => $session->get('user')
+        ]);
+    }
+
+    #[Route('/payment/gp', name: 'app_buy')]
+    public function buy(SessionInterface $session, Request $request): Response
+    {
+        if (!$gp) {
+            return $this->redirectToRoute('app_home');
+        }
+        return $this->render('main/buy.html.twig', [
+            'controller_name' => 'UserController',
+            'user' => $session->get('user')
+        ]);
+    }
+    
+    
+
 }

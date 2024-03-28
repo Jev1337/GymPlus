@@ -188,12 +188,12 @@
                     return res.json();
                 }).then(function(orderData) {
                     if (orderData.status === 'success') {
-						//redirect
-						actions.redirect('/home');
+						domain = window.location.origin;
+						path = domain + "{{path('app_home')}}";
+						actions.redirect(path);
 					}else{
 						alert('Payment failed');
 					}
-
                 });
             }
 

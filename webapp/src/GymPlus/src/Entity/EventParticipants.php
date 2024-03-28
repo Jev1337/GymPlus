@@ -47,4 +47,9 @@ class EventParticipants
 
         return $this;
     }
+
+    public function getEventDetailsId(): ?int
+    {
+        return $this->event_details_id;
+    }
 }

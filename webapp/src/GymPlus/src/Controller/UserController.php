@@ -11,6 +11,13 @@ use App\Entity\User;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Twilio\Rest\Client;
 use App\Form\UserType;
+use App\Repository\AbonnementRepository;
+use App\Entity\Abonnement;
+use App\Repository\UserRepository;
+use Doctrine\Persistence\ManagerRegistry;
+use App\Repository\AbonnementDetailsRepository;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpClient\HttpClient;
 
 class UserController extends AbstractController
 {
@@ -40,7 +47,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/auth/login', name: 'app_login')]
-    public function login(Request $request, SessionInterface $session): Response
+    public function login(Request $request, SessionInterface $session, UserRepository $repo): Response
     {
         $user = $session->get('user');
         if ($user) {
@@ -54,7 +61,7 @@ class UserController extends AbstractController
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){
             $data = $form->getData();
-            $user = $this->getDoctrine()->getRepository(User::class)->findOneBy(['email' => $data['email']]);
+            $user = $repo->findOneBy(['email' => $data['email']]);
             if($user){
                 if(password_verify($data['password'], $user->getPassword())){
                     $session->set('user', $user);
@@ -113,7 +120,7 @@ class UserController extends AbstractController
 
     
     #[Route('/auth/signup', name: 'app_signup')]
-    public function signup(Request $request, SessionInterface $session): Response
+    public function signup(Request $request, SessionInterface $session, ManagerRegistry $reg): Response
     {
         $user = $session->get('user');
         if ($user) {
@@ -137,8 +144,13 @@ class UserController extends AbstractController
             $user->setNumTel($data->getNumTel());
             $user->setAdresse($data->getAdresse());
             $user->setFaceidTs(new \DateTime());
-            $this->getDoctrine()->getManager()->persist($user);
-            $this->getDoctrine()->getManager()->flush();
+            $user->setDateNaiss($data->getDateNaiss());
+            $user->setFirstname($data->getFirstname());
+            $user->setLastname($data->getLastname());
+            $user->setPhoto("");
+            $user->setId($data->getId());
+            $reg->getManager()->persist($user);
+            $reg->getManager()->flush();
             return $this->redirectToRoute('app_login');
         }
         return $this->render('main/signup.html.twig', [
@@ -156,35 +168,93 @@ class UserController extends AbstractController
     }
 
     #[Route('/subscriptions', name: 'app_subs')]
-    public function subscriptions(SessionInterface $session): Response
+    public function subscriptions(SessionInterface $session, AbonnementRepository $repo): Response
     {
+        $user = $session->get('user');
+        if ($user->getRole() != 'client') {
+            return $this->redirectToRoute('app_dashboard');
+        }
+
+        if ($repo->isUserSubscribed($user->getId())) {
+            return $this->render('main/mysubscriptions.html.twig', [
+                'controller_name' => 'UserController',
+                'user' => $session->get('user')
+            ]);
+        }
         return $this->render('main/subscriptions.html.twig', [
             'controller_name' => 'UserController',
             'user' => $session->get('user')
         ]);
     }
 
-    #[Route('/contact', name: 'app_contact')]
-    public function contact(SessionInterface $session): Response
-    {
-        return $this->render('main/contact.html.twig', [
-            'controller_name' => 'UserController',
-            'user' => $session->get('user')
-        ]);
-    }
-
     #[Route('/payment/gp', name: 'app_buy')]
-    public function buy(SessionInterface $session, Request $request): Response
+    public function buy(SessionInterface $session, Request $request, AbonnementRepository $repo, AbonnementDetailsRepository $repo0): Response
     {
-        if (!$gp) {
+        $id = $request->query->get('id');
+        if (!$id && id != 1 && id != 2 && id != 3) {
             return $this->redirectToRoute('app_home');
         }
+
+        $user = $session->get('user');
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+        if ($user->getRole() != 'client') {
+            return $this->redirectToRoute('app_dashboard');
+        }
+        if ($repo->isUserSubscribed($user->getId())) {
+            return $this->redirectToRoute('app_home');
+        }
+        $price = $repo0->getAbonnementPriceByName('GP ' . $id);
         return $this->render('main/buy.html.twig', [
             'controller_name' => 'UserController',
-            'user' => $session->get('user')
+            'user' => $session->get('user'),
+            'id' => $id,
+            'price' => $price
         ]);
     }
-    
-    
 
+    #[Route('/payment/validate', name: 'app_validate_pp')]
+    public function validatePayment(Request $request, AbonnementRepository $repo, AbonnementDetailsRepository $repo0, UserRepository $repo1, ManagerRegistry $reg): Response
+    {
+        $id = $request->query->get('order');
+        $userid = $request->query->get('user');
+        $gp = $request->query->get('gp');
+        $user = $repo1->findUserById($userid);
+        $abonnement = new Abonnement();
+        $abonnement->setUser($user);
+        $abonnement->setDatefinab(new \DateTime('+1 month'));
+        $type = $repo0->getAbonnementDetailsByName('GP ' . $gp);
+        $abonnement->setType($type);
+        $reg->getManager()->persist($abonnement);
+        $reg->getManager()->flush();
+
+        $client = HttpClient::create();
+        $auth = base64_encode('Af9N6m41ryO-aKuZO3cwgGr1PZeBsbxLTeSYVJ7iUr71UO3tA8Uc0p50NeEMbewLzmq00go8MoXAzXPC:EBfq6ayRpNgVeWdALsblGLrMKUspTHt5GzfuH5MOM1FN7gqsoR6y5TCOTTYlm4R3adGWPgKoWYOI46Xz');
+        $response = $client->request('POST', 'https://api-m.sandbox.paypal.com/v1/oauth2/token', [
+            'headers' => [
+                'Content-Type' => 'application/x-www-form-urlencoded',
+                'Authorization' => 'Basic '. $auth
+            ],
+            'body' => [
+                'grant_type' => 'client_credentials'
+            ]
+        ]);
+        $token = $response->toArray()['access_token'];
+        error_log($token);
+        $response = $client->request('GET', 'https://api-m.sandbox.paypal.com/v2/checkout/orders/' . $id, [
+            'headers' => [
+                'Content-Type' => 'application/json',
+                'Authorization' => 'Bearer '. $token
+            ]
+        ]);
+        $result = $response->toArray();
+
+        if ($result['status'] == 'APPROVED') {
+            return new JsonResponse(['status' => 'success'], 200);
+        }else{
+            return new JsonResponse(['status' => 'failed'], 400);
+        }
+        
+    }
 }

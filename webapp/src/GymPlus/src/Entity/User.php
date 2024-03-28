@@ -12,7 +12,6 @@ use App\Repository\UserRepository;
 class User
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id;
 
@@ -64,6 +63,12 @@ class User
     public function __construct()
     {
         $this->eventDetails = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    public function setId(int $id): static
+    {
+        $this->id = $id;
+        return $this;
     }
 
     public function getId(): ?int

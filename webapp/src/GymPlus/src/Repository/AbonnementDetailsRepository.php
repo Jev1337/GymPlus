@@ -21,6 +21,26 @@ class AbonnementDetailsRepository extends ServiceEntityRepository
         parent::__construct($registry, AbonnementDetails::class);
     }
 
+
+
+    public function getAbonnementPriceByName(string $name)
+    {
+        $qb = $this->createQueryBuilder('a');
+        $qb->select('a.prix');
+        $qb->where('a.name = :name');
+        $qb->setParameter('name', $name);
+        return $qb->getQuery()->getSingleScalarResult();
+    }
+
+    public function getAbonnementDetailsByName(string $name)
+    {
+        $qb = $this->createQueryBuilder('a');
+        $qb->select('a');
+        $qb->where('a.name = :name');
+        $qb->setParameter('name', $name);
+        return $qb->getQuery()->getOneOrNullResult();
+    }
+
 //    /**
 //     * @return AbonnementDetails[] Returns an array of AbonnementDetails objects
 //     */

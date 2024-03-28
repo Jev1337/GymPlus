@@ -78,6 +78,13 @@
 							
 							{{ form_start(form, {'attr': {'class': 'row', 'id': 'form-0'}}) }}
 
+
+							<div class="col-md-4 col-lg-4 form-group">
+								{{ form_label(form.id, 'CIN', {'label_attr': {'class': 'form-label'}}) }}
+								<div class="input-group input-line">
+									{{ form_widget(form.id, {'attr': {'class': 'form-control', 'placeholder': 'CIN'}}) }}
+								</div>
+							</div>
 							<div class="col-md-4 col-lg-4 form-group">
 								{{ form_label(form.username, 'Username', {'label_attr': {'class': 'form-label'}}) }}
 								<div class="input-group input-line">

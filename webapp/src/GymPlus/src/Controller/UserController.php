@@ -18,6 +18,7 @@ use Doctrine\Persistence\ManagerRegistry;
 use App\Repository\AbonnementDetailsRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpClient\HttpClient;
+use App\Form\ModifyUserType;
 
 class UserController extends AbstractController
 {
@@ -167,10 +168,65 @@ class UserController extends AbstractController
         return $this->redirectToRoute('app_login');
     }
 
+    #[Route('/profile', name: 'app_profile')]
+    public function profile(SessionInterface $session, Request $request, UserRepository $repo, ManagerRegistry $reg): Response
+    {
+        $user = $session->get('user');
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+        $user = $repo->findUserById($user->getId());
+        $form = $this->createForm(ModifyUserType::class, $user);
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()){
+            $data = $form->getData();
+            $user->setUsername($data->getUsername());
+            $user->setNumTel($data->getNumTel());
+            $user->setAdresse($data->getAdresse());
+            $user->setDateNaiss($data->getDateNaiss());
+            $user->setFirstname($data->getFirstname());
+            $user->setLastname($data->getLastname());
+            $reg->getManager()->persist($user);
+            $reg->getManager()->flush();
+            $session->set('user', $user);
+            return $this->redirectToRoute('app_profile');
+        }
+        return $this->render('main/profile.html.twig', [
+            'controller_name' => 'UserController',
+            'user' => $session->get('user'),
+            'form' => $form->createView()
+        ]);
+    }
+
+    #[Route('/api/modifyImage', name: 'app_photo')]
+    public function modifyImage(SessionInterface $session, Request $request, UserRepository $repo, ManagerRegistry $reg): Response
+    {
+        $user = $session->get('user');
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+        $user = $repo->findUserById($user->getId());
+        $photo = $request->files->get('image');
+        if ($photo) {
+            $filename = 'USERIMG' . $user->getId() . '.' . $photo->guessExtension();
+           
+            $targetdir = $this->getParameter('kernel.project_dir') . '/public/profileuploads/';
+            $photo->move($targetdir, $filename);
+            $user->setPhoto($filename);
+            $reg->getManager()->persist($user);
+            $reg->getManager()->flush();
+            $session->set('user', $user);
+        }
+        return $this->redirectToRoute('app_profile');
+    }
+
     #[Route('/subscriptions', name: 'app_subs')]
     public function subscriptions(SessionInterface $session, AbonnementRepository $repo): Response
     {
         $user = $session->get('user');
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
         if ($user->getRole() != 'client') {
             return $this->redirectToRoute('app_dashboard');
         }

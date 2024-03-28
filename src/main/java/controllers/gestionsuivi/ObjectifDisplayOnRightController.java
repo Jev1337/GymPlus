@@ -98,7 +98,7 @@ public class ObjectifDisplayOnRightController implements Initializable {
     }
 
     void  dataInfos2(Objectif objPlan) throws IOException {
-        String coachPhotoPath = "src/assets/profileuploads/" + objPlan.getCoachPhoto();
+        String coachPhotoPath = "webapp/src/gymplus/public/profileuploads/" + objPlan.getCoachPhoto();
         if (coachPhotoPath != null && !coachPhotoPath.isEmpty()) {
             File file = new File(coachPhotoPath);
             if (file.exists()) {
@@ -131,7 +131,7 @@ public class ObjectifDisplayOnRightController implements Initializable {
     }
 
   void  dataInfos(Objectif objPlan) throws IOException {
-      String coachPhotoPath = "src/assets/profileuploads/" + objPlan.getCoachPhoto();
+      String coachPhotoPath = "webapp/src/gymplus/public/profileuploads/" + objPlan.getCoachPhoto();
       if (coachPhotoPath != null && !coachPhotoPath.isEmpty()) {
           File file = new File(coachPhotoPath);
           if (file.exists()) {

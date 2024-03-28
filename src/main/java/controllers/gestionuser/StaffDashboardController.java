@@ -501,7 +501,7 @@ public class StaffDashboardController {
                                                 namesub_label.setText(c.getLastname() + " " + c.getFirstname());
                                                 id_label.setText(String.valueOf(c.getId()));
                                                 dobsub_label.setText(c.getDate_naiss());
-                                                scanneduser_imageview.setImage(new Image(new File("src/assets/profileuploads/" + c.getPhoto()).toURI().toString()));
+                                                scanneduser_imageview.setImage(new Image(new File("webapp/src/gymplus/public/profileuploads/" + c.getPhoto()).toURI().toString()));
                                                 Circle clip = new Circle(scanneduser_imageview.getFitWidth()/2, scanneduser_imageview.getFitHeight()/2, scanneduser_imageview.getFitWidth()/2);
                                                 scanneduser_imageview.setClip(clip);
                                                 scanneduser_imageview.setPreserveRatio(false);
@@ -807,9 +807,9 @@ public class StaffDashboardController {
                 }
                 userprofile_imageview.setImage(null);
                 user_imageview.setImage(null);
-                File oldFile = new File("src/assets/profileuploads/" +GlobalVar.getUser().getPhoto());
+                File oldFile = new File("webapp/src/gymplus/public/profileuploads/" +GlobalVar.getUser().getPhoto());
                 oldFile.delete();
-                Files.copy(file.toPath(), new File("src/assets/profileuploads/USERIMG"+ GlobalVar.getUser().getId() + file.getName().substring(file.getName().lastIndexOf("."))).toPath(), StandardCopyOption.REPLACE_EXISTING);
+                Files.copy(file.toPath(), new File("webapp/src/gymplus/public/profileuploads/USERIMG"+ GlobalVar.getUser().getId() + file.getName().substring(file.getName().lastIndexOf("."))).toPath(), StandardCopyOption.REPLACE_EXISTING);
                 Staff staff = new Staff(GlobalVar.getUser().getId(), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), dateofbirth_tf.getValue().toString(), GlobalVar.getUser().getPassword(), email_tf.getText(), phone_tf.getText(), address_ta.getText(), "USERIMG"+ GlobalVar.getUser().getId() + file.getName().substring(file.getName().lastIndexOf(".")), GlobalVar.getUser().getFaceid(), GlobalVar.getUser().getFaceid_ts());
                 staffService.update(staff);
                 GlobalVar.setUser(staff);
@@ -834,7 +834,7 @@ public class StaffDashboardController {
             try {
                 userprofile_imageview.setImage(null);
                 user_imageview.setImage(null);
-                File file = new File("src/assets/profileuploads/" +GlobalVar.getUser().getPhoto());
+                File file = new File("webapp/src/gymplus/public/profileuploads/" +GlobalVar.getUser().getPhoto());
                 file.delete();
                 staffService.delete(GlobalVar.getUser().getId());
                 logout_btn_act(null);
@@ -1060,7 +1060,7 @@ public class StaffDashboardController {
     private void initProfile(){
 
         String photoname = GlobalVar.getUser().getPhoto();
-        user_imageview.setImage(new Image(new File("src/assets/profileuploads/" +photoname).toURI().toString()));
+        user_imageview.setImage(new Image(new File("webapp/src/gymplus/public/profileuploads/" +photoname).toURI().toString()));
         Circle clip1 = new Circle(user_imageview.getFitWidth()/2, user_imageview.getFitHeight()/2, user_imageview.getFitWidth()/2);
         user_imageview.setClip(clip1);
         user_imageview.setPreserveRatio(false);
@@ -1068,7 +1068,7 @@ public class StaffDashboardController {
         clip2.setArcWidth(30);
         clip2.setArcHeight(30);
         cover_imageview.setClip(clip2);
-        userprofile_imageview.setImage(new Image(new File("src/assets/profileuploads/" +photoname).toURI().toString()));
+        userprofile_imageview.setImage(new Image(new File("webapp/src/gymplus/public/profileuploads/" +photoname).toURI().toString()));
         Circle clip3 = new Circle(userprofile_imageview.getFitWidth()/2, userprofile_imageview.getFitHeight()/2, userprofile_imageview.getFitWidth()/2);
         userprofile_imageview.setPreserveRatio(false);
         userprofile_imageview.setClip(clip3);
@@ -1376,7 +1376,7 @@ public class StaffDashboardController {
                     }
                     hBox.setStyle("-fx-background-color: #2196f3");
                 });
-                ImageView imageView = new ImageView(new Image(new File("src/assets/profileuploads/" + user.getPhoto()).toURI().toString()));
+                ImageView imageView = new ImageView(new Image(new File("webapp/src/gymplus/public/profileuploads/" + user.getPhoto()).toURI().toString()));
                 imageView.setFitWidth(50);
                 imageView.setFitHeight(50);
                 imageView.setPreserveRatio(false);
@@ -1437,7 +1437,7 @@ public class StaffDashboardController {
                 ImageView imageView = new ImageView();
                 imageView.setFitWidth(50);
                 imageView.setFitHeight(50);
-                imageView.setImage(new Image(new File("src/assets/profileuploads/" + client.getPhoto()).toURI().toString()));
+                imageView.setImage(new Image(new File("webapp/src/gymplus/public/profileuploads/" + client.getPhoto()).toURI().toString()));
 
                 hBox.getChildren().add(imageView);
 

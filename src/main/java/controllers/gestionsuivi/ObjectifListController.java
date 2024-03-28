@@ -275,7 +275,7 @@ public class ObjectifListController implements Initializable  {
         DateDebutField.setText(dateString);
         DateFinField.setText(dateString2);
 
-        String coachPhotoPath =  "src/assets/profileuploads/"+ objectif.getCoachPhoto();
+        String coachPhotoPath =  "webapp/src/gymplus/public/profileuploads/"+ objectif.getCoachPhoto();
         System.out.println(coachPhotoPath);
         if (coachPhotoPath != null && !coachPhotoPath.isEmpty()) {
             File file = new File(coachPhotoPath);

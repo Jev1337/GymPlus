@@ -158,7 +158,7 @@ public class PostController implements Initializable {
         nbLikes.setText(post.getLikes() + " Likes");
         comnts = post.getNbComnts();
         nbComnts.setText(comnts + " Comments");
-        Image imgP = new Image(new File("src/assets/profileuploads/" + post.getPhoto()).toURI().toString());
+        Image imgP = new Image(new File("webapp/src/gymplus/public/profileuploads/" + post.getPhoto()).toURI().toString());
         imgPost.setImage(imgP);
         dateTxt.setText(post.getDate().toString());
         if (post.getUser_id() != GlobalVar.getUser().getId()) {
@@ -168,7 +168,7 @@ public class PostController implements Initializable {
         try {
             userNameTxt.setText(us.getUserById(post.getUser_id()).getUsername());
             String profilePic = us.getUserById(p.getUser_id()).getPhoto();
-            Image img = new Image(new File("src/assets/profileuploads/" + profilePic).toURI().toString());
+            Image img = new Image(new File("webapp/src/gymplus/public/profileuploads/" + profilePic).toURI().toString());
             imgProfile.setImage(img);
             Circle clip1 = new Circle(imgProfile.getFitWidth() / 2, imgProfile.getFitHeight() / 2, imgProfile.getFitWidth() / 2);
             imgProfile.setClip(clip1);

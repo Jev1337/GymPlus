@@ -12,26 +12,23 @@ use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
-class UserType extends AbstractType
+class ModifyUserType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-        ->add('id', TextType::class, [
-            'required' => true,
-            'attr' => ['placeholder' => 'CIN']
-        ])
         ->add('username', TextType::class, [
-            'required' => true,
+            'required' => false,
             'attr' => ['placeholder' => 'Username']
         ])
         ->add('firstname', TextType::class, [
-            'required' => true,
+            'required' => false,
             'attr' => ['placeholder' => 'First Name']
         ])
         ->add('lastname', TextType::class, [
-            'required' => true,
+            'required' => false,
             'attr' => ['placeholder' => 'Last Name']
         ])
         ->add('dateNaiss', DateType::class, [
@@ -39,24 +36,19 @@ class UserType extends AbstractType
             'attr' => ['placeholder' => 'Date of Birth']
         ])
         ->add('password', PasswordType::class, [
-            'required' => true,
+            'required' => false,
             'attr' => ['placeholder' => 'Password']
         ])
-        ->add('email', EmailType::class, [
-            'required' => true,
-            'attr' => ['placeholder' => 'Email']
-        ])
         ->add('numTel', TelType::class, [
-            'required' => true,
+            'required' => false,
             'attr' => ['placeholder' => 'Phone Number']
         ])
         ->add('adresse', TextType::class, [
-            'required' => true,
+            'required' => false,
             'attr' => ['placeholder' => 'Address']
         ])
-        ->add('photo', FileType::class, [
-            'required' => true,
-            'attr' => ['placeholder' => 'Upload Photo']
+        ->add('submit', SubmitType::class, [
+            'label' => 'Save'
         ])
         ;
     }

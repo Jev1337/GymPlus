@@ -64,7 +64,7 @@ public class UpdatePostController {
         userName.setText(GlobalVar.getUser().getUsername());
         try {
         String profilePic = us.getUserById(p.getUser_id()).getPhoto();
-        Image img = new Image(new File("src/assets/profileuploads/" + profilePic).toURI().toString());
+        Image img = new Image(new File("webapp/src/gymplus/public/profileuploads/" + profilePic).toURI().toString());
         userPic.setImage(img);
         } catch (SQLException e) {
             throw new RuntimeException(e);

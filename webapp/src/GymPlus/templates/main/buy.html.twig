@@ -1,0 +1,202 @@
+{% extends "main/base.html.twig" %}
+
+{% block content %}
+
+	<div class="page-content bg-white">
+		
+		<!-- Banner  -->
+		<div class="dz-bnr-inr style-2" style="background-image: url('{{asset('main/images/banner/banner-2.png')}}')">
+			<div class="banner-gradient"></div>
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="dz-bnr-inr-entry">
+							<h1>Checkout</h1>
+							<!-- Breadcrumb Row -->
+							<nav aria-label="breadcrumb" class="breadcrumb-row">
+								<ul class="breadcrumb">
+									<li class="breadcrumb-item"><a href="index.html">Home</a></li>
+									<li class="breadcrumb-item active" aria-current="page">Checkout</li>
+								</ul>
+							</nav>
+							<!-- Breadcrumb Row End -->
+						</div>
+					</div>
+				</div>
+				<div class="banner-media">
+					<img src="{{asset('main/images/banner/pic1.png')}}" alt="/">
+				</div>				
+			</div>	
+		</div>
+		<!-- Banner End -->
+		
+		<!-- inner page banner End-->
+		<div class="content-inner-1">
+			<div class="container">
+				<div class="row shop-checkout">
+					<div class="col-xl-8">
+						<h5 class="title m-b15 text-uppercase font-weight-700 wow fadeInUp" data-wow-delay="0.2s">Billing details</h5>
+						<div class="accordion dz-accordion accordion-sm" id="accordionFaq">
+							<div class="accordion-item wow fadeInUp" data-wow-delay="0.3s">
+								<h2 class="accordion-header" id="headingOne">
+									<a href="#" class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+										Not you? &nbsp; <span>Click here to log out</span>
+										<span class="toggle-close"></span>
+									</a>
+								</h2>
+								<div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionFaq">
+									<div class="accordion-body">
+										<p class="m-b0">You are logged in as {{user.username}}</p>
+									</div>
+								</div>
+							</div>
+						</div>
+						
+					</div>
+					<div class="col-xl-4 side-bar">
+						<h4 class="title m-b15 text-uppercase wow fadeInUp" data-wow-delay="0.2s">Your Order</h4>
+						<div class="order-detail sticky-top">
+							<div class="cart-item style-1 wow fadeInUp" data-wow-delay="0.3s">
+								<div class="dz-media">
+									<img src="{{asset('main/images/blog/recent-blog/pic2.jpg')}}" alt="">
+								</div>
+								<div class="dz-content">
+									
+									<h6 class="title mb-0"><a href="product-detail.html">GP {{id}}</a></h6>
+									<span class="price">${{price}}</span>
+								</div>
+							</div>
+							<table class="wow fadeInUp" data-wow-delay="0.5s">
+								<tbody>
+									<tr class="subtotal">
+										<td>Subtotal</td>
+										<td class="price">${{price}}</td>
+									</tr>
+									<tr class="title">
+										<td><h6 class="title font-weight-500">Shipping</h6></td>
+										<td></td>
+									</tr>
+									<tr class="shipping">
+										<td>
+											<div class="custom-control custom-checkbox">
+											  <input class="form-check-input radio" type="radio" name="flexRadioDefault" id="flexRadioDefault1" checked disabled>
+											  <label class="form-check-label" for="flexRadioDefault1">
+												No Shippment Required
+											  </label>
+											</div>
+											
+										</td>
+									</tr>
+									<tr class="total">
+										<td>Total</td>
+										<td class="price">${{price}}</td>
+										
+									</tr>
+								</tbody>
+							</table>
+							
+							<div class="accordion dz-accordion accordion-sm wow fadeInUp" data-wow-delay="0.6s" id="accordionFaq1">
+								
+								<div class="accordion-item">
+									<div class="accordion-header" id="heading3">
+										<div class="accordion-button collapsed custom-control custom-checkbox" data-bs-toggle="collapse" data-bs-target="#collapse3" role="navigation" aria-expanded="true" aria-controls="collapse3">
+											<input class="form-check-input radio" type="radio" name="flexRadioDefault" id="flexRadioDefault4" checked>
+											<label class="form-check-label" for="flexRadioDefault4">
+												Paypal
+											</label>
+											<img src="{{asset('main/images/shop/payment.jpg')}}" alt="/">
+											<a href="javascript:void(0);">What is PayPal?</a>
+										</div>
+									</div>
+									<div id="collapse3" class="accordion-collapse collapse show" aria-labelledby="heading3" data-bs-parent="#accordionFaq1">
+										<div class="accordion-body">
+											<p class="m-b0">Make your payment directly into our bank account. Please use your Order ID as the payment reference.</p>
+										</div>
+									</div>
+								</div>
+							</div>
+							<p class="text wow fadeInUp" data-wow-delay="0.7s">Your personal data will be used to process your order, support your experience throughout this website, and for other purposes described in our <a href="javascript:void(0);">privacy policy.</a></p>
+							<div class="form-group wow fadeInUp" data-wow-delay="0.8s">
+								<div class="custom-control custom-checkbox d-flex m-b15">
+									<input type="checkbox" class="form-check-input square" id="basic_checkbox_3" checked disabled>
+									<label class="form-check-label" for="basic_checkbox_3">I have read and agree to the website terms and conditions </label>
+								</div>
+							</div>
+							<div id="paypal-button-container"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Call To Action -->
+		<section class="call-action style-2 bg-img-fix bg-primary">
+			<div class="container">
+				<div class="inner-content">
+					<div class="row justify-content-between align-items-center">
+						<div class="text-center text-lg-start col-xl-6 m-lg-b20 wow fadeInUp" data-wow-delay="0.2s">
+							<h2 class="title m-0"><span class="font-weight-400">Subscribe To Our </span>Newsletter</h2>
+						</div>
+						<div class="text-center text-lg-end col-xl-6 wow fadeInUp" data-wow-delay="0.4s">
+							<form class="dzSubscribe" action="{{asset('main/script/mailchamp.php')}}" method="post">
+								<div class="dzSubscribeMsg"></div>
+								<div class="form-group">
+									<div class="input-group mb-0"> 
+										<div class="input-skew">
+											<input name="dzEmail" required="required" type="email" class="form-control" placeholder="Your Email Address">
+										</div>
+										<div class="input-group-addon">
+											<button name="submit" value="Submit" type="submit" class="btn btn-secondary btn-lg btn-skew h-100"><span class="skew-inner"><span class="text">Subscribe Now</span></span></button>
+										</div>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		<!-- Call To Action -->
+		
+	</div>
+
+	
+	
+{% endblock %}
+
+{% block js %}
+	{{ parent() }}
+	<script src="https://www.paypal.com/sdk/js?client-id=Af9N6m41ryO-aKuZO3cwgGr1PZeBsbxLTeSYVJ7iUr71UO3tA8Uc0p50NeEMbewLzmq00go8MoXAzXPC&currency=USD"></script>
+	<script>
+        // Render the PayPal button into #paypal-button-container
+        paypal.Buttons({
+
+			createOrder: function(data, actions) {
+				return actions.order.create({
+					purchase_units: [{
+						amount: {
+							value: '{{price}}'
+						}
+					}]
+				});
+			},
+            // Call your server to finalize the transaction
+            onApprove: function(data, actions) {
+                return fetch('/payment/validate?order=' + data.orderID + "&user={{user.id}}&gp={{id}}", {
+                    method: 'get'
+                }).then(function(res) {
+                    return res.json();
+                }).then(function(orderData) {
+                    if (orderData.status === 'success') {
+						domain = window.location.origin;
+						path = domain + "{{path('app_home')}}";
+						actions.redirect(path);
+					}else{
+						alert('Payment failed');
+					}
+                });
+            }
+
+        }).render('#paypal-button-container');
+    </script>
+{% endblock %}

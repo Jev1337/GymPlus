@@ -5,17 +5,16 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\AbonnementDetailsRepository;
 
-#[ORM\Entity(repositoryClass: AbonnementDetailsRepository::class)]
+#[ORM\Entity (repositoryClass: AbonnementDetailsRepository::class)]
 class AbonnementDetails
 {
 
     #[ORM\Id]
-    #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $name;
+    private ?string $name;
 
     #[ORM\Column]
-    private ?floatval $prix;
+    private ?float $prix;
 
     public function getName(): ?string
     {

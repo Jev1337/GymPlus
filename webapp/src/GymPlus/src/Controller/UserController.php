@@ -154,4 +154,13 @@ class UserController extends AbstractController
         $session->remove('user');
         return $this->redirectToRoute('app_login');
     }
+
+    #[Route('/subscriptions', name: 'app_subs')]
+    public function subscriptions(SessionInterface $session): Response
+    {
+        return $this->render('main/subscriptions.html.twig', [
+            'controller_name' => 'UserController',
+            'user' => $session->get('user')
+        ]);
+    }
 }

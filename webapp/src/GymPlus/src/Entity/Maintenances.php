@@ -15,7 +15,7 @@ class Maintenances
     private ?int $id;
 
     #[ORM\Column]
-    private ?\DateTimeInterface $dateMaintenance;
+    private ?\DateTime $dateMaintenance;
 
 
     #[ORM\Column]
@@ -30,12 +30,12 @@ class Maintenances
         return $this->id;
     }
 
-    public function getDateMaintenance(): ?\DateTimeInterface
+    public function getDateMaintenance(): ?\DateTime
     {
         return $this->dateMaintenance;
     }
 
-    public function setDateMaintenance(?\DateTimeInterface $dateMaintenance): static
+    public function setDateMaintenance(?\DateTime $dateMaintenance): static
     {
         $this->dateMaintenance = $dateMaintenance;
 

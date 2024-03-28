@@ -27,7 +27,7 @@ class User
     private ?string $lastname;
 
     #[ORM\Column]
-    private ?\DateTimeInterface $dateNaiss;
+    private ?\DateTime $dateNaiss;
 
     #[ORM\Column]
     private ?string $password;
@@ -54,7 +54,7 @@ class User
     private ?string $faceid;
 
     #[ORM\Column]
-    private ?\DateTimeInterface $faceidTs;
+    private ?\DateTime $faceidTs;
 
 
     #[ORM\ManyToMany(targetEntity: EventDetails::class, inversedBy: "user")]
@@ -107,12 +107,12 @@ class User
         return $this;
     }
 
-    public function getDateNaiss(): ?\DateTimeInterface
+    public function getDateNaiss(): ?\DateTime
     {
         return $this->dateNaiss;
     }
 
-    public function setDateNaiss(?\DateTimeInterface $dateNaiss): static
+    public function setDateNaiss(?\DateTime $dateNaiss): static
     {
         $this->dateNaiss = $dateNaiss;
 
@@ -215,12 +215,12 @@ class User
         return $this;
     }
 
-    public function getFaceidTs(): ?\DateTimeInterface
+    public function getFaceidTs(): ?\DateTime
     {
         return $this->faceidTs;
     }
 
-    public function setFaceidTs(\DateTimeInterface $faceidTs): static
+    public function setFaceidTs(\DateTime $faceidTs): static
     {
         $this->faceidTs = $faceidTs;
 

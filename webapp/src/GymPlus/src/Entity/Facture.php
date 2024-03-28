@@ -15,7 +15,7 @@ class Facture
     private ?int $idfacture;
 
     #[ORM\Column]
-    private ?\DateTimeInterface $datevente;
+    private ?\DateTime $datevente;
 
     #[ORM\Column]
     private ?float $prixtatalpaye;
@@ -31,12 +31,12 @@ class Facture
         return $this->idfacture;
     }
 
-    public function getDatevente(): ?\DateTimeInterface
+    public function getDatevente(): ?\DateTime
     {
         return $this->datevente;
     }
 
-    public function setDatevente(\DateTimeInterface $datevente): static
+    public function setDatevente(\DateTime $datevente): static
     {
         $this->datevente = $datevente;
 

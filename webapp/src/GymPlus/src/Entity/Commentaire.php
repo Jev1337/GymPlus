@@ -45,12 +45,12 @@ class Commentaire
         return $this;
     }
 
-    public function getDate(): ?\DateTimeInterface
+    public function getDate(): ?\DateTime
     {
         return $this->date;
     }
 
-    public function setDate(?\DateTimeInterface $date): static
+    public function setDate(?\DateTime $date): static
     {
         $this->date = $date;
 

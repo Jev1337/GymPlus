@@ -73,12 +73,12 @@ class EventDetails
         return $this;
     }
 
-    public function getEventDate(): ?\DateTimeInterface
+    public function getEventDate(): ?\DateTime
     {
         return $this->eventDate;
     }
 
-    public function setEventDate(?\DateTimeInterface $eventDate): static
+    public function setEventDate(?\DateTime $eventDate): static
     {
         $this->eventDate = $eventDate;
 

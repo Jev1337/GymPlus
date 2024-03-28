@@ -36,7 +36,7 @@
 	<link href="{{asset('main/vendor/datepicker/css/bootstrap-datetimepicker.min.css')}}" rel="stylesheet">
     <!-- Custom Stylesheet -->
     <link rel="stylesheet" href="{{asset('main/css/style.css')}}">
-	<link class="skin" rel="stylesheet" href="{{asset('main/css/skin/skin-1.css')}}">
+	<link class="skin" rel="stylesheet" href="{{asset('main/css/skin/skin-5.css')}}">
 
 	<!-- Google Fonts -->
 	<link rel="preconnect" href="https://fonts.googleapis.com">
@@ -113,7 +113,12 @@
                     </div>
                     <ul class="nav navbar-nav navbar navbar-left">	
                         <li><a href="{{path('app_home')}}">Home</a></li>
-                        <li><a href="{{path('app_subs')}}">My Subscriptions</a></li>
+						<li class="sub-menu-down"><a href="javascript:void(0);">Members Area</a>
+							<ul class="sub-menu">
+								<li><a href="{{path('app_subs')}}">My Subscriptions</a></li>
+								<li><a href="{{path('app_profile')}}">My Profile</a></li>
+							</ul>
+						</li>
 						 <li><a href="{{path('app_eventsf')}}">Events</a></li>
                     </ul>
                     <div class="dz-social-icon">
@@ -216,7 +221,12 @@
 						</div>
 						<ul class="nav navbar-nav navbar navbar-left">	
 							<li><a href="{{path('app_home')}}">Home</a></li>
-                        	<li><a href="{{path('app_subs')}}">My Subscriptions</a></li>
+                        	<li class="sub-menu-down"><a href="javascript:void(0);">Members Area</a>
+							<ul class="sub-menu">
+								<li><a href="{{path('app_subs')}}">My Subscriptions</a></li>
+								<li><a href="{{path('app_profile')}}">My Profile</a></li>
+							</ul>
+						</li>
 						</ul>
 						<div class="dz-social-icon">
 							<ul>
@@ -321,9 +331,13 @@
 								<a href="index.html"><img src="{{asset('main/images/logo.png')}}" alt=""></a>
 							</div>
 							<ul class="nav navbar-nav navbar navbar-left">	
-								
 								<li><a href="{{path('app_home')}}">Home</a></li>
-                        		<li><a href="{{path('app_subs')}}">My Subscriptions</a></li>	
+                        		<li class="sub-menu-down"><a href="javascript:void(0);">Members Area</a>
+									<ul class="sub-menu">
+										<li><a href="{{path('app_subs')}}">My Subscriptions</a></li>
+										<li><a href="{{path('app_profile')}}">My Profile</a></li>
+									</ul>
+								</li>
 							</ul>
 							</div>	
 						</div>

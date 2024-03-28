@@ -307,7 +307,7 @@ public class AuthController {
             usernameres_label.setText(user.getUsername());
             phoneres_label.setText(user.getNum_tel());
 
-            userreset_imageview.setImage(new Image(new File("src/assets/profileuploads/" + user.getPhoto()).toURI().toString()));
+            userreset_imageview.setImage(new Image(new File("webapp/src/gymplus/public/profileuploads/" + user.getPhoto()).toURI().toString()));
             Circle clip = new Circle(userreset_imageview.getFitWidth() / 2, userreset_imageview.getFitHeight() / 2, userreset_imageview.getFitWidth() / 2);
             userreset_imageview.setClip(clip);
             fadeOutDownAnimation.setNode(forgotpaneverif);
@@ -405,7 +405,7 @@ public class AuthController {
             String newphone = first.replaceAll("[0-9]", "*") + last4;
             phonelabelforgot_label.setText(newphone);
 
-            userforgot_imageview.setImage(new Image(new File("src/assets/profileuploads/" + user.getPhoto()).toURI().toString()));
+            userforgot_imageview.setImage(new Image(new File("webapp/src/gymplus/public/profileuploads/" + user.getPhoto()).toURI().toString()));
             Circle clip = new Circle(userforgot_imageview.getFitWidth() / 2, userforgot_imageview.getFitHeight() / 2, userforgot_imageview.getFitWidth() / 2);
             userforgot_imageview.setClip(clip);
             fadeOutLeftAnimation.setNode(signin_pane);
@@ -510,7 +510,7 @@ public class AuthController {
                 setFaceID();
                 return;
             }
-            File dest = new File("src/assets/profileuploads/USERIMG" + cin_tf.getText() + file.getName().substring(file.getName().lastIndexOf(".")));
+            File dest = new File("webapp/src/gymplus/public/profileuploads/USERIMG" + cin_tf.getText() + file.getName().substring(file.getName().lastIndexOf(".")));
             Files.copy(file.toPath(), dest.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
             clientService.add(new Client(Integer.parseInt(cin_tf.getText()), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), date_dp.getValue().toString(), pwdsu_pf.getText(), emailsu_tf.getText(), phone_tf.getText(), address_tf.getText(), dest.getName(), "", new SimpleDateFormat("yyyy-MM-dd").format(new Date(System.currentTimeMillis()))));
             successAlert("Client added successfully!", "Client added successfully!", "Client added successfully! Please sign in to continue.");
@@ -997,7 +997,7 @@ public class AuthController {
         if (b) {
             try {
                 File file = new File(photo_tf.getText());
-                File dest = new File("src/assets/profileuploads/USERIMG" + cin_tf.getText() + file.getName().substring(file.getName().lastIndexOf(".")));
+                File dest = new File("webapp/src/gymplus/public/profileuploads/USERIMG" + cin_tf.getText() + file.getName().substring(file.getName().lastIndexOf(".")));
                 Files.copy(file.toPath(), dest.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
                 clientService.add(new Client(Integer.parseInt(cin_tf.getText()), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), date_dp.getValue().toString(), pwdsu_pf.getText(), emailsu_tf.getText(), phone_tf.getText(), address_tf.getText(), dest.getName(), faceId, new SimpleDateFormat("yyyy-MM-dd").format(new Date(System.currentTimeMillis()))));
                 successAlert("Client added successfully!", "Client added successfully!", "Client added successfully! Please sign in to continue.");

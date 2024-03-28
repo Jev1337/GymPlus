@@ -1,0 +1,45 @@
+
+
+{% extends "dashboard/base.html.twig" %}
+
+{% block content %}
+    <div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
+        <div style="margin: auto; margin-right: 10%; table-layout: fixed; width: 60%; border-collapse: collapse;">
+            <h1 style="text-align: center;">Events</h1>
+
+            <table >
+               
+                <thead>
+                    <tr>
+                        <th style="w0idth: 10%; border: 1px solid black; padding: 4px;">Name</th>
+                        <th style="width: 10%; border: 1px solid black; padding: 4px;">Type</th>
+                        <th style="width: 10%; border: 1px solid black; padding: 4px;">Date</th>
+                        <th style="width: 10%; border: 1px solid black; padding: 4px;">Duration</th>
+                        <th style="width: 10%; border: 1px solid black; padding: 4px;">Number of Places</th>
+                        <th style="width: 10%; border: 1px solid black; padding: 4px;">Total Number</th>
+                        <th style="border: 1px solid black; padding: 4px;">Edit</th>
+                        <th style="border: 1px solid black; padding: 4px;">Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for event in events %}
+                    <tr>
+                        <td style="border: 1px solid black; padding: 4px;">{{ event.name }}</td>
+                        <td style="border: 1px solid black; padding: 4px;">{{ event.type }}</td>
+                        <td style="border: 1px solid black; padding: 4px;">{{ event.eventDate|date('Y-m-d') }}</td>
+                        <td style="border: 1px solid black; padding: 4px;">{{ event.duree }}</td>
+                        <td style="border: 1px solid black; padding: 4px;">{{ event.nbPlaces }}</td>
+                        <td style="border: 1px solid black; padding: 4px;">{{ event.nbTotal }}</td>
+                        <td style="border: 1px solid black; padding: 4px;"><a href="{{ path('event_edit', {'id': event.id}) }}">Edit</a></td>
+                        <td style="border: 1px solid black; padding: 4px;"><a href="{{ path('event_delete', {'id': event.id}) }}">Delete</a></td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="8" style="text-align: center; border: 1px solid black; padding: 4px;">No events found.</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

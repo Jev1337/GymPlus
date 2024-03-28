@@ -1,0 +1,41 @@
+{% extends "dashboard/base.html.twig" %}
+
+{% block content %}
+    <h1 style="text-align: center;"> Add event </h1>
+
+    <style>
+        .centered-form {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* This will take the full height of the viewport */
+            flex-direction: column; /* This will stack the items vertically */
+        }
+    </style>
+
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'class': 'centered-form'}}) }}
+    <table class="styled-table">
+        <tr>
+            <td>{{ form_label(form.name) }}</td>
+            <td>{{ form_widget(form.name) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.type) }}</td>
+            <td>{{ form_widget(form.type) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.eventDate) }}</td>
+            <td>{{ form_widget(form.eventDate) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.duree) }}</td>
+            <td>{{ form_widget(form.duree) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.nbPlaces) }}</td>
+            <td>{{ form_widget(form.nbPlaces, {'attr': {'disabled': isEditAction ? 'disabled' : null}}) }}</td>
+        </tr>
+        
+    </table>
+    {{ form_end(form) }}
+{% endblock %}

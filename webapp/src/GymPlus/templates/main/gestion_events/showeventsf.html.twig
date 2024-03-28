@@ -1,0 +1,103 @@
+{% extends "main/base.html.twig" %}
+{% block content %}
+
+<div class="page-content bg-white">
+		
+		<!-- Banner  -->
+		<div class="dz-bnr-inr style-2" style="background-image: url('assets/images/banner/banner-2.png')">
+			<div class="banner-gradient"></div>
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-8">
+						<div class="dz-bnr-inr-entry">
+							<h1>Events</h1>
+							<!-- Breadcrumb Row -->
+							<nav aria-label="breadcrumb" class="breadcrumb-row">
+								<ul class="breadcrumb">
+									<li class="breadcrumb-item"><a href="index.html">Home</a></li>
+									<li class="breadcrumb-item active" aria-current="page">Events</li>
+								</ul>
+							</nav>
+							<!-- Breadcrumb Row End -->
+						</div>
+					</div>
+				</div>	
+				<div class="banner-media">
+					<img src="assets/images/banner/pic4.png" alt="/">
+				</div>
+			</div>	
+		</div>
+		<!-- Banner End -->
+		
+		<!-- Our Events -->
+		<section class="content-inner">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="row justify-content-center">
+		{% for event in events %}
+    <div class="col-xl-6 col-lg-8">
+        <div class="dz-card style-1 blog-half m-b30 overlay-shine wow fadeInUp" data-wow-delay="0.2s">
+            <div class="dz-media">
+                <a href="javascript:void(0);"><img src="{{ asset('assets/images/blog/blog-grid/pic2.jpg') }}" alt="/"></a>
+            </div>
+            <div class="dz-info">
+                <div class="dz-meta">
+                    <ul>
+                        <li class="dz-date">
+                            <span>{{ event.eventDate|date('d') }}</span> {{ event.eventDate|date('M') }}
+                        </li>
+                        <li class="dz-time">
+                            <a href="javascript:void(0);">{{ event.eventDate|date('g:i a') }}</a>
+                        </li>
+                    </ul>
+                </div> 
+                <h4 class="dz-title"><a href="event-detail.html">{{ event.name }}</a></h4>
+                <p>Type: {{ event.type }}</p>
+                <p>Duration: {{ event.duree }}</p>
+                <p>Number of Places: {{ event.nbPlaces }}</p>
+                <a class="read-btn btn-link" href="event-detail.html">Read More</a>
+            </div>
+        </div>
+    </div>
+{% endfor %}
+							
+						
+					</div>
+				</div>
+			</div>
+		</section>
+		<!-- Our Events -->
+		
+		<!-- Call To Action -->
+		<section class="call-action style-2 bg-img-fix bg-primary">
+			<div class="container">
+				<div class="inner-content">
+					<div class="row justify-content-between align-items-center">
+						<div class="text-center text-lg-start col-xl-6 m-lg-b20 wow fadeInUp" data-wow-delay="0.2s">
+							<h2 class="title m-0"><span class="font-weight-400">Subscribe To Our </span>Newsletter</h2>
+						</div>
+						<div class="text-center text-lg-end col-xl-6 wow fadeInUp" data-wow-delay="0.4s">
+							<form class="dzSubscribe" action="assets/script/mailchamp.php" method="post">
+								<div class="dzSubscribeMsg"></div>
+								<div class="form-group">
+									<div class="input-group mb-0"> 
+										<div class="input-skew">
+											<input name="dzEmail" required="required" type="email" class="form-control" placeholder="Your Email Address">
+										</div>
+										<div class="input-group-addon">
+											<button name="submit" value="Submit" type="submit" class="btn btn-secondary btn-lg btn-skew h-100"><span class="skew-inner"><span class="text">Subscribe Now</span></span></button>
+										</div>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		<!-- Call To Action -->
+		
+	</div>
+
+{% endblock %}

@@ -1,45 +1,72 @@
-
-
 {% extends "dashboard/base.html.twig" %}
 
-{% block content %}
-    <div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
-        <div style="margin: auto; margin-right: 10%; table-layout: fixed; width: 60%; border-collapse: collapse;">
-            <h1 style="text-align: center;">Events</h1>
 
-            <table >
-               
-                <thead>
-                    <tr>
-                        <th style="w0idth: 10%; border: 1px solid black; padding: 4px;">Name</th>
-                        <th style="width: 10%; border: 1px solid black; padding: 4px;">Type</th>
-                        <th style="width: 10%; border: 1px solid black; padding: 4px;">Date</th>
-                        <th style="width: 10%; border: 1px solid black; padding: 4px;">Duration</th>
-                        <th style="width: 10%; border: 1px solid black; padding: 4px;">Number of Places</th>
-                        <th style="width: 10%; border: 1px solid black; padding: 4px;">Total Number</th>
-                        <th style="border: 1px solid black; padding: 4px;">Edit</th>
-                        <th style="border: 1px solid black; padding: 4px;">Delete</th>
-                    </tr>
-                </thead>
-                <tbody>
-                {% for event in events %}
-                    <tr>
-                        <td style="border: 1px solid black; padding: 4px;">{{ event.name }}</td>
-                        <td style="border: 1px solid black; padding: 4px;">{{ event.type }}</td>
-                        <td style="border: 1px solid black; padding: 4px;">{{ event.eventDate|date('Y-m-d') }}</td>
-                        <td style="border: 1px solid black; padding: 4px;">{{ event.duree }}</td>
-                        <td style="border: 1px solid black; padding: 4px;">{{ event.nbPlaces }}</td>
-                        <td style="border: 1px solid black; padding: 4px;">{{ event.nbTotal }}</td>
-                        <td style="border: 1px solid black; padding: 4px;"><a href="{{ path('event_edit', {'id': event.id}) }}">Edit</a></td>
-                        <td style="border: 1px solid black; padding: 4px;"><a href="{{ path('event_delete', {'id': event.id}) }}">Delete</a></td>
-                    </tr>
-                {% else %}
-                    <tr>
-                        <td colspan="8" style="text-align: center; border: 1px solid black; padding: 4px;">No events found.</td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+
+{% block content %}
+    <div class="custom-padding">
+        <div class="container-fluid">
+            <div class="page-titles">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="javascript:void(0)">Table</a></li>
+                    <li class="breadcrumb-item active"><a href="javascript:void(0)">Bootstrap</a></li>
+                </ol>
+            </div>
+            <!-- row -->
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">Events</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive custom-table" style="width: 80%; margin: auto; margin-bottom: 20px; margin-right: 20px;">
+                                <table class="table table-responsive-md" style="padding: 0.05rem !important; border-color: transparent !important;">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Name</th>
+                                            <th>Type</th>
+                                            <th>Date</th>
+                                            <th>Duration</th>
+                                            <th>Number of Places</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for event in events %}
+                                        <tr>
+                                            <td><strong class="text-black">{{ loop.index }}</strong></td>
+                                            <td>{{ event.name }}</td>
+                                            <td>{{ event.type }}</td>
+                                            <td>{{ event.eventDate|date('Y-m-d') }}</td>
+                                            <td>{{ event.duree }}</td>
+                                            <td>{{ event.nbPlaces ~ '/' ~ event.nbTotal }}</td>
+                                            <td>
+                                                <div class="dropdown">
+                                                    <button type="button" class="btn btn-success light sharp" data-bs-toggle="dropdown">
+                                                        <svg width="20px" height="20px" viewBox="0 0 24 24" version="1.1"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><rect x="0" y="0" width="24" height="24"></rect><circle fill="#000000" cx="5" cy="12" r="2"></circle><circle fill="#000000" cx="12" cy="12" r="2"></circle><circle fill="#000000" cx="19" cy="12" r="2"></circle></g></svg>
+                                                    </button>
+                                                    <div class="dropdown-menu">
+                                                        <a class="dropdown-item" href="edit_event">Edit</a>
+                                                        <a class="dropdown-item" href="#">Delete</a>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        {% else %}
+                                        <tr>
+                                            <td colspan="7" style="text-align: center;">No events found.</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+ 
 {% endblock %}

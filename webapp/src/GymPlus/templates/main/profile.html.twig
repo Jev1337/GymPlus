@@ -51,7 +51,20 @@
 							</div>
 						</div>
 					</div>
+					
 					<div class="card-container col-lg-8 col-md-6">
+					{% for message in app.flashes('success') %}
+								<div class="alert alert-success">
+									<i class="fa-solid fa-check"></i>
+									{{ message }}
+								</div>
+							{% endfor %}
+							{% for message in app.flashes('error') %}
+								<div class="alert alert-danger">
+									<i class="fa-solid fa-times"></i>
+									{{ message }}
+								</div>
+						{% endfor %}
 						<div class="widget widget-newslatter bg-white p-a20">
 							<div class="widget-title">
 								<h4 class="title">Account Information</h4>

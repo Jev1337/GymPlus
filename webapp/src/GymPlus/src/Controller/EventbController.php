@@ -12,10 +12,19 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use App\Entity\User; 
 use Doctrine\Persistence\ManagerRegistry;
+use App\Entity\EventParticipants;
+use App\Repository\EventParticipantsRepository;
+use App\Repository\EventDetailsRepository;
+
 
 
 class EventbController extends AbstractController
-{
+{   private $eventParticipantsRepository;
+
+    public function __construct(EventParticipantsRepository $eventParticipantsRepository)
+    {
+        $this->eventParticipantsRepository = $eventParticipantsRepository;
+    }
     #[Route('/add_event', name: 'app_events')]
     public function add_event(Request $request, SessionInterface $session, ManagerRegistry $registry): Response
     {
@@ -93,20 +102,77 @@ class EventbController extends AbstractController
     }
     #[Route('/eventf', name: 'app_eventsf')]
     public function eventf(ManagerRegistry $registry, SessionInterface $session): Response
-    {   
+{   
+    $user = $session->get('user');
+    if (!$user instanceof User) {
+        throw new \Exception('No user in session');
+    }
+    
+    $events = $registry->getRepository(EventDetails::class)->findAll();
+
+    $eventsWithUserStatus = [];
+    foreach ($events as $event) {
+        $isUserParticipant = $this->eventParticipantsRepository->findOneBy([
+            'user_id' => $user->getId(),
+            'event_details_id' => $event->getId()
+        ]) !== null;
+
+        $eventsWithUserStatus[] = [
+            'event' => $event,
+            'isUserParticipant' => $isUserParticipant
+        ];
+    }
+
+    return $this->render('main\gestion_events/showeventsf.html.twig', [
+        'controller_name' => 'EventbController',
+        'events' => $eventsWithUserStatus,
+        'user' => $user,
+    ]);
+}
+    #user join event by clicking on join
+    #[Route('/eventf/join/{id}', name: 'event_join')]
+    public function join($id, ManagerRegistry $registry, SessionInterface $session): Response
+    {
         $user = $session->get('user');
         if (!$user instanceof User) {
             throw new \Exception('No user in session');
         }
-        
-        $events = $registry->getRepository(EventDetails::class)->findAll();
-    
-        return $this->render('main\gestion_events/showeventsf.html.twig', [
-            'controller_name' => 'EventbController',
-            'events' => $events, 
-            'user' => $user,
-        ]);
+        $event = $registry->getRepository(EventDetails::class)->find($id);
+        $event->setNbPlaces($event->getNbPlaces()-1);
+        $entityManager = $registry->getManager();
+        $entityManager->flush();
+        $eventParticipant = new EventParticipants();
+        $eventParticipant->setUserId($user->getId());
+        $eventParticipant->setEventDetailsId($id);
+        $entityManager->persist($eventParticipant);
+        $entityManager->flush();
+        return $this->redirectToRoute('app_eventsf');
+
+
+
+}
+#[Route('/eventf/leave/{id}', name: 'event_leave')]
+public function leaveEvent($id, ManagerRegistry $registry, SessionInterface $session)
+{
+    $user = $session->get('user');
+    if (!$user) {
+        throw new \Exception('No user in session');
+    }
+    $event = $registry->getRepository(EventDetails::class)->find($id);
+        $event->setNbPlaces($event->getNbPlaces()+1);
+
+    $eventParticipant = $registry->getRepository(EventParticipants::class)->findOneBy([
+        'user_id' => $user->getId(),
+        'event_details_id' => $id
+    ]);
+
+    if ($eventParticipant) {
+        $entityManager = $registry->getManager();
+        $entityManager->remove($eventParticipant);
+        $entityManager->flush();
     }
 
+    return $this->redirectToRoute('app_eventsf');
+}
 
 }

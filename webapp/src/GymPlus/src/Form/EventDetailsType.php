@@ -14,13 +14,16 @@ use Symfony\Component\Form\Extension\Core\Type\NumberType;
 class EventDetailsType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
-    {
+    { $event = $builder->getData();
         $builder
             ->add('name')
             ->add('type')
             ->add('eventDate')
             ->add('duree')
-            ->add('nbPlaces', null, ['disabled' => $options['isEditAction'] ?? false])  // Use the option here
+            ->add('nbPlaces', null, [
+                'disabled' => $event && $event->getId() !== null,
+                'empty_data' => $event ? $event->getNbPlaces() : null,
+            ])
             ->add('save', SubmitType::class);
     }
     

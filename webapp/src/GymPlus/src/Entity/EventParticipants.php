@@ -9,19 +9,26 @@ use Doctrine\ORM\Mapping as ORM;
 class EventParticipants
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(type: "integer")]
     private ?int $event_details_id = null;
 
-    #[ORM\Column]
+    #[ORM\Id]
+    #[ORM\Column(type: "integer")]
     private ?int $user_id = null;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column(type: "integer", nullable: true)]
     private ?int $rate = null;
 
-    public function getId(): ?int
+    public function getEventDetailsId(): ?int
     {
-        return $this->id;
+        return $this->event_details_id;
+    }
+
+    public function setEventDetailsId(int $event_details_id): static
+    {
+        $this->event_details_id = $event_details_id;
+
+        return $this;
     }
 
     public function getUserId(): ?int
@@ -47,9 +54,4 @@ class EventParticipants
 
         return $this;
     }
-
-    public function getEventDetailsId(): ?int
-    {
-        return $this->event_details_id;
-    }
-}
+ }

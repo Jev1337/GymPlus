@@ -35,10 +35,6 @@ class ModifyUserType extends AbstractType
             'widget' => 'single_text',
             'attr' => ['placeholder' => 'Date of Birth']
         ])
-        ->add('password', PasswordType::class, [
-            'required' => false,
-            'attr' => ['placeholder' => 'Password']
-        ])
         ->add('numTel', TelType::class, [
             'required' => false,
             'attr' => ['placeholder' => 'Phone Number']

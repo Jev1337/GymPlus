@@ -134,30 +134,57 @@ class UserController extends AbstractController
         $form = $this->createForm(UserType::class);
         $form->handleRequest($request);
         
-        if($form->isSubmitted() && $form->isValid()){
-            $data = $form->getData();
-            $user = new User();
-            
-            $user->setEmail($data->getEmail());
-            $user->setPassword(password_hash($data->getPassword(), PASSWORD_DEFAULT));
-            $user->setRole('client');
-            $user->setUsername($data->getUsername());
-            $user->setNumTel($data->getNumTel());
-            $user->setAdresse($data->getAdresse());
-            $user->setFaceidTs(new \DateTime());
-            $user->setDateNaiss($data->getDateNaiss());
-            $user->setFirstname($data->getFirstname());
-            $user->setLastname($data->getLastname());
-            $user->setPhoto("");
-            $user->setId($data->getId());
-            $reg->getManager()->persist($user);
-            $reg->getManager()->flush();
-            return $this->redirectToRoute('app_login');
+        if($form->isSubmitted() ){
+            if(!$form->isValid()){
+                foreach($form->getErrors(true) as $error){
+                    $this->addFlash('error', $error->getMessage());
+                }
+            }else{
+                $data = $form->getData();
+                if ($reg->getRepository(User::class)->findOneBy(['email' => $data->getEmail()])) {
+                    $this->addFlash('error', 'Email already exists');
+                    return $this->redirectToRoute('app_signup');
+                }
+                if ($reg->getRepository(User::class)->findOneBy(['username' => $data->getUsername()])) {
+                    $this->addFlash('error', 'Username already exists');
+                    return $this->redirectToRoute('app_signup');
+                }
+                if ($reg->getRepository(User::class)->findOneBy(['numTel' => $data->getNumTel()])) {
+                    $this->addFlash('error', 'Phone number already exists');
+                    return $this->redirectToRoute('app_signup');
+                }
+                if ($reg->getRepository(User::class)->findOneBy(['id' => $data->getId()])) {
+                    $this->addFlash('error', 'CIN already exists');
+                    return $this->redirectToRoute('app_signup');
+                }
+                $user = new User();
+                $user->setEmail($data->getEmail());
+                $user->setPassword(password_hash($data->getPassword(), PASSWORD_DEFAULT));
+                $user->setRole('client');
+                $user->setUsername($data->getUsername());
+                $user->setNumTel($data->getNumTel());
+                $user->setAdresse($data->getAdresse());
+                $user->setFaceidTs(new \DateTime());
+                $user->setDateNaiss($data->getDateNaiss());
+                $user->setFirstname($data->getFirstname());
+                $user->setLastname($data->getLastname());
+                $user->setId($data->getId());
+                $photo = $form['photo']->getData();
+                $filename = 'USERIMG' . $user->getId() . '.' . $photo->guessExtension();
+                $targetdir = $this->getParameter('kernel.project_dir') . '/public/profileuploads/';
+                $photo->move($targetdir, $filename);
+                $user->setPhoto($filename);
+                $reg->getManager()->persist($user);
+                $reg->getManager()->flush();
+                $session->set('user', $user);
+            }
         }
+        
+
         return $this->render('main/signup.html.twig', [
             'controller_name' => 'UserController',
-            'user' => $session->get('user'),
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'user' => $session->get('user')
         ]);
     }
 
@@ -178,18 +205,24 @@ class UserController extends AbstractController
         $user = $repo->findUserById($user->getId());
         $form = $this->createForm(ModifyUserType::class, $user);
         $form->handleRequest($request);
-        if($form->isSubmitted() && $form->isValid()){
-            $data = $form->getData();
-            $user->setUsername($data->getUsername());
-            $user->setNumTel($data->getNumTel());
-            $user->setAdresse($data->getAdresse());
-            $user->setDateNaiss($data->getDateNaiss());
-            $user->setFirstname($data->getFirstname());
-            $user->setLastname($data->getLastname());
-            $reg->getManager()->persist($user);
-            $reg->getManager()->flush();
-            $session->set('user', $user);
-            return $this->redirectToRoute('app_profile');
+        if($form->isSubmitted() ){
+            if (!$form->isValid()) {
+                foreach ($form->getErrors(true) as $error) {
+                    $this->addFlash('error', $error->getMessage());
+                }
+            }else{
+                $data = $form->getData();
+                $user->setUsername($data->getUsername());
+                $user->setNumTel($data->getNumTel());
+                $user->setAdresse($data->getAdresse());
+                $user->setDateNaiss($data->getDateNaiss());
+                $user->setFirstname($data->getFirstname());
+                $user->setLastname($data->getLastname());
+                $reg->getManager()->persist($user);
+                $reg->getManager()->flush();
+                $session->set('user', $user);
+                return $this->redirectToRoute('app_profile');
+            }
         }
         return $this->render('main/profile.html.twig', [
             'controller_name' => 'UserController',

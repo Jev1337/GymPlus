@@ -11,13 +11,14 @@
 
 var PowerZone = function(){
 	/* Photo Modification ============ */
-	document.getElementById('userphoto').addEventListener('click', function() {
-		document.getElementById('imageInput').click();
-	});
-	document.getElementById('imageInput').addEventListener('change', function() {
-		document.getElementById('submitBtn').click();
-	});
-
+	if (document.getElementById('imageInput') != null) {
+		document.getElementById('userphoto').addEventListener('click', function() {
+			document.getElementById('imageInput').click();
+		});
+		document.getElementById('imageInput').addEventListener('change', function() {
+			document.getElementById('submitBtn').click();
+		});
+	}
 
 	/* Search Bar ============ */
 	siteUrl = '';
@@ -763,7 +764,11 @@ var PowerZone = function(){
 				
 			   //alert("You are on step "+stepNumber+" now");
 			   if (stepNumber == 2){
+				history.replaceState(null, null, ' '); 	
+
 				document.getElementById('form-0').submit();
+				//remove hash from url
+				
 			   }
 			   if(stepPosition === 'first'){
 				   $("#prev-btn").addClass('disabled');
@@ -1123,12 +1128,6 @@ var PowerZone = function(){
 			jQuery('.styleswitcher, .DZ-theme-btn').toggleClass('hide');
 		});
 	}
-
-	/* Handle Support ============ */
-	var handleSupport = function(){
-		var support = '<script id="DZScript" src="https://dzassets.s3.amazonaws.com/w3-global.js"></script>';
-		jQuery('body').append(support);
-	}
 	
 	/* Password Show / Hide */
 	var handleShowPass = function(){
@@ -1188,7 +1187,6 @@ var PowerZone = function(){
 			handleScreenLock();
 			handleBootstrapTouchSpin();
 			dzTheme();
-			handleSupport();
 		},
 
 		load:function(){

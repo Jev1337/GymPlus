@@ -13,6 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\FormInterface;
 
 class ModifyUserType extends AbstractType
 {
@@ -20,32 +21,52 @@ class ModifyUserType extends AbstractType
     {
         $builder
         ->add('username', TextType::class, [
-            'required' => false,
-            'attr' => ['placeholder' => 'Username']
+            'required' => true,
+            'attr' =>[
+                'pattern' => '[a-zA-Z0-9]*',
+                'minLength' => 3,
+                'maxLength' => 20,
+            ]
         ])
         ->add('firstname', TextType::class, [
-            'required' => false,
-            'attr' => ['placeholder' => 'First Name']
+            'required' => true,
+            'attr' =>[
+                'pattern' => '[a-zA-Z]*',
+                'minLength' => 3,
+                'maxLength' => 20,
+            ]
         ])
         ->add('lastname', TextType::class, [
-            'required' => false,
-            'attr' => ['placeholder' => 'Last Name']
+            'required' => true,
+            'attr' =>[
+                'pattern' => '[a-zA-Z]*',
+                'minLength' => 3,
+                'maxLength' => 20,
+            ]
         ])
         ->add('dateNaiss', DateType::class, [
             'widget' => 'single_text',
-            'attr' => ['placeholder' => 'Date of Birth']
+            'required' => true,
         ])
         ->add('password', PasswordType::class, [
             'required' => false,
             'attr' => ['placeholder' => 'Password']
         ])
         ->add('numTel', TelType::class, [
-            'required' => false,
-            'attr' => ['placeholder' => 'Phone Number']
+            'required' => true,
+            'attr' =>[
+                'pattern' => '[0-9]*',
+                'minLength' => 8,
+                'maxLength' => 8,
+            ]
         ])
         ->add('adresse', TextType::class, [
-            'required' => false,
-            'attr' => ['placeholder' => 'Address']
+            'required' => true,
+            'attr' =>[
+                'pattern' => '[a-zA-Z0-9]*',
+                'minLength' => 3,
+                'maxLength' => 50,
+            ]
         ])
         ->add('submit', SubmitType::class, [
             'label' => 'Save'
@@ -53,10 +74,14 @@ class ModifyUserType extends AbstractType
         ;
     }
 
-    public function configureOptions(OptionsResolver $resolver): void
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => User::class,
+            'validation_groups' => function (FormInterface $form) {
+                $data = $form->getData();
+                return null === $data->getId() ? ['Default', 'create'] : ['Default', 'update'];
+            },
         ]);
     }
 }

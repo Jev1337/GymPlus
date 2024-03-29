@@ -19,6 +19,8 @@ var PowerZone = function(){
 			document.getElementById('submitBtn').click();
 		});
 	}
+	
+
 
 	/* Search Bar ============ */
 	siteUrl = '';

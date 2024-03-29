@@ -48,10 +48,6 @@ class ModifyUserType extends AbstractType
             'widget' => 'single_text',
             'required' => true,
         ])
-        ->add('password', PasswordType::class, [
-            'required' => false,
-            'attr' => ['placeholder' => 'Password']
-        ])
         ->add('numTel', TelType::class, [
             'required' => true,
             'attr' =>[

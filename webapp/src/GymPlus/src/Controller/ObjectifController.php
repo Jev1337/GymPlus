@@ -40,7 +40,6 @@ class ObjectifController extends AbstractController
     {
         $user = $session->get('user');
         $userId = $user->getId();
-
         $entityManager = $registry->getManager();
         $objectifs = $entityManager->getRepository(Objectif::class)->findBy(['userid' => $userId]);
 

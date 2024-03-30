@@ -46,8 +46,6 @@ class AuthentificationSubscriber implements EventSubscriberInterface
         if (!in_array($currentRoute, $protectedRoutes)) {
             return;
         }
-
-
         if (!$user) {
             $event->setResponse(new RedirectResponse($this->urlGenerator->generate('app_login')));
             return;

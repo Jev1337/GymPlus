@@ -35,8 +35,6 @@ class Objectif
     #[ORM\Column]
     private ?string $typeobj;
 
-   #[ORM\Column]
-    private ?string $coachNames;
 
     #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(name: "userid", referencedColumnName: "id")]
@@ -124,20 +122,6 @@ class Objectif
 
         return $this;
     }
-
-
-    public function getCoachNames(): ?string
-    {
-        return $this->coachNames;
-    }
-
-    public function setCoachNames(?string $coachNames): static
-    {
-        $this->coachNames = $coachNames;
-
-        return $this;
-    }
-
     
 
     public function getTypeobj(): ?string

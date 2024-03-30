@@ -13,6 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Doctrine\ORM\EntityRepository;
 
 class ObjectifType extends AbstractType
 {
@@ -35,16 +36,14 @@ class ObjectifType extends AbstractType
                 'widget' => 'single_text',
                 'attr' => ['placeholder' => 'Date ']
             ])           
-                ->add('CoachNames', EntityType::class, [
+            ->add('coachid', EntityType::class, [
                 'class' => User::class,
-                'query_builder' => function ($userRepository) {
-                    return $userRepository->createQueryBuilder('u')
-                        ->where('u.role LIKE :role')
-                        ->setParameter('role', '%staff%');
-                },
                 'choice_label' => 'username',
-                'placeholder' => 'Select your Coach',
-
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('u')
+                        ->where('u.role LIKE :role')
+                        ->setParameter('role', 'staff');
+                },
             ])
             ->add('submit', SubmitType::class)
         ;

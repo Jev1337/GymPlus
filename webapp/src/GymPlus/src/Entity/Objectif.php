@@ -35,8 +35,8 @@ class Objectif
     #[ORM\Column]
     private ?string $typeobj;
 
-   /* #[ORM\Column]
-    private ?string $coachNames;*/
+   #[ORM\Column]
+    private ?string $coachNames;
 
     #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(name: "userid", referencedColumnName: "id")]

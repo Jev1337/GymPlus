@@ -29,10 +29,6 @@ class EventbController extends AbstractController
     public function add_event(Request $request, SessionInterface $session, ManagerRegistry $registry): Response
     {
         $user = $session->get('user');
-        if (!$user instanceof User) {
-            throw new \Exception('No user in session');
-        }
-
         $event = new EventDetails();
         $form = $this->createForm(EventDetailsType::class, $event);
 
@@ -58,9 +54,6 @@ class EventbController extends AbstractController
     public function eventb(ManagerRegistry $registry, SessionInterface $session): Response
     {   
         $user = $session->get('user');
-        if (!$user instanceof User) {
-            throw new \Exception('No user in session');
-        }
         
         $events = $registry->getRepository(EventDetails::class)->findAll();
     
@@ -82,9 +75,6 @@ class EventbController extends AbstractController
     #[Route('/eventb/edit/{id}', name: 'event_edit')]
     public function edit($id, Request $request, ManagerRegistry $registry, SessionInterface $session): Response
     {    $user = $session->get('user');
-        if (!$user instanceof User) {
-            throw new \Exception('No user in session');
-        }
         $event = $registry->getRepository(EventDetails::class)->find($id);
         $form = $this->createForm(EventDetailsType::class, $event);
         $form->handleRequest($request);
@@ -104,9 +94,6 @@ class EventbController extends AbstractController
     public function eventf(ManagerRegistry $registry, SessionInterface $session): Response
 {   
     $user = $session->get('user');
-    if (!$user instanceof User) {
-        throw new \Exception('No user in session');
-    }
     
     $events = $registry->getRepository(EventDetails::class)->findAll();
 
@@ -134,9 +121,7 @@ class EventbController extends AbstractController
     public function join($id, ManagerRegistry $registry, SessionInterface $session): Response
     {
         $user = $session->get('user');
-        if (!$user instanceof User) {
-            throw new \Exception('No user in session');
-        }
+        
         $event = $registry->getRepository(EventDetails::class)->find($id);
         $event->setNbPlaces($event->getNbPlaces()-1);
         $entityManager = $registry->getManager();
@@ -155,9 +140,7 @@ class EventbController extends AbstractController
 public function leaveEvent($id, ManagerRegistry $registry, SessionInterface $session)
 {
     $user = $session->get('user');
-    if (!$user) {
-        throw new \Exception('No user in session');
-    }
+   
     $event = $registry->getRepository(EventDetails::class)->find($id);
         $event->setNbPlaces($event->getNbPlaces()+1);
 

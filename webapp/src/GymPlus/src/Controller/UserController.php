@@ -240,6 +240,25 @@ class UserController extends AbstractController
         return $this->redirect($request->headers->get('referer'));
     }
 
+    #[Route('/api/dashboard/modifyImage/{id}', name: 'app_photo_admin')]
+    public function modifyImageAdmin(SessionInterface $session, Request $request, UserRepository $repo, ManagerRegistry $reg, $id): Response
+    {   
+        $user = $session->get('user');
+        $userimg = $repo->findUserById($id);
+        $photo = $request->files->get('image');
+        if ($photo) {
+            $filename = 'USERIMG' . $userimg->getId() . '.' . $photo->guessExtension();
+            $targetdir = $this->getParameter('kernel.project_dir') . '/public/profileuploads/';
+            $photo->move($targetdir, $filename);
+            $userimg->setPhoto($filename);
+            $reg->getManager()->persist($userimg);
+            $reg->getManager()->flush();
+            $this->addFlash('success', 'Image updated successfully!');
+        }
+        return $this->redirect($request->headers->get('referer'));
+    }
+
+
 
     #[Route('/member/subscriptions', name: 'app_subs')]
     public function subscriptions(SessionInterface $session, AbonnementRepository $repo): Response

@@ -71,7 +71,7 @@
 
 
                                 <div class="profile-blog mb-5">
-									{% if useredit.id != user.id %}
+									{% if user.role == 'admin' %}
 									<form id="imageForm" action="/api/dashboard/modifyImage/{{useredit.id}}" method="post" enctype="multipart/form-data" style="display: none;">
 									{% else %}
 									<form id="imageForm" action="/api/modifyImage" method="post" enctype="multipart/form-data" style="display: none;">

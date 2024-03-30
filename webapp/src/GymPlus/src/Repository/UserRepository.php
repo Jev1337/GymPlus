@@ -32,7 +32,7 @@ class UserRepository extends ServiceEntityRepository
             ->where('u.id = :id')
             ->setParameter('id', $id)
             ->getQuery()
-            ->getResult();
+            ->getOneOrNullResult();
     }
     public function findUserByEmail($email)
     {
@@ -40,7 +40,7 @@ class UserRepository extends ServiceEntityRepository
             ->where('u.email = :email')
             ->setParameter('email', $email)
             ->getQuery()
-            ->getResult();
+            ->getOneOrNullResult();
     }
     public function findUserByRole($role)
     {
@@ -56,7 +56,7 @@ class UserRepository extends ServiceEntityRepository
             ->where('u.username = :username')
             ->setParameter('username', $username)
             ->getQuery()
-            ->getResult();
+            ->getOneOrNullResult();
     }
     public function findUserByPhone($num_tel)
     {

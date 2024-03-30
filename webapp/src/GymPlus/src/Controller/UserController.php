@@ -211,7 +211,6 @@ class UserController extends AbstractController
                 $user->setLastname($data->getLastname());
                 $reg->getManager()->persist($user);
                 $reg->getManager()->flush();
-                $session->set('user', $user);
                 return $this->redirectToRoute('app_profile');
             }
         }
@@ -236,7 +235,6 @@ class UserController extends AbstractController
             $user->setPhoto($filename);
             $reg->getManager()->persist($user);
             $reg->getManager()->flush();
-            $session->set('user', $user);
         }
         return $this->redirectToRoute('app_profile');
     }
@@ -330,13 +328,91 @@ class UserController extends AbstractController
     public function manageUsers(SessionInterface $session, UserRepository $repo): Response
     {
         $user = $session->get('user');
-        if ($user->getRole() != 'admin') {
-            return $this->redirectToRoute('app_home');
-        }
-        return $this->render('dashboard/manageusers.html.twig', [
+        return $this->render('dashboard/userlist.html.twig', [
             'controller_name' => 'UserController',
             'user' => $session->get('user'),
             'users' => $repo->findAll()
         ]);
+    }
+
+    #[Route('/dashboard/manageuser/{id}', name: 'app_user_edit')]
+    public function manageUser(SessionInterface $session, UserRepository $repo, Request $req, ManagerRegistry $reg, $id): Response
+    {
+        $user = $session->get('user');
+        $useredit = $repo->findUserById($id);
+        $form = $this->createForm(ModifyUserType::class, $useredit);
+        $form->handleRequest($req);
+        if($form->isSubmitted() ){
+            if (!$form->isValid()) {
+                foreach ($form->getErrors(true) as $error) {
+                    $this->addFlash('error', $error->getMessage());
+                }
+            }else{
+                $data = $form->getData();
+                $useredit->setUsername($data->getUsername());
+                $useredit->setNumTel($data->getNumTel());
+                $useredit->setAdresse($data->getAdresse());
+                $useredit->setDateNaiss($data->getDateNaiss());
+                $useredit->setFirstname($data->getFirstname());
+                $useredit->setLastname($data->getLastname());
+                $reg->getManager()->persist($useredit);
+                $reg->getManager()->flush();
+                $this->addFlash('success', 'User updated successfully!');
+                return $this->redirectToRoute('app_user_edit', ['id' => $id]);
+            }
+        }
+        return $this->render('dashboard/profile.html.twig', [
+            'controller_name' => 'UserController',
+            'user' => $user,
+            'useredit' => $useredit,
+            'form' => $form->createView()
+        ]);
+    }
+
+    #[Route('/dashboard/profile', name: 'app_dashboard_profile')]
+    public function dashboardProfile(SessionInterface $session, UserRepository $repo, Request $req, ManagerRegistry $reg): Response
+    {
+        $user = $session->get('user');
+        $form = $this->createForm(ModifyUserType::class, $user);
+        $form->handleRequest($req);
+        if($form->isSubmitted() ){
+            if (!$form->isValid()) {
+                foreach ($form->getErrors(true) as $error) {
+                    $this->addFlash('error', $error->getMessage());
+                }
+            }else{
+                $data = $form->getData();
+                $user->setUsername($data->getUsername());
+                $user->setNumTel($data->getNumTel());
+                $user->setAdresse($data->getAdresse());
+                $user->setDateNaiss($data->getDateNaiss());
+                $user->setFirstname($data->getFirstname());
+                $user->setLastname($data->getLastname());
+                $reg->getManager()->persist($user);
+                $reg->getManager()->flush();
+                $this->addFlash('success', 'User updated successfully!');
+                return $this->redirectToRoute('app_dashboard_profile');
+            }
+        }
+        return $this->render('dashboard/profile.html.twig', [
+            'controller_name' => 'UserController',
+            'user' => $user,
+            'useredit' => $user,
+            'form' => $form->createView()
+        ]);
+    }
+
+    #[Route('/dashboard/deleteuser/{id}', name: 'app_user_delete')]
+    public function deleteUser(SessionInterface $session, UserRepository $repo, $id, ManagerRegistry $reg): Response
+    {
+        $user = $session->get('user');
+        $userdel = $repo->findUserById($id);
+        $reg->getManager()->remove($userdel);
+        $reg->getManager()->flush();
+        if ($user->getId() == $userdel->getId()) {
+            $session->remove('user');
+            return $this->redirectToRoute('app_login');
+        }
+        return $this->redirectToRoute('app_usermgmt');
     }
 }

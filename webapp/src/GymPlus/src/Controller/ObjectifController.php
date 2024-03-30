@@ -16,10 +16,10 @@ class ObjectifController extends AbstractController
     public function add_Objectif(Request $request, SessionInterface $session, ManagerRegistry $registry): Response
     {
         $user = $session->get('user');
-        if (!$user instanceof User) {
-            throw new \Exception('No user in session');
+        if ($user->getRole() != 'client')
+        {
+            return $this->redirectToRoute('app_dashboard');
         }
-
         $obj = new Objectif();
         $form = $this->createForm(ObjectifType::class, $obj);
 
@@ -43,13 +43,11 @@ class ObjectifController extends AbstractController
     public function Schedule_Objectif(Request $request, SessionInterface $session, ManagerRegistry $registry): Response
     {
         $user = $session->get('user');
-        if (!$user instanceof User) {
-            throw new \Exception('No user in session');
+        if ($user->getRole() != 'client')
+        {
+            return $this->redirectToRoute('app_dashboard');
         }
-
         $userId = $user->getId();
-        print_r($userId);
-
         $entityManager = $registry->getManager();
         $objectifs = $entityManager->getRepository(Objectif::class)->findBy(['userid' => $userId]);
 

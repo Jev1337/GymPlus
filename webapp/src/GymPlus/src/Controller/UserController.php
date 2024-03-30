@@ -325,8 +325,18 @@ class UserController extends AbstractController
             return new JsonResponse(['status' => 'success'], 200);
         }
         return new JsonResponse(['status' => 'error'], 400);
-        
-       
-        
+    }
+    #[Route('/dashboard/manageusers', name: 'app_usermgmt')]
+    public function manageUsers(SessionInterface $session, UserRepository $repo): Response
+    {
+        $user = $session->get('user');
+        if ($user->getRole() != 'admin') {
+            return $this->redirectToRoute('app_home');
+        }
+        return $this->render('dashboard/manageusers.html.twig', [
+            'controller_name' => 'UserController',
+            'user' => $session->get('user'),
+            'users' => $repo->findAll()
+        ]);
     }
 }

@@ -37,13 +37,16 @@ class AuthentificationSubscriber implements EventSubscriberInterface
         , 'app_Schedule_objectif', 'app_events', 'eventb', 'event_delete', 'event_edit', 'app_eventsf', 'event_join', 'event_leave'];
 
         // Routes that ONLY clients can access
-        $clientRoutes = ['app_subs', 'app_buy', 'app_profile', 'app_photo', 'app_objectif', 'app_Schedule_objectif', 'event_join', 'event_leave','app_eventsf','app_home'];
+        $clientRoutes = ['app_home', 'app_subs', 'app_buy', 'app_profile', 'app_photo', 'app_objectif', 'app_Schedule_objectif', 'event_join', 'event_leave','app_eventsf'];
         // Routes that staff can access
         $staffRoutes = ['app_events', 'eventb', 'event_delete', 'event_edit','eventParticipant_kick','eventParticipant'];
-        // Routes that admin can access
-        $adminRoutes = ['app_events', 'eventb', 'event_delete', 'event_edit','eventParticipant_kick','eventParticipant'];
+        // Routes that ONLY admin can access
+        $adminRoutes = $staffRoutes;
+        $adminRoutes = array_merge($adminRoutes, 
+            []
+        );
 
-               
+       
         if ($user->getRole() == 'client' && (in_array($currentRoute, $staffRoutes) || in_array($currentRoute, $adminRoutes))) {
             $event->setResponse(new RedirectResponse($this->urlGenerator->generate('app_home')));
             return;
@@ -53,7 +56,7 @@ class AuthentificationSubscriber implements EventSubscriberInterface
             return;
         }
         
-        if (($user->getRole() == 'admin') && (in_array($currentRoute, $clientRoutes) )) {
+        if (($user->getRole() == 'admin') && (in_array($currentRoute, $clientRoutes))) {
             $event->setResponse(new RedirectResponse($this->urlGenerator->generate('app_dashboard')));
             return;
         }

@@ -16,6 +16,10 @@ use App\Entity\EventParticipants;
 use App\Repository\EventParticipantsRepository;
 use App\Repository\EventDetailsRepository;
 
+use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Writer\PngWriter;
+use Endroid\QrCodeBundle\Response\QrCodeResponse;
+
 
 
 class EventbController extends AbstractController
@@ -146,11 +150,27 @@ class EventbController extends AbstractController
         $eventParticipant->setEventDetailsId($id);
         $entityManager->persist($eventParticipant);
         $entityManager->flush();
-        return $this->redirectToRoute('app_eventsf');
-
-
-
-}
+    
+        // Generate QR code
+        $qrCode = new QrCode(json_encode([
+            'userId' => $user->getId(),
+            'eventId' => $id,
+        ]));
+        $qrCode->setSize(300);
+    
+        // Create a QR code writer
+        $writer = new PngWriter();
+    
+        // Generate a PNG image
+        $image = $writer->write($qrCode, null, null);
+    
+        // Create a Symfony Response object with the QR code image
+        $response = new Response($image->getString());
+        $response->headers->set('Content-Type', 'image/png');
+    
+        // Return the Response object
+        return $response;
+    }
 #[Route('/eventf/leave/{id}', name: 'event_leave')]
 public function leaveEvent($id, ManagerRegistry $registry, SessionInterface $session)
 {

@@ -1,4 +1,4 @@
-<?php
+53<?php
 
 return [
     Symfony\Bundle\FrameworkBundle\FrameworkBundle::class => ['all' => true],
@@ -10,4 +10,5 @@ return [
     Symfony\Bundle\MakerBundle\MakerBundle::class => ['dev' => true],
     Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle::class => ['dev' => true, 'test' => true],
     Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle::class => ['all' => true],
+    Endroid\QrCodeBundle\EndroidQrCodeBundle::class => ['all' => true],
 ];

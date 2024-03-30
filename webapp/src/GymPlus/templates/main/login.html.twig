@@ -1,5 +1,6 @@
 {% extends "main/base.html.twig" %}
 {% block content%}
+
 	<div class="page-content bg-white">
 
 		<section class="p-0 overflow-hidden">
@@ -83,10 +84,12 @@
 								</div>
 							</div>
 							<div class="text-center">
+
 								{{ form_widget(form.submit, {'attr': {'class': 'btn btn-primary m-b15 w-100', 'value': 'Login'} } ) }}
 								<a href="javascript:void(0);" class="btn-link">Don’t have account?<span> Sign Up</span></a> 
 							</div>
-							<!-- Add other form fields here -->
+							
+        					
 							{{ form_end(form) }}
 							<form id="forgot-password" class="tab-pane fade  col-12 text-center">
 								<h4 class="m-b5 text-white">Forget Password ?</h4>

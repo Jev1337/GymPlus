@@ -27,6 +27,17 @@
 	<title>GymPlus - Fitness, Workout & Gym</title>
 {% endblock %}
 {% block css %}
+	<style>
+		.grecaptcha-badge {
+			width: 70px !important;
+			overflow: hidden !important;
+			transition: all 0.3s ease !important;
+			left: 4px !important;
+		}
+		.grecaptcha-badge:hover {
+			width: 256px !important;
+		}
+	</style>
     <link href="{{asset('main/vendor/animate/animate.css')}}" rel="stylesheet">
     <link href="{{asset('main/vendor/swiper/swiper-bundle.min.css')}}" rel="stylesheet">
     <link href="{{asset('main/vendor/splitting/dist/splitting.css')}}" rel="stylesheet">

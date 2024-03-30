@@ -20,6 +20,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpClient\HttpClient;
 use App\Form\ModifyUserType;
 use App\Annotation\ProtectedRoute;
+use Karser\Recaptcha3Bundle\Validator\Constraints\Recaptcha3Validator;
 
 class UserController extends AbstractController
 {
@@ -27,9 +28,7 @@ class UserController extends AbstractController
     public function dashboard(SessionInterface $session): Response
     {
         $user = $session->get('user');
-        if ($user->getRole() == 'client') {
-            return $this->redirectToRoute('app_home');
-        }
+    
         return $this->render('dashboard/index.html.twig', [
             'controller_name' => 'UserController',
             'user' => $user
@@ -40,11 +39,7 @@ class UserController extends AbstractController
     public function home(SessionInterface $session): Response
     {
         $user = $session->get('user');
-        if($user){
-            if ($user->getRole() != 'client') {
-                return $this->redirectToRoute('app_dashboard');
-            }
-        }
+       
         return $this->render('main/index.html.twig', [
             'controller_name' => 'UserController',
             'user' => $session->get('user')
@@ -52,36 +47,36 @@ class UserController extends AbstractController
     }
 
     #[Route('/auth/login', name: 'app_login')]
-    public function login(Request $request, SessionInterface $session, UserRepository $repo): Response
+    public function login(Request $request, SessionInterface $session, UserRepository $repo, Recaptcha3Validator $recaptcha3Validator): Response
     {
         $user = $session->get('user');
-        if ($user) {
-            if ($user->getRole() == 'client') {
-                return $this->redirectToRoute('app_home');
-            } else {
-                return $this->redirectToRoute('app_dashboard');
-            }
-        }
+    
         $form = $this->createForm(LoginType::class);
         $form->handleRequest($request);
-        if($form->isSubmitted() && $form->isValid()){
-            $data = $form->getData();
-            $user = $repo->findOneBy(['email' => $data['email']]);
-            if($user){
-                if(password_verify($data['password'], $user->getPassword())){
-                    $session->set('user', $user);
-                    if ($user->getRole() != 'client') {
-                        return $this->redirectToRoute('app_dashboard');
-                    } else {
-                        return $this->redirectToRoute('app_home');
+        if($form->isSubmitted() ){
+            if (!$form->isValid()) {
+                foreach ($form->getErrors(true) as $error) {
+                    $this->addFlash('error', $error->getMessage());
+                }
+            }else{
+                //$score = $recaptcha3Validator->getLastResponse()->getScore();
+                $data = $form->getData();
+                $user = $repo->findOneBy(['email' => $data['email']]);
+                if($user){
+                    if(password_verify($data['password'], $user->getPassword())){
+                        $session->set('user', $user);
+                        if ($user->getRole() != 'client') {
+                            return $this->redirectToRoute('app_dashboard');
+                        } else {
+                            return $this->redirectToRoute('app_home');
+                        }
+                    }else{
+                        $this->addFlash('error', 'Invalid Email or Password');
                     }
                 }else{
                     $this->addFlash('error', 'Invalid Email or Password');
                 }
-            }else{
-                $this->addFlash('error', 'Invalid Email or Password');
             }
-            
         }
         return $this->render('main/login.html.twig', [
             'controller_name' => 'UserController',
@@ -128,13 +123,7 @@ class UserController extends AbstractController
     public function signup(Request $request, SessionInterface $session, ManagerRegistry $reg, UserRepository $repo): Response
     {
         $user = $session->get('user');
-        if ($user) {
-            if ($user->getRole() == 'client') {
-                return $this->redirectToRoute('app_home');
-            } else {
-                return $this->redirectToRoute('app_dashboard');
-            }
-        }
+        
         $form = $this->createForm(UserType::class);
         $form->handleRequest($request);
         
@@ -203,9 +192,7 @@ class UserController extends AbstractController
     public function profile(SessionInterface $session, Request $request, UserRepository $repo, ManagerRegistry $reg): Response
     {
         $user = $session->get('user');
-        if ($user->getRole() != 'client') {
-            return $this->redirectToRoute('app_dashboard');
-        }
+       
         $user = $repo->findUserById($user->getId());
         $form = $this->createForm(ModifyUserType::class, $user);
         $form->handleRequest($request);
@@ -260,9 +247,6 @@ class UserController extends AbstractController
     {
 
         $user = $session->get('user');
-        if ($user->getRole() != 'client') {
-            return $this->redirectToRoute('app_dashboard');
-        }
         if ($repo->isUserSubscribed($user->getId())) {
             return $this->render('main/mysubscriptions.html.twig', [
                 'controller_name' => 'UserController',
@@ -288,9 +272,6 @@ class UserController extends AbstractController
         }
 
         $user = $session->get('user');
-        if ($user->getRole() != 'client') {
-            return $this->redirectToRoute('app_dashboard');
-        }
         if ($repo->isUserSubscribed($user->getId())) {
             return $this->redirectToRoute('app_home');
         }

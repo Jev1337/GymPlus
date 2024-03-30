@@ -13,6 +13,8 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormInterface;
+use Karser\Recaptcha3Bundle\Form\Recaptcha3Type;
+use Karser\Recaptcha3Bundle\Validator\Constraints\Recaptcha3;
 
 class UserType extends AbstractType
 {
@@ -38,7 +40,7 @@ class UserType extends AbstractType
         ->add('firstname', TextType::class, [
             'required' => true,
             'attr' =>[
-                'pattern' => '[a-zA-Z]*',
+                'pattern' => '[a-zA-Z ]*',
                 'minLength' => 3,
                 'maxLength' => 20,
             ]
@@ -46,7 +48,7 @@ class UserType extends AbstractType
         ->add('lastname', TextType::class, [
             'required' => true,
             'attr' =>[
-                'pattern' => '[a-zA-Z]*',
+                'pattern' => '[a-zA-Z ]*',
                 'minLength' => 3,
                 'maxLength' => 20,
             ]
@@ -65,9 +67,7 @@ class UserType extends AbstractType
         ->add('email', EmailType::class, [
             'required' => true,
             'attr' =>[
-                'pattern' => '[a-zA-Z0-9]*',
-                'minLength' => 3,
-                'maxLength' => 50,
+                'pattern' => '^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$'
             ]
         ])
         ->add('numTel', TelType::class, [
@@ -81,13 +81,18 @@ class UserType extends AbstractType
         ->add('adresse', TextType::class, [
             'required' => true,
             'attr' =>[
-                'pattern' => '[a-zA-Z0-9]*',
+                'pattern' => '[a-zA-Z0-9 ]*',
                 'minLength' => 3,
                 'maxLength' => 50,
             ]
         ])
         ->add('photo', FileType::class, [
             'required' => true,
+        ])
+        ->add('captcha', Recaptcha3Type::class, [
+            'constraints' => new Recaptcha3(),
+            'action_name' => 'login',
+            'locale' => 'en',
         ])
         ;
     }

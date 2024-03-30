@@ -33,6 +33,26 @@ class AbonnementRepository extends ServiceEntityRepository
         return $count > 0;
     }
 
+    public function getOldSubscriptionsByUserId($userId): array
+    {
+        $qb = $this->createQueryBuilder('a');
+        $qb->where('a.user = :userId');
+        $qb->setParameter('userId', $userId);
+        $qb->andWhere('a.datefinab < :now');
+        $qb->setParameter('now', new \DateTime());
+        return $qb->getQuery()->getResult();
+    }
+
+    public function getCurrentSubByUserId($userId): ?Abonnement
+    {
+        $qb = $this->createQueryBuilder('a');
+        $qb->where('a.user = :userId');
+        $qb->setParameter('userId', $userId);
+        $qb->andWhere('a.datefinab > :now');
+        $qb->setParameter('now', new \DateTime());
+        return $qb->getQuery()->getOneOrNullResult();
+    }
+
 //    /**
 //     * @return Abonnement[] Returns an array of Abonnement objects
 //     */

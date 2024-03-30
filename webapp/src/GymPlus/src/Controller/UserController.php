@@ -19,16 +19,14 @@ use App\Repository\AbonnementDetailsRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpClient\HttpClient;
 use App\Form\ModifyUserType;
+use App\Annotation\ProtectedRoute;
 
 class UserController extends AbstractController
 {
-    #[Route('/dashboard', name: 'app_dashboard')]
+    #[Route('/dashboard/home', name: 'app_dashboard')]
     public function dashboard(SessionInterface $session): Response
     {
         $user = $session->get('user');
-        if(!$user){
-            return $this->redirectToRoute('app_login');
-        }
         if ($user->getRole() == 'client') {
             return $this->redirectToRoute('app_home');
         }
@@ -41,6 +39,12 @@ class UserController extends AbstractController
     #[Route('/home', name: 'app_home')]
     public function home(SessionInterface $session): Response
     {
+        $user = $session->get('user');
+        if($user){
+            if ($user->getRole() != 'client') {
+                return $this->redirectToRoute('app_dashboard');
+            }
+        }
         return $this->render('main/index.html.twig', [
             'controller_name' => 'UserController',
             'user' => $session->get('user')
@@ -121,7 +125,7 @@ class UserController extends AbstractController
 
     
     #[Route('/auth/signup', name: 'app_signup')]
-    public function signup(Request $request, SessionInterface $session, ManagerRegistry $reg): Response
+    public function signup(Request $request, SessionInterface $session, ManagerRegistry $reg, UserRepository $repo): Response
     {
         $user = $session->get('user');
         if ($user) {
@@ -141,19 +145,19 @@ class UserController extends AbstractController
                 }
             }else{
                 $data = $form->getData();
-                if ($reg->getRepository(User::class)->findOneBy(['email' => $data->getEmail()])) {
+                if ($repo->findUserByEmail($data->getEmail())) {
                     $this->addFlash('error', 'Email already exists');
                     return $this->redirectToRoute('app_signup');
                 }
-                if ($reg->getRepository(User::class)->findOneBy(['username' => $data->getUsername()])) {
+                if ($repo->findUserByUsername($data->getUsername())) {
                     $this->addFlash('error', 'Username already exists');
                     return $this->redirectToRoute('app_signup');
                 }
-                if ($reg->getRepository(User::class)->findOneBy(['numTel' => $data->getNumTel()])) {
+                if ($repo->findUserByPhone($data->getNumTel())) {
                     $this->addFlash('error', 'Phone number already exists');
                     return $this->redirectToRoute('app_signup');
                 }
-                if ($reg->getRepository(User::class)->findOneBy(['id' => $data->getId()])) {
+                if ($repo->findUserById($data->getId())) {
                     $this->addFlash('error', 'CIN already exists');
                     return $this->redirectToRoute('app_signup');
                 }
@@ -195,12 +199,12 @@ class UserController extends AbstractController
         return $this->redirectToRoute('app_login');
     }
 
-    #[Route('/profile', name: 'app_profile')]
+    #[Route('/member/profile', name: 'app_profile')]
     public function profile(SessionInterface $session, Request $request, UserRepository $repo, ManagerRegistry $reg): Response
     {
         $user = $session->get('user');
-        if (!$user) {
-            return $this->redirectToRoute('app_login');
+        if ($user->getRole() != 'client') {
+            return $this->redirectToRoute('app_dashboard');
         }
         $user = $repo->findUserById($user->getId());
         $form = $this->createForm(ModifyUserType::class, $user);
@@ -235,9 +239,6 @@ class UserController extends AbstractController
     public function modifyImage(SessionInterface $session, Request $request, UserRepository $repo, ManagerRegistry $reg): Response
     {
         $user = $session->get('user');
-        if (!$user) {
-            return $this->redirectToRoute('app_login');
-        }
         $user = $repo->findUserById($user->getId());
         $photo = $request->files->get('image');
         if ($photo) {
@@ -253,23 +254,25 @@ class UserController extends AbstractController
         return $this->redirectToRoute('app_profile');
     }
 
-    #[Route('/subscriptions', name: 'app_subs')]
+
+    #[Route('/member/subscriptions', name: 'app_subs')]
     public function subscriptions(SessionInterface $session, AbonnementRepository $repo): Response
     {
+
         $user = $session->get('user');
-        if (!$user) {
-            return $this->redirectToRoute('app_login');
-        }
         if ($user->getRole() != 'client') {
             return $this->redirectToRoute('app_dashboard');
         }
-
         if ($repo->isUserSubscribed($user->getId())) {
             return $this->render('main/mysubscriptions.html.twig', [
                 'controller_name' => 'UserController',
-                'user' => $session->get('user')
+                'user' => $session->get('user'),
+                'subs' => $repo->getOldSubscriptionsByUserId($user->getId()),
+                'subnow' => $repo->getCurrentSubByUserId($user->getId()),
+                'diff' => $repo->getCurrentSubByUserId($user->getId())->getDatefinab()->diff(new \DateTime())->format('%a')
             ]);
         }
+        
         return $this->render('main/subscriptions.html.twig', [
             'controller_name' => 'UserController',
             'user' => $session->get('user')
@@ -285,9 +288,6 @@ class UserController extends AbstractController
         }
 
         $user = $session->get('user');
-        if (!$user) {
-            return $this->redirectToRoute('app_login');
-        }
         if ($user->getRole() != 'client') {
             return $this->redirectToRoute('app_dashboard');
         }
@@ -330,20 +330,22 @@ class UserController extends AbstractController
             ]
         ]);
         $token = $response->toArray()['access_token'];
-        error_log($token);
-        $response = $client->request('GET', 'https://api-m.sandbox.paypal.com/v2/checkout/orders/' . $id, [
+        
+
+        $response = $client->request('POST', 'https://api-m.sandbox.paypal.com/v2/checkout/orders/' . $id . '/capture', [
             'headers' => [
                 'Content-Type' => 'application/json',
                 'Authorization' => 'Bearer '. $token
             ]
         ]);
-        $result = $response->toArray();
 
-        if ($result['status'] == 'APPROVED') {
+        
+        if ($response->getStatus() === "COMPLETED"){
             return new JsonResponse(['status' => 'success'], 200);
-        }else{
-            return new JsonResponse(['status' => 'failed'], 400);
         }
+        return new JsonResponse(['status' => 'error'], 400);
+        
+       
         
     }
 }

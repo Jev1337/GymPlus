@@ -10,17 +10,6 @@
 **/
 
 var PowerZone = function(){
-	/* Photo Modification ============ */
-	if (document.getElementById('imageInput') != null) {
-		document.getElementById('userphoto').addEventListener('click', function() {
-			document.getElementById('imageInput').click();
-		});
-		document.getElementById('imageInput').addEventListener('change', function() {
-			document.getElementById('submitBtn').click();
-		});
-	}
-	
-
 
 	/* Search Bar ============ */
 	siteUrl = '';

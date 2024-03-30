@@ -37,29 +37,32 @@ class AuthentificationSubscriber implements EventSubscriberInterface
         , 'app_Schedule_objectif', 'app_events', 'eventb', 'event_delete', 'event_edit', 'app_eventsf', 'event_join', 'event_leave'];
 
         // Routes that ONLY clients can access
-        $clientRoutes = ['app_subs', 'app_buy', 'app_profile', 'app_photo', 'app_objectif', 'app_Schedule_objectif', 'event_join', 'event_leave','app_eventsf'];
+        $clientRoutes = ['app_subs', 'app_buy', 'app_profile', 'app_photo', 'app_objectif', 'app_Schedule_objectif', 'event_join', 'event_leave','app_eventsf','app_home'];
         // Routes that staff can access
         $staffRoutes = ['app_events', 'eventb', 'event_delete', 'event_edit','eventParticipant_kick','eventParticipant'];
         // Routes that admin can access
-        $adminRoutes = [];
+        $adminRoutes = ['app_events', 'eventb', 'event_delete', 'event_edit','eventParticipant_kick','eventParticipant'];
+
+               
+        if ($user->getRole() == 'client' && (in_array($currentRoute, $staffRoutes) || in_array($currentRoute, $adminRoutes))) {
+            $event->setResponse(new RedirectResponse($this->urlGenerator->generate('app_home')));
+            return;
+        }
+        if (($user->getRole() == 'staff') && (in_array($currentRoute, $clientRoutes) || in_array($currentRoute, $adminRoutes))) {
+            $event->setResponse(new RedirectResponse($this->urlGenerator->generate('app_dashboard')));
+            return;
+        }
+        
+        if (($user->getRole() == 'admin') && (in_array($currentRoute, $clientRoutes) )) {
+            $event->setResponse(new RedirectResponse($this->urlGenerator->generate('app_dashboard')));
+            return;
+        }
 
         if (!in_array($currentRoute, $protectedRoutes)) {
             return;
         }
         if (!$user) {
             $event->setResponse(new RedirectResponse($this->urlGenerator->generate('app_login')));
-            return;
-        }
-        if ($user->getRole() == 'client' && (in_array($currentRoute, $staffRoutes) || in_array($currentRoute, $adminRoutes))) {
-            $event->setResponse(new RedirectResponse($this->urlGenerator->generate('app_home')));
-            return;
-        }
-        if (($user->getRole() == 'staff') && (in_array($currentRoute, $clientRoutes) || in_array($currentRoute, $adminRoutes))) {
-            $event->setResponse(new RedirectResponse($this->urlGenerator->generate('app_home')));
-            return;
-        }
-        if (($user->getRole() == 'admin') && (in_array($currentRoute, $clientRoutes) || in_array($currentRoute, $staffRoutes))) {
-            $event->setResponse(new RedirectResponse($this->urlGenerator->generate('app_home')));
             return;
         }
 

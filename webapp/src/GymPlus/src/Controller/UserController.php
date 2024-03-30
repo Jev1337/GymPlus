@@ -235,8 +235,9 @@ class UserController extends AbstractController
             $user->setPhoto($filename);
             $reg->getManager()->persist($user);
             $reg->getManager()->flush();
+            $this->addFlash('success', 'Image updated successfully!');
         }
-        return $this->redirectToRoute('app_profile');
+        return $this->redirect($request->headers->get('referer'));
     }
 
 

@@ -17,7 +17,7 @@
                                     <div class="cover-photo"></div>
                                 </div>
                                 <div class="profile-info">
-									<div class="profile-photo">
+									<div class="profile-photo" id="userphoto" style="cursor:pointer">
 										<img src="{{asset('profileuploads/' ~ useredit.photo)}}" class="img-fluid rounded-circle" alt="">
 									</div>
 									<div class="profile-details">
@@ -71,6 +71,16 @@
 
 
                                 <div class="profile-blog mb-5">
+									{% if useredit.id != user.id %}
+									<form id="imageForm" action="/api/dashboard/modifyImage/{{useredit.id}}" method="post" enctype="multipart/form-data" style="display: none;">
+									{% else %}
+									<form id="imageForm" action="/api/modifyImage" method="post" enctype="multipart/form-data" style="display: none;">
+									{% endif %}
+										<input type="file" id="imageInput" name="image">
+										<input type="submit" id="submitBtn">
+									</form>
+									
+										
 									<br>
 									
                                     <h5 class="text-primary d-inline">About me</h5>
@@ -185,5 +195,12 @@
 				swal("Error!", "{{ message }}", "error");
 			{% endif %}
 		{% endfor %}
+		document.getElementById('userphoto').addEventListener('click', function() {
+			document.getElementById('imageInput').click();
+		});
+		document.getElementById('imageInput').addEventListener('change', function() {
+			document.getElementById('submitBtn').click();
+		});
 	</script>
+	
 {% endblock %}

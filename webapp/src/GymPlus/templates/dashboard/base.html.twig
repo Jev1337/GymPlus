@@ -19,6 +19,7 @@
 	<link href="{{asset('dashboard/vendor/owl-carousel/owl.carousel.css')}}" rel="stylesheet">
     <link href="{{asset('dashboard/css/style.css')}}" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+	<link href="{{asset('dashboard/vendor/sweetalert2/dist/sweetalert2.min.css')}}" rel="stylesheet">
 	<style>
 	
 		.table-title {
@@ -761,7 +762,7 @@
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right">
 								    
-                                    <a href="./app-profile.html" class="dropdown-item ai-icon">
+                                    <a href="{{path('app_dashboard_profile')}}" class="dropdown-item ai-icon">
                                         <svg id="icon-user1" xmlns="http://www.w3.org/2000/svg" class="text-primary" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                                         <span class="ml-2">Profile </span>
                                     </a>
@@ -803,12 +804,18 @@
 							<span class="nav-text">Events</span>
 						</a>
 					</li>
-					<li>
-						<a href="{{ path('app_usermgmt') }}">
+					
+					<li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
 							<i class="fa fa-user"></i>
 							<span class="nav-text">User Management</span>
 						</a>
-					</li>
+                        <ul aria-expanded="false">
+							{% if user.role == "admin" %}
+                            	<li><a href="{{ path('app_usermgmt') }}">Manage Accounts</a></li>
+							{% endif %}
+                            <li><a href="./app-new-user.html">Manage Subscriptions</a></li>
+                        </ul>
+                    </li>
 
                    
                 </ul>
@@ -846,18 +853,9 @@
     <script src="{{asset('dashboard/js/custom.min.js')}}"></script>
 	<script src="{{asset('dashboard/js/deznav-init.js')}}"></script>
 	<script src="{{asset('dashboard/vendor/owl-carousel/owl.carousel.js')}}"></script>
-	
-	
-	
+	<script src="{{asset('dashboard/vendor/sweetalert2/dist/sweetalert2.min.js')}}"></script>
 
-	<!-- Chart piety plugin files -->
-    <script src="{{asset('dashboard/vendor/peity/jquery.peity.min.js')}}"></script>
-	
-	<!-- Apex Chart -->
-	<script src="{{asset('dashboard/vendor/apexchart/apexchart.js')}}"></script>
-	
-	<!-- Dashboard 1 -->
-	<script src="{{asset('dashboard/js/dashboard/dashboard-1.js')}}"></script>
+
 	<script>
 		function carouselReview(){
 			/*  testimonial one function by = owl.carousel.js */

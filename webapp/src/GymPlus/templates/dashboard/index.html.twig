@@ -331,3 +331,13 @@
             Content body end
         ***********************************-->
 		{% endblock %}
+
+{% block js %}
+	{{ parent() }}
+	<!-- Apex Chart -->
+	<script src="{{asset('dashboard/vendor/apexchart/apexchart.js')}}"></script>
+	<!-- Chart piety plugin files -->
+    <script src="{{asset('dashboard/vendor/peity/jquery.peity.min.js')}}"></script>
+	<!-- Dashboard 1 -->
+	<script src="{{asset('dashboard/js/dashboard/dashboard-1.js')}}"></script>
+{% endblock %}

@@ -161,9 +161,7 @@ public function leaveEvent($id, ManagerRegistry $registry, SessionInterface $ses
 public function eventParticipants($id, ManagerRegistry $registry, SessionInterface $session): Response
 {
     $user = $session->get('user');
-    if (!$user instanceof User) {
-        throw new \Exception('No user in session');
-    }
+   
 
     $event = $registry->getRepository(EventDetails::class)->find($id);
     $eventParticipants = $registry->getRepository(EventParticipants::class)->findBy(['event_details_id' => $id]);

@@ -116,6 +116,12 @@
                     <ul class="nav navbar-nav navbar navbar-left">	
                         <li><a href="{{path('app_home')}}">Home</a></li>
                         <li><a href="{{path('app_subs')}}">My Subscriptions</a></li>
+						<li class="sub-menu-down"><a href="javascript:void(0);">Objectif</a>
+										<ul class="sub-menu">
+									<li><a href="{{ path('app_objectif') }}">Add Objectif</a></li>
+									<li><a href="{{ path('app_Schedule_objectif') }}">Objectif Schedule</a></li>
+								</ul>
+								</li>
                     </ul>
                     <div class="dz-social-icon">
                         <ul>
@@ -502,6 +508,7 @@
 
 {% block js %}
 <!-- JAVASCRIPT FILES ========================================= -->
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
 <script src="{{asset('main/js/jquery.min.js')}}"></script><!-- JQUERY.MIN JS -->
 <script src="{{asset('main/vendor/wow/wow.js')}}"></script><!-- WOW.JS -->
 <script src="{{asset('main/vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script><!-- BOOTSTRAP.MIN JS -->

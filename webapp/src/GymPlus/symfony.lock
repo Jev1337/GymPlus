@@ -139,6 +139,18 @@
             "./config/routes.yaml"
         ]
     },
+    "symfony/security-bundle": {
+        "version": "5.4",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "5.3",
+            "ref": "98f1f2b0d635908c2b40f3675da2d23b1a069d30"
+        },
+        "files": [
+            "./config/packages/security.yaml"
+        ]
+    },
     "symfony/twig-bundle": {
         "version": "5.4",
         "recipe": {
@@ -163,6 +175,9 @@
         "files": [
             "./config/packages/validator.yaml"
         ]
+    },
+    "tetranz/select2entity-bundle": {
+        "version": "v3.1.0"
     },
     "twig/extra-bundle": {
         "version": "v3.8.0"

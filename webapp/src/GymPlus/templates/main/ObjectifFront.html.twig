@@ -1,0 +1,106 @@
+{% extends "main/base.html.twig" %}
+{% block content %}
+
+		
+	<!--banner-->
+		<div class="contact-bnr" style="background-image: url(assets/images/background/bg9.png);">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-6">
+
+						<div class="contact-info style-1 text-start text-white">
+							<h2 class="title wow fadeInUp" data-wow-delay="0.1s">DISCOVER US</h2>
+							<p class="text wow fadeInUp" data-wow-delay="0.2s"><span class="text-decoration-underline text-white"><a class="text-white" href="javascript:void(0)">PowerZone is here to help you;</a></span> <br> Our experts are available to answer any questions you might have. We’ve got the answers.</p>
+							<div class="contact-bottom wow fadeInUp" data-wow-delay="0.3s">
+								<div class="contact-left">
+									<h3>Call Us</h3>
+									<ul>
+										<li><a href="tel:+011234567890">+01-123-456-7890</a></li>
+										<li><a href="tel:+019785687400">+01-978-568-7400</a></li>
+									</ul>
+								</div>
+								<div class="contact-right">
+									<h3>Email Us</h3>
+									<ul>
+										<li>help@example.com</li>
+									</ul>
+								</div>		
+							</div>
+						</div>
+					</div>
+                   
+				   
+
+					<div class="col-lg-6">
+						<div class="contact-area1 style-1 m-r20 m-md-r0 wow fadeInUp" data-wow-delay="0.5s">
+							<form class="dz-form dzForm">
+								<div class="dzFormMsg"></div>
+
+				    	{{ form_start(form, {'attr': {'class': 'dz-form dzForm', 'id': 'objectif'} }) }}
+
+								<div class="form-group">
+								<label class="form-label">Weight Objectif</label>
+								<div class="input-group">
+								{{ form_widget(form.poidsobj, {'attr': {'class': 'form-control', 'placeholder': 'Weight Objectif'}}) }}
+								</div>
+								</div>
+
+								<div class="form-group">
+								<label class="form-label">Weight Actuelle</label>
+								<div class="input-group">
+								{{ form_widget(form.poidsact, {'attr': {'class': 'form-control', 'placeholder': 'Weight Actuelle'}}) }}
+								</div>
+								</div>
+
+                              <div class="form-group">
+								<label class="form-label">Height</label>
+								<div class="input-group">
+								{{ form_widget(form.taille, {'attr': {'class': 'form-control', 'placeholder': 'Height'}}) }}
+								</div>
+								</div>
+
+                              <div class="form-group">
+								<label class="form-label">Something To Say*</label>
+                               <div class="input-group">
+                              {{ form_widget(form.alergie, {'attr': {'class': 'form-control', 'placeholder': 'Something To Say*'}}) }}
+                              </div>
+                              </div>
+
+                              <div class="form-group">
+                            <label class="form-label" for="{{ form.typeobj.vars.id }}">Type Objectif</label>
+                           <div class="input-group">
+                            {{ form_widget(form.typeobj, {'attr': {'class': 'form-control', 'placeholder': '', 'id': form.typeobj.vars.id}}) }}
+                                 </div>
+                                  </div>
+
+                              <div class="form-group">
+							 <label class="form-label">Date</label>
+								<div class="input-group">
+								{{ form_widget(form.datef, {'attr': {'class': 'form-control', 'placeholder': 'Date of Birth'}}) }}
+								</div>
+							       </div>
+
+                    <div class="form-group">
+                     <label class="form-label">Coach</label>
+						  <div class="input-group">
+                           {{ form_widget(form.CoachNames)}}
+                                </div>
+							       </div>
+
+
+								<div>
+									<div class="text-center">
+						  	          {{ form_widget(form.submit, {'attr': {'class': 'btn btn-primary w-100 btnhover', 'value': 'Add Objectif'} } ) }}
+                                    </div>
+									
+								</div>
+								{{ form_end(form) }}
+
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+ 
+{% endblock %}

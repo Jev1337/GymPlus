@@ -26,7 +26,8 @@ class AuthentificationSubscriber implements EventSubscriberInterface
 
         $currentRoute = $event->getRequest()->attributes->get('_route');
 
-        $protectedRoutes = ['app_subs', 'app_buy', 'app_profile', 'app_photo', 'app_logout', 'app_dashboard'];
+        $protectedRoutes = ['app_subs', 'app_buy', 'app_profile', 'app_photo', 'app_logout', 'app_dashboard', 'app_objectif'
+        , 'app_Schedule_objectif'];
         if (!in_array($currentRoute, $protectedRoutes)) {
             return;
         }

@@ -21,6 +21,28 @@ class CommentaireRepository extends ServiceEntityRepository
         parent::__construct($registry, Commentaire::class);
     }
 
+    public function getNbComnts($value) // khedma bl createQuerry fi 3ou4 createQuerryBuilder
+    {
+        $em = $this->getEntityManager();
+        return $em->createQuery('select count(b) from App\Entity\Commentaire b where b.postId = :val')
+        ->setParameter('val', $value)
+
+        ->getSingleScalarResult(); //khater ma aandich list
+    }
+
+    // public function showCommentsByPost()
+    // {
+    //     return $this->createQueryBuilder('b')
+    //     ->join('b.idPost', 'a')
+    //     ->addSelect('a')
+    //     // ->where('a.idPost = :val') 
+    //     // ->andWhere('a.idPost = :val')
+    //     // ->setParameter('val', $value)
+    //     // ->from('YourMappingSpace:Campsite', 's')
+    //     ->orderBy('a.idPost', 'DESC')
+    //     ->getQuery()
+    //     ->getResult();
+    // }
 //    /**
 //     * @return Commentaire[] Returns an array of Commentaire objects
 //     */

@@ -32,7 +32,39 @@ class UserRepository extends ServiceEntityRepository
             ->where('u.id = :id')
             ->setParameter('id', $id)
             ->getQuery()
-            ->getOneOrNullResult();
+            ->getResult();
+    }
+    public function findUserByEmail($email)
+    {
+        return $this->createQueryBuilder('u')
+            ->where('u.email = :email')
+            ->setParameter('email', $email)
+            ->getQuery()
+            ->getResult();
+    }
+    public function findUserByRole($role)
+    {
+        return $this->createQueryBuilder('u')
+            ->where('u.roles LIKE :role')
+            ->setParameter('role', '%'.$role.'%')
+            ->getQuery()
+            ->getResult();
+    }
+    public function findUserByUsername($username)
+    {
+        return $this->createQueryBuilder('u')
+            ->where('u.username = :username')
+            ->setParameter('username', $username)
+            ->getQuery()
+            ->getResult();
+    }
+    public function findUserByPhone($num_tel)
+    {
+        return $this->createQueryBuilder('u')
+            ->where('u.numTel = :numTel')
+            ->setParameter('numTel', $num_tel)
+            ->getQuery()
+            ->getResult();
     }
 
 //    /**

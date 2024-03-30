@@ -46,7 +46,6 @@ class AuthentificationSubscriber implements EventSubscriberInterface
             []
         );
 
-
         if ($user && $user->getRole() == 'client' && (in_array($currentRoute, $staffRoutes) || in_array($currentRoute, $adminRoutes))) {
             $event->setResponse(new RedirectResponse($this->urlGenerator->generate('app_home')));
             return;

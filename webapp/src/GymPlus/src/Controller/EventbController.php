@@ -14,7 +14,9 @@ use App\Entity\User;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Entity\EventParticipants;
 use App\Repository\EventParticipantsRepository;
-use App\Repository\EventDetailsRepository;
+
+
+
 
 
 
@@ -132,10 +134,8 @@ class EventbController extends AbstractController
         $entityManager->persist($eventParticipant);
         $entityManager->flush();
         return $this->redirectToRoute('app_eventsf');
-
-
-
-}
+    
+    }
 #[Route('/eventf/leave/{id}', name: 'event_leave')]
 public function leaveEvent($id, ManagerRegistry $registry, SessionInterface $session)
 {
@@ -157,5 +157,51 @@ public function leaveEvent($id, ManagerRegistry $registry, SessionInterface $ses
 
     return $this->redirectToRoute('app_eventsf');
 }
+#[Route('event_participants/{id}', name: 'eventParticipant')]
+public function eventParticipants($id, ManagerRegistry $registry, SessionInterface $session): Response
+{
+    $user = $session->get('user');
+    if (!$user instanceof User) {
+        throw new \Exception('No user in session');
+    }
 
+    $event = $registry->getRepository(EventDetails::class)->find($id);
+    $eventParticipants = $registry->getRepository(EventParticipants::class)->findBy(['event_details_id' => $id]);
+
+    // Fetch the User entities associated with the EventParticipants entities
+    $participantsUsers = array_map(function($participant) use ($registry) {
+        $userId = $participant->getUserId();
+        return $registry->getRepository(User::class)->find($userId);
+    }, $eventParticipants);
+
+    return $this->render('dashboard\gestion_events/event_participants.html.twig', [
+        'controller_name' => 'EventbController',
+        'event' => $event,
+        'eventParticipants' => $eventParticipants,
+        'participantsUsers' => $participantsUsers,
+        'user' => $user,
+    ]);
+}
+#[Route('/eventf/kick/{userId}/{eventDetailsId}', name: 'eventParticipant_kick')]
+public function kick($userId, $eventDetailsId, ManagerRegistry $registry): Response
+{
+    // Use both parts of the composite key to find the EventParticipants entity
+    $eventParticipant = $registry->getRepository(EventParticipants::class)->findOneBy([
+        'user_id' => $userId,
+        'event_details_id' => $eventDetailsId,
+    ]);
+
+    if (!$eventParticipant) {
+        throw $this->createNotFoundException('No participant found for id '.$userId);
+    }
+ 
+    $event = $registry->getRepository(EventDetails::class)->find($eventDetailsId);
+    $event->setNbPlaces($event->getNbPlaces()+1);
+
+    $entityManager = $registry->getManager();
+    $entityManager->remove($eventParticipant);
+    $entityManager->flush();
+
+    return $this->redirectToRoute('eventParticipant', ['id' => $eventDetailsId]);
+}
 }

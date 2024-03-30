@@ -58,10 +58,11 @@
                 <p>Duration: {{ event.event.duree }}</p>
                 <p>Number of Places: {{ event.event.nbPlaces }}</p>
                 <form action="{{ event.isUserParticipant ? path('event_leave', {'id': event.event.id}) : path('event_join', {'id': event.event.id}) }}" method="post">
-        <button type="submit" class="btn btn-primary btn-skew appointment-btn">
-            <span class="skew-inner"><span class="text">{{ event.isUserParticipant ? 'Leave' : 'Join' }}</span></span>
-        </button>
-    </form>
+    <button type="submit" class="btn btn-skew appointment-btn {{ event.isUserParticipant ? 'btn-danger' : 'btn-primary' }}">
+        <span class="skew-inner"><span class="text">{{ event.isUserParticipant ? 'Leave' : 'Join' }}</span></span>
+    </button>
+</form>
+	
             </div>
         </div>
     </div>

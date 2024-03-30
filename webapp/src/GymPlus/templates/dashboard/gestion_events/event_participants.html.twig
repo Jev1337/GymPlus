@@ -1,0 +1,96 @@
+{% extends "dashboard/base.html.twig" %}
+
+{% block content %}
+<style>
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {background-color: #ddd;}
+
+.dropdown:hover .dropdown-content {display: block;}
+
+.dropdown:hover .dropbtn {background-color: #3e8e41;}
+.table-title {
+    text-align: center !important;
+    margin-bottom: 20px !important;
+    font-size: 24px !important;
+    font-weight: bold !important;
+    
+}
+
+</style>
+
+<div class="custom-padding">
+    <div class="container-fluid">
+        <div class="page-titles">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="javascript:void(0)">Table</a></li>
+                <li class="breadcrumb-item active"><a href="javascript:void(0)">Bootstrap</a></li>
+            </ol>
+        </div>
+        <!-- row -->
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Participants</h4>
+                    </div>
+                    <div class="card-body">
+                    <div class="table-title">Participants</div>
+                        <div class="table-responsive custom-table" style="width: 80%; margin: auto; margin-bottom: 20px; margin-right: 20px;">
+                            <table class="table table-responsive-md" style="padding: 0.05rem !important; border-color: transparent !important;">
+                                <thead>
+                                    <tr>
+                <th>#</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Username</th>
+                <th>Actions</th>
+            </tr>
+                                </thead>
+                                <tbody>
+           {% for user in participantsUsers %}
+            <tr>
+                <td><strong class="text-black">{{ user.id }}</strong></td>
+                <td>{{ user.firstname }}</td>
+                <td>{{ user.lastname }}</td>
+                <td>{{ user.username }}</td>
+                <td>
+                    <a href="{{ path('eventParticipant_kick', {'userId': user.id, 'eventDetailsId': event.id}) }}" class="btn btn-danger">Kick</a>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="5" style="text-align: center;">No eventParticipants found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

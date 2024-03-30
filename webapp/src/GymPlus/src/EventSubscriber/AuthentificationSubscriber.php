@@ -46,17 +46,17 @@ class AuthentificationSubscriber implements EventSubscriberInterface
             []
         );
 
-       
-        if ($user->getRole() == 'client' && (in_array($currentRoute, $staffRoutes) || in_array($currentRoute, $adminRoutes))) {
+
+        if ($user && $user->getRole() == 'client' && (in_array($currentRoute, $staffRoutes) || in_array($currentRoute, $adminRoutes))) {
             $event->setResponse(new RedirectResponse($this->urlGenerator->generate('app_home')));
             return;
         }
-        if (($user->getRole() == 'staff') && (in_array($currentRoute, $clientRoutes) || in_array($currentRoute, $adminRoutes))) {
+        if ($user && ($user->getRole() == 'staff') && (in_array($currentRoute, $clientRoutes) || in_array($currentRoute, $adminRoutes))) {
             $event->setResponse(new RedirectResponse($this->urlGenerator->generate('app_dashboard')));
             return;
         }
         
-        if (($user->getRole() == 'admin') && (in_array($currentRoute, $clientRoutes))) {
+        if ($user && ($user->getRole() == 'admin') && (in_array($currentRoute, $clientRoutes))) {
             $event->setResponse(new RedirectResponse($this->urlGenerator->generate('app_dashboard')));
             return;
         }

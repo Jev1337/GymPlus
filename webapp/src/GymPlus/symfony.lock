@@ -50,8 +50,7 @@
             "./migrations/.gitignore"
         ]
     },
-    "endroid/qr-code-bundle": {
-        "version": "5.0.1"
+   
     "google/recaptcha": {
         "version": "1.3",
         "recipe": {
@@ -206,3 +205,4 @@
         "version": "v3.8.0"
     }
 }
+

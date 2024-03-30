@@ -24,7 +24,7 @@
     <link rel="icon" type="image/png" href="{{asset('main/images/favicon.png')}}">
 {% block title %}
     <!-- Title -->
-	<title>PowerZone - Fitness, Workout & Gym HTML Template</title>
+	<title>GymPlus - Fitness, Workout & Gym</title>
 {% endblock %}
 {% block css %}
     <link href="{{asset('main/vendor/animate/animate.css')}}" rel="stylesheet">
@@ -36,7 +36,7 @@
 	<link href="{{asset('main/vendor/datepicker/css/bootstrap-datetimepicker.min.css')}}" rel="stylesheet">
     <!-- Custom Stylesheet -->
     <link rel="stylesheet" href="{{asset('main/css/style.css')}}">
-	<link class="skin" rel="stylesheet" href="{{asset('main/css/skin/skin-1.css')}}">
+	<link class="skin" rel="stylesheet" href="{{asset('main/css/skin/skin-5.css')}}">
 
 	<!-- Google Fonts -->
 	<link rel="preconnect" href="https://fonts.googleapis.com">
@@ -50,15 +50,13 @@
 <body>
 	<div id="loading-area" class="loading-page-1">
 		<div class="loading-inner">
-			<span class="text-primary">P</span>
-			<span class="text-primary">o</span>
-			<span class="text-primary">w</span>
-			<span class="text-primary">e</span>
-			<span class="text-primary">r</span>
-			<span class="text-white">Z</span>
-			<span class="text-white">o</span>
-			<span class="text-white">n</span>
-			<span class="text-white">e</span>
+			<span class="text-primary">G</span>
+			<span class="text-primary">Y</span>
+			<span class="text-primary">M</span>
+			<span class="text-white">P</span>
+			<span class="text-white">L</span>
+			<span class="text-white">U</span>
+			<span class="text-white">S</span>
 		</div>
 	</div>
 {% block body %}
@@ -115,13 +113,22 @@
                     </div>
                     <ul class="nav navbar-nav navbar navbar-left">	
                         <li><a href="{{path('app_home')}}">Home</a></li>
-                        <li><a href="{{path('app_subs')}}">My Subscriptions</a></li>
+						<li class="sub-menu-down"><a href="javascript:void(0);">Members Area</a>
+							<ul class="sub-menu">
+								<li><a href="{{path('app_subs')}}">My Subscriptions</a></li>
+								<li><a href="{{path('app_profile')}}">My Profile</a></li>
+								<li><a href="{{path('app_eventsf')}}">Events</a></li>
+								
+							</ul>
+						</li>
+
 						<li class="sub-menu-down"><a href="javascript:void(0);">Objectif</a>
 										<ul class="sub-menu">
 									<li><a href="{{ path('app_objectif') }}">Add Objectif</a></li>
 									<li><a href="{{ path('app_Schedule_objectif') }}">Objectif Schedule</a></li>
 								</ul>
 								</li>
+						 
                     </ul>
                     <div class="dz-social-icon">
                         <ul>
@@ -223,7 +230,19 @@
 						</div>
 						<ul class="nav navbar-nav navbar navbar-left">	
 							<li><a href="{{path('app_home')}}">Home</a></li>
-                        	<li><a href="{{path('app_subs')}}">My Subscriptions</a></li>
+                        	<li class="sub-menu-down"><a href="javascript:void(0);">Members Area</a>
+							<ul class="sub-menu">
+								<li><a href="{{path('app_subs')}}">My Subscriptions</a></li>
+								<li><a href="{{path('app_profile')}}">My Profile</a></li>
+								<li><a href="{{path('app_eventsf')}}">Events</a></li>
+							</ul>
+						</li>
+						<li class="sub-menu-down"><a href="javascript:void(0);">Objectif</a>
+										<ul class="sub-menu">
+									<li><a href="{{ path('app_objectif') }}">Add Objectif</a></li>
+									<li><a href="{{ path('app_Schedule_objectif') }}">Objectif Schedule</a></li>
+								</ul>
+								</li>
 						</ul>
 						<div class="dz-social-icon">
 							<ul>
@@ -328,9 +347,20 @@
 								<a href="index.html"><img src="{{asset('main/images/logo.png')}}" alt=""></a>
 							</div>
 							<ul class="nav navbar-nav navbar navbar-left">	
-								
 								<li><a href="{{path('app_home')}}">Home</a></li>
-                        		<li><a href="{{path('app_subs')}}">My Subscriptions</a></li>	
+                        		<li class="sub-menu-down"><a href="javascript:void(0);">Members Area</a>
+									<ul class="sub-menu">
+										<li><a href="{{path('app_subs')}}">My Subscriptions</a></li>
+										<li><a href="{{path('app_profile')}}">My Profile</a></li>
+										<li><a href="{{path('app_eventsf')}}">Events</a></li>
+									</ul>
+								</li>
+								<li class="sub-menu-down"><a href="javascript:void(0);">Objectif</a>
+										<ul class="sub-menu">
+									<li><a href="{{ path('app_objectif') }}">Add Objectif</a></li>
+									<li><a href="{{ path('app_Schedule_objectif') }}">Objectif Schedule</a></li>
+								</ul>
+								</li>
 							</ul>
 							</div>	
 						</div>

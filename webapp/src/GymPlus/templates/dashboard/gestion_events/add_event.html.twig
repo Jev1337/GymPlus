@@ -1,0 +1,21 @@
+{% extends "dashboard/base.html.twig" %}
+
+{% block content %}
+    <h1 style="text-align: center;"> Add event </h1>
+
+    <style>
+        .centered-form {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* This will take the full height of the viewport */
+            flex-direction: column; /* This will stack the items vertically */
+        }
+    </style>
+
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'class': 'centered-form'}}) }}
+    <table class="styled-table">
+        
+    </table>
+    {{ form_end(form) }}
+{% endblock %}

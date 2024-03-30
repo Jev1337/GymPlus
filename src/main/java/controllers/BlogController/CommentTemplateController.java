@@ -90,7 +90,7 @@ public class CommentTemplateController {
         try {
             userName.setText(us.getUserById(commentaire.getUser_id()).getUsername());
             String profilePicture = us.getUserById(c.getUser_id()).getPhoto();
-            Image img = new Image(new File("src/assets/profileuploads/" + profilePicture).toURI().toString());
+            Image img = new Image(new File("webapp/src/gymplus/public/profileuploads/" + profilePicture).toURI().toString());
             profilePic.setImage(img);
             Circle clip1 = new Circle(profilePic.getFitWidth()/2, profilePic.getFitHeight()/2, profilePic.getFitWidth()/2);
             profilePic.setClip(clip1);

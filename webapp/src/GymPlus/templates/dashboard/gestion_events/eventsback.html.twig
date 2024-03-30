@@ -1,0 +1,108 @@
+{% extends "dashboard/base.html.twig" %}
+
+{% block content %}
+<style>
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {background-color: #ddd;}
+
+.dropdown:hover .dropdown-content {display: block;}
+
+.dropdown:hover .dropbtn {background-color: #3e8e41;}
+.table-title {
+    text-align: center !important;
+    margin-bottom: 20px !important;
+    font-size: 24px !important;
+    font-weight: bold !important;
+    
+}
+
+</style>
+
+<div class="custom-padding">
+    <div class="container-fluid">
+        <div class="page-titles">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="javascript:void(0)">Table</a></li>
+                <li class="breadcrumb-item active"><a href="javascript:void(0)">Bootstrap</a></li>
+            </ol>
+        </div>
+        <!-- row -->
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Events</h4>
+                    </div>
+                    <div class="card-body">
+                    <div class="table-title">Events</div>
+                        <div class="table-responsive custom-table" style="width: 80%; margin: auto; margin-bottom: 20px; margin-right: 20px;">
+                            <table class="table table-responsive-md" style="padding: 0.05rem !important; border-color: transparent !important;">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Name</th>
+                                        <th>Type</th>
+                                        <th>Date</th>
+                                        <th>Duration</th>
+                                        <th>Number of Places</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for event in events %}
+                                    <tr>
+                                        <td><strong class="text-black">{{ loop.index }}</strong></td>
+                                        <td>{{ event.name }}</td>
+                                        <td>{{ event.type }}</td>
+                                        <td>{{ event.eventDate|date('Y-m-d') }}</td>
+                                        <td>{{ event.duree }}</td>
+                                        <td>{{ event.nbPlaces ~ '/' ~ event.nbTotal }}</td>
+                                        <td>
+                                            <div class="dropdown">
+                                                <button class="btn btn-success light sharp dropbtn">
+                                                    <svg width="20px" height="20px" viewBox="0 0 24 24" version="1.1"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><rect x="0" y="0" width="24" height="24"></rect><circle fill="#000000" cx="5" cy="12" r="2"></circle><circle fill="#000000" cx="12" cy="12" r="2"></circle><circle fill="#000000" cx="19" cy="12" r="2"></circle></g></svg>
+                                                </button>
+                                              <div class="dropdown-content">
+                                                    <a href="{{ path('event_edit', {'id': event.id}) }}">Edit</a>
+                                                    <a href="{{ path('event_delete', {'id': event.id}) }}">Delete</a>
+                                              </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% else %}
+                                    <tr>
+                                        <td colspan="7" style="text-align: center;">No events found.</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

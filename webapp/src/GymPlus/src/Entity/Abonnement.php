@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Entity;
-
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\AbonnementRepository;
@@ -16,25 +15,26 @@ class Abonnement
     private ?int $id;
 
     #[ORM\Column]
-    private ?date $datefinab;
+    private ?\DateTime $datefinab;
 
     #[ORM\ManyToOne(targetEntity: AbonnementDetails::class)]
-    private ?string $type;
+    #[ORM\JoinColumn(name: "type", referencedColumnName: "name")]
+    private ?AbonnementDetails $type;
 
     #[ORM\ManyToOne(targetEntity: User::class)]
-    private ?int $user;
+    private ?User $user;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getDatefinab(): ?\DateTime
+    public function getDatefinab(): ?\DateTimeInterface
     {
         return $this->datefinab;
     }
 
-    public function setDatefinab(?\DateTime $datefinab): static
+    public function setDatefinab(\DateTimeInterface $datefinab): static
     {
         $this->datefinab = $datefinab;
 
@@ -64,6 +64,7 @@ class Abonnement
 
         return $this;
     }
+
 
 
 }

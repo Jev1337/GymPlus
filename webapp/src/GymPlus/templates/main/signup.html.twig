@@ -35,7 +35,18 @@
 						<i class="fa-solid fa-exclamation-circle"></i> <span id="error-message">test</span>
 
 					</div>
-				
+					{% for message in app.flashes('success') %}
+							<div class="alert alert-success">
+								<i class="fa-solid fa-check"></i>
+								{{ message }}
+							</div>
+						{% endfor %}
+						{% for message in app.flashes('error') %}
+							<div class="alert alert-danger">
+								<i class="fa-solid fa-times"></i>
+								{{ message }}
+							</div>
+					{% endfor %}
 				<div id="smartwizard" class="wizard-form">
 					<ul class="nav">
 						
@@ -67,9 +78,10 @@
 						  </a>
 						</li>
 					</ul>
-				 
+
 					<div class="tab-content">
-						
+	
+					
 						
 						<div id="wizardStep1" class="tab-pane" role="tabpanel" aria-labelledby="wizardStep3">
 							<h5 class="m-b5">Your New Account</h5>
@@ -78,6 +90,13 @@
 							
 							{{ form_start(form, {'attr': {'class': 'row', 'id': 'form-0'}}) }}
 
+
+							<div class="col-md-4 col-lg-4 form-group">
+								{{ form_label(form.id, 'CIN', {'label_attr': {'class': 'form-label'}}) }}
+								<div class="input-group input-line">
+									{{ form_widget(form.id, {'attr': {'class': 'form-control', 'placeholder': 'CIN'}}) }}
+								</div>
+							</div>
 							<div class="col-md-4 col-lg-4 form-group">
 								{{ form_label(form.username, 'Username', {'label_attr': {'class': 'form-label'}}) }}
 								<div class="input-group input-line">

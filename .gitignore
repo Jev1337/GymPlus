@@ -1,5 +1,6 @@
 ### Profile Uploads ###
 src/assets/profileuploads/*
+webapp/src/gymplus/public/profileuploads/*
 
 target/
 !.mvn/wrapper/maven-wrapper.jar

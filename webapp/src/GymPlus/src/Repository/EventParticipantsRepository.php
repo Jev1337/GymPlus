@@ -20,6 +20,15 @@ class EventParticipantsRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, EventParticipants::class);
     }
+    public function isUserParticipant(int $userId, int $eventDetailsId): bool
+    {
+        $participant = $this->findOneBy([
+            'user_id' => $userId,
+            'event_details_id' => $eventDetailsId,
+        ]);
+
+        return $participant !== null;
+    }
 
 //    /**
 //     * @return EventParticipants[] Returns an array of EventParticipants objects

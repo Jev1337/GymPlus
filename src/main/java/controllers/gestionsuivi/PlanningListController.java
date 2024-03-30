@@ -94,7 +94,7 @@ public class PlanningListController {
     private Separator Seperatorr;
 
     public void setData(Objectif objPlan) {
-        String coachPhotoPath = "src/assets/profileuploads/" + objPlan.getCoachPhoto();
+        String coachPhotoPath = "webapp/src/gymplus/public/profileuploads/" + objPlan.getCoachPhoto();
         ObservableList<Planning> objectifList = getPlanningItems(objPlan.getId_planning());
 
 

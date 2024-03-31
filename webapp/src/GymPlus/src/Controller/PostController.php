@@ -27,26 +27,31 @@ class PostController extends AbstractController
         }
 
         $post = new Post();
-        $post->setDate($dateImmutable);
+        
+        $form = $this->createForm(PostType::class, $post); //bch thot les info mte3i ml formulaire lel $author
+        
+        $form->handleRequest($req); //bch te5ou request eli tbaathet mel form
+        if ($form->isSubmitted() && $form->isValid()) {
+            $post->setDate($dateImmutable);
         $post->setNbComnts(0);
         $post->setIdUser($user->getId());
         $post->setLikes(0);
-        $form = $this->createForm(PostType::class, $post); //bch thot les info mte3i ml formulaire lel $author
-        $form->handleRequest($req); //bch te5ou request eli tbaathet mel form
-        if ($form->isSubmitted()) {
             $em->persist($post);
             $em->flush();
             return $this->redirectToRoute('getAll_post');
         }
         //Affichage
+
         $posts = $rep->findAll();
         for ($i=0; $i < sizeof($posts); $i++) { 
+            // $users = $urep->findById($posts[$i]->getIdUser());
             $this->updateNbComnt($crep,$posts[$i],$rep,$manager);
         }
         return $this->renderForm('main/post/index.html.twig', [
             'posts' => $posts,
-            'user' => $user, 
-            'form' => $form
+            'user' => $user,
+            'form' => $form,
+            // 'users' => $users
         ]);
     }
     
@@ -58,7 +63,7 @@ class PostController extends AbstractController
         $post = $rep->find($id);
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($req);
-        if ($form->isSubmitted()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $em->persist($post);
             $em->flush();
             return $this->redirectToRoute('getAll_post');

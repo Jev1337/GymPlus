@@ -35,10 +35,10 @@ class AuthentificationSubscriber implements EventSubscriberInterface
 
         // Routes that require authentication
         $protectedRoutes = ['app_subs', 'app_buy', 'app_profile', 'app_photo', 'app_logout', 'app_dashboard', 'app_objectif'
-        , 'app_Schedule_objectif', 'app_events', 'eventb', 'event_delete', 'event_edit', 'app_eventsf', 'event_join', 'event_leave'];
+        , 'app_Schedule_objectif', 'app_events', 'eventb', 'event_delete', 'event_edit', 'app_eventsf', 'event_join', 'event_leave', 'getAll_post'];
 
         // Routes that ONLY clients can access
-        $clientRoutes = ['app_home', 'app_subs', 'app_buy', 'app_profile', 'app_objectif', 'app_Schedule_objectif', 'event_join', 'event_leave','app_eventsf','getAll_post'];
+        $clientRoutes = ['app_home', 'app_subs', 'app_buy', 'app_profile', 'app_objectif', 'app_Schedule_objectif', 'event_join', 'event_leave','app_eventsf','getAll_post','rewards','points'];
         // Routes that staff can access
         $staffRoutes = ['app_dashboard', 'app_events', 'eventb', 'event_delete', 'event_edit','eventParticipant_kick','eventParticipant'];
         // Routes that ONLY admin can access

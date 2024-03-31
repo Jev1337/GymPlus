@@ -14,6 +14,8 @@ use App\Entity\User;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Entity\EventParticipants;
 use App\Repository\EventParticipantsRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use App\Form\EventDetailsEditType;
 
 
 
@@ -65,20 +67,29 @@ class EventbController extends AbstractController
             'user' => $user,
         ]);
     }
-    #[Route('/eventb/delete/{id}', name: 'event_delete')]
-    public function delete($id, ManagerRegistry $registry): Response
-    {
-        $event = $registry->getRepository(EventDetails::class)->find($id);
-        $entityManager = $registry->getManager();
-        $entityManager->remove($event);
-        $entityManager->flush();
-        return $this->redirectToRoute('eventb');
+#[Route('/eventb/delete/{id}', name: 'event_delete')]
+public function delete($id, ManagerRegistry $registry): Response
+{
+    $event = $registry->getRepository(EventDetails::class)->find($id);
+    if (!$event) {
+        throw $this->createNotFoundException('No event found for id '.$id);
     }
+    $entityManager = $registry->getManager();
+    $entityManager->remove($event);
+    $entityManager->flush();
+    return $this->redirectToRoute('eventb');
+}
     #[Route('/eventb/edit/{id}', name: 'event_edit')]
     public function edit($id, Request $request, ManagerRegistry $registry): Response
-    {    $user = $this->getUser();
+    {
+        $user = $this->getUser();
         $event = $registry->getRepository(EventDetails::class)->find($id);
-        $form = $this->createForm(EventDetailsType::class, $event);
+        
+        if (!$event) {
+            throw $this->createNotFoundException('No event found for id '.$id);
+        }
+
+        $form = $this->createForm(EventDetailsEditType::class, $event);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $registry->getManager();
@@ -89,7 +100,7 @@ class EventbController extends AbstractController
             'controller_name' => 'EventbController',
             'form' => $form->createView(),
             'user' => $user,
-            'isEditAction' => true,
+            
         ]);
     }
     #[Route('/eventf', name: 'app_eventsf')]
@@ -202,4 +213,75 @@ public function kick($userId, $eventDetailsId, ManagerRegistry $registry): Respo
 
     return $this->redirectToRoute('eventParticipant', ['id' => $eventDetailsId]);
 }
+#rewards hub
+#[Route('/rewards', name: 'rewards')]
+public function rewards(ManagerRegistry $registry, SessionInterface $session): Response
+{
+    $user = $session->get('user');
+    return $this->render('main\gestion_events\event_hub.html.twig', [
+        'controller_name' => 'EventbController',
+        'user' => $user,
+    ]);
+}
+#rewards hub
+#[Route('/rewards/whey', name: 'whey')]
+public function claimWhey(Request $request, EntityManagerInterface $entityManager): Response
+{   /** @var User $user */
+    $user = $this->getUser();
+    if ($user === null) {
+        return new Response('No user is logged in');
+    }
+
+    if ($user->getEventPoints() >= 3500) {
+        $user->setEventPoints($user->getEventPoints() - 3500);
+
+        // Update user points in the database
+        $entityManager->persist($user);
+        $entityManager->flush();
+
+        return new Response('Claim successful');
+    } else {
+        return new Response('Not enough points');
+    }
+}
+#[Route('/rewards/belt', name: 'belt')]
+public function claimBelt(Request $request, EntityManagerInterface $entityManager): Response
+{   /** @var User $user */
+    $user = $this->getUser();
+    if ($user === null) {
+        return new Response('No user is logged in');
+    }
+
+    if ($user->getEventPoints() >= 2500) {
+        $user->setEventPoints($user->getEventPoints() - 2500);
+
+        // Update user points in the database
+        $entityManager->persist($user);
+        $entityManager->flush();
+
+        return new Response('Claim successful');
+    } else {
+        return new Response('Not enough points');
+    }
+}
+    #[Route('/rewards/bag', name: 'bag')]
+    public function claimBag(Request $request, EntityManagerInterface $entityManager): Response
+    {   /** @var User $user */
+        $user = $this->getUser();
+        if ($user === null) {
+            return new Response('No user is logged in');
+        }
+    
+        if ($user->getEventPoints() >= 3000) {
+            $user->setEventPoints($user->getEventPoints() - 3000);
+    
+            // Update user points in the database
+            $entityManager->persist($user);
+            $entityManager->flush();
+    
+            return new Response('Claim successful');
+        } else {
+            return new Response('Not enough points');
+        }
+    }
 }

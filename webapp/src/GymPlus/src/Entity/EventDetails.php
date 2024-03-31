@@ -7,28 +7,64 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\EventDetailsRepository;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: EventDetailsRepository::class)]
 class EventDetails
 {
-
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id;
 
+    /**
+     * @Assert\Length(
+     *      min = 4,
+     *      minMessage = "The name must be at least {{ limit }} characters long"
+     * )
+     */
     #[ORM\Column]
     private ?string $name;
 
+    /**
+     * @Assert\Length(
+     *      min = 4,
+     *      minMessage = "The type must be at least {{ limit }} characters long"
+     * )
+     * @Assert\Regex(
+     *     pattern="/^[a-zA-Z]*$/",
+     *     message="The type should contain only letters"
+     * )
+     */
     #[ORM\Column]
     private ?string $type;
 
+    /**
+     * @Assert\GreaterThan(
+     *     "now",
+     *     message="The event date should be at least 1 hour from now"
+     * )
+     */
     #[ORM\Column]
     private ?\DateTime $eventDate;
 
+    /**
+     * @Assert\Range(
+     *      min = 20,
+     *      max = 120,
+     *      notInRangeMessage = "The duration must be between {{ min }} and {{ max }}",
+     * )
+     */
     #[ORM\Column]
     private ?string $duree;
 
+    /**
+     * @Assert\Range(
+     *      min = 10,
+     *      max = 50,
+     *      notInRangeMessage = "The number of places must be between {{ min }} and {{ max }}",
+     * )
+     */
     #[ORM\Column]
     private ?int $nbPlaces;
 
@@ -38,11 +74,13 @@ class EventDetails
     #[ORM\ManyToMany(targetEntity: User::class)]
     private Collection $user;
 
-
     public function __construct()
     {
-        $this->user = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->user = new ArrayCollection();
     }
+
+    
+
 
     public function getId(): ?int
     {

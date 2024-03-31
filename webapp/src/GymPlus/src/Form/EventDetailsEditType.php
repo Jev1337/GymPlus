@@ -11,8 +11,9 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Validator\Constraints as Assert;
 
-class EventDetailsType extends AbstractType
+class EventDetailsEditType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     { $event = $builder->getData();
@@ -29,12 +30,16 @@ class EventDetailsType extends AbstractType
                     'Crossfit' => 'crossfit',
                 ],
                 'placeholder' => 'Choose an event type',
+                'constraints' => [
+                    new Assert\NotBlank([
+                        'message' => 'Please select an event type.',
+                    ]),
+                ],
             ])
             ->add('eventDate')
             ->add('duree')
-            ->add('nbPlaces')
             ->add('save', SubmitType::class);
     }
     
-
+   
 }

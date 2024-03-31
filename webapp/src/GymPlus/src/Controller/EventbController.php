@@ -28,9 +28,9 @@ class EventbController extends AbstractController
         $this->eventParticipantsRepository = $eventParticipantsRepository;
     }
     #[Route('/add_event', name: 'app_events')]
-    public function add_event(Request $request, SessionInterface $session, ManagerRegistry $registry): Response
+    public function add_event(Request $request, ManagerRegistry $registry): Response
     {
-        $user = $session->get('user');
+        $user = $this->getUser();
         $event = new EventDetails();
         $form = $this->createForm(EventDetailsType::class, $event);
 
@@ -53,9 +53,9 @@ class EventbController extends AbstractController
         ]);
     }
     #[Route('/eventb', name: 'eventb')]
-    public function eventb(ManagerRegistry $registry, SessionInterface $session): Response
+    public function eventb(ManagerRegistry $registry): Response
     {   
-        $user = $session->get('user');
+        $user = $this->getUser();
         
         $events = $registry->getRepository(EventDetails::class)->findAll();
     
@@ -75,8 +75,8 @@ class EventbController extends AbstractController
         return $this->redirectToRoute('eventb');
     }
     #[Route('/eventb/edit/{id}', name: 'event_edit')]
-    public function edit($id, Request $request, ManagerRegistry $registry, SessionInterface $session): Response
-    {    $user = $session->get('user');
+    public function edit($id, Request $request, ManagerRegistry $registry): Response
+    {    $user = $this->getUser();
         $event = $registry->getRepository(EventDetails::class)->find($id);
         $form = $this->createForm(EventDetailsType::class, $event);
         $form->handleRequest($request);
@@ -93,9 +93,9 @@ class EventbController extends AbstractController
         ]);
     }
     #[Route('/eventf', name: 'app_eventsf')]
-    public function eventf(ManagerRegistry $registry, SessionInterface $session): Response
+    public function eventf(ManagerRegistry $registry): Response
 {   
-    $user = $session->get('user');
+    $user = $this->getUser();
     
     $events = $registry->getRepository(EventDetails::class)->findAll();
 
@@ -120,9 +120,9 @@ class EventbController extends AbstractController
 }
     #user join event by clicking on join
     #[Route('/eventf/join/{id}', name: 'event_join')]
-    public function join($id, ManagerRegistry $registry, SessionInterface $session): Response
+    public function join($id, ManagerRegistry $registry): Response
     {
-        $user = $session->get('user');
+        $user = $this->getUser();
         
         $event = $registry->getRepository(EventDetails::class)->find($id);
         $event->setNbPlaces($event->getNbPlaces()-1);
@@ -137,9 +137,9 @@ class EventbController extends AbstractController
     
     }
 #[Route('/eventf/leave/{id}', name: 'event_leave')]
-public function leaveEvent($id, ManagerRegistry $registry, SessionInterface $session)
+public function leaveEvent($id, ManagerRegistry $registry)
 {
-    $user = $session->get('user');
+    $user = $this->getUser();
    
     $event = $registry->getRepository(EventDetails::class)->find($id);
         $event->setNbPlaces($event->getNbPlaces()+1);
@@ -158,9 +158,9 @@ public function leaveEvent($id, ManagerRegistry $registry, SessionInterface $ses
     return $this->redirectToRoute('app_eventsf');
 }
 #[Route('event_participants/{id}', name: 'eventParticipant')]
-public function eventParticipants($id, ManagerRegistry $registry, SessionInterface $session): Response
+public function eventParticipants($id, ManagerRegistry $registry): Response
 {
-    $user = $session->get('user');
+    $user = $this->getUser();
    
 
     $event = $registry->getRepository(EventDetails::class)->find($id);

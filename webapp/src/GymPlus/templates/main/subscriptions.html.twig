@@ -44,7 +44,7 @@
 									<h2 class="pricingtable-bx">$20<small>/ Per User Per Month</small></h2>
 									<p class="m-b20">Basic Plan.</p>
 									<div class="pricingtable-button">
-										{% if user %}
+										{% if app.user %}
 											<a href="{{path('app_buy', {'id': 1})}}" class="btn btn-dark rounded-0 d-block m-b10"><span>Buy Now</span></a>
 										{% else %}
 											<a href="{{path('app_login')}}" class="btn btn-dark rounded-0 d-block m-b10"><span>Buy Now</span></a>
@@ -76,7 +76,7 @@
 									<h2 class="pricingtable-bx">$30<small>/ Per User Per Month</small></h2>
 									<p class="m-b20">More Time More Gain!</p>
 									<div class="pricingtable-button">
-										{% if user %}
+										{% if app.user %}
 											<a href="{{path('app_buy', {'id': 2})}}" class="btn btn-dark rounded-0 d-block m-b10"><span>Buy Now</span></a>
 										{% else %}
 											<a href="{{path('app_login')}}" class="btn btn-dark rounded-0 d-block m-b10"><span>Buy Now</span></a>
@@ -103,7 +103,7 @@
 									<h2 class="pricingtable-bx">$50<small>/ Per User Per Month</small></h2>
 									<p class="m-b20">Everything you need</p>
 									<div class="pricingtable-button">
-										{% if user %}
+										{% if app.user %}
 											<a href="{{path('app_buy', {'id': 3})}}" class="btn btn-dark rounded-0 d-block m-b10"><span>Buy Now</span></a>
 										{% else %}
 											<a href="{{path('app_login')}}" class="btn btn-dark rounded-0 d-block m-b10"><span>Buy Now</span></a>

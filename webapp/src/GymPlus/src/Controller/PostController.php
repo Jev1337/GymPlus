@@ -16,12 +16,12 @@ use Symfony\Component\Routing\Annotation\Route;
 class PostController extends AbstractController
 {
     #[Route('/post', name: 'getAll_post')]
-    public function getAllPosts(Request $req, PostRepository $rep, SessionInterface $session, CommentaireRepository $crep, ManagerRegistry $manager): Response
+    public function getAllPosts(Request $req, PostRepository $rep, CommentaireRepository $crep, ManagerRegistry $manager): Response
     {
         $em = $manager->getManager();
         $dateImmutable = date_create('now');
         
-        $user = $session->get('user');
+        $user = $this->getUser();
         if ($user->getRole() != 'client') {
             return $this->redirectToRoute('app_dashboard');
         }
@@ -51,9 +51,9 @@ class PostController extends AbstractController
     }
     
     #[Route('/post/{id}', name: 'update_post')]
-    public function updatePosts(Request $req, $id, SessionInterface $session, PostRepository $rep, ManagerRegistry $manager): Response
+    public function updatePosts(Request $req, $id, PostRepository $rep, ManagerRegistry $manager): Response
     {
-        $user = $session->get('user');
+        $user = $this->getUser();
         $em = $manager->getManager();
         $post = $rep->find($id);
         $form = $this->createForm(PostType::class, $post);
@@ -70,9 +70,9 @@ class PostController extends AbstractController
         ]);
     }
     #[Route('/post/delete/{id}', name: 'delete_post')]
-    public function delete(PostRepository $rep, $id, ManagerRegistry $manager, SessionInterface $session, CommentaireRepository $repc): Response
+    public function delete(PostRepository $rep, $id, ManagerRegistry $manager, CommentaireRepository $repc): Response
     {
-        // $user = $session->get('user');
+        // $user = $this->getUser();
         $em = $manager->getManager();
         $post = $rep->find($id);
         $comntController = new CommentaireController();

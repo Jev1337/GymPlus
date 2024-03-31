@@ -41,7 +41,7 @@
 								<div class="dz-box">
 									<div class="dz-media" id="userphoto" style="cursor: pointer">
 										
-										<img src="{{asset('profileuploads/' ~ user.photo)}}"  alt="">
+										<img src="{{asset('profileuploads/' ~ app.user.photo)}}"  alt="">
 									</div>
 									<div class="dz-info m-t15">
 										<h5 class="dz-title">About Me</h5>
@@ -168,7 +168,7 @@
 	
 		document.getElementById('form-0').addEventListener('submit', function(e) {
 				
-			if(document.getElementById('modify_user_numTel').value != {{ user.numTel }}) {
+			if(document.getElementById('modify_user_numTel').value != {{ app.user.numTel }}) {
 				e.preventDefault();
 				const req = new XMLHttpRequest();
 				const num = document.getElementById('modify_user_numTel').value;

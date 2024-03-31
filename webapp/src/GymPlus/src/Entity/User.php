@@ -8,9 +8,11 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-class User
+class User Implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\Column]
@@ -94,6 +96,19 @@ class User
         $this->eventDetails = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->email;
+    }
+
+    public function getRoles(): array
+    {
+
+        $roles = ["ROLE_".strtoupper($this->role)];
+
+        return array_unique($roles);
+    }
+
     public function setId(int $id): static
     {
         $this->id = $id;
@@ -153,9 +168,21 @@ class User
         return $this;
     }
 
+
     public function getPassword(): ?string
     {
         return $this->password;
+    }
+
+    public function eraseCredentials(): void
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
+    }
+
+    public function getSalt()
+    {
+        // not needed when using the "bcrypt" algorithm in security.yaml
     }
 
     public function setPassword(?string $password): static

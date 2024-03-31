@@ -7,6 +7,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: PostRepository::class)]
 #[Vich\Uploadable]
@@ -24,6 +25,7 @@ class Post
     private ?string $mode = null;
 
     #[ORM\Column(name: "content", length: 255, nullable: true)]
+    #[Assert\NotBlank(message: 'Please enter your lastname.')]
     private ?string $content = null;
 
     #[ORM\Column(name: "date", type: Types::DATE_MUTABLE, nullable: true)]

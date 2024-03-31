@@ -33,7 +33,8 @@
         "tetranz/select2entity-bundle": "^3.1",
         "twig/extra-bundle": "^2.12|^3.0",
         "twig/twig": "^2.12|^3.0",
-        "twilio/sdk": "^7.16"
+        "twilio/sdk": "^7.16",
+        "vich/uploader-bundle": "^2.3"
     },
     "config": {
         "allow-plugins": {

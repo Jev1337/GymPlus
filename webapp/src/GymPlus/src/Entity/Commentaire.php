@@ -2,35 +2,63 @@
 
 namespace App\Entity;
 
+use App\Repository\CommentaireRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use App\Repository\CommentaireRepository;
+
 #[ORM\Entity(repositoryClass: CommentaireRepository::class)]
 class Commentaire
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $idComment;
+    #[ORM\Column(name: "id_comment")]
+    private ?int $id = null;
 
-    #[ORM\Column]
-    private ?string $content;
+    #[ORM\Column(name: "user_id", nullable: true)]
+    private ?int $userId = null;
 
-    #[ORM\Column]
-    private ?\DateTime $date;
+    #[ORM\Column(name: "id_post", nullable: true)]
+    private ?int $postId = null;
 
-    #[ORM\Column]
-    private ?int $likes;
+    #[ORM\Column(name: "content", length: 255, nullable: true)]
+    private ?string $content = null;
 
-    #[ORM\ManyToOne(targetEntity: User::class)]
-    private $user;
+    #[ORM\Column(name: "date", type: Types::DATE_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $date = null;
 
-    #[ORM\ManyToOne(targetEntity: Post::class)]
-    private $idPost;
+    #[ORM\Column(name: "likes", nullable: true)]
+    private ?int $likes = null;
 
-    public function getIdComment(): ?int
+    // #[ORM\ManyToOne(inversedBy: 'comnts')]
+    // private ?Post $post = null;
+
+    public function getId(): ?int
     {
-        return $this->idComment;
+        return $this->id;
+    }
+
+    public function getUserId(): ?int
+    {
+        return $this->userId;
+    }
+
+    public function setUserId(?int $userId): static
+    {
+        $this->userId = $userId;
+
+        return $this;
+    }
+
+    public function getPostId(): ?int
+    {
+        return $this->postId;
+    }
+
+    public function setPostId(?int $postId): static
+    {
+        $this->postId = $postId;
+
+        return $this;
     }
 
     public function getContent(): ?string
@@ -45,12 +73,12 @@ class Commentaire
         return $this;
     }
 
-    public function getDate(): ?\DateTime
+    public function getDate(): ?\DateTimeInterface
     {
         return $this->date;
     }
 
-    public function setDate(?\DateTime $date): static
+    public function setDate(?\DateTimeInterface $date): static
     {
         $this->date = $date;
 
@@ -69,29 +97,15 @@ class Commentaire
         return $this;
     }
 
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
+    // public function getPost(): ?Post
+    // {
+    //     return $this->post;
+    // }
 
-    public function setUser(?User $user): static
-    {
-        $this->user = $user;
+    // public function setPost(?Post $post): static
+    // {
+    //     $this->post = $post;
 
-        return $this;
-    }
-
-    public function getIdPost(): ?Post
-    {
-        return $this->idPost;
-    }
-
-    public function setIdPost(?Post $idPost): static
-    {
-        $this->idPost = $idPost;
-
-        return $this;
-    }
-
-
+    //     return $this;
+    // }
 }

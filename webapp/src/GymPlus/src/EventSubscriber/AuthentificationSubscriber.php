@@ -43,7 +43,7 @@ class AuthentificationSubscriber implements EventSubscriberInterface
         // Routes that ONLY admin can access
         $adminRoutes = $staffRoutes;
         $adminRoutes = array_merge($adminRoutes, 
-            ['app_usermgmt', 'app_user_delete', 'app_user_edit', 'app_photo_admin']
+            ['app_usermgmt', 'app_user_delete', 'app_user_edit', 'app_photo_admin', 'app_usermgmt']
         );
 
 

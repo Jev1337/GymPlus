@@ -25,12 +25,6 @@ class LoginType extends AbstractType
             ->add('submit', SubmitType::class, [
                 'label' => 'Login'
             ])
-            ->add('captcha', Recaptcha3Type::class, [
-                'constraints' => new Recaptcha3(),
-                'action_name' => 'login',
-                'locale' => 'en',
-            ]);
-            ;
         ;
     }
 

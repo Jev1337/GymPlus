@@ -21,6 +21,10 @@ use Symfony\Component\HttpClient\HttpClient;
 use App\Form\ModifyUserType;
 use App\Annotation\ProtectedRoute;
 use Karser\Recaptcha3Bundle\Validator\Constraints\Recaptcha3Validator;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\Security\Core\Security;
+
 
 class UserController extends AbstractController
 {
@@ -47,42 +51,24 @@ class UserController extends AbstractController
     }
 
     #[Route('/auth/login', name: 'app_login')]
-    public function login(Request $request, SessionInterface $session, UserRepository $repo, Recaptcha3Validator $recaptcha3Validator): Response
+    public function login(AuthenticationUtils $authenticationUtils, Request $request, Recaptcha3Validator $recaptcha3Validator): Response
     {
-        $user = $session->get('user');
-    
         $form = $this->createForm(LoginType::class);
-        $form->handleRequest($request);
-        if($form->isSubmitted() ){
-            if (!$form->isValid()) {
-                foreach ($form->getErrors(true) as $error) {
-                    $this->addFlash('error', $error->getMessage());
-                }
-            }else{
-                //$score = $recaptcha3Validator->getLastResponse()->getScore();
-                $data = $form->getData();
-                $user = $repo->findOneBy(['email' => $data['email']]);
-                if($user){
-                    if(password_verify($data['password'], $user->getPassword())){
-                        $session->set('user', $user);
-                        if ($user->getRole() != 'client') {
-                            return $this->redirectToRoute('app_dashboard');
-                        } else {
-                            return $this->redirectToRoute('app_home');
-                        }
-                    }else{
-                        $this->addFlash('error', 'Invalid Email or Password');
-                    }
-                }else{
-                    $this->addFlash('error', 'Invalid Email or Password');
-                }
-            }
+        $error = $authenticationUtils->getLastAuthenticationError();
+        $lastUsername = $authenticationUtils->getLastUsername();
+
+        $form = $this->createForm(LoginType::class);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            dd($form->getData());
         }
         return $this->render('main/login.html.twig', [
             'controller_name' => 'UserController',
             'form' => $form->createView(),
-            'user' => $session->get('user')
+            'last_username' => $lastUsername,
+            'error' => $error,
         ]);
+        
     }
 
     #[Route('/api/sendSms', name: 'api_send_sms')]
@@ -123,7 +109,7 @@ class UserController extends AbstractController
 
     
     #[Route('/auth/signup', name: 'app_signup')]
-    public function signup(Request $request, SessionInterface $session, ManagerRegistry $reg, UserRepository $repo): Response
+    public function signup(Request $request, SessionInterface $session, ManagerRegistry $reg, UserRepository $repo, UserPasswordHasherInterface $passwordHasher): Response
     {
         $user = $session->get('user');
         
@@ -155,7 +141,6 @@ class UserController extends AbstractController
                 }
                 $user = new User();
                 $user->setEmail($data->getEmail());
-                $user->setPassword(password_hash($data->getPassword(), PASSWORD_DEFAULT));
                 $user->setRole('client');
                 $user->setUsername($data->getUsername());
                 $user->setNumTel($data->getNumTel());
@@ -170,6 +155,11 @@ class UserController extends AbstractController
                 $targetdir = $this->getParameter('kernel.project_dir') . '/public/profileuploads/';
                 $photo->move($targetdir, $filename);
                 $user->setPhoto($filename);
+                $hashedPassword = $passwordHasher->hashPassword(
+                    $user,
+                    $plaintextPassword
+                );
+                $user->setPassword($hashedPassword);
                 $reg->getManager()->persist($user);
                 $reg->getManager()->flush();
                 $session->set('user', $user);
@@ -187,7 +177,6 @@ class UserController extends AbstractController
     #[Route('/auth/logout', name: 'app_logout')]
     public function logout(SessionInterface $session): Response
     {
-        $session->remove('user');
         return $this->redirectToRoute('app_login');
     }
 

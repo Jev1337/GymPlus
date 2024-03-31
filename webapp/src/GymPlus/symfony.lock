@@ -50,7 +50,6 @@
             "./migrations/.gitignore"
         ]
     },
-   
     "google/recaptcha": {
         "version": "1.3",
         "recipe": {
@@ -198,6 +197,19 @@
             "./config/packages/validator.yaml"
         ]
     },
+    "symfony/web-profiler-bundle": {
+        "version": "5.4",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "5.3",
+            "ref": "24bbc3d84ef2f427f82104f766014e799eefcc3e"
+        },
+        "files": [
+            "./config/packages/web_profiler.yaml",
+            "./config/routes/web_profiler.yaml"
+        ]
+    },
     "tetranz/select2entity-bundle": {
         "version": "v3.1.0"
     },
@@ -217,4 +229,3 @@
         ]
     }
 }
-

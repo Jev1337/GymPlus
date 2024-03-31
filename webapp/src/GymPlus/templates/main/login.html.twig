@@ -60,6 +60,13 @@
 									{{ message }}
 								</div>
 						{% endfor %}
+
+						{% if error %}
+						<div class="alert alert-danger">
+							<i class="fa-solid fa-times"></i>
+							{{ error.messageKey|trans(error.messageData, 'security') }}
+						</div>
+					{% endif %}
 						<div class="tab-content nav">
 							
 							{{ form_start(form, {'attr': {'class': 'tab-pane active col-12', 'id': 'login'} }) }}
@@ -84,7 +91,7 @@
 								</div>
 							</div>
 							<div class="text-center">
-
+								<input type="hidden" id="g-recaptcha-response" name="login[captcha]">
 								{{ form_widget(form.submit, {'attr': {'class': 'btn btn-primary m-b15 w-100', 'value': 'Login'} } ) }}
 								<a href="javascript:void(0);" class="btn-link">Don’t have account?<span> Sign Up</span></a> 
 							</div>
@@ -110,4 +117,20 @@
 		</section>
 		
 	</div>
+{% endblock %}
+
+{% block js %}
+{{ parent() }}
+	 <script src="https://www.google.com/recaptcha/api.js?render=6LdlPKkpAAAAALgqhgO8rYjIjul6vNm95b85038u"></script>
+	 <script>
+		document.getElementById('login').addEventListener('submit', function(e) {
+			e.preventDefault();
+			grecaptcha.ready(function() {
+				grecaptcha.execute('6LdlPKkpAAAAALgqhgO8rYjIjul6vNm95b85038u', {action: 'login'}).then(function(token) {
+					document.getElementById('g-recaptcha-response').value = token;
+					document.getElementById('login').submit();
+				});
+			});
+		});
+	</script>
 {% endblock %}

@@ -64,7 +64,7 @@ class UserRepository extends ServiceEntityRepository
             ->where('u.numTel = :numTel')
             ->setParameter('numTel', $num_tel)
             ->getQuery()
-            ->getResult();
+            ->getOneOrNullResult();
     }
 
 //    /**

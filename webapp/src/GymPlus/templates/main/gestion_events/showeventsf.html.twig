@@ -39,7 +39,8 @@
     <div class="col-xl-6 col-lg-8">
         <div class="dz-card style-1 blog-half m-b30 overlay-shine wow fadeInUp" data-wow-delay="0.2s">
             <div class="dz-media">
-                <a href="javascript:void(0);"><img src="{{ asset('main/images/blog/blog-grid/pic2.jpg') }}" alt="/"></a>
+                
+                <a href="javascript:void(0);"><img src="{{ asset('main/images/event/' ~ event.event.type ~ '.jpg') }}" alt="/"></a>
             </div>
             <div class="dz-info">
                 <div class="dz-meta">
@@ -56,7 +57,7 @@
                 <h4 class="dz-title"><a href="event-detail.html">{{ event.event.name }}</a></h4>
                 <p>Type: {{ event.event.type }}</p>
                 <p>Duration: {{ event.event.duree }} Minutes</p>
-                <p>Number of Places: {{ event.event.nbPlaces }}</p>
+                <p>Remaining Spots: {{ event.event.nbPlaces }}</p>
                 <form action="{{ event.isUserParticipant ? path('event_leave', {'id': event.event.id}) : path('event_join', {'id': event.event.id}) }}" method="post">
     <button type="submit" class="btn btn-skew appointment-btn {{ event.isUserParticipant ? 'btn-danger' : 'btn-primary' }}">
         <span class="skew-inner"><span class="text">{{ event.isUserParticipant ? 'Leave' : 'Join' }}</span></span>

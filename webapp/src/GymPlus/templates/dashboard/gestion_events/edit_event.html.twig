@@ -1,40 +1,54 @@
 {% extends "dashboard/base.html.twig" %}
 
 {% block content %}
-    <h1 style="text-align: center;"> Add event </h1>
+<div class="content-body default-height" style="min-height: 878px;">
+    <div class="container-fluid">
+        <div class="page-titles">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
+                <li class="breadcrumb-item active"><a href="javascript:void(0)">Events</a></li>
+            </ol>
+        </div>
+        <!-- row -->
 
-    <style>
-        .centered-form {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            flex-direction: column;
-        }
-    </style>
-
-    {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'class': 'centered-form'}}) }}
-    <table class="styled-table">
-        <tr>
-            <td>{{ form_label(form.name) }}</td>
-            <td>{{ form_widget(form.name) }}</td>
-            <td>{{ form_errors(form.name) }}</td>
-        </tr>
-        <tr>
-            <td>{{ form_label(form.type) }}</td>
-            <td>{{ form_widget(form.type, {'attr': {'class': 'custom-class'}}) }}</td>
-            <td>{{ form_errors(form.type) }}</td>
-        </tr>
-        <tr>
-            <td>{{ form_label(form.eventDate) }}</td>
-            <td>{{ form_widget(form.eventDate) }}</td>
-            <td>{{ form_errors(form.eventDate) }}</td>
-        </tr>
-        <tr>
-            <td>{{ form_label(form.duree) }}</td>
-            <td>{{ form_widget(form.duree) }}</td>
-            <td>{{ form_errors(form.duree) }}</td>
-        </tr>
-    </table>
-    {{ form_end(form) }}
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Add Event</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive custom-table">
+                            {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'class': 'centered-form'}}) }}
+                            <table class="styled-table">
+                                <tr>
+                                    <td>{{ form_label(form.name) }}</td>
+                                    <td>{{ form_widget(form.name) }}</td>
+                                    <td>{{ form_errors(form.name) }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ form_label(form.type) }}</td>
+                                    <td>{{ form_widget(form.type, {'attr': {'class': 'custom-class'}}) }}</td>
+                                    <td>{{ form_errors(form.type) }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ form_label(form.eventDate) }}</td>
+                                    <td>{{ form_widget(form.eventDate) }}</td>
+                                    <td>{{ form_errors(form.eventDate) }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ form_label(form.duree) }}</td>
+                                    <td>{{ form_widget(form.duree) }}</td>
+                                    <td>{{ form_errors(form.duree) }}</td>
+                                </tr>
+                            
+                            </table>
+                            {{ form_end(form) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

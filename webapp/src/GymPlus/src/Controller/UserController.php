@@ -8,7 +8,6 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Form\LoginType;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\User;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Twilio\Rest\Client;
 use App\Form\UserType;
 use App\Repository\AbonnementRepository;
@@ -21,36 +20,31 @@ use Symfony\Component\HttpClient\HttpClient;
 use App\Form\ModifyUserType;
 use App\Annotation\ProtectedRoute;
 use Karser\Recaptcha3Bundle\Validator\Constraints\Recaptcha3Validator;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+
 
 class UserController extends AbstractController
 {
     #[Route('/dashboard/home', name: 'app_dashboard')]
-    public function dashboard(SessionInterface $session): Response
+    public function dashboard(): Response
     {
-        $user = $session->get('user');
     
         return $this->render('dashboard/index.html.twig', [
             'controller_name' => 'UserController',
-            'user' => $user
         ]);
     }
 
     #[Route('/home', name: 'app_home')]
-    public function home(SessionInterface $session): Response
+    public function home(): Response
     {
-        $user = $session->get('user');
-       
         return $this->render('main/index.html.twig', [
             'controller_name' => 'UserController',
-            'user' => $session->get('user')
         ]);
     }
 
     #[Route('/auth/login', name: 'app_login')]
-    public function login(Request $request, SessionInterface $session, UserRepository $repo, Recaptcha3Validator $recaptcha3Validator): Response
+    public function login(Request $request, UserRepository $repo, Recaptcha3Validator $recaptcha3Validator): Response
     {
-        $user = $session->get('user');
-    
         $form = $this->createForm(LoginType::class);
         $form->handleRequest($request);
         if($form->isSubmitted() ){
@@ -64,7 +58,9 @@ class UserController extends AbstractController
                 $user = $repo->findOneBy(['email' => $data['email']]);
                 if($user){
                     if(password_verify($data['password'], $user->getPassword())){
-                        $session->set('user', $user);
+                        $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
+                        $this->get('security.token_storage')->setToken($token);
+                        $this->get('session')->set('_security_main', serialize($token));
                         if ($user->getRole() != 'client') {
                             return $this->redirectToRoute('app_dashboard');
                         } else {
@@ -80,8 +76,7 @@ class UserController extends AbstractController
         }
         return $this->render('main/login.html.twig', [
             'controller_name' => 'UserController',
-            'form' => $form->createView(),
-            'user' => $session->get('user')
+            'form' => $form->createView()
         ]);
     }
 
@@ -123,9 +118,8 @@ class UserController extends AbstractController
 
     
     #[Route('/auth/signup', name: 'app_signup')]
-    public function signup(Request $request, SessionInterface $session, ManagerRegistry $reg, UserRepository $repo): Response
+    public function signup(Request $request, ManagerRegistry $reg, UserRepository $repo): Response
     {
-        $user = $session->get('user');
         
         $form = $this->createForm(UserType::class);
         $form->handleRequest($request);
@@ -172,31 +166,31 @@ class UserController extends AbstractController
                 $user->setPhoto($filename);
                 $reg->getManager()->persist($user);
                 $reg->getManager()->flush();
-                $session->set('user', $user);
+                $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
+                $this->get('security.token_storage')->setToken($token);
+                $this->get('session')->set('_security_main', serialize($token));
             }
         }
         
 
         return $this->render('main/signup.html.twig', [
             'controller_name' => 'UserController',
-            'form' => $form->createView(),
-            'user' => $session->get('user')
+            'form' => $form->createView()
         ]);
     }
 
     #[Route('/auth/logout', name: 'app_logout')]
-    public function logout(SessionInterface $session): Response
+    public function logout(): Response
     {
-        $session->remove('user');
+        $this->get('security.token_storage')->setToken(null);
+        $this->get('session')->invalidate();
         return $this->redirectToRoute('app_login');
     }
 
     #[Route('/member/profile', name: 'app_profile')]
-    public function profile(SessionInterface $session, Request $request, UserRepository $repo, ManagerRegistry $reg): Response
+    public function profile(Request $request, UserRepository $repo, ManagerRegistry $reg): Response
     {
-        $user = $session->get('user');
-       
-        $user = $repo->findUserById($user->getId());
+        $user = $this->getUser();
         $form = $this->createForm(ModifyUserType::class, $user);
         $form->handleRequest($request);
         if($form->isSubmitted() ){
@@ -228,20 +222,17 @@ class UserController extends AbstractController
         }
         return $this->render('main/profile.html.twig', [
             'controller_name' => 'UserController',
-            'user' => $session->get('user'),
             'form' => $form->createView()
         ]);
     }
 
     #[Route('/api/modifyImage', name: 'app_photo')]
-    public function modifyImage(SessionInterface $session, Request $request, UserRepository $repo, ManagerRegistry $reg): Response
+    public function modifyImage(Request $request, UserRepository $repo, ManagerRegistry $reg): Response
     {
-        $user = $session->get('user');
-        $user = $repo->findUserById($user->getId());
+        $user = $this->getUser();
         $photo = $request->files->get('image');
         if ($photo) {
             $filename = 'USERIMG' . $user->getId() . '.' . $photo->guessExtension();
-           
             $targetdir = $this->getParameter('kernel.project_dir') . '/public/profileuploads/';
             $photo->move($targetdir, $filename);
             $user->setPhoto($filename);
@@ -253,9 +244,8 @@ class UserController extends AbstractController
     }
 
     #[Route('/api/dashboard/modifyImage/{id}', name: 'app_photo_admin')]
-    public function modifyImageAdmin(SessionInterface $session, Request $request, UserRepository $repo, ManagerRegistry $reg, $id): Response
+    public function modifyImageAdmin(Request $request, UserRepository $repo, ManagerRegistry $reg, $id): Response
     {   
-        $user = $session->get('user');
         $userimg = $repo->findUserById($id);
         $photo = $request->files->get('image');
         if ($photo) {
@@ -273,42 +263,39 @@ class UserController extends AbstractController
 
 
     #[Route('/member/subscriptions', name: 'app_subs')]
-    public function subscriptions(SessionInterface $session, AbonnementRepository $repo): Response
+    public function subscriptions(AbonnementRepository $repo): Response
     {
 
-        $user = $session->get('user');
-        if ($repo->isUserSubscribed($user->getId())) {
+        if ($repo->isUserSubscribed($this->getUser()->getId())) {
             return $this->render('main/mysubscriptions.html.twig', [
                 'controller_name' => 'UserController',
-                'user' => $session->get('user'),
-                'subs' => $repo->getOldSubscriptionsByUserId($user->getId()),
-                'subnow' => $repo->getCurrentSubByUserId($user->getId()),
-                'diff' => $repo->getCurrentSubByUserId($user->getId())->getDatefinab()->diff(new \DateTime())->format('%a')
+                'subs' => $repo->getOldSubscriptionsByUserId($this->getUser()->getId()),
+                'subnow' => $repo->getCurrentSubByUserId($this->getUser()->getId()),
+                'diff' => $repo->getCurrentSubByUserId($this->getUser()->getId())->getDatefinab()->diff(new \DateTime())->format('%a')
             ]);
         }
         
         return $this->render('main/subscriptions.html.twig', [
             'controller_name' => 'UserController',
-            'user' => $session->get('user')
+
         ]);
     }
 
     #[Route('/payment/gp', name: 'app_buy')]
-    public function buy(SessionInterface $session, Request $request, AbonnementRepository $repo, AbonnementDetailsRepository $repo0): Response
+    public function buy( Request $request, AbonnementRepository $repo, AbonnementDetailsRepository $repo0): Response
     {
+        $user = $this->getUser();
         $id = $request->query->get('id');
         if (!$id && id != 1 && id != 2 && id != 3) {
             return $this->redirectToRoute('app_home');
         }
 
-        $user = $session->get('user');
         if ($repo->isUserSubscribed($user->getId())) {
             return $this->redirectToRoute('app_home');
         }
         $price = $repo0->getAbonnementPriceByName('GP ' . $id);
         return $this->render('main/buy.html.twig', [
             'controller_name' => 'UserController',
-            'user' => $session->get('user'),
             'id' => $id,
             'price' => $price
         ]);
@@ -349,28 +336,27 @@ class UserController extends AbstractController
                 'Authorization' => 'Bearer '. $token
             ]
         ]);
+        
 
         
-        if ($response->getStatus() === "COMPLETED"){
+        if ($response->toArray()['status'] === "COMPLETED"){
             return new JsonResponse(['status' => 'success'], 200);
         }
         return new JsonResponse(['status' => 'error'], 400);
     }
+    
     #[Route('/dashboard/manageusers', name: 'app_usermgmt')]
-    public function manageUsers(SessionInterface $session, UserRepository $repo): Response
+    public function manageUsers(UserRepository $repo): Response
     {
-        $user = $session->get('user');
         return $this->render('dashboard/userlist.html.twig', [
             'controller_name' => 'UserController',
-            'user' => $session->get('user'),
             'users' => $repo->findAll()
         ]);
     }
 
     #[Route('/dashboard/manageuser/{id}', name: 'app_user_edit')]
-    public function manageUser(SessionInterface $session, UserRepository $repo, Request $req, ManagerRegistry $reg, $id): Response
+    public function manageUser(UserRepository $repo, Request $req, ManagerRegistry $reg, $id): Response
     {
-        $user = $session->get('user');
         $useredit = $repo->findUserById($id);
         $form = $this->createForm(ModifyUserType::class, $useredit);
         $form->handleRequest($req);
@@ -404,16 +390,15 @@ class UserController extends AbstractController
         }
         return $this->render('dashboard/profile.html.twig', [
             'controller_name' => 'UserController',
-            'user' => $user,
             'useredit' => $useredit,
             'form' => $form->createView()
         ]);
     }
 
     #[Route('/dashboard/profile', name: 'app_dashboard_profile')]
-    public function dashboardProfile(SessionInterface $session, UserRepository $repo, Request $req, ManagerRegistry $reg): Response
+    public function dashboardProfile(UserRepository $repo, Request $req, ManagerRegistry $reg): Response
     {
-        $user = $session->get('user');
+        $user = $this->getUser();
         $form = $this->createForm(ModifyUserType::class, $user);
         $form->handleRequest($req);
         if($form->isSubmitted() ){
@@ -452,14 +437,14 @@ class UserController extends AbstractController
     }
 
     #[Route('/dashboard/deleteuser/{id}', name: 'app_user_delete')]
-    public function deleteUser(SessionInterface $session, UserRepository $repo, $id, ManagerRegistry $reg): Response
+    public function deleteUser( UserRepository $repo, $id, ManagerRegistry $reg): Response
     {
-        $user = $session->get('user');
         $userdel = $repo->findUserById($id);
         $reg->getManager()->remove($userdel);
         $reg->getManager()->flush();
         if ($user->getId() == $userdel->getId()) {
-            $session->remove('user');
+            $this->get('security.token_storage')->setToken(null);
+            $this->get('session')->invalidate();
             return $this->redirectToRoute('app_login');
         }
         return $this->redirectToRoute('app_usermgmt');

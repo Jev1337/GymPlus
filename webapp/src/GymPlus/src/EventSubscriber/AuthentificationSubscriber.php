@@ -9,22 +9,22 @@ use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use App\Repository\UserRepository;
+use Symfony\Component\Security\Core\Security;
 
 class AuthentificationSubscriber implements EventSubscriberInterface
 {
     private $urlGenerator;
-    private $session;
-    private $userRepository;
 
-    public function __construct(UrlGeneratorInterface $urlGenerator, SessionInterface $session, UserRepository $userRepository)
+    public function __construct(UrlGeneratorInterface $urlGenerator, UserRepository $userRepository, Security $security)
     {
         $this->urlGenerator = $urlGenerator;
-        $this->session = $session;
         $this->userRepository = $userRepository;
+        $this->security = $security;
     }
 
     public function onKernelRequest(RequestEvent $event): void
     {   
+        
         $currentRoute = $event->getRequest()->attributes->get('_route');
 
         /** These arrays represent the routes that require authentication and the routes that each role can access
@@ -40,31 +40,17 @@ class AuthentificationSubscriber implements EventSubscriberInterface
         // Routes that ONLY clients can access
         $clientRoutes = ['app_home', 'app_subs', 'app_buy', 'app_profile', 'app_objectif', 'app_Schedule_objectif', 'event_join', 'event_leave','app_eventsf','getAll_post','rewards','points'];
         // Routes that staff can access
-        $staffRoutes = ['app_events', 'eventb', 'event_delete', 'event_edit','eventParticipant_kick','eventParticipant'];
+        $staffRoutes = ['app_dashboard', 'app_events', 'eventb', 'event_delete', 'event_edit','eventParticipant_kick','eventParticipant'];
         // Routes that ONLY admin can access
         $adminRoutes = $staffRoutes;
         $adminRoutes = array_merge($adminRoutes, 
             ['app_usermgmt', 'app_user_delete', 'app_user_edit', 'app_photo_admin', 'app_usermgmt']
         );
-
-
-        // Check if the user is authenticated
-        $user = $this->session->get('user');
         
+        // Get the current user
+        $user = $this->security->getUser();
+
         if ($user) {
-
-            // Refresh the user data in the session
-            $user = $this->userRepository->findUserById($user->getId());
-
-            // If the user does not exist in the database, log them out
-            if (!$user) {
-                $this->session->remove('user');
-                $event->setResponse(new RedirectResponse($this->urlGenerator->generate('app_login')));
-                return;
-            }
-
-            // Update the user data in the session  
-            $this->session->set('user', $user);
             
             if ($user->getRole() == 'client' && (in_array($currentRoute, $staffRoutes) || in_array($currentRoute, $adminRoutes))) {
                 $event->setResponse(new RedirectResponse($this->urlGenerator->generate('app_home')));
@@ -91,7 +77,8 @@ class AuthentificationSubscriber implements EventSubscriberInterface
             $event->setResponse(new RedirectResponse($this->urlGenerator->generate('app_login')));
             return;
         }
-
+        
+        
        
 
     }
@@ -102,4 +89,8 @@ class AuthentificationSubscriber implements EventSubscriberInterface
             KernelEvents::REQUEST => 'onKernelRequest',
         ];
     }
+    
 }
+
+
+?>

@@ -52,7 +52,7 @@
                                             <img style="width:3rem; height:3rem; border-radius:50%" src="{{asset('profileuploads/' ~ user.photo)}}" alt="image" />
                                             <div>
                                                 <h5 class="card-title">
-                                                    {{ user.username }}
+                                                    {{ app.user.username }}
                                                 </h5>
                                                 <div class="">
                                                     {{ post.date ? post.date|date('Y-m-d') : '' }}

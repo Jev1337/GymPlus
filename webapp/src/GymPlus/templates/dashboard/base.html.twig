@@ -752,12 +752,12 @@
 							-->
                             <li class="nav-item dropdown header-profile">
                                 <a class="nav-link" href="javascript:void(0)" role="button" data-toggle="dropdown">
-                                    <img src="{{asset('profileuploads/' ~ user.photo)}}" width="20" alt=""/>
+                                    <img src="{{asset('profileuploads/' ~ app.user.photo)}}" width="20" alt=""/>
 									<div class="header-info">
 										<span class="text-black"><strong>
-											{{ user.username }}
+											{{ app.user.username }}
 										</strong></span>
-										<p class="fs-12 mb-0">{{ user.role|capitalize }}</p>
+										<p class="fs-12 mb-0">{{ app.user.role|capitalize }}</p>
 									</div>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right">
@@ -810,10 +810,10 @@
 							<span class="nav-text">User Management</span>
 						</a>
                         <ul aria-expanded="false">
-							{% if user.role == "admin" %}
+							{% if app.user.role == "admin" %}
                             	<li><a href="{{ path('app_usermgmt') }}">Manage Accounts</a></li>
 							{% endif %}
-                            <li><a href="./app-new-user.html">Manage Subscriptions</a></li>
+                            <li><a href="./app-new-app.user.html">Manage Subscriptions</a></li>
                         </ul>
                     </li>
 					<li>

@@ -70,10 +70,10 @@
                                 <tbody>
            {% for user in participantsUsers %}
             <tr>
-                <td><strong class="text-black">{{ user.id }}</strong></td>
-                <td>{{ user.firstname }}</td>
-                <td>{{ user.lastname }}</td>
-                <td>{{ user.username }}</td>
+                <td><strong class="text-black">{{ app.user.id }}</strong></td>
+                <td>{{ app.user.firstname }}</td>
+                <td>{{ app.user.lastname }}</td>
+                <td>{{ app.user.username }}</td>
                 <td>
                     <a href="{{ path('eventParticipant_kick', {'userId': user.id, 'eventDetailsId': event.id}) }}" class="btn btn-danger">Kick</a>
                 </td>

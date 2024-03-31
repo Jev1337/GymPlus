@@ -46,7 +46,7 @@
 								</h2>
 								<div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionFaq">
 									<div class="accordion-body">
-										<p class="m-b0">You are logged in as {{user.username}}</p>
+										<p class="m-b0">You are logged in as {{app.user.username}}</p>
 									</div>
 								</div>
 							</div>
@@ -197,7 +197,7 @@
 			},
             // Call your server to finalize the transaction
             onApprove: function(data, actions) {
-                return fetch('/payment/validate?order=' + data.orderID + "&user={{user.id}}&gp={{id}}", {
+                return fetch('/payment/validate?order=' + data.orderID + "&user={{app.user.id}}&gp={{id}}", {
                     method: 'get'
                 }).then(function(res) {
                     return res.json();

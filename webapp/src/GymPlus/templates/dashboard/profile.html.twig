@@ -16,7 +16,7 @@
 					</button><strong>Reminder:</strong> You are currently previewing the profile of <strong>{{useredit.firstname|capitalize}} {{useredit.lastname|capitalize}}</strong>. Proceed with caution.
 				</div>
 				
-					{% if user.id == useredit.id %}
+					{% if app.user.id == useredit.id %}
 					<div class="alert alert-danger solid alert-right-icon alert-dismissible fade show">
 						<span><i class="mdi mdi-alert"></i></span>
 						<button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span><i class="mdi mdi-close"></i></span>
@@ -87,7 +87,7 @@
 
 
                                 <div class="profile-blog mb-5">
-									{% if user.role == 'admin' %}
+									{% if app.user.role == 'admin' %}
 									<form id="imageForm" action="/api/dashboard/modifyImage/{{useredit.id}}" method="post" enctype="multipart/form-data" style="display: none;">
 									{% else %}
 									<form id="imageForm" action="/api/modifyImage" method="post" enctype="multipart/form-data" style="display: none;">
@@ -211,7 +211,7 @@
 	{{ parent() }}
 	<script>
 
-		{% if user.role == 'staff' %}
+		{% if app.user.role == 'staff' %}
 			document.getElementById('modifyForm').addEventListener('submit', function(e) {
 				
 			if(document.getElementById('modify_user_numTel').value != {{ useredit.numTel }}) {

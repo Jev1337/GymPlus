@@ -1,10 +1,10 @@
 {% extends "main/base.html.twig" %}
-{% block body %}
-    <div class="page-content bg-white">
+{% block content %}
+    <div class="page-content bg-white" style="margin-top:5rem;">
         <section class="content-inner">
             <div class="container">
                 <div class="row justify-content-center gap-5">
-                <div class="container d-grid shadow p-3 mb-5 rounded" style="width: 50rem;">
+                <div class="container d-grid shadow p-3 mb-5 rounded align-items-center" style="width: 50rem; height: 10rem; ">
                 {{ form_start(form) }}
                     {{ form_widget(form.content, {'attr': {'class': 'form-control rounded', 'placeholder': 'Express your thoughts' }}
                     ) }}                         

@@ -20,7 +20,11 @@ class PostController extends AbstractController
     {
         $em = $manager->getManager();
         $dateImmutable = date_create('now');
+        
         $user = $session->get('user');
+        if ($user->getRole() != 'client') {
+            return $this->redirectToRoute('app_dashboard');
+        }
 
         $post = new Post();
         $post->setDate($dateImmutable);
@@ -45,31 +49,7 @@ class PostController extends AbstractController
             'form' => $form
         ]);
     }
-    #[Route('/post/add', name: 'add_post')]
-    public function addPosts(Request $req, ManagerRegistry $manager,SessionInterface $session): Response
-    {
-        $user = $session->get('user');
-        $em = $manager->getManager();
-        $dateImmutable = date_create('now');
-
-        $post = new Post();
-        $post->setDate($dateImmutable);
-        $post->setNbComnts(0);
-        $post->setIdUser($user->getId());
-        $post->setLikes(0);
-        $form = $this->createForm(PostType::class, $post); //bch thot les info mte3i ml formulaire lel $author
-        $form->handleRequest($req); //bch te5ou request eli tbaathet mel form
-        if ($form->isSubmitted()) {
-            $em->persist($post);
-            $em->flush();
-            return $this->redirectToRoute('getAll_post');
-        }
-
-        return $this->renderForm('main/post/addNewPost.html.twig', [ //fi3ou4 render bch n9oul raw bch nraja3 formulaire
-            "form" => $form,
-            "user" => $user
-        ]);
-    }
+    
     #[Route('/post/{id}', name: 'update_post')]
     public function updatePosts(Request $req, $id, SessionInterface $session, PostRepository $rep, ManagerRegistry $manager): Response
     {

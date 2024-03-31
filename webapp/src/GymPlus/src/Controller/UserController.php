@@ -115,7 +115,10 @@ class UserController extends AbstractController
         $verificationCheck = $twilio->verify->v2->services("VA10dd8bfd053741ce7361fd967c83a1e6")
                                    ->verificationChecks
                                    ->create(["to"=> "whatsapp:+216. " . $phone, "code" => $code]);
-        return new Response($verificationCheck->status, 200);
+        if ($verificationCheck->status == 'approved') {
+            return new JsonResponse(['status' => 'success'], 200);
+        }
+        return new JsonResponse(['status' => 'error'], 400);
     }
 
     
@@ -203,6 +206,14 @@ class UserController extends AbstractController
                 }
             }else{
                 $data = $form->getData();
+                if ($repo->findUserByUsername($data->getUsername()) && $repo->findUserByUsername($data->getUsername())->getId() != $user->getId()){
+                    $this->addFlash('error', 'Username already exists');
+                    return $this->redirectToRoute('app_profile');
+                }
+                if ($repo->findUserByPhone($data->getNumTel()) && $repo->findUserByPhone($data->getNumTel())->getId() != $user->getId()) {
+                    $this->addFlash('error', 'Phone number already exists, please remove it from the other account!');
+                    return $this->redirectToRoute('app_profile');
+                }
                 $user->setUsername($data->getUsername());
                 $user->setNumTel($data->getNumTel());
                 $user->setAdresse($data->getAdresse());
@@ -211,6 +222,7 @@ class UserController extends AbstractController
                 $user->setLastname($data->getLastname());
                 $reg->getManager()->persist($user);
                 $reg->getManager()->flush();
+                $this->addFlash('success', 'User updated successfully!');
                 return $this->redirectToRoute('app_profile');
             }
         }
@@ -369,6 +381,15 @@ class UserController extends AbstractController
                 }
             }else{
                 $data = $form->getData();
+                $data = $form->getData();
+                if ($repo->findUserByUsername($data->getUsername()) && $repo->findUserByUsername($data->getUsername())->getId() != $useredit->getId()){
+                    $this->addFlash('error', 'Username already exists');
+                    return $this->redirectToRoute('app_dashboard_profile');
+                }
+                if ($repo->findUserByPhone($data->getNumTel()) && $repo->findUserByPhone($data->getNumTel())->getId() != $useredit->getId()) {
+                    $this->addFlash('error', 'Phone number already exists, please remove it from the other account!');
+                    return $this->redirectToRoute('app_dashboard_profile');
+                }
                 $useredit->setUsername($data->getUsername());
                 $useredit->setNumTel($data->getNumTel());
                 $useredit->setAdresse($data->getAdresse());
@@ -402,6 +423,14 @@ class UserController extends AbstractController
                 }
             }else{
                 $data = $form->getData();
+                if ($repo->findUserByUsername($data->getUsername()) && $repo->findUserByUsername($data->getUsername())->getId() != $user->getId()){
+                    $this->addFlash('error', 'Username already exists');
+                    return $this->redirectToRoute('app_dashboard_profile');
+                }
+                if ($repo->findUserByPhone($data->getNumTel()) && $repo->findUserByPhone($data->getNumTel())->getId() != $user->getId()) {
+                    $this->addFlash('error', 'Phone number already exists, please remove it from the other account!');
+                    return $this->redirectToRoute('app_dashboard_profile');
+                }
                 $user->setUsername($data->getUsername());
                 $user->setNumTel($data->getNumTel());
                 $user->setAdresse($data->getAdresse());

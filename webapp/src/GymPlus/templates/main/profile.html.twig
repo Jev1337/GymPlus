@@ -53,12 +53,7 @@
 					</div>
 					
 					<div class="card-container col-lg-8 col-md-6">
-					{% for message in app.flashes('success') %}
-								<div class="alert alert-success">
-									<i class="fa-solid fa-check"></i>
-									{{ message }}
-								</div>
-							{% endfor %}
+
 							{% for message in app.flashes('error') %}
 								<div class="alert alert-danger">
 									<i class="fa-solid fa-times"></i>
@@ -170,6 +165,59 @@
 {% block js %}
 	{{ parent() }}
 	<script>
+	
+		document.getElementById('form-0').addEventListener('submit', function(e) {
+				
+			if(document.getElementById('modify_user_numTel').value != {{ user.numTel }}) {
+				e.preventDefault();
+				const req = new XMLHttpRequest();
+				const num = document.getElementById('modify_user_numTel').value;
+				req.open('GET', '/api/sendSms?phone=' + document.getElementById('modify_user_numTel').value);
+				req.send();
+				Swal.fire({
+				title: "Please enter the confirmation code",
+				input: "text",
+				inputAttributes: {
+					autocapitalize: "off"
+				},
+				showCancelButton: true,
+				confirmButtonText: "Confirm",
+				showLoaderOnConfirm: true,
+				
+				preConfirm: async (code) => {
+					try {
+					const githubUrl = `
+						/api/verifyPhone?phone=${num}&code=${code}
+					`;
+					const response = await fetch(githubUrl);
+					if (!response.ok) {
+						return Swal.showValidationMessage(`
+						${JSON.stringify(await response.json())}
+						`);
+					}
+					return response.json();
+					} catch (error) {
+					Swal.showValidationMessage(`
+						Error validating code, please try again.
+					`);
+				}
+			},
+			allowOutsideClick: () => !Swal.isLoading()
+				}).then((result) => {
+				if (result.value.status === "success") {
+					console.log(result);
+					document.getElementById('form-0').submit();
+				}});
+			}
+
+			});
+
+			{% for message in app.flashes('success') %}
+			{% if loop.first %}
+				swal("{{ message }}", "", "success")
+			{% endif %}
+			
+			{% endfor %}
 		document.getElementById('userphoto').addEventListener('click', function() {
 			document.getElementById('imageInput').click();
 		});

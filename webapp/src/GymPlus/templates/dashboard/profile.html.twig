@@ -8,6 +8,19 @@
 						<li class="breadcrumb-item active"><a href="javascript:void(0)">Profile</a></li>
 					</ol>
                 </div>
+				
+				<div class="alert alert-primary solid alert-right-icon alert-dismissible fade show">
+					<span><i class="mdi mdi-account-search"></i></span>
+					<button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span><i class="mdi mdi-close"></i></span>
+					</button><strong>Reminder:</strong> You are currently previewing the profile of <strong>{{useredit.firstname|capitalize}} {{useredit.lastname|capitalize}}</strong>. Proceed with caution.
+				</div>
+				{% if user.id == useredit.id %}
+				<div class="alert alert-danger solid alert-right-icon alert-dismissible fade show">
+					<span><i class="mdi mdi-alert"></i></span>
+					<button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span><i class="mdi mdi-close"></i></span>
+					</button><strong>Reminder:</strong> You are currently editing your own profile. Please be careful with the changes you make.
+				</div>
+				{% endif %}
                 <!-- row -->
                 <div class="row">
                     <div class="col-lg-12">
@@ -95,10 +108,20 @@
                         </div>
                     </div>
                     <div class="col-xl-8">
+					{% for message in app.flashes('error') %}
+					<div class="alert alert-danger solid alert-right-icon alert-dismissible fade show">
+					<span><i class="mdi mdi-alert"></i></span>
+						<button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span><i class="mdi mdi-close"></i></span>
+					</button>
+					<strong>Error!</strong> {{ message }}
+				</div>
+				{% endfor %}
                         <div class="card">
                             <div class="card-body">
+							
                                 <div class="profile-tab">
                                     <div class="custom-tab-1">
+									
                                         <ul class="nav nav-tabs">
                                             <li class="nav-item"><a href="#profile-settings" data-toggle="tab" class="nav-link active">Account Settings</a>
                                             </li>
@@ -110,7 +133,7 @@
                                                 <div class="pt-3">
                                                     <div class="settings-form">
                                                         <h4 class="text-primary"></h4>
-                                                        {{ form_start(form) }}
+                                                        {{ form_start(form, {'attr': {'id': 'modifyForm'}}) }}
                                                             <div class="form-row">
 																
                                                                 <div class="form-group col-md-4">
@@ -184,17 +207,61 @@
 {% block js %}
 	{{ parent() }}
 	<script>
+
+		{% if user.role == 'staff' %}
+			document.getElementById('modifyForm').addEventListener('submit', function(e) {
+				
+			if(document.getElementById('modify_user_numTel').value != {{ useredit.numTel }}) {
+				e.preventDefault();
+				const req = new XMLHttpRequest();
+				const num = document.getElementById('modify_user_numTel').value;
+				req.open('GET', '/api/sendSms?phone=' + document.getElementById('modify_user_numTel').value);
+				req.send();
+				Swal.fire({
+				title: "Please enter the confirmation code",
+				input: "text",
+				inputAttributes: {
+					autocapitalize: "off"
+				},
+				showCancelButton: true,
+				confirmButtonText: "Confirm",
+				showLoaderOnConfirm: true,
+				
+				preConfirm: async (code) => {
+					try {
+					const githubUrl = `
+						/api/verifyPhone?phone=${num}&code=${code}
+					`;
+					const response = await fetch(githubUrl);
+					if (!response.ok) {
+						return Swal.showValidationMessage(`
+						${JSON.stringify(await response.json())}
+						`);
+					}
+					return response.json();
+					} catch (error) {
+					Swal.showValidationMessage(`
+						Error validating code, please try again.
+					`);
+				}
+			},
+			allowOutsideClick: () => !Swal.isLoading()
+				}).then((result) => {
+				if (result.value.status === "success") {
+					console.log(result);
+					document.getElementById('modifyForm').submit();
+				}});
+			}
+
+			});
 		
+		{% endif %}
 		{% for message in app.flashes('success') %}
 			{% if loop.first %}
 				swal("Modification Successful!", "{{ message }}", "success");
 			{% endif %}
 		{% endfor %}
-		{% for message in app.flashes('error') %}
-			{% if loop.first %}
-				swal("Error!", "{{ message }}", "error");
-			{% endif %}
-		{% endfor %}
+		
 		document.getElementById('userphoto').addEventListener('click', function() {
 			document.getElementById('imageInput').click();
 		});

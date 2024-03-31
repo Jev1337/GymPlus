@@ -55,7 +55,7 @@
 
                 <h4 class="dz-title"><a href="event-detail.html">{{ event.event.name }}</a></h4>
                 <p>Type: {{ event.event.type }}</p>
-                <p>Duration: {{ event.event.duree }}</p>
+                <p>Duration: {{ event.event.duree }} Minutes</p>
                 <p>Number of Places: {{ event.event.nbPlaces }}</p>
                 <form action="{{ event.isUserParticipant ? path('event_leave', {'id': event.event.id}) : path('event_join', {'id': event.event.id}) }}" method="post">
     <button type="submit" class="btn btn-skew appointment-btn {{ event.isUserParticipant ? 'btn-danger' : 'btn-primary' }}">

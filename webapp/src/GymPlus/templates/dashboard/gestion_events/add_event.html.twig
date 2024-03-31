@@ -4,18 +4,58 @@
     <h1 style="text-align: center;"> Add event </h1>
 
     <style>
+    
         .centered-form {
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh; /* This will take the full height of the viewport */
-            flex-direction: column; /* This will stack the items vertically */
+            height: 100vh;
+            flex-direction: column;
+        }
+        .form-box {
+            background-color: #f2f2f2;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.15);
+            width: 50%;
+            margin: auto;
+        }
+        .styled-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .styled-table td {
+            padding: 10px;
         }
     </style>
 
-    {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'class': 'centered-form'}}) }}
-    <table class="styled-table">
-        
+    <div class="form-box">
+        {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'class': 'centered-form'}}) }}
+        <table class="styled-table">
+        <tr>
+            <td>{{ form_label(form.name) }}</td>
+            <td>{{ form_widget(form.name) }}</td>
+            <td>{{ form_errors(form.name) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.type) }}</td>
+            <td>{{ form_widget(form.type, {'attr': {'class': 'custom-class'}}) }}</td>
+            <td>{{ form_errors(form.type) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.eventDate) }}</td>
+            <td>{{ form_widget(form.eventDate) }}</td>
+            <td>{{ form_errors(form.eventDate) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.duree) }}</td>
+            <td>{{ form_widget(form.duree) }}</td>
+            <td>{{ form_errors(form.duree) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.nbPlaces) }}</td>
+            <td>{{ form_widget(form.nbPlaces) }}</td>
+            <td>{{ form_errors(form.nbPlaces) }}</td>
     </table>
     {{ form_end(form) }}
 {% endblock %}

@@ -39,7 +39,7 @@
     <td><strong class="text-black">{{ loop.index }}</strong></td>
     <td>{{ event.name }}</td>
     <td>{{ event.type }}</td>
-    <td>{{ event.eventDate|date('Y-m-d') }}</td>
+    <td>{{ event.eventDate|date('Y-m-d h:i A') }}</td>
     <td>{{ event.duree }}</td>
     <td>{{ event.nbPlaces ~ '/' ~ event.nbTotal }}</td>
     <td>

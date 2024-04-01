@@ -129,3 +129,25 @@
 		
 	</div>
 {% endblock %}
+{% block js %}
+{{parent()}}
+<script>
+    {% if app.flashes('claimStatus')|length > 0 %}
+        {% set status = app.flashes('claimStatus')[0] %}
+        if ('{{ status }}' === 'success') {
+            Swal.fire({
+                title: "Good job!",
+                text: "You clicked the button!",
+                icon: "success"
+            });
+        } else if ('{{ status }}' === 'error') {
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Something went wrong!",
+                footer: '<a href="#">Why do I have this issue?</a>'
+            });
+        }
+    {% endif %}
+</script>
+{% endblock %}

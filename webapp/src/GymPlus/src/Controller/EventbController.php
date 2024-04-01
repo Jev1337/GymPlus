@@ -19,7 +19,7 @@ use App\Form\EventDetailsEditType;
 
 use Endroid\QrCode\Builder\BuilderInterface;
 use Endroid\QrCodeBundle\Response\QrCodeResponse;
-
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 
 class EventbController extends AbstractController
@@ -56,7 +56,7 @@ class EventbController extends AbstractController
     }
     #[Route('/eventb', name: 'eventb')]
     public function eventb(ManagerRegistry $registry): Response
-    {   
+    {      /** @var User $user */
         $user = $this->getUser();
         
         $events = $registry->getRepository(EventDetails::class)->findAll();
@@ -65,6 +65,7 @@ class EventbController extends AbstractController
             'controller_name' => 'EventbController',
             'events' => $events, 
             'user' => $user,
+            
         ]);
     }
 #[Route('/eventb/delete/{id}', name: 'event_delete')]
@@ -107,7 +108,7 @@ public function delete($id, ManagerRegistry $registry): Response
     public function eventf(ManagerRegistry $registry): Response
 {    /** @var User $user */
     $user = $this->getUser();
-    
+    $userPoints = $user->getEventPoints();
     $events = $registry->getRepository(EventDetails::class)->findAll();
 
     $eventsWithUserStatus = [];
@@ -119,7 +120,8 @@ public function delete($id, ManagerRegistry $registry): Response
 
         $eventsWithUserStatus[] = [
             'event' => $event,
-            'isUserParticipant' => $isUserParticipant
+            'isUserParticipant' => $isUserParticipant,
+            
         ];
     }
 
@@ -127,10 +129,11 @@ public function delete($id, ManagerRegistry $registry): Response
         'controller_name' => 'EventbController',
         'events' => $eventsWithUserStatus,
         'user' => $user,
+        'user_points' => $userPoints,
     ]);
 }
     #user join event by clicking on join
-    
+    #user gets 100 points for joining an event 
     #[Route('/eventf/join/{id}', name: 'event_join')]
     public function join($id, ManagerRegistry $registry, BuilderInterface $qrCodeBuilder): Response
     {
@@ -139,24 +142,23 @@ public function delete($id, ManagerRegistry $registry): Response
         
         $event = $registry->getRepository(EventDetails::class)->find($id);
         $event->setNbPlaces($event->getNbPlaces()-1);
+        $user->setEventPoints($user->getEventPoints() + 100);
         $entityManager = $registry->getManager();
+        $entityManager->persist($user);
+        $entityManager->flush();
+        $entityManager->persist($event);
         $entityManager->flush();
         $eventParticipant = new EventParticipants();
         $eventParticipant->setUserId($user->getId());
         $eventParticipant->setEventDetailsId($id);
         $entityManager->persist($eventParticipant);
         $entityManager->flush();
+        
     
-         // Generate QR code with event details
-    $qrCode = $qrCodeBuilder
-        ->data('Event ID: ' . $id)
-        ->build();
 
-    // Add flash message
-    $this->addFlash('success', 'User joined the event successfully!');
+        return $this->redirectToRoute('app_eventsf');
+        //redirect to route appeventsf
 
-    // Return QR code as a response
-    return new QrCodeResponse($qrCode);
     }
 #[Route('/eventf/leave/{id}', name: 'event_leave')]
 public function leaveEvent($id, ManagerRegistry $registry)
@@ -165,6 +167,14 @@ public function leaveEvent($id, ManagerRegistry $registry)
    
     $event = $registry->getRepository(EventDetails::class)->find($id);
         $event->setNbPlaces($event->getNbPlaces()+1);
+        $user->setEventPoints($user->getEventPoints() - 100);
+        $entityManager = $registry->getManager();
+        $entityManager->persist($user);
+        $entityManager->flush();
+        $entityManager->persist($event);
+        $entityManager->flush();
+    
+
 
     $eventParticipant = $registry->getRepository(EventParticipants::class)->findOneBy([
 
@@ -238,10 +248,12 @@ public function rewards(ManagerRegistry $registry, SessionInterface $session): R
 #rewards hub
 #[Route('/rewards/whey', name: 'whey')]
 public function claimWhey(Request $request, EntityManagerInterface $entityManager): Response
-{   /** @var User $user */
+{
+    /** @var User $user */
     $user = $this->getUser();
     if ($user === null) {
-        return new Response('No user is logged in');
+        $this->addFlash('error', 'No user is logged in');
+        return $this->redirectToRoute('login'); // Redirect to login page or any other page
     }
 
     if ($user->getEventPoints() >= 3500) {
@@ -251,11 +263,15 @@ public function claimWhey(Request $request, EntityManagerInterface $entityManage
         $entityManager->persist($user);
         $entityManager->flush();
 
-        return new Response('Claim successful');
-    } else {
-        return new Response('Not enough points');
-    }
+        $this->addFlash('claimStatus', 'success');
+} else {
+    $this->addFlash('claimStatus', 'error');
 }
+
+    return $this->redirectToRoute('rewards'); // Redirect back to the rewards page
+}
+
+// D
 #[Route('/rewards/belt', name: 'belt')]
 public function claimBelt(Request $request, EntityManagerInterface $entityManager): Response
 {   /** @var User $user */

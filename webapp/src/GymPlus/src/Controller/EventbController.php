@@ -19,7 +19,7 @@ use App\Form\EventDetailsEditType;
 
 use Endroid\QrCode\Builder\BuilderInterface;
 use Endroid\QrCodeBundle\Response\QrCodeResponse;
-
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 
 class EventbController extends AbstractController
@@ -248,10 +248,12 @@ public function rewards(ManagerRegistry $registry, SessionInterface $session): R
 #rewards hub
 #[Route('/rewards/whey', name: 'whey')]
 public function claimWhey(Request $request, EntityManagerInterface $entityManager): Response
-{   /** @var User $user */
+{
+    /** @var User $user */
     $user = $this->getUser();
     if ($user === null) {
-        return new Response('No user is logged in');
+        $this->addFlash('error', 'No user is logged in');
+        return $this->redirectToRoute('login'); // Redirect to login page or any other page
     }
 
     if ($user->getEventPoints() >= 3500) {
@@ -261,11 +263,15 @@ public function claimWhey(Request $request, EntityManagerInterface $entityManage
         $entityManager->persist($user);
         $entityManager->flush();
 
-        return new Response('Claim successful');
-    } else {
-        return new Response('Not enough points');
-    }
+        $this->addFlash('claimStatus', 'success');
+} else {
+    $this->addFlash('claimStatus', 'error');
 }
+
+    return $this->redirectToRoute('rewards'); // Redirect back to the rewards page
+}
+
+// D
 #[Route('/rewards/belt', name: 'belt')]
 public function claimBelt(Request $request, EntityManagerInterface $entityManager): Response
 {   /** @var User $user */

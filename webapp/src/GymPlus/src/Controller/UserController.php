@@ -45,6 +45,9 @@ class UserController extends AbstractController
     #[Route('/auth/login', name: 'app_login')]
     public function login(Request $request, UserRepository $repo, Recaptcha3Validator $recaptcha3Validator): Response
     {
+        if ($this->getUser()) {
+            return $this->redirectToRoute('app_home');
+        }
         $form = $this->createForm(LoginType::class);
         $form->handleRequest($request);
         if($form->isSubmitted() ){

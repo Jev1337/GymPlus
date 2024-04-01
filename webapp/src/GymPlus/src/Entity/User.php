@@ -86,7 +86,7 @@ class User Implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?\DateTime $faceidTs;
 
-
+    
     #[ORM\ManyToMany(targetEntity: EventDetails::class, inversedBy: "user")]
     private Collection $eventDetails;
 

@@ -142,28 +142,46 @@
                                                                 <div class="form-group col-md-4">
                                                                     {{ form_label(form.username)}}
                                                                     {{ form_widget(form.username, {'attr': {'class': 'form-control'}}) }}
+																	<small class="text-danger">
+																			{{ form_errors(form.username) }}
+																	</small>
                                                                 </div>
                                                                 <div class="form-group col-md-4">
                                                                     {{ form_label(form.firstname)}}
                                                                     {{ form_widget(form.firstname, {'attr': {'class': 'form-control'}}) }}
+																	<small class="text-danger">
+																		{{ form_errors(form.firstname) }}
+																	</small>
                                                                 </div>
 																<div class="form-group col-md-4">
 																	{{ form_label(form.lastname)}}
 																	{{ form_widget(form.lastname, {'attr': {'class': 'form-control'}}) }}
+																	<small class="text-danger">
+																		{{ form_errors(form.lastname) }}
+																	</small>
 																</div>
                                                             </div>
 															<div class="form-row">
 																<div class="form-group col-md-4">
 																	{{ form_label(form.dateNaiss)}}
 																	{{ form_widget(form.dateNaiss, {'attr': {'class': 'form-control'}}) }}
+																	<small class="text-danger">
+																		{{ form_errors(form.dateNaiss) }}
+																	</small>
 																</div>
 																<div class="form-group col-md-4">
 																	{{ form_label(form.numTel)}}
 																	{{ form_widget(form.numTel, {'attr': {'class': 'form-control'}}) }}
+																	<small class="text-danger">
+																		{{ form_errors(form.numTel) }}
+																	</small>
 																</div>
 																<div class="form-group col-md-4">
 																	{{ form_label(form.adresse)}}
 																	{{ form_widget(form.adresse, {'attr': {'class': 'form-control'}}) }}
+																	<small class="text-danger">
+																		{{ form_errors(form.adresse) }}
+																	</small>
 																</div>
 															</div>
                                                             {{form_widget(form.submit, {'attr': {'class': 'btn btn-primary'}})}}

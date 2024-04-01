@@ -806,7 +806,7 @@
 					</li>
 					
 					<li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
-							<i class="fa fa-user"></i>
+							<i class="fa fa-users"></i>
 							<span class="nav-text">User Management</span>
 						</a>
                         <ul aria-expanded="false">
@@ -814,6 +814,16 @@
                             	<li><a href="{{ path('app_usermgmt') }}">Manage Accounts</a></li>
 							{% endif %}
                             <li><a href="./app-new-app.user.html">Manage Subscriptions</a></li>
+                        </ul>
+                    </li>
+					<li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
+							<i class="fa fa-sitemap"></i>
+							<span class="nav-text">Equipments</span>
+							
+						</a>
+                        <ul aria-expanded="false">
+                            <li><a href="{{ path('app_equipments') }}">Manage Equipments</a></li>
+                            <li><a href="{{ path('app_maintenances') }}">Manage Maintenances</a></li>
                         </ul>
                     </li>
 					<li>
@@ -828,6 +838,7 @@
                 </ul>
 				
 				<div class="copyright">
+
 					<p><strong>GymPlus Fitness Admin Dashboard</strong> © 2024 All Rights Reserved</p>
 					<p>Made with <span class="heart"></span> by UnityKnights</p>
 				</div>

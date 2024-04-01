@@ -88,10 +88,7 @@ class ModifyUserType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => User::class,
-            'validation_groups' => function (FormInterface $form) {
-                $data = $form->getData();
-                return null === $data->getId() ? ['Default', 'create'] : ['Default', 'update'];
-            },
+            'validation_groups' => ['update'],
         ]);
     }
 }

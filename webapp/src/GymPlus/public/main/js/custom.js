@@ -730,7 +730,9 @@ var PowerZone = function(){
 						return false;
 					}else
 					{
-						if (req.responseText == 'approved')
+						json = JSON.parse(req.responseText);
+						stat = json['status'];
+						if (stat == 'success')
 						{
 							//do nothing
 						}else
@@ -755,6 +757,7 @@ var PowerZone = function(){
 				
 			   //alert("You are on step "+stepNumber+" now");
 			   if (stepNumber == 2){
+				
 				history.replaceState(null, null, ' '); 	
 
 				document.getElementById('form-0').submit();

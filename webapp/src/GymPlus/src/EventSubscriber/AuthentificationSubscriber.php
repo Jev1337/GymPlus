@@ -35,12 +35,14 @@ class AuthentificationSubscriber implements EventSubscriberInterface
 
         // Routes that require authentication
         $protectedRoutes = ['app_subs', 'app_buy', 'app_profile', 'app_photo', 'app_logout', 'app_dashboard', 'app_objectif'
-        , 'app_Schedule_objectif', 'app_events', 'eventb', 'event_delete', 'event_edit', 'app_eventsf', 'event_join', 'event_leave', 'getAll_post'];
+        , 'app_Schedule_objectif', 'app_events', 'eventb', 'event_delete', 'event_edit', 'app_eventsf', 'event_join', 'event_leave', 'getAll_post'
+        , 'app_equipments', 'app_equipments_edit', 'app_equipments_delete', 'app_maintenances', 'app_maintenances_edit', 'app_maintenances_delete'];
 
         // Routes that ONLY clients can access
         $clientRoutes = ['app_home', 'app_subs', 'app_buy', 'app_profile', 'app_objectif', 'app_Schedule_objectif', 'event_join', 'event_leave','app_eventsf','getAll_post','rewards','points'];
         // Routes that staff can access
-        $staffRoutes = ['app_dashboard', 'app_events', 'eventb', 'event_delete', 'event_edit','eventParticipant_kick','eventParticipant'];
+        $staffRoutes = ['app_dashboard', 'app_events', 'eventb', 'event_delete', 'event_edit','eventParticipant_kick','eventParticipant', 'app_equipments', 'app_equipments_edit'
+        , 'app_equipments_delete', 'app_maintenances', 'app_maintenances_edit', 'app_maintenances_delete'];
         // Routes that ONLY admin can access
         $adminRoutes = $staffRoutes;
         $adminRoutes = array_merge($adminRoutes, 

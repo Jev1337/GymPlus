@@ -48,19 +48,16 @@ class UserController extends AbstractController
         if ($this->getUser()) {
             return $this->redirectToRoute('app_home');
         }
-        $form = $this->createForm(LoginType::class);
+        $userlog = new User();
+        $form = $this->createForm(LoginType::class, $userlog);
         $form->handleRequest($request);
         if($form->isSubmitted() ){
             if (!$form->isValid()) {
-                foreach ($form->getErrors(true) as $error) {
-                    $this->addFlash('error', $error->getMessage());
-                }
+               $this->addFlash('error', 'There was an error with the form, please check the fields and try again!');
             }else{
-                //$score = $recaptcha3Validator->getLastResponse()->getScore();
-                $data = $form->getData();
-                $user = $repo->findOneBy(['email' => $data['email']]);
+                $user = $repo->findUserByEmail($userlog->getEmail());
                 if($user){
-                    if(password_verify($data['password'], $user->getPassword())){
+                    if(password_verify($userlog->getPassword(), $user->getPassword())){
                         $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
                         $this->get('security.token_storage')->setToken($token);
                         $this->get('session')->set('_security_main', serialize($token));
@@ -123,53 +120,45 @@ class UserController extends AbstractController
     #[Route('/auth/signup', name: 'app_signup')]
     public function signup(Request $request, ManagerRegistry $reg, UserRepository $repo): Response
     {
-        
-        $form = $this->createForm(UserType::class);
+        if ($this->getUser()) {
+            return $this->redirectToRoute('app_home');
+        }
+        $usersig = new User();
+        $form = $this->createForm(UserType::class, $usersig);
         $form->handleRequest($request);
         
         if($form->isSubmitted() ){
             if(!$form->isValid()){
-                foreach($form->getErrors(true) as $error){
-                    $this->addFlash('error', $error->getMessage());
-                }
+                $this->addFlash('error', 'There was an error with the form, please check the fields and try again!');
             }else{
-                $data = $form->getData();
-                if ($repo->findUserByEmail($data->getEmail())) {
+                
+                if ($repo->findUserByEmail($usersig->getEmail())) {
                     $this->addFlash('error', 'Email already exists');
                     return $this->redirectToRoute('app_signup');
                 }
-                if ($repo->findUserByUsername($data->getUsername())) {
+                if ($repo->findUserByUsername($usersig->getUsername())) {
                     $this->addFlash('error', 'Username already exists');
                     return $this->redirectToRoute('app_signup');
                 }
-                if ($repo->findUserByPhone($data->getNumTel())) {
+                if ($repo->findUserByPhone($usersig->getNumTel())) {
                     $this->addFlash('error', 'Phone number already exists');
                     return $this->redirectToRoute('app_signup');
                 }
-                if ($repo->findUserById($data->getId())) {
+                if ($repo->findUserById($usersig->getId())) {
                     $this->addFlash('error', 'CIN already exists');
                     return $this->redirectToRoute('app_signup');
                 }
-                $user = new User();
-                $user->setEmail($data->getEmail());
-                $user->setPassword(password_hash($data->getPassword(), PASSWORD_DEFAULT));
-                $user->setRole('client');
-                $user->setUsername($data->getUsername());
-                $user->setNumTel($data->getNumTel());
-                $user->setAdresse($data->getAdresse());
-                $user->setFaceidTs(new \DateTime());
-                $user->setDateNaiss($data->getDateNaiss());
-                $user->setFirstname($data->getFirstname());
-                $user->setLastname($data->getLastname());
-                $user->setId($data->getId());
+                $usersig->setPassword(password_hash($usersig->getPassword(), PASSWORD_DEFAULT));
+                $usersig->setRole('client');
+                $usersig->setFaceidTs(new \DateTime());
                 $photo = $form['photo']->getData();
-                $filename = 'USERIMG' . $user->getId() . '.' . $photo->guessExtension();
+                $filename = 'USERIMG' . $usersig->getId() . '.' . $photo->guessExtension();
                 $targetdir = $this->getParameter('kernel.project_dir') . '/public/profileuploads/';
                 $photo->move($targetdir, $filename);
-                $user->setPhoto($filename);
-                $reg->getManager()->persist($user);
+                $usersig->setPhoto($filename);
+                $reg->getManager()->persist($usersig);
                 $reg->getManager()->flush();
-                $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
+                $token = new UsernamePasswordToken($usersig, null, 'main', $usersig->getRoles());
                 $this->get('security.token_storage')->setToken($token);
                 $this->get('session')->set('_security_main', serialize($token));
             }
@@ -198,9 +187,7 @@ class UserController extends AbstractController
         $form->handleRequest($request);
         if($form->isSubmitted() ){
             if (!$form->isValid()) {
-                foreach ($form->getErrors(true) as $error) {
-                    $this->addFlash('error', $error->getMessage());
-                }
+                $this->addFlash('error', 'There was an error with the form, please check the fields and try again!');
             }else{
                 $data = $form->getData();
                 if ($repo->findUserByUsername($data->getUsername()) && $repo->findUserByUsername($data->getUsername())->getId() != $user->getId()){
@@ -211,12 +198,6 @@ class UserController extends AbstractController
                     $this->addFlash('error', 'Phone number already exists, please remove it from the other account!');
                     return $this->redirectToRoute('app_profile');
                 }
-                $user->setUsername($data->getUsername());
-                $user->setNumTel($data->getNumTel());
-                $user->setAdresse($data->getAdresse());
-                $user->setDateNaiss($data->getDateNaiss());
-                $user->setFirstname($data->getFirstname());
-                $user->setLastname($data->getLastname());
                 $reg->getManager()->persist($user);
                 $reg->getManager()->flush();
                 $this->addFlash('success', 'User updated successfully!');
@@ -365,11 +346,8 @@ class UserController extends AbstractController
         $form->handleRequest($req);
         if($form->isSubmitted() ){
             if (!$form->isValid()) {
-                foreach ($form->getErrors(true) as $error) {
-                    $this->addFlash('error', $error->getMessage());
-                }
+                $this->addFlash('error', 'There was an error with the form, please check the fields and try again!');
             }else{
-                $data = $form->getData();
                 $data = $form->getData();
                 if ($repo->findUserByUsername($data->getUsername()) && $repo->findUserByUsername($data->getUsername())->getId() != $useredit->getId()){
                     $this->addFlash('error', 'Username already exists');
@@ -379,12 +357,7 @@ class UserController extends AbstractController
                     $this->addFlash('error', 'Phone number already exists, please remove it from the other account!');
                     return $this->redirectToRoute('app_dashboard_profile');
                 }
-                $useredit->setUsername($data->getUsername());
-                $useredit->setNumTel($data->getNumTel());
-                $useredit->setAdresse($data->getAdresse());
-                $useredit->setDateNaiss($data->getDateNaiss());
-                $useredit->setFirstname($data->getFirstname());
-                $useredit->setLastname($data->getLastname());
+            
                 $reg->getManager()->persist($useredit);
                 $reg->getManager()->flush();
                 $this->addFlash('success', 'User updated successfully!');
@@ -406,9 +379,7 @@ class UserController extends AbstractController
         $form->handleRequest($req);
         if($form->isSubmitted() ){
             if (!$form->isValid()) {
-                foreach ($form->getErrors(true) as $error) {
-                    $this->addFlash('error', $error->getMessage());
-                }
+                $this->addFlash('error', 'There was an error with the form, please check the fields and try again!');
             }else{
                 $data = $form->getData();
                 if ($repo->findUserByUsername($data->getUsername()) && $repo->findUserByUsername($data->getUsername())->getId() != $user->getId()){
@@ -419,28 +390,22 @@ class UserController extends AbstractController
                     $this->addFlash('error', 'Phone number already exists, please remove it from the other account!');
                     return $this->redirectToRoute('app_dashboard_profile');
                 }
-                $user->setUsername($data->getUsername());
-                $user->setNumTel($data->getNumTel());
-                $user->setAdresse($data->getAdresse());
-                $user->setDateNaiss($data->getDateNaiss());
-                $user->setFirstname($data->getFirstname());
-                $user->setLastname($data->getLastname());
                 $reg->getManager()->persist($user);
                 $reg->getManager()->flush();
                 $this->addFlash('success', 'User updated successfully!');
                 return $this->redirectToRoute('app_dashboard_profile');
             }
         }
+        
         return $this->render('dashboard/profile.html.twig', [
             'controller_name' => 'UserController',
-            'user' => $user,
             'useredit' => $user,
             'form' => $form->createView()
         ]);
     }
 
     #[Route('/dashboard/deleteuser/{id}', name: 'app_user_delete')]
-    public function deleteUser( UserRepository $repo, $id, ManagerRegistry $reg): Response
+    public function deleteUser(UserRepository $repo, $id, ManagerRegistry $reg): Response
     {
         $userdel = $repo->findUserById($id);
         $reg->getManager()->remove($userdel);

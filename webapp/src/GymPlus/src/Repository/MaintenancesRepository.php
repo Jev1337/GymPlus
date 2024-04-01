@@ -21,6 +21,21 @@ class MaintenancesRepository extends ServiceEntityRepository
         parent::__construct($registry, Maintenances::class);
     }
 
+    public function getMaintenances(): array
+    {
+        return $this->createQueryBuilder('m')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function getMaintenancesById(int $id): ?Maintenances
+    {
+        return $this->createQueryBuilder('m')
+            ->andWhere('m.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 //    /**
 //     * @return Maintenances[] Returns an array of Maintenances objects
 //     */

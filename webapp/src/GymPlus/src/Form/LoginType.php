@@ -27,17 +27,15 @@ class LoginType extends AbstractType
             ])
             ->add('captcha', Recaptcha3Type::class, [
                 'constraints' => new Recaptcha3(),
-                'action_name' => 'login',
-                'locale' => 'en',
+                'action_name' => 'login'
             ]);
             ;
-        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'validation_groups' => ['login'],
+            'validation_groups' => ['login', 'Default'],
         ]);
     }
 }

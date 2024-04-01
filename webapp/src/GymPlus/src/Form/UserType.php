@@ -13,8 +13,6 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormInterface;
-use Karser\Recaptcha3Bundle\Form\Recaptcha3Type;
-use Karser\Recaptcha3Bundle\Validator\Constraints\Recaptcha3;
 
 class UserType extends AbstractType
 {
@@ -88,12 +86,7 @@ class UserType extends AbstractType
         ])
         ->add('photo', FileType::class, [
             'required' => true,
-        ])
-        ->add('captcha', Recaptcha3Type::class, [
-            'constraints' => new Recaptcha3(),
-            'action_name' => 'login',
-            'locale' => 'en',
-        ])
+        ])  
         ;
     }
 
@@ -101,7 +94,7 @@ class UserType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => User::class,
-            'validation_groups' => ['create'],
+            'validation_groups' => ['create', 'Default'],
         ]);
     }
 }

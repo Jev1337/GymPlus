@@ -57,6 +57,8 @@ class User Implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $email;
 
     #[ORM\Column]
+    #[Assert\NotBlank(message: 'Please enter your role.', groups: ['admincreate'])]
+    #[Assert\Choice(choices: ['admin', 'client', 'staff'], message: 'Role must be either admin or user.', groups: ['admincreate'])]
     private ?string $role;
 
     #[ORM\Column]
@@ -72,7 +74,7 @@ class User Implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $adresse;
 
     #[ORM\Column]
-    #[Assert\NotBlank(message: 'Please upload your photo.')]
+    #[Assert\NotBlank(message: 'Please upload your photo.', groups: ['create'])]
     #[Assert\File(mimeTypes: ['image/jpeg', 'image/png'], mimeTypesMessage: 'Please upload a valid image file.', groups: ['create'])]
     #[Assert\Image(maxSize: '2M', maxSizeMessage: 'Please upload an image file that is less than 2MB.', groups: ['create'])]
     private ?string $photo;
@@ -85,10 +87,6 @@ class User Implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column]
     private ?\DateTime $faceidTs;
-
-    
-    #[ORM\ManyToMany(targetEntity: EventDetails::class, mappedBy: "user")]
-    private Collection $eventDetails;
 
     
     public function __construct()
@@ -180,9 +178,9 @@ class User Implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->plainPassword = null;
     }
 
-    public function getSalt()
+    public function getSalt(): ?string
     {
-        // not needed when using the "bcrypt" algorithm in security.yaml
+        return null;
     }
 
     public function setPassword(?string $password): static

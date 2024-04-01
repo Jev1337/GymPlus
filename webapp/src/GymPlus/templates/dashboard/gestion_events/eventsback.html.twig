@@ -1,8 +1,11 @@
 {% extends "dashboard/base.html.twig" %}
-
+{% block css %}
+	<!-- Datatable -->
+	<link href="{{asset('dashboard/vendor/datatables/css/jquery.dataTables.min.css')}}" rel="stylesheet">
+	{{ parent() }}
+{% endblock %}
 {% block content %}
-
-<div class="content-body default-height">
+<div class="content-body">
     <div class="container-fluid">
         <div class="page-titles">
             <ol class="breadcrumb">
@@ -11,17 +14,15 @@
             </ol>
         </div>
         <!-- row -->
-
         <div class="row">
-            <div class="col-lg-12">
+            <div class="col-12">
                 <div class="card">
                     <div class="card-header">
                         <h4 class="card-title">Events</h4>
                     </div>
                     <div class="card-body">
-                    <div class="table-title">Events</div>
-                        <div class="table-responsive custom-table">
-                            <table class="table table-responsive-md">
+                        <div class="table-responsive">
+                            <table id="example5" class="display min-w850">
                                 <thead>
                                     <tr>
                                         <th>#</th>
@@ -35,26 +36,26 @@
                                 </thead>
                                 <tbody>
                                     {% for event in events %}
-                                   <tr>
-    <td><strong class="text-black">{{ loop.index }}</strong></td>
-    <td>{{ event.name }}</td>
-    <td>{{ event.type }}</td>
-    <td>{{ event.eventDate|date('Y-m-d h:i A') }}</td>
-    <td>{{ event.duree }}</td>
-    <td>{{ event.nbPlaces ~ '/' ~ event.nbTotal }}</td>
-    <td>
-													<div class="dropdown">
-														<button type="button" class="btn btn-success light sharp" data-toggle="dropdown">
-															<svg width="20px" height="20px" viewBox="0 0 24 24" version="1.1"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><rect x="0" y="0" width="24" height="24"/><circle fill="#000000" cx="5" cy="12" r="2"/><circle fill="#000000" cx="12" cy="12" r="2"/><circle fill="#000000" cx="19" cy="12" r="2"/></g></svg>
-														</button>
-														<div class="dropdown-menu">
-															<a class="dropdown-item" href="{{ path('event_edit', {'id': event.id}) }}">Edit</a>
-															<a class="dropdown-item" href="{{ path('event_delete', {'id': event.id}) }}">Delete</a>
-                                                            <a class="dropdown-item" href="{{ path('eventParticipant', {'id': event.id}) }}">Participants</a>
-                                                        </div>
-													</div>
-												</td>
-</tr>
+                                    <tr>
+                                        <td><strong class="text-black">{{ loop.index }}</strong></td>
+                                        <td>{{ event.name }}</td>
+                                        <td>{{ event.type }}</td>
+                                        <td>{{ event.eventDate|date('Y-m-d h:i A') }}</td>
+                                        <td>{{ event.duree }}</td>
+                                        <td>{{ event.nbPlaces ~ '/' ~ event.nbTotal }}</td>
+                                        <td>
+                                            <div class="dropdown ms-auto text-end c-pointer">
+                                                <div class="btn-link" data-toggle="dropdown">
+                                                    <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><rect x="0" y="0" width="24" height="24"></rect><circle fill="#000000" cx="5" cy="12" r="2"></circle><circle fill="#000000" cx="12" cy="12" r="2"></circle><circle fill="#000000" cx="19" cy="12" r="2"></circle></g></svg>
+                                                </div>
+                                                <div class="dropdown-menu dropdown-menu-right">
+                                                    <a class="dropdown-item" href="{{ path('event_edit', {'id': event.id}) }}">Edit</a>
+                                                    <a class="dropdown-item" href="{{ path('event_delete', {'id': event.id}) }}">Delete</a>
+                                                    <a class="dropdown-item" href="{{ path('eventParticipant', {'id': event.id}) }}">Participants</a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
                                     {% else %}
                                     <tr>
                                         <td colspan="7" style="text-align: center;">No events found.</td>
@@ -63,11 +64,18 @@
                                 </tbody>
                             </table>
                         </div>
+                        <a href="{{ path('app_events') }}" class="btn btn-primary">Add</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+{% endblock %}
 
+{% block js %}
+    {{ parent() }}
+    <!-- Datatable -->
+    <script src="{{asset('dashboard/vendor/datatables/js/jquery.dataTables.min.js')}}"></script>
+    <script src="{{asset('dashboard/js/plugins-init/datatables.init.js')}}"></script>
 {% endblock %}

@@ -38,7 +38,7 @@ class EventDetailsEditType extends AbstractType
             ])
             ->add('eventDate')
             ->add('duree')
-            ->add('save', SubmitType::class);
+            ->add('Edit', SubmitType::class);
     }
     
    

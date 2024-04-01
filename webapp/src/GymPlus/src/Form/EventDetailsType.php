@@ -11,7 +11,7 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 class EventDetailsType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -30,10 +30,14 @@ class EventDetailsType extends AbstractType
                 ],
                 'placeholder' => 'Choose an event type',
             ])
-            ->add('eventDate')
+            ->add('eventDate', DateTimeType::class, [
+                'widget' => 'single_text',
+                'required' => true,
+            ]
+            )
             ->add('duree')
             ->add('nbPlaces')
-            ->add('save', SubmitType::class);
+            ->add('Add', SubmitType::class);
     }
     
 

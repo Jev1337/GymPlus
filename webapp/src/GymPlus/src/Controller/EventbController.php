@@ -20,6 +20,7 @@ use App\Form\EventDetailsEditType;
 use Endroid\QrCode\Builder\BuilderInterface;
 use Endroid\QrCodeBundle\Response\QrCodeResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Entity\BlackListed;
 
 
 class EventbController extends AbstractController
@@ -45,7 +46,7 @@ class EventbController extends AbstractController
             $entityManager->persist($event);
             $entityManager->flush();
     
-            return $this->redirectToRoute('app_events'); 
+            return $this->redirectToRoute('eventb'); 
         }
         return $this->render('dashboard\gestion_events/add_event.html.twig', [
             'controller_name' => 'EventbController',
@@ -105,9 +106,22 @@ public function delete($id, ManagerRegistry $registry): Response
         ]);
     }
     #[Route('/eventf', name: 'app_eventsf')]
-    public function eventf(ManagerRegistry $registry): Response
-{    /** @var User $user */
+public function eventf(ManagerRegistry $registry): Response
+{
+    /** @var User $user */
     $user = $this->getUser();
+
+    // Check if the user is in the blacklist
+    $blacklist = $registry->getRepository(BlackListed::class)->findOneBy(['idUser' => $user]);
+
+    if ($blacklist) {
+        // Add a flash message to inform the user
+       //$this->addFlash('warning', 'You are banned until ' . $blacklist->getEndBan()->format('Y-m-d') . '. You cannot access this page.');
+       
+        // Redirect to a different route (replace 'banned_route' with the actual route name)
+        return $this->redirectToRoute('app_home');
+    }
+
     $userPoints = $user->getEventPoints();
     $events = $registry->getRepository(EventDetails::class)->findAll();
 
@@ -121,7 +135,6 @@ public function delete($id, ManagerRegistry $registry): Response
         $eventsWithUserStatus[] = [
             'event' => $event,
             'isUserParticipant' => $isUserParticipant,
-            
         ];
     }
 
@@ -225,12 +238,18 @@ public function kick($userId, $eventDetailsId, ManagerRegistry $registry): Respo
     if (!$eventParticipant) {
         throw $this->createNotFoundException('No participant found for id '.$userId);
     }
- 
+
+    // Get the User entity of the kicked user and reduce its points
+    
+    $kickedUser = $registry->getRepository(User::class)->find($userId);
+    $kickedUser->setEventPoints($kickedUser->getEventPoints() - 100);
+
     $event = $registry->getRepository(EventDetails::class)->find($eventDetailsId);
     $event->setNbPlaces($event->getNbPlaces()+1);
 
     $entityManager = $registry->getManager();
     $entityManager->remove($eventParticipant);
+    $entityManager->persist($kickedUser); // Persist the changes to the User entity
     $entityManager->flush();
 
     return $this->redirectToRoute('eventParticipant', ['id' => $eventDetailsId]);
@@ -239,46 +258,52 @@ public function kick($userId, $eventDetailsId, ManagerRegistry $registry): Respo
 #[Route('/rewards', name: 'rewards')]
 public function rewards(ManagerRegistry $registry, SessionInterface $session): Response
 {
-    $user = $session->get('user');
+    /** @var User $user */
+    $user = $this->getUser();
+
+    // Check if the user is in the blacklist
+    $blacklist = $registry->getRepository(BlackListed::class)->findOneBy(['idUser' => $user]);
+    if ($blacklist) {
+        // Add a flash message to inform the user
+       //$this->addFlash('warning', 'You are banned until ' . $blacklist->getEndBan()->format('Y-m-d') . '. You cannot access this page.');
+       
+        // Redirect to a different route (replace 'banned_route' with the actual route name)
+        return $this->redirectToRoute('app_home');
+    }
     return $this->render('main\gestion_events\event_hub.html.twig', [
         'controller_name' => 'EventbController',
         'user' => $user,
     ]);
 }
+
 #rewards hub
 #[Route('/rewards/whey', name: 'whey')]
 public function claimWhey(Request $request, EntityManagerInterface $entityManager): Response
 {
     /** @var User $user */
     $user = $this->getUser();
-    if ($user === null) {
-        $this->addFlash('error', 'No user is logged in');
-        return $this->redirectToRoute('login'); // Redirect to login page or any other page
-    }
-
+    
     if ($user->getEventPoints() >= 3500) {
         $user->setEventPoints($user->getEventPoints() - 3500);
 
-        // Update user points in the database
+       
         $entityManager->persist($user);
         $entityManager->flush();
 
         $this->addFlash('claimStatus', 'success');
-} else {
-    $this->addFlash('claimStatus', 'error');
+    } else {
+        $this->addFlash('claimStatus', 'error');
+    }
+
+    return $this->redirectToRoute('rewards'); 
 }
 
-    return $this->redirectToRoute('rewards'); // Redirect back to the rewards page
-}
-
-// D
 #[Route('/rewards/belt', name: 'belt')]
 public function claimBelt(Request $request, EntityManagerInterface $entityManager): Response
-{   /** @var User $user */
+{
+    /** @var User $user */
     $user = $this->getUser();
-    if ($user === null) {
-        return new Response('No user is logged in');
-    }
+    
 
     if ($user->getEventPoints() >= 2500) {
         $user->setEventPoints($user->getEventPoints() - 2500);
@@ -287,29 +312,82 @@ public function claimBelt(Request $request, EntityManagerInterface $entityManage
         $entityManager->persist($user);
         $entityManager->flush();
 
-        return new Response('Claim successful');
+        $this->addFlash('success', 'Claim successful');
     } else {
-        return new Response('Not enough points');
+        $this->addFlash('error', 'Not enough points');
     }
+
+    return $this->redirectToRoute('rewards'); // Redirect back to the rewards page
 }
-    #[Route('/rewards/bag', name: 'bag')]
-    public function claimBag(Request $request, EntityManagerInterface $entityManager): Response
-    {   /** @var User $user */
-        $user = $this->getUser();
-        if ($user === null) {
-            return new Response('No user is logged in');
-        }
-    
-        if ($user->getEventPoints() >= 3000) {
-            $user->setEventPoints($user->getEventPoints() - 3000);
-    
-            // Update user points in the database
-            $entityManager->persist($user);
-            $entityManager->flush();
-    
-            return new Response('Claim successful');
-        } else {
-            return new Response('Not enough points');
-        }
+
+#[Route('/rewards/bag', name: 'bag')]
+public function claimBag(Request $request, EntityManagerInterface $entityManager): Response
+{
+    /** @var User $user */
+    $user = $this->getUser();
+   
+
+    if ($user->getEventPoints() >= 3000) {
+        $user->setEventPoints($user->getEventPoints() - 3000);
+
+        // Update user points in the database
+        $entityManager->persist($user);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Claim successful');
+    } else {
+        $this->addFlash('error', 'Not enough points');
     }
+
+    return $this->redirectToRoute('rewards'); // Redirect back to the rewards page
+ }
+ #[Route('/blacklised', name: 'blacklised')]
+ public function showblacklisted(ManagerRegistry $registry)
+ {
+     $user = $this->getUser();
+     $users = $registry->getRepository(User::class)->findBy(['role' => 'client']); // Fetch only users that are clients
+     $blacklisted = $registry->getRepository(BlackListed::class)->findAll();
+     $blacklistedUsers = [];
+     foreach ($blacklisted as $blacklist) {
+         $blacklistedUsers[] = $blacklist->getIdUser()->getId();
+     }
+     return $this->render('dashboard\gestion_events/blacklisted.html.twig', [
+         'controller_name' => 'EventbController',
+         'users' => $users,
+         'blacklistedUsers' => $blacklistedUsers,
+         'user' => $user,
+         'blacklisted' => $blacklisted,
+     ]);
+ }
+ #[Route('/ban/{id}/{endBan}', name: 'ban')]
+ public function ban($id, $endBan, ManagerRegistry $registry)
+ {
+     $user = $registry->getRepository(User::class)->find($id);
+     $blacklist = new BlackListed();
+     $blacklist->setIdUser($user);
+     $blacklist->setStartBan(new \DateTime());
+ 
+     // Convert the endBan string to a DateTime object
+     $endBanDate = \DateTime::createFromFormat('Y-m-d', $endBan);
+     $blacklist->setEndBan($endBanDate);
+ 
+     $entityManager = $registry->getManager();
+     $entityManager->persist($blacklist);
+     $entityManager->flush();
+     return $this->redirectToRoute('blacklised');
+ }
+    #[Route('/unban/{id}', name: 'unban')]
+    public function unban($id, ManagerRegistry $registry)
+    {
+        $user = $registry->getRepository(User::class)->find($id);
+        $blacklist = $registry->getRepository(BlackListed::class)->findOneBy(['idUser' => $user]);
+        $entityManager = $registry->getManager();
+        $entityManager->remove($blacklist);
+        $entityManager->flush();
+        return $this->redirectToRoute('blacklised');
+    }
+ 
+
+
+
 }

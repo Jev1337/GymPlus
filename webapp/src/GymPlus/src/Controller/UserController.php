@@ -19,8 +19,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpClient\HttpClient;
 use App\Form\ModifyUserType;
 use App\Annotation\ProtectedRoute;
-use Karser\Recaptcha3Bundle\Validator\Constraints\Recaptcha3Validator;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use App\Form\AdminUserType;
+use Karser\Recaptcha3Bundle\Validator\Constraints\Recaptcha3Validator;
 
 
 class UserController extends AbstractController
@@ -51,7 +52,24 @@ class UserController extends AbstractController
         $userlog = new User();
         $form = $this->createForm(LoginType::class, $userlog);
         $form->handleRequest($request);
-        if($form->isSubmitted() ){
+        if($form->isSubmitted()){
+            /*
+            $client = HttpClient::create();
+            $response = $client->request('POST', 'https://www.google.com/recaptcha/api/siteverify', [
+                'body' => [
+                    'secret' => '6LdlPKkpAAAAAJt_IYp6Nk2pIimy6h4UEJTyk9tQ',
+                    'response' => $form['captcha']->getData(),
+                ]]);
+            $data = $response->toArray();
+            if (!$data['success']) {
+                $this->addFlash('error', 'Recaptcha validation failed, please try again!');
+                return $this->redirectToRoute('app_login');
+            }else{
+                if ($data['score'] < 0.5) {
+                    $this->addFlash('error', 'Recaptcha validation failed, please try again!');
+                    return $this->redirectToRoute('app_login');
+                }
+            }*/
             if (!$form->isValid()) {
                $this->addFlash('error', 'There was an error with the form, please check the fields and try again!');
             }else{
@@ -148,9 +166,8 @@ class UserController extends AbstractController
                     $this->addFlash('error', 'CIN already exists');
                     return $this->redirectToRoute('app_signup');
                 }
-                $usersig->setPassword(password_hash($usersig->getPassword(), PASSWORD_DEFAULT));
+                $usersig->setPassword(password_hash($usersig->getPassword(), PASSWORD_BCRYPT));
                 $usersig->setRole('client');
-                $usersig->setFaceidTs(new \DateTime());
                 $photo = $form['photo']->getData();
                 $filename = 'USERIMG' . $usersig->getId() . '.' . $photo->guessExtension();
                 $targetdir = $this->getParameter('kernel.project_dir') . '/public/profileuploads/';
@@ -330,11 +347,45 @@ class UserController extends AbstractController
     }
     
     #[Route('/dashboard/manageusers', name: 'app_usermgmt')]
-    public function manageUsers(UserRepository $repo): Response
+    public function manageUsers(UserRepository $repo, Request $req, ManagerRegistry $reg): Response
     {
+        $form = $this->createForm(AdminUserType::class);
+        $form->handleRequest($req);
+        
+        if($form->isSubmitted() ){
+            if (!$form->isValid()) {
+                $this->addFlash('error', 'There was an error with the form, please check the fields and try again!');
+            }else{
+                $user = $form->getData();
+                if ($repo->findUserByUsername($user->getUsername())) {
+                    $this->addFlash('error', 'Username already exists');
+                } else if ($repo->findUserByPhone($user->getNumTel())) {
+                    $this->addFlash('error', 'Phone number already exists, please remove it from the other account!');
+                } else if ($repo->findUserById($user->getId())) {
+                    $this->addFlash('error', 'CIN already exists');
+                } else if ($repo->findUserByEmail($user->getEmail())) {
+                    $this->addFlash('error', 'Email already exists');
+                }else{
+                    $photo = $form['photo']->getData();
+                    $filename = 'USERIMG' . $user->getId() . '.' . $photo->guessExtension();
+                    $targetdir = $this->getParameter('kernel.project_dir') . '/public/profileuploads/';
+                    $photo->move($targetdir, $filename);
+                    $user->setPhoto($filename);
+                    $user->setPassword(password_hash($user->getPassword(), PASSWORD_BCRYPT));
+
+                    $reg->getManager()->persist($user);
+                    $reg->getManager()->flush();
+                    $this->addFlash('success', 'User updated successfully!');
+                    return $this->redirectToRoute('app_usermgmt');
+                }
+            }
+        }
+
+
         return $this->render('dashboard/userlist.html.twig', [
             'controller_name' => 'UserController',
-            'users' => $repo->findAll()
+            'users' => $repo->findAll(),
+            'form' => $form->createView()
         ]);
     }
 
@@ -408,9 +459,12 @@ class UserController extends AbstractController
     public function deleteUser(UserRepository $repo, $id, ManagerRegistry $reg): Response
     {
         $userdel = $repo->findUserById($id);
+        if (!$userdel) {
+            return $this->redirectToRoute('app_usermgmt');
+        }
         $reg->getManager()->remove($userdel);
         $reg->getManager()->flush();
-        if ($user->getId() == $userdel->getId()) {
+        if ($this->getUser()->getId() == $userdel->getId()) {
             $this->get('security.token_storage')->setToken(null);
             $this->get('session')->invalidate();
             return $this->redirectToRoute('app_login');

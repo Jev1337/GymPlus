@@ -70,10 +70,6 @@ class EventDetails
 
     #[ORM\Column]
     private ?int $nbTotal;
-    
-    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: "eventDetails")]
-    private Collection $user;
-
 
     public function __construct()
     {

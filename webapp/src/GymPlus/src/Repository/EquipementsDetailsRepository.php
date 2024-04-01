@@ -21,6 +21,22 @@ class EquipementsDetailsRepository extends ServiceEntityRepository
         parent::__construct($registry, EquipementsDetails::class);
     }
 
+    public function getEquipementsDetails(): array
+    {
+        return $this->createQueryBuilder('e')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function getEquipementsDetailsById(int $id): ?EquipementsDetails
+    {
+        return $this->createQueryBuilder('e')
+            ->andWhere('e.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
 //    /**
 //     * @return EquipementsDetails[] Returns an array of EquipementsDetails objects
 //     */

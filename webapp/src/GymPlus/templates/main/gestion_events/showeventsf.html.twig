@@ -62,7 +62,9 @@
     <button type="submit" class="btn btn-skew appointment-btn {{ event.isUserParticipant ? 'btn-danger' : 'btn-primary' }}">
         <span class="skew-inner"><span class="text">{{ event.isUserParticipant ? 'Leave' : 'Join' }}</span></span>
     </button>
+	<img src="{{ qr_code_path('My QR Code') }}" />
 </form>
+
 	
             </div>
         </div>
@@ -80,4 +82,9 @@
 		
 	</div>
 
+
 {% endblock %}
+{% block js %}
+    {{ parent() }}
+    swal("Modification Successful!", "test", "success");
+{% endblock %} 

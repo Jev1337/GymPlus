@@ -17,8 +17,8 @@ use App\Repository\EventParticipantsRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\EventDetailsEditType;
 
-
-
+use Endroid\QrCode\Builder\BuilderInterface;
+use Endroid\QrCodeBundle\Response\QrCodeResponse;
 
 
 
@@ -130,9 +130,11 @@ public function delete($id, ManagerRegistry $registry): Response
     ]);
 }
     #user join event by clicking on join
+    
     #[Route('/eventf/join/{id}', name: 'event_join')]
-    public function join($id, ManagerRegistry $registry): Response
-    {   /** @var User $user */
+    public function join($id, ManagerRegistry $registry, BuilderInterface $qrCodeBuilder): Response
+    {
+        /** @var User $user */
         $user = $this->getUser();
         
         $event = $registry->getRepository(EventDetails::class)->find($id);
@@ -144,8 +146,17 @@ public function delete($id, ManagerRegistry $registry): Response
         $eventParticipant->setEventDetailsId($id);
         $entityManager->persist($eventParticipant);
         $entityManager->flush();
-        return $this->redirectToRoute('app_eventsf');
     
+         // Generate QR code with event details
+    $qrCode = $qrCodeBuilder
+        ->data('Event ID: ' . $id)
+        ->build();
+
+    // Add flash message
+    $this->addFlash('success', 'User joined the event successfully!');
+
+    // Return QR code as a response
+    return new QrCodeResponse($qrCode);
     }
 #[Route('/eventf/leave/{id}', name: 'event_leave')]
 public function leaveEvent($id, ManagerRegistry $registry)

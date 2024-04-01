@@ -116,7 +116,7 @@ public function eventf(ManagerRegistry $registry): Response
 
     if ($blacklist) {
         // Add a flash message to inform the user
-       $this->addFlash('warning', 'You are banned until ' . $blacklist->getEndBan()->format('Y-m-d') . '. You cannot access this page.');
+       //$this->addFlash('warning', 'You are banned until ' . $blacklist->getEndBan()->format('Y-m-d') . '. You cannot access this page.');
        
         // Redirect to a different route (replace 'banned_route' with the actual route name)
         return $this->redirectToRoute('app_home');
@@ -265,7 +265,7 @@ public function rewards(ManagerRegistry $registry, SessionInterface $session): R
     $blacklist = $registry->getRepository(BlackListed::class)->findOneBy(['idUser' => $user]);
     if ($blacklist) {
         // Add a flash message to inform the user
-       $this->addFlash('warning', 'You are banned until ' . $blacklist->getEndBan()->format('Y-m-d') . '. You cannot access this page.');
+       //$this->addFlash('warning', 'You are banned until ' . $blacklist->getEndBan()->format('Y-m-d') . '. You cannot access this page.');
        
         // Redirect to a different route (replace 'banned_route' with the actual route name)
         return $this->redirectToRoute('app_home');
@@ -275,30 +275,27 @@ public function rewards(ManagerRegistry $registry, SessionInterface $session): R
         'user' => $user,
     ]);
 }
+
 #rewards hub
 #[Route('/rewards/whey', name: 'whey')]
 public function claimWhey(Request $request, EntityManagerInterface $entityManager): Response
 {
     /** @var User $user */
     $user = $this->getUser();
-    if ($user === null) {
-        $this->addFlash('error', 'No user is logged in');
-        return $this->redirectToRoute('login'); // Redirect to login page or any other page
-    }
-
+    
     if ($user->getEventPoints() >= 3500) {
         $user->setEventPoints($user->getEventPoints() - 3500);
 
-        // Update user points in the database
+       
         $entityManager->persist($user);
         $entityManager->flush();
 
-        $this->addFlash('success', 'Claim successful');
+        $this->addFlash('claimStatus', 'success');
     } else {
-        $this->addFlash('error', 'Not enough points');
+        $this->addFlash('claimStatus', 'error');
     }
 
-    return $this->redirectToRoute('rewards'); // Redirect back to the rewards page
+    return $this->redirectToRoute('rewards'); 
 }
 
 #[Route('/rewards/belt', name: 'belt')]
@@ -306,10 +303,7 @@ public function claimBelt(Request $request, EntityManagerInterface $entityManage
 {
     /** @var User $user */
     $user = $this->getUser();
-    if ($user === null) {
-        $this->addFlash('error', 'No user is logged in');
-        return $this->redirectToRoute('login'); // Redirect to login page or any other page
-    }
+    
 
     if ($user->getEventPoints() >= 2500) {
         $user->setEventPoints($user->getEventPoints() - 2500);
@@ -331,10 +325,7 @@ public function claimBag(Request $request, EntityManagerInterface $entityManager
 {
     /** @var User $user */
     $user = $this->getUser();
-    if ($user === null) {
-        $this->addFlash('error', 'No user is logged in');
-        return $this->redirectToRoute('login'); // Redirect to login page or any other page
-    }
+   
 
     if ($user->getEventPoints() >= 3000) {
         $user->setEventPoints($user->getEventPoints() - 3000);

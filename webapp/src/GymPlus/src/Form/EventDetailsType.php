@@ -33,7 +33,7 @@ class EventDetailsType extends AbstractType
             ->add('eventDate')
             ->add('duree')
             ->add('nbPlaces')
-            ->add('save', SubmitType::class);
+            ->add('Add', SubmitType::class);
     }
     
 

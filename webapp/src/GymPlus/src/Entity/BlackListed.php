@@ -17,7 +17,7 @@ class BlackListed
 
     #[ORM\Id]
     #[ORM\ManyToOne(targetEntity: User::class)]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(name: "id_user", referencedColumnName: "id", nullable: false)]
     private $idUser;
 
     public function getStartBan(): ?\DateTimeInterface

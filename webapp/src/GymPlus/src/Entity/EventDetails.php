@@ -16,8 +16,8 @@ class EventDetails
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id;
-
     /**
+     * @Assert\NotBlank(message="This field cannot be empty")
      * @Assert\Length(
      *      min = 4,
      *      minMessage = "The name must be at least {{ limit }} characters long"
@@ -27,6 +27,7 @@ class EventDetails
     private ?string $name;
 
     /**
+     * @Assert\NotBlank(message="This field cannot be empty")
      * @Assert\Length(
      *      min = 4,
      *      minMessage = "The type must be at least {{ limit }} characters long"
@@ -36,47 +37,46 @@ class EventDetails
      *     message="The type should contain only letters"
      * )
      */
-    #[ORM\Column]
+    #[ORM\Column(nullable: false)]
     private ?string $type;
 
     /**
+     * @Assert\NotBlank(message="This field cannot be empty")
      * @Assert\GreaterThan(
      *     "now",
      *     message="The event date should be at least 1 hour from now"
      * )
      */
-    #[ORM\Column]
+    #[ORM\Column(nullable: false)]
     private ?\DateTime $eventDate;
 
     /**
+     * @Assert\NotBlank(message="This field cannot be empty")
      * @Assert\Range(
      *      min = 20,
      *      max = 120,
      *      notInRangeMessage = "The duration must be between {{ min }} and {{ max }}",
      * )
      */
-    #[ORM\Column]
+    #[ORM\Column(nullable: false)]
     private ?string $duree;
 
     /**
+     * @Assert\NotBlank(message="This field cannot be empty")
      * @Assert\Range(
      *      min = 10,
      *      max = 50,
      *      notInRangeMessage = "The number of places must be between {{ min }} and {{ max }}",
      * )
      */
-    #[ORM\Column]
+    #[ORM\Column(nullable: false)]
     private ?int $nbPlaces;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: false)]
     private ?int $nbTotal;
-    
-    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: "eventDetails")]
-    private Collection $user;
-
 
     public function __construct()
-    {
+    {   
         $this->user = new ArrayCollection();
     }
 

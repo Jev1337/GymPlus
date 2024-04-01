@@ -1,0 +1,145 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block css %}
+    <!-- Datatable -->
+    <link href="{{asset('dashboard/vendor/datatables/css/jquery.dataTables.min.css')}}" rel="stylesheet">
+    {{ parent() }}
+{% endblock %}
+
+{% block content %}
+        <div class="content-body">
+            <div class="container-fluid">
+                <div class="page-titles">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">App</a></li>
+                        <li class="breadcrumb-item active"><a href="javascript:void(0)">Profile</a></li>
+                    </ol>
+                </div>
+                <!-- row -->
+                
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">Users</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table id="example5" class="display min-w850">
+                                        <thead>
+                                            <tr>
+                                                <th>User CIN</th>
+                                                <th>First Name</th>
+                                                <th>Last Name</th>
+                                                <th>Start Ban Date</th>
+                                                <th>End Ban Date</th>
+                                                <th>Status</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                          {% for user in users %}
+                                            <tr>
+                                                <td>{{ user.id }}</td>
+                                                <td>{{ user.firstname }}</td>
+                                                <td>{{ user.lastname }}</td>
+                                                {% set userIsBlacklisted = user.id in blacklistedUsers %}
+                                                {% if userIsBlacklisted %}
+                                                    {% set blacklist = blacklisted | filter(blacklist => blacklist.idUser.id == user.id) | first %}
+                                                    <td>{{ blacklist.startBan | date('Y-m-d') }}</td>
+                                                    <td>{{ blacklist.endBan | date('Y-m-d') }}</td>
+                                                    <td>
+                                                        <span class="badge light badge-danger">
+                                                            <i class="fa fa-circle text-danger mr-1"></i>
+                                                            BlackListed
+                                                        </span>
+                                                    </td>
+                                                    <td><a href="{{ path('unban', {'id': user.id}) }}" class="btn btn-success">Unban</a></td>
+                                                {% else %}
+                                                    <td>----------</td>
+                                                    <td>----------</td>
+                                                    <td>
+                                                        <span class="badge light badge-success">
+                                                            <i class="fa fa-circle text-success mr-1"></i>
+                                                            Good
+                                                        </span>
+                                                    </td>
+                                                    <td><a href="#" data-id="{{ user.id }}" class="btn btn-danger ban-button">Ban</a></td>
+                                                {% endif %}
+                                            </tr>
+                                        {% endfor %}
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
+        <div class="modal fade" id="banUserModal" tabindex="-1" role="dialog" aria-labelledby="banUserModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="banUserModalLabel">Ban User</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="banUserForm">
+                            <div class="form-group">
+                                <label for="endBanDate" class="col-form-label">End Ban Date:</label>
+                                <input type="date" class="form-control" id="endBanDate">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" id="confirmBanButton">Ban User</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!--**********************************
+            Content body end
+        ***********************************-->
+{% endblock %}
+
+{% block js %}
+    {{ parent() }}
+    <!-- Datatable -->
+    <script src="{{asset('dashboard/vendor/datatables/js/jquery.dataTables.min.js')}}"></script>
+    <script src="{{asset('dashboard/js/plugins-init/datatables.init.js')}}"></script>
+    <script>
+   
+    $('.ban-button').click(function(event) {
+      event.preventDefault();
+      $('#banUserModal').modal('show');
+
+      
+      $('#confirmBanButton').data('id', $(this).data('id'));
+    });
+
+
+    $('#confirmBanButton').click(function() {
+  var endBanDate = new Date($('#endBanDate').val());
+  var today = new Date();
+
+  // Check if the end ban date is in the future
+  if (endBanDate <= today) {
+    alert('End ban date must be in the future.');
+    return;
+  }
+
+  var userId = $(this).data('id');
+  var url = '/ban/' + userId + '/' + endBanDate.toISOString().split('T')[0];
+  $.post(url, function(data) {
+    // Handle the response
+    location.reload();
+  });
+});
+    </script>
+{% endblock %}

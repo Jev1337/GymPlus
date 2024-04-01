@@ -105,7 +105,7 @@ public function delete($id, ManagerRegistry $registry): Response
     }
     #[Route('/eventf', name: 'app_eventsf')]
     public function eventf(ManagerRegistry $registry): Response
-{   
+{    /** @var User $user */
     $user = $this->getUser();
     
     $events = $registry->getRepository(EventDetails::class)->findAll();
@@ -132,7 +132,7 @@ public function delete($id, ManagerRegistry $registry): Response
     #user join event by clicking on join
     #[Route('/eventf/join/{id}', name: 'event_join')]
     public function join($id, ManagerRegistry $registry): Response
-    {
+    {   /** @var User $user */
         $user = $this->getUser();
         
         $event = $registry->getRepository(EventDetails::class)->find($id);
@@ -149,13 +149,14 @@ public function delete($id, ManagerRegistry $registry): Response
     }
 #[Route('/eventf/leave/{id}', name: 'event_leave')]
 public function leaveEvent($id, ManagerRegistry $registry)
-{
+{   /** @var User $user */
     $user = $this->getUser();
    
     $event = $registry->getRepository(EventDetails::class)->find($id);
         $event->setNbPlaces($event->getNbPlaces()+1);
 
     $eventParticipant = $registry->getRepository(EventParticipants::class)->findOneBy([
+
         'user_id' => $user->getId(),
         'event_details_id' => $id
     ]);

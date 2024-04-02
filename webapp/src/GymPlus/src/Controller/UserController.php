@@ -309,13 +309,7 @@ class UserController extends AbstractController
         $userid = $request->query->get('user');
         $gp = $request->query->get('gp');
         $user = $repo1->findUserById($userid);
-        $abonnement = new Abonnement();
-        $abonnement->setUser($user);
-        $abonnement->setDatefinab(new \DateTime('+1 month'));
-        $type = $repo0->getAbonnementDetailsByName('GP ' . $gp);
-        $abonnement->setType($type);
-        $reg->getManager()->persist($abonnement);
-        $reg->getManager()->flush();
+        
 
         $client = HttpClient::create();
         $auth = base64_encode('Af9N6m41ryO-aKuZO3cwgGr1PZeBsbxLTeSYVJ7iUr71UO3tA8Uc0p50NeEMbewLzmq00go8MoXAzXPC:EBfq6ayRpNgVeWdALsblGLrMKUspTHt5GzfuH5MOM1FN7gqsoR6y5TCOTTYlm4R3adGWPgKoWYOI46Xz');
@@ -341,6 +335,18 @@ class UserController extends AbstractController
 
         
         if ($response->toArray()['status'] === "COMPLETED"){
+            $abonnement = new Abonnement();
+            $abonnement->setUser($user);
+            if ($gp == 1)
+                $abonnement->setDatefinab(new \DateTime('+3 month'));
+            else if($gp == 2)
+                $abonnement->setDatefinab(new \DateTime('+6 month'));
+            else
+                $abonnement->setDatefinab(new \DateTime('+12 month'));
+            $type = $repo0->getAbonnementDetailsByName('GP ' . $gp);
+            $abonnement->setType($type);
+            $reg->getManager()->persist($abonnement);
+            $reg->getManager()->flush();
             return new JsonResponse(['status' => 'success'], 200);
         }
         return new JsonResponse(['status' => 'error'], 400);

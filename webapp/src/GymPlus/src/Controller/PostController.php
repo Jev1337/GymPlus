@@ -47,6 +47,7 @@ class PostController extends AbstractController
             // $users = $urep->findById($posts[$i]->getIdUser());
             $this->updateNbComnt($crep,$posts[$i],$rep,$manager);
         }
+        
         return $this->renderForm('main/post/index.html.twig', [
             'posts' => $posts,
             'user' => $user,
@@ -58,7 +59,7 @@ class PostController extends AbstractController
     #[Route('/post/{id}', name: 'update_post')]
     public function updatePosts(Request $req, $id, PostRepository $rep, ManagerRegistry $manager): Response
     {
-        $user = $this->getUser();
+        // $user = $this->getUser();
         $em = $manager->getManager();
         $post = $rep->find($id);
         $form = $this->createForm(PostType::class, $post);
@@ -71,7 +72,7 @@ class PostController extends AbstractController
 
         return $this->renderForm('main/post/addNewPost.html.twig', [
             "form" => $form,
-            "user" => $user
+            // "user" => $user
         ]);
     }
     #[Route('/post/delete/{id}', name: 'delete_post')]

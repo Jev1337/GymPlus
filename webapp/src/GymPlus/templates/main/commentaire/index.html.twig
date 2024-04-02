@@ -1,0 +1,191 @@
+{% extends "main/base.html.twig" %}
+{% block content %}
+    <!-- Banner  -->
+    <div class="dz-bnr-inr style-2" style="background-image: url('{{ asset('main/images/banner/banner-2.png') }}')">
+        <div class="banner-gradient"></div>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="dz-bnr-inr-entry">
+                        <h1>
+                            BLOG
+                                                                        
+                                                    
+                        </h1>
+                        <!-- Breadcrumb Row -->
+                        <nav aria-label="breadcrumb" class="breadcrumb-row">
+                            <ul class="breadcrumb">
+                                <li class="breadcrumb-item">
+                                    <a href="index.html">
+                                        Home
+                                                                                                            
+                                                                            
+                                    </a>
+                                </li>
+                                <li class="breadcrumb-item active" aria-current="page">
+                                    Blog
+                                                                                                
+                                                                    
+                                </li>
+                                <li class="breadcrumb-item active" aria-current="page">
+                                    Commentaire
+                                                                                                
+                                                                    
+                                </li>
+                            </ul>
+                        </nav>
+                    <!-- Breadcrumb Row End -->
+                    </div>
+                </div>
+            </div>
+            <div class="banner-media">
+                <img src="{{ asset('main/images/banner/pic4.png') }}" alt="/"></div>
+            </div>
+        </div>
+        <!-- Banner End -->
+        <div class="page-content bg-white">
+            <section class="content-inner">
+                <div class="container">
+                    <div class="row justify-content-center gap-5">
+                        <div >
+                            <a class="d-flex align-items-center" style="width: 7rem;" href="{{ path('getAll_post') }}" aria-expanded="false">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-caret-left" viewBox="0 0 16 16">
+                                    <path d="M10 12.796V3.204L4.519 8zm-.659.753-5.48-4.796a1 1 0 0 1 0-1.506l5.48-4.796A1 1 0 0 1 11 3.204v9.592a1 1 0 0 1-1.659.753" />
+                                </svg>
+                                Go Back
+                            </a>
+                        </div>
+                        <div class="card shadow p-3 rounded" style="width: 50rem;">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between">
+                                    <div class="d-flex gap-3">
+                                        <img style="width:3rem; height:3rem; border-radius:50%" src="{{ asset('profileuploads/' ~ app.user.photo) }}" alt="image" />
+                                        <div>
+                                            <h5 class="card-title">
+                                                {{ app.user.username }}
+                                            </h5>
+                                            <div class="">
+                                                {{ post.date ? post.date|date('Y-m-d') : '' }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% if post.idUser == app.user.id %}
+                                        <div class="d-flex gap-3">
+                                            <a href="{{ path('update_post', {'id': post.id}) }}" aria-expanded="false">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                                                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
+                                                </svg>
+                                            </a>
+                                            <a class="" href="{{ path('delete_post', {'id': post.id}) }}" aria-expanded="false">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                                                    <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
+                                                </svg>
+                                            </a>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <p class="card-text mt-3">
+                                    {{ post.content }}
+                                </p>
+                                {% if post.photo != "" %}
+                                    <img class="rounded card-img-top" style="height: 30rem; object-fit: contain;" src="{{ vich_uploader_asset(post, 'imageFile') }}" />
+                                {% endif %}
+                                <div class="d-flex justify-content-between py-3" style="border-bottom: 1px solid #F1EFEF;">
+                                    <div>
+                                        {{ post.likes }}
+                                        likes                                                 
+                                                                                                            
+                                                                            
+                                    </div>
+                                    <div>
+                                        {{ post.nbComnts }}
+                                        comnts                                                
+                                                                                                            
+                                                                            
+                                    </div>
+                                </div>
+                                <div class="container px-4 mt-2 text-center">
+                                    <div class="row gx-5">
+                                        <div class="col  pt-2" style="border-right: 1px solid #F1EFEF;">
+                                            <a class="" href="">
+                                                like
+                                                                                                                                    
+                                                                                            
+                                            </a>
+                                        </div>
+                                        <div class="col  pt-2" style="border-left: 1px solid #F1EFEF;">
+                                            <a class="" href="">
+                                                comnts
+                                                                                                                                    
+                                                                                            
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            {% for comnt in comments %}
+                                <div class="card rounded px-3 pt-3 ">
+                                    <div class="d-flex justify-content-between">
+                                        <div class="d-flex gap-3">
+                                            <img style="width:3rem; height:3rem; border-radius:50%" src="{{ asset('profileuploads/' ~ user.photo) }}" alt="image" />
+                                            <div>
+                                                <h5 class="card-title">
+                                                    {{ user.username }}
+                                                </h5>
+                                                <div class="">
+                                                    {{ comnt.date ? comnt.date|date('Y-m-d') : '' }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% if comnt.userId == user.id %}
+                                            <div class="d-flex gap-3">
+                                                <a class="" href="{{ path('update_commentaire', {'id': comnt.id}) }}" aria-expanded="false" data-toggle="modal" data-target="#edit">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                                        <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                                                        <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
+                                                    </svg>
+                                                </a>
+                                                <a class="" href="{{ path('delete_commentaire', {'id': comnt.id}) }}" aria-expanded="false">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                                                        <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
+                                                    </svg>
+                                                </a>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="card-body">
+                                        <p class="card-text">
+                                            {{ comnt.content }}
+                                        </p>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <a colspan="8">
+                                    no records found                             
+                                                                                                                                
+                                                                                                
+                                                                    
+                                </a>
+                            {% endfor %}
+                            <div class="card-footer">
+                                {{ form_start(form) }}
+                                {{ form_widget(form.content, {'attr': {'class': 'form-control rounded', 'placeholder': 'write your comnt' }}
+                                ) }}                         
+                                                                                        
+                                                                
+                                {{ form_widget(form.coment, {'attr': {'class': 'btn h-3 btn-outline-primary rounded mt-3' }}
+                                ) }}
+                                                                                    
+                                                                
+                                {{ form_end(form) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    {% endblock %}
+    

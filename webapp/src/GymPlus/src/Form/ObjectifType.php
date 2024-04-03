@@ -13,17 +13,23 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Doctrine\ORM\EntityRepository;
+use Symfony\Component\Form\FormInterface;
 
 class ObjectifType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('poidsobj')
-            ->add('poidsact')
-            ->add('taille')
-            ->add('alergie')
+            ->add('poidsobj', TextType::class, [
+            ])
+            ->add('poidsact', TextType::class, [
+            ])    
+            ->add('taille', TextType::class, [
+            ])     
+            ->add('alergie', TextareaType::class, [
+            ])        
             ->add('typeobj', ChoiceType::class, [
                 'choices' => [
                     'Default 1' => 'Default',
@@ -34,7 +40,6 @@ class ObjectifType extends AbstractType
             ])
             ->add('datef', DateType::class, [
                 'widget' => 'single_text',
-                'attr' => ['placeholder' => 'Date ']
             ])           
             ->add('coachid', EntityType::class, [
                 'class' => User::class,
@@ -53,6 +58,7 @@ class ObjectifType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Objectif::class,
+            
         ]);
     }
 }

@@ -76,14 +76,6 @@ class UserType extends AbstractType
                 'maxLength' => 8,
             ]
         ])
-        ->add('adresse', TextType::class, [
-            'required' => true,
-            'attr' =>[
-                'pattern' => '[a-zA-Z0-9 ]*',
-                'minLength' => 3,
-                'maxLength' => 50,
-            ]
-        ])
         ->add('photo', FileType::class, [
             'required' => true,
         ])  

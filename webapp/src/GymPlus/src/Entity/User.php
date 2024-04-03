@@ -68,9 +68,6 @@ class User Implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $numTel;
 
     #[ORM\Column]
-    #[Assert\NotBlank(message: 'Please enter your address.', groups: ['create', 'update'])]
-    #[Assert\Length(min: 3, max: 50, minMessage: 'Address must be at least 3 characters long.', maxMessage: 'Address must be at most 50 characters long.', groups: ['create', 'update'])]
-    #[Assert\Regex(pattern: '/^[a-zA-Z0-9 ]*$/', message: 'Address must contain only letters and numbers.', groups: ['create', 'update'])]
     private ?string $adresse;
 
     #[ORM\Column]

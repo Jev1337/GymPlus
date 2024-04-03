@@ -461,11 +461,11 @@
 {% endblock %}
 
 {% block js %}
-	{{ parent() }}
-	<script src="{{asset('main/js/jquery-3.6.0.min.js')}}"></script><!--  -->
-	<script src="{{asset('main/js/bootstrap.min.js')}}"></script><!--  -->
 	<script src="{{asset('main/js/main.min.js')}}"></script><!-- -->
 	<script src='https://cdn.jsdelivr.net/npm/fullcalendar/index.global.min.js'></script>
+	{{ parent() }}
+	
+
 	<script>
 		document.addEventListener('DOMContentLoaded', function() {
             const calendarEl = document.getElementById('calendar');

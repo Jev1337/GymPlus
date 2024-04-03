@@ -39,12 +39,14 @@ class AuthentificationSubscriber implements EventSubscriberInterface
         , 'app_equipments', 'app_equipments_edit', 'app_equipments_delete', 'app_maintenances', 'app_maintenances_edit', 'app_maintenances_delete'
         , 'app_usermgmt', 'app_user_delete', 'app_user_edit', 'app_photo_admin'];
 
-        // Routes that ONLY clients can access
+        // Routes that require client role
         $clientRoutes = ['app_home', 'app_subs', 'app_buy', 'app_profile', 'app_objectif', 'app_Schedule_objectif', 'event_join', 'event_leave','app_eventsf','getAll_post','rewards','points','belt','bag','whey'];
-        // Routes that staff can access
+        
+        // Routes that require staff role
         $staffRoutes = ['app_dashboard', 'app_events', 'eventb', 'event_delete', 'event_edit','eventParticipant_kick','eventParticipant', 'app_equipments', 'app_equipments_edit'
-        , 'app_equipments_delete', 'app_maintenances', 'app_maintenances_edit', 'app_maintenances_delete','blacklised','ban','unban'];
-        // Routes that ONLY admin can access
+        , 'app_equipments_delete', 'app_maintenances', 'app_maintenances_edit', 'app_maintenances_delete','blacklised','ban','unban', 'app_dashboard_profile'];
+        
+        // Routes that require admin role (inherits staff routes)
         $adminRoutes = $staffRoutes;
         $adminRoutes = array_merge($adminRoutes, 
             ['app_usermgmt', 'app_user_delete', 'app_user_edit', 'app_photo_admin']
@@ -55,19 +57,22 @@ class AuthentificationSubscriber implements EventSubscriberInterface
 
         if ($user) {
             
-            if ($user->getRole() == 'client' && (in_array($currentRoute, $staffRoutes) || in_array($currentRoute, $adminRoutes))) {
+            if ($user->getRole() == 'client' && !in_array($currentRoute, $clientRoutes)) {
                 $event->setResponse(new RedirectResponse($this->urlGenerator->generate('app_home')));
                 return;
             }
-            if (($user->getRole() == 'staff') && (in_array($currentRoute, $clientRoutes) || in_array($currentRoute, $adminRoutes))) {
+    
+            if ($user->getRole() == 'staff' && !in_array($currentRoute, $staffRoutes)) {
                 $event->setResponse(new RedirectResponse($this->urlGenerator->generate('app_dashboard')));
                 return;
             }
+    
+            if ($user->getRole() == 'admin' && !in_array($currentRoute, $adminRoutes)) {
+                $event->setResponse(new RedirectResponse($this->urlGenerator->generate('app_dashboard')));
+                return;
+            }
+
             
-            if (($user->getRole() == 'admin') && (in_array($currentRoute, $clientRoutes))) {
-                $event->setResponse(new RedirectResponse($this->urlGenerator->generate('app_dashboard')));
-                return;
-            }
         }
 
         // If the current route is not protected, do nothing to allow access to everyone

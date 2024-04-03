@@ -27,6 +27,10 @@
 	<title>GymPlus - Fitness, Workout & Gym</title>
 {% endblock %}
 {% block css %}
+	<link href="{{asset('main/vendor/ScheduleBootsrap/bootstrap.min.css')}}" rel="stylesheet">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+	<link href="{{asset('main/vendor/ScheduleBootsrap/main.min.css')}}" rel="stylesheet">
+
 	<style>
 		.grecaptcha-badge {
 			width: 70px !important;
@@ -570,6 +574,10 @@
 
 {% block js %}
 <!-- JAVASCRIPT FILES ========================================= -->
+<script src="{{asset('main/js/jquery-3.6.0.min.js')}}"></script><!--  -->
+<script src="{{asset('main/js/bootstrap.min.js')}}"></script><!--  -->
+<script src="{{asset('main/js/main.min.js')}}"></script><!-- -->
+
 <script src="{{asset('main/js/jquery.min.js')}}"></script><!-- JQUERY.MIN JS -->
 <script src="{{asset('main/vendor/wow/wow.js')}}"></script><!-- WOW.JS -->
 <script src="{{asset('main/vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script><!-- BOOTSTRAP.MIN JS -->

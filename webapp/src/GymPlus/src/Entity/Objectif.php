@@ -1,10 +1,9 @@
 <?php
-
 namespace App\Entity;
-
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ObjectifRepository;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ObjectifRepository::class)]
 class Objectif
@@ -15,24 +14,32 @@ class Objectif
     private ?int $idobjectif;
 
     #[ORM\Column]
+    #[Assert\NotBlank(message: "Field requiredeeee")]
+    #[Assert\GreaterThanOrEqual(value:0, message:"La quantité doit être un nombre positif")]
     private ?float $poidsobj;
+
 
     #[ORM\Column]
     private ?\DateTime $dated;
 
     #[ORM\Column]
+    #[Assert\NotBlank(message: "Field required")]
     private ?\DateTime $datef;
 
     #[ORM\Column]
+    #[Assert\NotBlank(message: "Field required")]
     private ?float $poidsact;
 
     #[ORM\Column]
+    #[Assert\NotBlank(message: "Field required")]
     private ?float $taille;
 
     #[ORM\Column]
+    #[Assert\NotBlank(message: "Field required")]
     private ?string $alergie;
 
-    #[ORM\Column]
+    #[ORM\Column]  
+    #[Assert\NotBlank(message: "Field required")]
     private ?string $typeobj;
 
 

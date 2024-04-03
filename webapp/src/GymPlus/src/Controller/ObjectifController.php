@@ -19,6 +19,11 @@ class ObjectifController extends AbstractController
         $obj = new Objectif();
         $form = $this->createForm(ObjectifType::class, $obj);
 
+        $userId = $user->getId(); 
+        $entityManager = $registry->getManager();
+        $userEntity = $entityManager->getRepository(User::class)->find($userId); 
+        $obj->setUserid($userEntity);
+
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $registry->getManager();
@@ -32,7 +37,7 @@ class ObjectifController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
-
+  
 
 
     #[Route('/Schedule_Objectif', name: 'app_Schedule_objectif')]
@@ -49,6 +54,7 @@ class ObjectifController extends AbstractController
             'objectifs' => $objectifs,
         ]);
     }
+
     
 /*
     #[Route('/eventb', name: 'eventb')]
@@ -67,35 +73,41 @@ class ObjectifController extends AbstractController
             'user' => $user,
         ]);
     }
-    #[Route('/eventb/delete/{id}', name: 'event_delete')]
-    public function delete($id, ManagerRegistry $registry): Response
+    */
+    #[Route('/objectif/delete/{id}', name: 'obj_delete')]
+    public function deleteObjective($id, ManagerRegistry $registry): Response
     {
-        $event = $registry->getRepository(Objectif::class)->find($id);
+        $obj = $registry->getRepository(Objectif::class)->find($id);
         $entityManager = $registry->getManager();
-        $entityManager->remove($event);
+        $entityManager->remove($obj);
         $entityManager->flush();
-        return $this->redirectToRoute('eventb');
+        return $this->redirectToRoute('app_Schedule_objectif');
     }
-    #[Route('/eventb/edit/{id}', name: 'event_edit')]
+
+
+    
+    #[Route('/objectif/edit/{id}', name: 'obj_edit')]
     public function edit($id, Request $request, ManagerRegistry $registry, SessionInterface $session): Response
-    {    $user = $session->get('user');
-        if (!$user instanceof User) {
-            throw new \Exception('No user in session');
+    {  
+          $user = $session->get('user');
+        if ($user->getRole() != 'client')
+        {
+            return $this->redirectToRoute('app_dashboard');
         }
-        $event = $registry->getRepository(Objectif::class)->find($id);
-        $form = $this->createForm(ObjectifType::class, $event);
+        $obj = $registry->getRepository(Objectif::class)->find($id);
+        $form = $this->createForm(ObjectifType::class, $obj);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $registry->getManager();
             $entityManager->flush();
-            return $this->redirectToRoute('eventb');
+            return $this->redirectToRoute('app_objectif');
         }
-        return $this->render('dashboard\gestion_events/edit_event.html.twig', [
-            'controller_name' => 'EventbController',
+        return $this->render('main\ObjectifFront.html.twig', [
+            'controller_name' => 'ObjectifController',
             'form' => $form->createView(),
             'user' => $user,
         ]);
     }
 
-*/
+
 }

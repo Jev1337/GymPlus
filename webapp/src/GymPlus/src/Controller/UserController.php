@@ -53,23 +53,6 @@ class UserController extends AbstractController
         $form = $this->createForm(LoginType::class, $userlog);
         $form->handleRequest($request);
         if($form->isSubmitted()){
-            /*
-            $client = HttpClient::create();
-            $response = $client->request('POST', 'https://www.google.com/recaptcha/api/siteverify', [
-                'body' => [
-                    'secret' => '6LdlPKkpAAAAAJt_IYp6Nk2pIimy6h4UEJTyk9tQ',
-                    'response' => $form['captcha']->getData(),
-                ]]);
-            $data = $response->toArray();
-            if (!$data['success']) {
-                $this->addFlash('error', 'Recaptcha validation failed, please try again!');
-                return $this->redirectToRoute('app_login');
-            }else{
-                if ($data['score'] < 0.5) {
-                    $this->addFlash('error', 'Recaptcha validation failed, please try again!');
-                    return $this->redirectToRoute('app_login');
-                }
-            }*/
             if (!$form->isValid()) {
                $this->addFlash('error', 'There was an error with the form, please check the fields and try again!');
             }else{
@@ -135,37 +118,60 @@ class UserController extends AbstractController
     }
 
     
+    #[Route('/api/auth/verify', name: 'api_verify')]
+    public function verify(Request $request, UserRepository $repo): Response
+    {
+        $form = $this->createForm(UserType::class);
+        $form->handleRequest($request);
+        
+        if($form->isSubmitted() ){
+            if(!$form->isValid()){
+                $errorArray = [];
+                foreach ($form->getErrors(true) as $error) {
+                    $errorArray[] = $error->getMessage();
+                }
+                return new JsonResponse(['status' => 'error', 'errors' => $errorArray], 200);
+            }else{
+                $usersig = $form->getData();
+                $errorArray = [];
+                if ($repo->findUserByEmail($usersig->getEmail())) {
+                    //append error to array
+                    array_push($errorArray, 'Email already exists');
+                }
+                if ($repo->findUserByUsername($usersig->getUsername())) {
+                    //append error to array
+                    array_push($errorArray, 'Username already exists');
+                }
+                if ($repo->findUserByPhone($usersig->getNumTel())) {
+                    //append error to array
+                    array_push($errorArray, 'Phone number already exists');
+                }
+                if ($repo->findUserById($usersig->getId())) {
+                    //append error to array
+                    array_push($errorArray, 'CIN already exists');
+                }
+                if (count($errorArray) > 0) {
+                    return new JsonResponse(['status' => 'error', 'errors' => $errorArray], 200);
+                }
+                return new JsonResponse(['status' => 'success'], 200);
+            }
+        }
+    }
+
     #[Route('/auth/signup', name: 'app_signup')]
     public function signup(Request $request, ManagerRegistry $reg, UserRepository $repo): Response
     {
         if ($this->getUser()) {
             return $this->redirectToRoute('app_home');
         }
-        $usersig = new User();
-        $form = $this->createForm(UserType::class, $usersig);
+        $form = $this->createForm(UserType::class);
         $form->handleRequest($request);
         
         if($form->isSubmitted() ){
             if(!$form->isValid()){
                 $this->addFlash('error', 'There was an error with the form, please check the fields and try again!');
             }else{
-                
-                if ($repo->findUserByEmail($usersig->getEmail())) {
-                    $this->addFlash('error', 'Email already exists');
-                    return $this->redirectToRoute('app_signup');
-                }
-                if ($repo->findUserByUsername($usersig->getUsername())) {
-                    $this->addFlash('error', 'Username already exists');
-                    return $this->redirectToRoute('app_signup');
-                }
-                if ($repo->findUserByPhone($usersig->getNumTel())) {
-                    $this->addFlash('error', 'Phone number already exists');
-                    return $this->redirectToRoute('app_signup');
-                }
-                if ($repo->findUserById($usersig->getId())) {
-                    $this->addFlash('error', 'CIN already exists');
-                    return $this->redirectToRoute('app_signup');
-                }
+                $usersig = $form->getData();
                 $usersig->setPassword(password_hash($usersig->getPassword(), PASSWORD_BCRYPT));
                 $usersig->setRole('client');
                 $photo = $form['photo']->getData();

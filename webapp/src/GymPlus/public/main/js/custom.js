@@ -671,48 +671,56 @@ var PowerZone = function(){
 	
 	/* smartWizard ============ */
 	var smartWizard = function (){
-		if(($('#smartwizard').length > 0)){
-			// Leave step event is used for validating the forms
-			$("#smartwizard").on("leaveStep", function(e, anchorObject, currentStepIdx, nextStepIdx, stepDirection) {
-			
-                // Validate only on forward movement  
-                if (stepDirection == 'forward') {
-                  let form = document.getElementById('form-' + currentStepIdx);
-				 
 
+		// Leave step event is used for validating the forms
+		$("#smartwizard").on("leaveStep", function(e, anchorObject, currentStepIdx, nextStepIdx, stepDirection) {
+			if (stepDirection == 'backward'){
+				return false;
+			}
+			// Validate only on forward movement  
+			if (stepDirection == 'forward') {
+			  let form = document.getElementById('form-0');
 				if (form) {
-                    if (!form.checkValidity()) {
-                      form.classList.add('was-validated');
-                      $('#smartwizard').smartWizard("setState", [currentStepIdx], 'error');
-                      $("#smartwizard").smartWizard('fixHeight');
-                      return false;
-                    }
-                    $('#smartwizard').smartWizard("unsetState", [currentStepIdx], 'error');
-                  }
+					
+					if (currentStepIdx == 0){
+						
+						// Create a FormData object from the form
+						let formData = new FormData(form);
+						//async fetch to current url with POST containing form-0 data
+						let req = new XMLHttpRequest();
+						req.open('POST', '/api/auth/verify', false);
+						req.send(formData);
 
-				  if (currentStepIdx == 0)
-				  {
-					// get request to validate, to /api/sendSms?phone=...
-					//if code == 200, then we validate
-					req = new XMLHttpRequest();
-					req.open('GET', '/api/sendSms?phone=' + document.getElementById('user_numTel').value, false);
-					req.send(null);
-					if (req.status != 200)
-					{
-						document.getElementById("error").style.display = "block";
-						document.getElementById("error").innerHTML = "Error sending SMS, please try again later.";
-						setTimeout(function() {
-							$("#error").fadeOut().empty();
-						}, 3000);
-						form.classList.add('was-validated');
-						$('#smartwizard').smartWizard("setState", [currentStepIdx], 'error');
-						$("#smartwizard").smartWizard('fixHeight');
-						return false;
-					}
-				}else if (currentStepIdx == 1)
-				  {
-					// get request to validate, to /api/verifyPhone?phone=...&code=...
-					//if code == 200, then we validate
+						
+						if (req.status == 200) {
+							let data = JSON.parse(req.responseText);
+							if (data.errors) {
+								form.classList.add('was-validated');
+								$('#smartwizard').smartWizard("setState", [currentStepIdx], 'error');
+								$("#smartwizard").smartWizard('fixHeight');
+								intel = document.getElementById('error');
+								intel.style.display = 'block';
+								intel.innerHTML = "There was an error with your submission. The errors are as follows:";
+								for (let i = 0; i < data.errors.length; i++) {
+									intel.innerHTML += "<ul><li>&mdash;&nbsp;" + data.errors[i] + "</li></ul>";
+								}
+								return false;
+							} else {
+								$('#smartwizard').smartWizard("unsetState", [currentStepIdx], 'error');
+								req = new XMLHttpRequest();
+								req.open('GET', '/api/sendSms?phone=' + document.getElementById('user_numTel').value);
+								req.send();
+								document.getElementById('error').style.display = 'none';
+								
+							}
+						}else{
+							form.classList.add('was-validated');
+							$('#smartwizard').smartWizard("setState", [currentStepIdx], 'error');
+							$("#smartwizard").smartWizard('fixHeight');
+							return false;
+						}
+
+					}else if (currentStepIdx == 1){
 					req = new XMLHttpRequest();
 					req.open('GET', '/api/verifyPhone?phone=' + document.getElementById('user_numTel').value + '&code=' + document.getElementById('code').value, false);
 					req.send(null);
@@ -734,7 +742,8 @@ var PowerZone = function(){
 						stat = json['status'];
 						if (stat == 'success')
 						{
-							//do nothing
+							document.getElementById("form-0").submit();
+
 						}else
 						{
 							document.getElementById("error").style.display = "block";
@@ -744,31 +753,32 @@ var PowerZone = function(){
 							}, 3000);
 							document.getElementById('code').value = '';
 							form.classList.add('was-validated');
-							$('#smartwizard').smartWizard("setState", [currentStepIdx], 'error');
-							$("#smartwizard").smartWizard('fixHeight');
-							return false;
 						}
 					}
 				  }
-                }
-            });
+					/*
+					if (!form.checkValidity()) {
+					form.classList.add('was-validated');
+					$('#smartwizard').smartWizard("setState", [currentStepIdx], 'error');
+					$("#smartwizard").smartWizard('fixHeight');
+					return false;
+					}
+					$('#smartwizard').smartWizard("unsetState", [currentStepIdx], 'error');
+					*/
+					//ajax to current url with POST containing form-0 data, analyze json response, if error, display alert, other wise $('#smartwizard').smartWizard("unsetState", [currentStepIdx], 'error');
+					
+				}
+			}
+		});
+
+		if(($('#smartwizard').length > 0)){
 			// Step show event
 			$("#smartwizard").on("showStep", function(e, anchorObject, stepNumber, stepDirection, stepPosition) {
-				
 			   //alert("You are on step "+stepNumber+" now");
-			   if (stepNumber == 2){
-				
-				history.replaceState(null, null, ' '); 	
-
-				document.getElementById('form-0').submit();
-				//remove hash from url
-				
-			   }
 			   if(stepPosition === 'first'){
 				   $("#prev-btn").addClass('disabled');
 			   }else if(stepPosition === 'final'){
 				   $("#next-btn").addClass('disabled');
-				   $("#prev-btn").addClass('disabled');
 			   }else{
 				   $("#prev-btn").removeClass('disabled');
 				   $("#next-btn").removeClass('disabled');
@@ -795,6 +805,8 @@ var PowerZone = function(){
 					toolbarExtraButtons: [btnFinish, btnCancel]
 				}
 			});
+			
+			$('.sw-btn-prev').css('visibility', 'hidden');
 			
 			// External Button Events
 			$("#reset-btn").on("click", function() {
@@ -826,6 +838,7 @@ var PowerZone = function(){
 			
 		}
 	}
+
 	/* Load File ============ */
 	var dzTheme = function () {
 

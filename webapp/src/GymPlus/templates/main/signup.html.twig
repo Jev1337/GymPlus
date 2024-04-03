@@ -48,6 +48,7 @@
 								{{ message }}
 							</div>
 					{% endfor %}
+				
 				<div id="smartwizard" class="wizard-form">
 					<ul class="nav">
 						
@@ -84,98 +85,132 @@
 	
 					
 						
-						<div id="wizardStep1" class="tab-pane" role="tabpanel" aria-labelledby="wizardStep3">
+						<div id="wizardStep1" class="tab-pane" role="tabpanel" aria-labelledby="wizardStep1">
 							<h5 class="m-b5">Your New Account</h5>
 							<p class="m-b0">You are about to create a new account.</p>
 							<p class="m-b30">Please provide your details in the form below to proceed with your signup. You will confirm your phone number in the next step.</p>
 							
-							{{ form_start(form, {'attr': {'class': 'row', 'id': 'form-0'}}) }}
-
-
-							<div class="col-md-4 col-lg-4 form-group">
-								{{ form_label(form.id, 'CIN', {'label_attr': {'class': 'form-label'}}) }}
-								<div class="input-group input-line">
-									{{ form_widget(form.id, {'attr': {'class': 'form-control', 'placeholder': 'CIN'}}) }}
+							
+								{{ form_start(form, {'attr': { 'id': 'form-0', 'class' : 'row'}}) }}
+								<div class="col-md-2 col-lg-2 form-group">
+									{{ form_label(form.id, 'CIN', {'label_attr': {'class': 'form-label'}}) }}
+									<div class="input-group input-line">
+										{{ form_widget(form.id, {'attr': {'class': 'form-control', 'placeholder': 'CIN'}}) }}
+									</div>
+									<div class="invalid-feedback">
+										Please choose a correct CIN.
+									</div>
 								</div>
-								<small class="text-danger">{{ form_errors(form.id) }}</small>
-							</div>
-							<div class="col-md-4 col-lg-4 form-group">
-								{{ form_label(form.username, 'Username', {'label_attr': {'class': 'form-label'}}) }}
-								<div class="input-group input-line">
-									{{ form_widget(form.username, {'attr': {'class': 'form-control', 'placeholder': 'Username'}}) }}
+								<div class="col-md-2 col-lg-2 form-group">
+									{{ form_label(form.username, 'Username', {'label_attr': {'class': 'form-label'}}) }}
+									<div class="input-group input-line">
+										{{ form_widget(form.username, {'attr': {'class': 'form-control', 'placeholder': 'Username'}}) }}
+									</div>
+									<div class="invalid-feedback">
+										Please choose a correct username.
+									</div>
 								</div>
-								<small class="text-danger">{{ form_errors(form.username) }}</small>
-							</div>
 
-							<div class="col-md-4 col-lg-4 form-group">
-								{{ form_label(form.firstname, 'First Name', {'label_attr': {'class': 'form-label'}}) }}
-								<div class="input-group input-line">
-									{{ form_widget(form.firstname, {'attr': {'class': 'form-control', 'placeholder': 'First Name'}}) }}
+								<div class="col-md-2 col-lg-2 form-group">
+									{{ form_label(form.firstname, 'First Name', {'label_attr': {'class': 'form-label'}}) }}
+									<div class="input-group input-line">
+										{{ form_widget(form.firstname, {'attr': {'class': 'form-control', 'placeholder': 'First Name'}}) }}
+									</div>
+									<div class="invalid-feedback">
+										Please choose a correct first name.
+									</div>
 								</div>
-								<small class="text-danger">{{ form_errors(form.firstname) }}</small>
-							</div>
 
-							<div class="col-md-4 col-lg-4 form-group">
-								{{ form_label(form.lastname, 'Last Name', {'label_attr': {'class': 'form-label'}}) }}
-								<div class="input-group input-line">
-									{{ form_widget(form.lastname, {'attr': {'class': 'form-control', 'placeholder': 'Last Name'}}) }}
+								<div class="col-md-2 col-lg-2 form-group">
+									{{ form_label(form.lastname, 'Last Name', {'label_attr': {'class': 'form-label'}}) }}
+									<div class="input-group input-line">
+										{{ form_widget(form.lastname, {'attr': {'class': 'form-control', 'placeholder': 'Last Name'}}) }}
+									</div>
+									<div class="invalid-feedback">
+										Please choose a correct last name.
+									</div>
 								</div>
-								<small class="text-danger">{{ form_errors(form.lastname) }}</small>
-							</div>
 
-							<div class="col-md-4 col-lg-4 form-group">
-								{{ form_label(form.dateNaiss, 'Date of Birth', {'label_attr': {'class': 'form-label'}}) }}
-								<div class="input-group input-line">
-									{{ form_widget(form.dateNaiss, {'attr': {'class': 'form-control', 'placeholder': 'Date of Birth'}}) }}
+								<div class="col-md-4 col-lg-4 form-group">
+									{{ form_label(form.dateNaiss, 'Date of Birth', {'label_attr': {'class': 'form-label'}}) }}
+									<div class="input-group input-line">
+										{{ form_widget(form.dateNaiss, {'attr': {'class': 'form-control', 'placeholder': 'Date of Birth'}}) }}
+									</div>
+									<div class="invalid-feedback">
+										Please choose a correct date of birth.
+									</div>
 								</div>
-								<small class="text-danger">{{ form_errors(form.dateNaiss) }}</small>
-							</div>
 
-							<div class="col-md-4 col-lg-4 form-group">
-								{{ form_label(form.password, 'Password', {'label_attr': {'class': 'form-label'}}) }}
-								<div class="input-group input-line">
-									{{ form_widget(form.password, {'attr': {'class': 'form-control', 'placeholder': 'Password'}}) }}
+								<div class="col-md-4 col-lg-4 form-group">
+									{{ form_label(form.email, 'Email', {'label_attr': {'class': 'form-label'}}) }}
+									<div class="input-group input-line">
+										{{ form_widget(form.email, {'attr': {'class': 'form-control', 'placeholder': 'Email'}}) }}
+									</div>
+									<div class="invalid-feedback">
+										Please choose a correct email.
+									</div>
 								</div>
-								<small class="text-danger">{{ form_errors(form.password) }}</small>
-							</div>
 
-							<div class="col-md-4 col-lg-4 form-group">
-								{{ form_label(form.email, 'Email', {'label_attr': {'class': 'form-label'}}) }}
-								<div class="input-group input-line">
-									{{ form_widget(form.email, {'attr': {'class': 'form-control', 'placeholder': 'Email'}}) }}
+								<div class="col-md-4 col-lg-4 form-group">
+									{{ form_label(form.password, 'Password', {'label_attr': {'class': 'form-label'}}) }}
+									<div class="input-group input-line">
+										{{ form_widget(form.password, {'attr': {'class': 'form-control', 'placeholder': 'Password'}}) }}
+									</div>
+									<div class="invalid-feedback">
+										Please choose a correct password.
+									</div>
 								</div>
-								<small class="text-danger">{{ form_errors(form.email) }}</small>
-							</div>
 
-							<div class="col-md-4 col-lg-4 form-group">
-								{{ form_label(form.numTel, 'Phone Number', {'label_attr': {'class': 'form-label'}}) }}
-								<div class="input-group input-line">
-									{{ form_widget(form.numTel, {'attr': {'class': 'form-control', 'placeholder': 'Phone Number'}}) }}
+								<div class="col-md-4 col-lg-4 form-group">
+									<label for="confirm_password" class="form-label">Confirm Password</label>
+									<div class="input-group input-line">
+										<input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="Confirm Password" required>
+									</div>
+									<div class="invalid-feedback">
+										Please choose a correct password.
+									</div>
+									<script>
+										var password = document.getElementById("user_password")
+										, confirm_password = document.getElementById("confirm_password");
+
+										function validatePassword(){
+											if(password.value != confirm_password.value) {
+												confirm_password.setCustomValidity("Passwords Don't Match");
+											} else {
+												confirm_password.setCustomValidity('');
+											}
+										}
+
+										password.onchange = validatePassword;
+										confirm_password.onkeyup = validatePassword;
+									</script>
 								</div>
-								<small class="text-danger">{{ form_errors(form.numTel) }}</small>
-							</div>
-
-							<div class="col-md-4 col-lg-4 form-group">
-								{{ form_label(form.adresse, 'Address', {'label_attr': {'class': 'form-label'}}) }}
-								<div class="input-group input-line">
-									{{ form_widget(form.adresse, {'attr': {'class': 'form-control', 'placeholder': 'Address'}}) }}
+								
+								<div class="col-md-4 col-lg-4 form-group">
+									{{ form_label(form.numTel, 'Phone Number', {'label_attr': {'class': 'form-label'}}) }}
+									<div class="input-group input-line">
+										{{ form_widget(form.numTel, {'attr': {'class': 'form-control', 'placeholder': 'Phone Number'}}) }}
+									</div>
+									<div class="invalid-feedback">
+										Please choose a correct phone number.
+									</div>
 								</div>
-								<small class="text-danger">{{ form_errors(form.adresse) }}</small>
-							</div>
-
-							<div class="col-md-4 col-lg-4 form-group">
-								{{ form_label(form.photo, 'Upload Photo', {'label_attr': {'class': 'form-label'}}) }}
-								<div class="input-group input-line">
-									{{ form_widget(form.photo, {'attr': {'class': 'form-control', 'placeholder': 'Upload Photo'}}) }}
+								<div class="col-md-4 col-lg-4 form-group">
+									{{ form_label(form.photo, 'Upload Photo', {'label_attr': {'class': 'form-label'}}) }}
+									<div class="input-group input-line">
+										{{ form_widget(form.photo, {'attr': {'class': 'form-control', 'placeholder': 'Upload Photo'}}) }}
+									</div>
+									<div class="invalid-feedback">
+										Please choose a correct photo.
+									</div>
 								</div>
-								<small class="text-danger">{{ form_errors(form.photo) }}</small>
-							</div>
-
+							
 						{{ form_end(form) }}
 
 
 						</div>
-						<div id="wizardStep1" class="tab-pane" role="tabpanel" aria-labelledby="wizardStep4">
+						
+						<div id="wizardStep3" class="tab-pane" role="tabpanel" aria-labelledby="wizardStep3">
 							<h5>Verification Code</h5>
 							<p class="m-b0">You will receive a verification code on your phone number. Please input the code below to verify your account.</p>
 							<form class="row" id="form-1">
@@ -186,14 +221,17 @@
 								</div>
 							</form>
 						</div>
-						<div id="wizardStep3" class="tab-pane" role="tabpanel" aria-labelledby="wizardStep5">
+
+						<div id="wizardStep3" class="tab-pane" role="tabpanel" aria-labelledby="wizardStep3">
 							<div class="successful-box text-center">
 								<div class="successful-check"><i class="fa-solid fa-check"></i></div>
-								<h2>Successful</h2>									
+								<h2>Your Account Has Been Created Successfully!</h2>
+								<a href="{{path('app_home')}}">Not Redirected? Click Here</a>					
 							</div>
 						</div>
 					</div>
 				</div>  
+				
 			</div>
 		</section>
 		

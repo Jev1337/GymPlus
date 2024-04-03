@@ -15,6 +15,7 @@
 							<nav aria-label="breadcrumb" class="breadcrumb-row">
 								<ul class="breadcrumb">
 									<li class="breadcrumb-item"><a href="index.html">Home</a></li>
+									
 									<li class="breadcrumb-item active" aria-current="page">Events</li>
 								</ul>
 							</nav>
@@ -28,9 +29,20 @@
 			</div>	
 		</div>
 		<!-- Banner End -->
-		
+	<div class="container text-center my-4">
+    <a href="{{ path('rewards') }}" class="text-decoration-none text-dark">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Event Points</h5>
+                <p class="card-text">{{ user_points }}</p>
+               
+            </div>
+        </div>
+    </a>
+</div>
 		<!-- Our Events -->
 		<section class="content-inner">
+		
 			<div class="container">
 				<div class="row">
 					<div class="col-lg-12">
@@ -39,7 +51,8 @@
     <div class="col-xl-6 col-lg-8">
         <div class="dz-card style-1 blog-half m-b30 overlay-shine wow fadeInUp" data-wow-delay="0.2s">
             <div class="dz-media">
-                <a href="javascript:void(0);"><img src="{{ asset('main/images/blog/blog-grid/pic2.jpg') }}" alt="/"></a>
+                
+                <a href="javascript:void(0);"><img src="{{ asset('main/images/event/' ~ event.event.type ~ '.jpg') }}" alt="/"></a>
             </div>
             <div class="dz-info">
                 <div class="dz-meta">
@@ -55,13 +68,15 @@
 
                 <h4 class="dz-title"><a href="event-detail.html">{{ event.event.name }}</a></h4>
                 <p>Type: {{ event.event.type }}</p>
-                <p>Duration: {{ event.event.duree }}</p>
-                <p>Number of Places: {{ event.event.nbPlaces }}</p>
+                <p>Duration: {{ event.event.duree }} Minutes</p>
+                <p>Remaining Spots: {{ event.event.nbPlaces }}</p>
                 <form action="{{ event.isUserParticipant ? path('event_leave', {'id': event.event.id}) : path('event_join', {'id': event.event.id}) }}" method="post">
-        <button type="submit" class="btn btn-primary btn-skew appointment-btn">
-            <span class="skew-inner"><span class="text">{{ event.isUserParticipant ? 'Leave' : 'Join' }}</span></span>
-        </button>
-    </form>
+    <button type="submit" class="btn btn-skew appointment-btn join-button {{ event.isUserParticipant ? 'btn-danger' : 'btn-primary' }}">
+    <span class="skew-inner"><span class="text">{{ event.isUserParticipant ? 'Leave' : 'Join' }}</span></span>
+</button>
+
+</form>
+	
             </div>
         </div>
     </div>
@@ -78,4 +93,27 @@
 		
 	</div>
 
+{% endblock %}
+{% block js %}
+{{parent()}}
+<script>
+   {% set claimStatusFlashes = app.flashes('claimStatus') %}
+   {% if claimStatusFlashes is not empty %}
+    {% set status = claimStatusFlashes[0] %}
+    if ('{{ status }}' === 'success') {
+        Swal.fire({
+            title: "Good job!",
+            text: "You clicked the button!",
+            icon: "success"
+        });
+    } else if ('{{ status }}' === 'error') {
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Something went wrong!",
+            footer: '<a href="#">Why do I have this issue?</a>'
+        });
+    }
+{% endif %}
+</script>
 {% endblock %}

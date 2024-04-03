@@ -13,13 +13,9 @@ use Doctrine\Persistence\ManagerRegistry;
 class ObjectifController extends AbstractController
 {
     #[Route('/add_Objectif', name: 'app_objectif')]
-    public function add_Objectif(Request $request, SessionInterface $session, ManagerRegistry $registry): Response
+    public function add_Objectif(Request $request, ManagerRegistry $registry): Response
     {
-        $user = $session->get('user');
-        if ($user->getRole() != 'client')
-        {
-            return $this->redirectToRoute('app_dashboard');
-        }
+        $user = $this->getUser();
         $obj = new Objectif();
         $form = $this->createForm(ObjectifType::class, $obj);
 
@@ -45,13 +41,9 @@ class ObjectifController extends AbstractController
 
 
     #[Route('/Schedule_Objectif', name: 'app_Schedule_objectif')]
-    public function Schedule_Objectif(Request $request, SessionInterface $session, ManagerRegistry $registry): Response
+    public function Schedule_Objectif(Request $request, ManagerRegistry $registry): Response
     {
-        $user = $session->get('user');
-        if ($user->getRole() != 'client')
-        {
-            return $this->redirectToRoute('app_dashboard');
-        }
+        $user = $this->getUser();
         $userId = $user->getId();
         $entityManager = $registry->getManager();
         $objectifs = $entityManager->getRepository(Objectif::class)->findBy(['userid' => $userId]);

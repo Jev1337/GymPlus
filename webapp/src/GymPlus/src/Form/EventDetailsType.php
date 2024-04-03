@@ -10,28 +10,35 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
-
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 class EventDetailsType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     { $event = $builder->getData();
         $builder
             ->add('name')
-            ->add('type')
-            ->add('eventDate')
-            ->add('duree')
-            ->add('nbPlaces', null, [
-                'disabled' => $event && $event->getId() !== null,
-                'empty_data' => $event ? $event->getNbPlaces() : null,
+            ->add('type', ChoiceType::class, [
+                'choices'  => [
+                    'Swimming' => 'swimming',
+                    'Boxing' => 'boxing',
+                    'Gymnastic' => 'gymnastic',
+                    'Powerlifting' => 'powerlifting',
+                    'Bodybuilding' => 'bodybuilding',
+                    'Spinning' => 'spinning',
+                    'Crossfit' => 'crossfit',
+                ],
+                'placeholder' => 'Choose an event type',
             ])
-            ->add('save', SubmitType::class);
+            ->add('eventDate', DateTimeType::class, [
+                'widget' => 'single_text',
+                'required' => true,
+            ]
+            )
+            ->add('duree')
+            ->add('nbPlaces')
+            ->add('Add', SubmitType::class);
     }
     
-    public function configureOptions(OptionsResolver $resolver): void
-    {
-        $resolver->setDefaults([
-            'data_class' => EventDetails::class,
-            'isEditAction' => false,  // Add this line to define the new option
-        ]);
-    }
+
 }

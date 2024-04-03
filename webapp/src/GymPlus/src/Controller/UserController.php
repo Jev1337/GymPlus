@@ -8,7 +8,6 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Form\LoginType;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\User;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Twilio\Rest\Client;
 use App\Form\UserType;
 use App\Repository\AbonnementRepository;
@@ -20,73 +19,82 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpClient\HttpClient;
 use App\Form\ModifyUserType;
 use App\Annotation\ProtectedRoute;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use App\Form\AdminUserType;
+use Karser\Recaptcha3Bundle\Validator\Constraints\Recaptcha3Validator;
+
 
 class UserController extends AbstractController
 {
     #[Route('/dashboard/home', name: 'app_dashboard')]
-    public function dashboard(SessionInterface $session): Response
+    public function dashboard(): Response
     {
-        $user = $session->get('user');
-        if ($user->getRole() == 'client') {
-            return $this->redirectToRoute('app_home');
-        }
+    
         return $this->render('dashboard/index.html.twig', [
             'controller_name' => 'UserController',
-            'user' => $user
         ]);
     }
 
     #[Route('/home', name: 'app_home')]
-    public function home(SessionInterface $session): Response
+    public function home(): Response
     {
-        $user = $session->get('user');
-        if($user){
-            if ($user->getRole() != 'client') {
-                return $this->redirectToRoute('app_dashboard');
-            }
-        }
         return $this->render('main/index.html.twig', [
             'controller_name' => 'UserController',
-            'user' => $session->get('user')
         ]);
     }
 
     #[Route('/auth/login', name: 'app_login')]
-    public function login(Request $request, SessionInterface $session, UserRepository $repo): Response
+    public function login(Request $request, UserRepository $repo, Recaptcha3Validator $recaptcha3Validator): Response
     {
-        $user = $session->get('user');
-        if ($user) {
-            if ($user->getRole() == 'client') {
-                return $this->redirectToRoute('app_home');
-            } else {
-                return $this->redirectToRoute('app_dashboard');
-            }
+        if ($this->getUser()) {
+            return $this->redirectToRoute('app_home');
         }
-        $form = $this->createForm(LoginType::class);
+        $userlog = new User();
+        $form = $this->createForm(LoginType::class, $userlog);
         $form->handleRequest($request);
-        if($form->isSubmitted() && $form->isValid()){
-            $data = $form->getData();
-            $user = $repo->findOneBy(['email' => $data['email']]);
-            if($user){
-                if(password_verify($data['password'], $user->getPassword())){
-                    $session->set('user', $user);
-                    if ($user->getRole() != 'client') {
-                        return $this->redirectToRoute('app_dashboard');
-                    } else {
-                        return $this->redirectToRoute('app_home');
+        if($form->isSubmitted()){
+            /*
+            $client = HttpClient::create();
+            $response = $client->request('POST', 'https://www.google.com/recaptcha/api/siteverify', [
+                'body' => [
+                    'secret' => '6LdlPKkpAAAAAJt_IYp6Nk2pIimy6h4UEJTyk9tQ',
+                    'response' => $form['captcha']->getData(),
+                ]]);
+            $data = $response->toArray();
+            if (!$data['success']) {
+                $this->addFlash('error', 'Recaptcha validation failed, please try again!');
+                return $this->redirectToRoute('app_login');
+            }else{
+                if ($data['score'] < 0.5) {
+                    $this->addFlash('error', 'Recaptcha validation failed, please try again!');
+                    return $this->redirectToRoute('app_login');
+                }
+            }*/
+            if (!$form->isValid()) {
+               $this->addFlash('error', 'There was an error with the form, please check the fields and try again!');
+            }else{
+                $user = $repo->findUserByEmail($userlog->getEmail());
+                if($user){
+                    if(password_verify($userlog->getPassword(), $user->getPassword())){
+                        $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
+                        $this->get('security.token_storage')->setToken($token);
+                        $this->get('session')->set('_security_main', serialize($token));
+                        if ($user->getRole() != 'client') {
+                            return $this->redirectToRoute('app_dashboard');
+                        } else {
+                            return $this->redirectToRoute('app_home');
+                        }
+                    }else{
+                        $this->addFlash('error', 'Invalid Email or Password');
                     }
                 }else{
                     $this->addFlash('error', 'Invalid Email or Password');
                 }
-            }else{
-                $this->addFlash('error', 'Invalid Email or Password');
             }
-            
         }
         return $this->render('main/login.html.twig', [
             'controller_name' => 'UserController',
-            'form' => $form->createView(),
-            'user' => $session->get('user')
+            'form' => $form->createView()
         ]);
     }
 
@@ -120,184 +128,175 @@ class UserController extends AbstractController
         $verificationCheck = $twilio->verify->v2->services("VA10dd8bfd053741ce7361fd967c83a1e6")
                                    ->verificationChecks
                                    ->create(["to"=> "whatsapp:+216. " . $phone, "code" => $code]);
-        return new Response($verificationCheck->status, 200);
+        if ($verificationCheck->status == 'approved') {
+            return new JsonResponse(['status' => 'success'], 200);
+        }
+        return new JsonResponse(['status' => 'error'], 400);
     }
 
     
     #[Route('/auth/signup', name: 'app_signup')]
-    public function signup(Request $request, SessionInterface $session, ManagerRegistry $reg, UserRepository $repo): Response
+    public function signup(Request $request, ManagerRegistry $reg, UserRepository $repo): Response
     {
-        $user = $session->get('user');
-        if ($user) {
-            if ($user->getRole() == 'client') {
-                return $this->redirectToRoute('app_home');
-            } else {
-                return $this->redirectToRoute('app_dashboard');
-            }
+        if ($this->getUser()) {
+            return $this->redirectToRoute('app_home');
         }
-        $form = $this->createForm(UserType::class);
+        $usersig = new User();
+        $form = $this->createForm(UserType::class, $usersig);
         $form->handleRequest($request);
         
         if($form->isSubmitted() ){
             if(!$form->isValid()){
-                foreach($form->getErrors(true) as $error){
-                    $this->addFlash('error', $error->getMessage());
-                }
+                $this->addFlash('error', 'There was an error with the form, please check the fields and try again!');
             }else{
-                $data = $form->getData();
-                if ($repo->findUserByEmail($data->getEmail())) {
+                
+                if ($repo->findUserByEmail($usersig->getEmail())) {
                     $this->addFlash('error', 'Email already exists');
                     return $this->redirectToRoute('app_signup');
                 }
-                if ($repo->findUserByUsername($data->getUsername())) {
+                if ($repo->findUserByUsername($usersig->getUsername())) {
                     $this->addFlash('error', 'Username already exists');
                     return $this->redirectToRoute('app_signup');
                 }
-                if ($repo->findUserByPhone($data->getNumTel())) {
+                if ($repo->findUserByPhone($usersig->getNumTel())) {
                     $this->addFlash('error', 'Phone number already exists');
                     return $this->redirectToRoute('app_signup');
                 }
-                if ($repo->findUserById($data->getId())) {
+                if ($repo->findUserById($usersig->getId())) {
                     $this->addFlash('error', 'CIN already exists');
                     return $this->redirectToRoute('app_signup');
                 }
-                $user = new User();
-                $user->setEmail($data->getEmail());
-                $user->setPassword(password_hash($data->getPassword(), PASSWORD_DEFAULT));
-                $user->setRole('client');
-                $user->setUsername($data->getUsername());
-                $user->setNumTel($data->getNumTel());
-                $user->setAdresse($data->getAdresse());
-                $user->setFaceidTs(new \DateTime());
-                $user->setDateNaiss($data->getDateNaiss());
-                $user->setFirstname($data->getFirstname());
-                $user->setLastname($data->getLastname());
-                $user->setId($data->getId());
+                $usersig->setPassword(password_hash($usersig->getPassword(), PASSWORD_BCRYPT));
+                $usersig->setRole('client');
                 $photo = $form['photo']->getData();
-                $filename = 'USERIMG' . $user->getId() . '.' . $photo->guessExtension();
+                $filename = 'USERIMG' . $usersig->getId() . '.' . $photo->guessExtension();
                 $targetdir = $this->getParameter('kernel.project_dir') . '/public/profileuploads/';
                 $photo->move($targetdir, $filename);
-                $user->setPhoto($filename);
-                $reg->getManager()->persist($user);
+                $usersig->setPhoto($filename);
+                $reg->getManager()->persist($usersig);
                 $reg->getManager()->flush();
-                $session->set('user', $user);
+                $token = new UsernamePasswordToken($usersig, null, 'main', $usersig->getRoles());
+                $this->get('security.token_storage')->setToken($token);
+                $this->get('session')->set('_security_main', serialize($token));
             }
         }
         
 
         return $this->render('main/signup.html.twig', [
             'controller_name' => 'UserController',
-            'form' => $form->createView(),
-            'user' => $session->get('user')
+            'form' => $form->createView()
         ]);
     }
 
     #[Route('/auth/logout', name: 'app_logout')]
-    public function logout(SessionInterface $session): Response
+    public function logout(): Response
     {
-        $session->remove('user');
+        $this->get('security.token_storage')->setToken(null);
+        $this->get('session')->invalidate();
         return $this->redirectToRoute('app_login');
     }
 
     #[Route('/member/profile', name: 'app_profile')]
-    public function profile(SessionInterface $session, Request $request, UserRepository $repo, ManagerRegistry $reg): Response
+    public function profile(Request $request, UserRepository $repo, ManagerRegistry $reg): Response
     {
-        $user = $session->get('user');
-        if ($user->getRole() != 'client') {
-            return $this->redirectToRoute('app_dashboard');
-        }
-        $user = $repo->findUserById($user->getId());
+        $user = $this->getUser();
         $form = $this->createForm(ModifyUserType::class, $user);
         $form->handleRequest($request);
         if($form->isSubmitted() ){
             if (!$form->isValid()) {
-                foreach ($form->getErrors(true) as $error) {
-                    $this->addFlash('error', $error->getMessage());
-                }
+                $this->addFlash('error', 'There was an error with the form, please check the fields and try again!');
             }else{
                 $data = $form->getData();
-                $user->setUsername($data->getUsername());
-                $user->setNumTel($data->getNumTel());
-                $user->setAdresse($data->getAdresse());
-                $user->setDateNaiss($data->getDateNaiss());
-                $user->setFirstname($data->getFirstname());
-                $user->setLastname($data->getLastname());
+                if ($repo->findUserByUsername($data->getUsername()) && $repo->findUserByUsername($data->getUsername())->getId() != $user->getId()){
+                    $this->addFlash('error', 'Username already exists');
+                    return $this->redirectToRoute('app_profile');
+                }
+                if ($repo->findUserByPhone($data->getNumTel()) && $repo->findUserByPhone($data->getNumTel())->getId() != $user->getId()) {
+                    $this->addFlash('error', 'Phone number already exists, please remove it from the other account!');
+                    return $this->redirectToRoute('app_profile');
+                }
                 $reg->getManager()->persist($user);
                 $reg->getManager()->flush();
-                $session->set('user', $user);
+                $this->addFlash('success', 'User updated successfully!');
                 return $this->redirectToRoute('app_profile');
             }
         }
         return $this->render('main/profile.html.twig', [
             'controller_name' => 'UserController',
-            'user' => $session->get('user'),
             'form' => $form->createView()
         ]);
     }
 
     #[Route('/api/modifyImage', name: 'app_photo')]
-    public function modifyImage(SessionInterface $session, Request $request, UserRepository $repo, ManagerRegistry $reg): Response
+    public function modifyImage(Request $request, UserRepository $repo, ManagerRegistry $reg): Response
     {
-        $user = $session->get('user');
-        $user = $repo->findUserById($user->getId());
+        $user = $this->getUser();
         $photo = $request->files->get('image');
         if ($photo) {
             $filename = 'USERIMG' . $user->getId() . '.' . $photo->guessExtension();
-           
             $targetdir = $this->getParameter('kernel.project_dir') . '/public/profileuploads/';
             $photo->move($targetdir, $filename);
             $user->setPhoto($filename);
             $reg->getManager()->persist($user);
             $reg->getManager()->flush();
-            $session->set('user', $user);
+            $this->addFlash('success', 'Image updated successfully!');
         }
-        return $this->redirectToRoute('app_profile');
+        return $this->redirect($request->headers->get('referer'));
+    }
+
+    #[Route('/api/dashboard/modifyImage/{id}', name: 'app_photo_admin')]
+    public function modifyImageAdmin(Request $request, UserRepository $repo, ManagerRegistry $reg, $id): Response
+    {   
+        $userimg = $repo->findUserById($id);
+        $photo = $request->files->get('image');
+        if ($photo) {
+            $filename = 'USERIMG' . $userimg->getId() . '.' . $photo->guessExtension();
+            $targetdir = $this->getParameter('kernel.project_dir') . '/public/profileuploads/';
+            $photo->move($targetdir, $filename);
+            $userimg->setPhoto($filename);
+            $reg->getManager()->persist($userimg);
+            $reg->getManager()->flush();
+            $this->addFlash('success', 'Image updated successfully!');
+        }
+        return $this->redirect($request->headers->get('referer'));
     }
 
 
+
     #[Route('/member/subscriptions', name: 'app_subs')]
-    public function subscriptions(SessionInterface $session, AbonnementRepository $repo): Response
+    public function subscriptions(AbonnementRepository $repo): Response
     {
 
-        $user = $session->get('user');
-        if ($user->getRole() != 'client') {
-            return $this->redirectToRoute('app_dashboard');
-        }
-        if ($repo->isUserSubscribed($user->getId())) {
+        if ($repo->isUserSubscribed($this->getUser()->getId())) {
             return $this->render('main/mysubscriptions.html.twig', [
                 'controller_name' => 'UserController',
-                'user' => $session->get('user'),
-                'subs' => $repo->getOldSubscriptionsByUserId($user->getId()),
-                'subnow' => $repo->getCurrentSubByUserId($user->getId()),
-                'diff' => $repo->getCurrentSubByUserId($user->getId())->getDatefinab()->diff(new \DateTime())->format('%a')
+                'subs' => $repo->getOldSubscriptionsByUserId($this->getUser()->getId()),
+                'subnow' => $repo->getCurrentSubByUserId($this->getUser()->getId()),
+                'diff' => $repo->getCurrentSubByUserId($this->getUser()->getId())->getDatefinab()->diff(new \DateTime())->format('%a')
             ]);
         }
         
         return $this->render('main/subscriptions.html.twig', [
             'controller_name' => 'UserController',
-            'user' => $session->get('user')
+
         ]);
     }
 
     #[Route('/payment/gp', name: 'app_buy')]
-    public function buy(SessionInterface $session, Request $request, AbonnementRepository $repo, AbonnementDetailsRepository $repo0): Response
+    public function buy( Request $request, AbonnementRepository $repo, AbonnementDetailsRepository $repo0): Response
     {
+        $user = $this->getUser();
         $id = $request->query->get('id');
         if (!$id && id != 1 && id != 2 && id != 3) {
             return $this->redirectToRoute('app_home');
         }
 
-        $user = $session->get('user');
-        if ($user->getRole() != 'client') {
-            return $this->redirectToRoute('app_dashboard');
-        }
         if ($repo->isUserSubscribed($user->getId())) {
             return $this->redirectToRoute('app_home');
         }
         $price = $repo0->getAbonnementPriceByName('GP ' . $id);
         return $this->render('main/buy.html.twig', [
             'controller_name' => 'UserController',
-            'user' => $session->get('user'),
             'id' => $id,
             'price' => $price
         ]);
@@ -310,13 +309,7 @@ class UserController extends AbstractController
         $userid = $request->query->get('user');
         $gp = $request->query->get('gp');
         $user = $repo1->findUserById($userid);
-        $abonnement = new Abonnement();
-        $abonnement->setUser($user);
-        $abonnement->setDatefinab(new \DateTime('+1 month'));
-        $type = $repo0->getAbonnementDetailsByName('GP ' . $gp);
-        $abonnement->setType($type);
-        $reg->getManager()->persist($abonnement);
-        $reg->getManager()->flush();
+        
 
         $client = HttpClient::create();
         $auth = base64_encode('Af9N6m41ryO-aKuZO3cwgGr1PZeBsbxLTeSYVJ7iUr71UO3tA8Uc0p50NeEMbewLzmq00go8MoXAzXPC:EBfq6ayRpNgVeWdALsblGLrMKUspTHt5GzfuH5MOM1FN7gqsoR6y5TCOTTYlm4R3adGWPgKoWYOI46Xz');
@@ -338,14 +331,150 @@ class UserController extends AbstractController
                 'Authorization' => 'Bearer '. $token
             ]
         ]);
+        
 
         
-        if ($response->getStatus() === "COMPLETED"){
+        if ($response->toArray()['status'] === "COMPLETED"){
+            $abonnement = new Abonnement();
+            $abonnement->setUser($user);
+            if ($gp == 1)
+                $abonnement->setDatefinab(new \DateTime('+3 month'));
+            else if($gp == 2)
+                $abonnement->setDatefinab(new \DateTime('+6 month'));
+            else
+                $abonnement->setDatefinab(new \DateTime('+12 month'));
+            $type = $repo0->getAbonnementDetailsByName('GP ' . $gp);
+            $abonnement->setType($type);
+            $reg->getManager()->persist($abonnement);
+            $reg->getManager()->flush();
             return new JsonResponse(['status' => 'success'], 200);
         }
         return new JsonResponse(['status' => 'error'], 400);
+    }
+    
+    #[Route('/dashboard/manageusers', name: 'app_usermgmt')]
+    public function manageUsers(UserRepository $repo, Request $req, ManagerRegistry $reg): Response
+    {
+        $form = $this->createForm(AdminUserType::class);
+        $form->handleRequest($req);
         
-       
+        if($form->isSubmitted() ){
+            if (!$form->isValid()) {
+                $this->addFlash('error', 'There was an error with the form, please check the fields and try again!');
+            }else{
+                $user = $form->getData();
+                if ($repo->findUserByUsername($user->getUsername())) {
+                    $this->addFlash('error', 'Username already exists');
+                } else if ($repo->findUserByPhone($user->getNumTel())) {
+                    $this->addFlash('error', 'Phone number already exists, please remove it from the other account!');
+                } else if ($repo->findUserById($user->getId())) {
+                    $this->addFlash('error', 'CIN already exists');
+                } else if ($repo->findUserByEmail($user->getEmail())) {
+                    $this->addFlash('error', 'Email already exists');
+                }else{
+                    $photo = $form['photo']->getData();
+                    $filename = 'USERIMG' . $user->getId() . '.' . $photo->guessExtension();
+                    $targetdir = $this->getParameter('kernel.project_dir') . '/public/profileuploads/';
+                    $photo->move($targetdir, $filename);
+                    $user->setPhoto($filename);
+                    $user->setPassword(password_hash($user->getPassword(), PASSWORD_BCRYPT));
+
+                    $reg->getManager()->persist($user);
+                    $reg->getManager()->flush();
+                    $this->addFlash('success', 'User updated successfully!');
+                    return $this->redirectToRoute('app_usermgmt');
+                }
+            }
+        }
+
+
+        return $this->render('dashboard/userlist.html.twig', [
+            'controller_name' => 'UserController',
+            'users' => $repo->findAll(),
+            'form' => $form->createView()
+        ]);
+    }
+
+    #[Route('/dashboard/manageuser/{id}', name: 'app_user_edit')]
+    public function manageUser(UserRepository $repo, Request $req, ManagerRegistry $reg, $id): Response
+    {
+        $useredit = $repo->findUserById($id);
+        $form = $this->createForm(ModifyUserType::class, $useredit);
+        $form->handleRequest($req);
+        if($form->isSubmitted() ){
+            if (!$form->isValid()) {
+                $this->addFlash('error', 'There was an error with the form, please check the fields and try again!');
+            }else{
+                $data = $form->getData();
+                if ($repo->findUserByUsername($data->getUsername()) && $repo->findUserByUsername($data->getUsername())->getId() != $useredit->getId()){
+                    $this->addFlash('error', 'Username already exists');
+                    return $this->redirectToRoute('app_dashboard_profile');
+                }
+                if ($repo->findUserByPhone($data->getNumTel()) && $repo->findUserByPhone($data->getNumTel())->getId() != $useredit->getId()) {
+                    $this->addFlash('error', 'Phone number already exists, please remove it from the other account!');
+                    return $this->redirectToRoute('app_dashboard_profile');
+                }
+            
+                $reg->getManager()->persist($useredit);
+                $reg->getManager()->flush();
+                $this->addFlash('success', 'User updated successfully!');
+                return $this->redirectToRoute('app_user_edit', ['id' => $id]);
+            }
+        }
+        return $this->render('dashboard/profile.html.twig', [
+            'controller_name' => 'UserController',
+            'useredit' => $useredit,
+            'form' => $form->createView()
+        ]);
+    }
+
+    #[Route('/dashboard/profile', name: 'app_dashboard_profile')]
+    public function dashboardProfile(UserRepository $repo, Request $req, ManagerRegistry $reg): Response
+    {
+        $user = $this->getUser();
+        $form = $this->createForm(ModifyUserType::class, $user);
+        $form->handleRequest($req);
+        if($form->isSubmitted() ){
+            if (!$form->isValid()) {
+                $this->addFlash('error', 'There was an error with the form, please check the fields and try again!');
+            }else{
+                $data = $form->getData();
+                if ($repo->findUserByUsername($data->getUsername()) && $repo->findUserByUsername($data->getUsername())->getId() != $user->getId()){
+                    $this->addFlash('error', 'Username already exists');
+                    return $this->redirectToRoute('app_dashboard_profile');
+                }
+                if ($repo->findUserByPhone($data->getNumTel()) && $repo->findUserByPhone($data->getNumTel())->getId() != $user->getId()) {
+                    $this->addFlash('error', 'Phone number already exists, please remove it from the other account!');
+                    return $this->redirectToRoute('app_dashboard_profile');
+                }
+                $reg->getManager()->persist($user);
+                $reg->getManager()->flush();
+                $this->addFlash('success', 'User updated successfully!');
+                return $this->redirectToRoute('app_dashboard_profile');
+            }
+        }
         
+        return $this->render('dashboard/profile.html.twig', [
+            'controller_name' => 'UserController',
+            'useredit' => $user,
+            'form' => $form->createView()
+        ]);
+    }
+
+    #[Route('/dashboard/deleteuser/{id}', name: 'app_user_delete')]
+    public function deleteUser(UserRepository $repo, $id, ManagerRegistry $reg): Response
+    {
+        $userdel = $repo->findUserById($id);
+        if (!$userdel) {
+            return $this->redirectToRoute('app_usermgmt');
+        }
+        $reg->getManager()->remove($userdel);
+        $reg->getManager()->flush();
+        if ($this->getUser()->getId() == $userdel->getId()) {
+            $this->get('security.token_storage')->setToken(null);
+            $this->get('session')->invalidate();
+            return $this->redirectToRoute('app_login');
+        }
+        return $this->redirectToRoute('app_usermgmt');
     }
 }

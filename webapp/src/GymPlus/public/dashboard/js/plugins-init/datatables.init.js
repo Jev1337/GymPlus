@@ -91,9 +91,13 @@ let dataSet = [
     });
 	
 	// 
-	var table = $('#example3, #example4, #example5').DataTable();
+	var table = $('#example3, #example4, #example5').DataTable({
+        "ordering": false,
+        "searching": false
+    });
 	$('#example tbody').on('click', 'tr', function () {
 		var data = table.row( this ).data();
 	});
+
    
 })(jQuery);

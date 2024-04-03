@@ -1,21 +1,60 @@
 {% extends "dashboard/base.html.twig" %}
 
 {% block content %}
-    <h1 style="text-align: center;"> Add event </h1>
+<div class="content-body default-height" style="min-height: 878px;">
+    <div class="container-fluid">
+        <div class="page-titles">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
+                <li class="breadcrumb-item active"><a href="javascript:void(0)">Events</a></li>
+            </ol>
+        </div>
+        <!-- row -->
 
-    <style>
-        .centered-form {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh; /* This will take the full height of the viewport */
-            flex-direction: column; /* This will stack the items vertically */
-        }
-    </style>
-
-    {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'class': 'centered-form'}}) }}
-    <table class="styled-table">
-        
-    </table>
-    {{ form_end(form) }}
+        <div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">Add Event</h4>
+            </div>
+            <div class="card-body">
+                {{ form_start(form, {'attr': {'class': 'centered-form','novalidate' : 'novalidate'}}) }}
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        {{ form_label(form.name) }}
+                        {{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
+                        <small class="text-danger">{{ form_errors(form.name) }}</small>
+                    </div>
+                    <div class="form-group col-md-4">
+                        {{ form_label(form.type) }}
+                        {{ form_widget(form.type, {'attr': {'class': 'form-control'}}) }}
+                        <small class="text-danger">{{ form_errors(form.type) }}</small>
+                    </div>
+                    <div class="form-group col-md-4">
+                        {{ form_label(form.eventDate) }}
+                        {{ form_widget(form.eventDate, {'attr': {'class': 'form-control'}}) }}
+                        <small class="text-danger">{{ form_errors(form.eventDate) }}</small>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        {{ form_label(form.duree) }}
+                        {{ form_widget(form.duree, {'attr': {'class': 'form-control'}}) }}
+                        <small class="text-danger">{{ form_errors(form.duree) }}</small>
+                    </div>
+                    <div class="form-group col-md-4">
+                        {{ form_label(form.nbPlaces) }}
+                        {{ form_widget(form.nbPlaces, {'attr': {'class': 'form-control'}}) }}
+                        <small class="text-danger">{{ form_errors(form.nbPlaces) }}</small>
+                    </div>
+                </div>
+                {{ form_widget(form.Add, {'attr': {'class': 'btn btn-primary'}}) }}
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+</div>
+        </div>
+    </div>
+</div>
 {% endblock %}

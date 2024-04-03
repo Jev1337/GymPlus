@@ -31,6 +31,17 @@
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
 	<link href="{{asset('main/vendor/ScheduleBootsrap/main.min.css')}}" rel="stylesheet">
 
+	<style>
+		.grecaptcha-badge {
+			width: 70px !important;
+			overflow: hidden !important;
+			transition: all 0.3s ease !important;
+			left: 4px !important;
+		}
+		.grecaptcha-badge:hover {
+			width: 256px !important;
+		}
+	</style>
     <link href="{{asset('main/vendor/animate/animate.css')}}" rel="stylesheet">
     <link href="{{asset('main/vendor/swiper/swiper-bundle.min.css')}}" rel="stylesheet">
     <link href="{{asset('main/vendor/splitting/dist/splitting.css')}}" rel="stylesheet">
@@ -38,6 +49,7 @@
     <link href="{{asset('main/vendor/bootstrap-select/dist/css/bootstrap-select.min.css')}}" rel="stylesheet">
     <link href="{{asset('main/vendor/smartwizard/dist/css/smart_wizard.css')}}" rel="stylesheet">
 	<link href="{{asset('main/vendor/datepicker/css/bootstrap-datetimepicker.min.css')}}" rel="stylesheet">
+	<link href="{{asset('dashboard/vendor/sweetalert2/dist/sweetalert2.min.css')}}" rel="stylesheet">
     <!-- Custom Stylesheet -->
     <link rel="stylesheet" href="{{asset('main/css/style.css')}}">
 	<link class="skin" rel="stylesheet" href="{{asset('main/css/skin/skin-5.css')}}">
@@ -93,7 +105,7 @@
                 <div class="extra-nav">
                     <div class="extra-cell">
                         <button id="quik-search-btn" type="button" class="header-search-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
-						{% if not user %}
+						{% if not app.user %}
                         <a href="{{path('app_signup')}}" class="btn btn-primary btn-skew appointment-btn"><span class="skew-inner"><span class="text">Sign Up</span></span></a>
 						{% else %}
 						<a href="{{path('app_logout')}}" class="btn btn-primary btn-skew appointment-btn"><span class="skew-inner"><span class="text">Logout</span></span></a>
@@ -121,17 +133,21 @@
 							<ul class="sub-menu">
 								<li><a href="{{path('app_subs')}}">My Subscriptions</a></li>
 								<li><a href="{{path('app_profile')}}">My Profile</a></li>
-								<li><a href="{{path('app_eventsf')}}">Events</a></li>
-								
 							</ul>
 						</li>
-
+						<li class="sub-menu-down"><a href="javascript:void(0);">Events</a>
+							<ul class="sub-menu">
+								<li><a href="{{path('app_eventsf')}}">Events</a></li>
+								<li><a href="{{path('rewards')}}">Rewards Hub</a></li>
+							</ul>
+						</li>
 						<li class="sub-menu-down"><a href="javascript:void(0);">Objective</a>
-										<ul class="sub-menu">
-									<li><a href="{{ path('app_objectif') }}">Add Objective</a></li>
-									<li><a href="{{ path('app_Schedule_objectif') }}">Objective Schedule</a></li>
-								</ul>
-								</li>
+							<ul class="sub-menu">
+								<li><a href="{{ path('app_objectif') }}">Add Objective</a></li>
+								<li><a href="{{ path('app_Schedule_objectif') }}">Objective Schedule</a></li>
+							</ul>
+						</li>
+						<li><a href="{{ path('getAll_post') }}">blog</a></li>
 						 
                     </ul>
                     <div class="dz-social-icon">
@@ -210,7 +226,7 @@
 					<div class="extra-nav">
 						<div class="extra-cell">
 							<button id="quik-search-btn" type="button" class="header-search-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
-							{% if not user %}
+							{% if not app.user %}
                         <a href="{{path('app_signup')}}" class="btn btn-primary btn-skew appointment-btn"><span class="skew-inner"><span class="text">Sign Up</span></span></a>
 						{% else %}
 						<a href="{{path('app_logout')}}" class="btn btn-primary btn-skew appointment-btn"><span class="skew-inner"><span class="text">Logout</span></span></a>
@@ -238,16 +254,25 @@
 							<ul class="sub-menu">
 								<li><a href="{{path('app_subs')}}">My Subscriptions</a></li>
 								<li><a href="{{path('app_profile')}}">My Profile</a></li>
+								
+								
+							</ul>
+						</li>
+						<li class="sub-menu-down"><a href="javascript:void(0);">Events</a>
+							<ul class="sub-menu">
 								<li><a href="{{path('app_eventsf')}}">Events</a></li>
+								<li><a href="{{path('rewards')}}">Rewards Hub</a></li>
 							</ul>
 						</li>
 						<li class="sub-menu-down"><a href="javascript:void(0);">Objective</a>
-										<ul class="sub-menu">
-									<li><a href="{{ path('app_objectif') }}">Add Objective</a></li>
-									<li><a href="{{ path('app_Schedule_objectif') }}">Objective Schedule</a></li>
-								</ul>
-								</li>
+							<ul class="sub-menu">
+								<li><a href="{{ path('app_objectif') }}">Add Objective</a></li>
+								<li><a href="{{ path('app_Schedule_objectif') }}">Objective Schedule</a></li>
+							</ul>
+						</li>
+						<li><a href="{{ path('getAll_post') }}">blog</a></li>
 						</ul>
+						
 						<div class="dz-social-icon">
 							<ul>
 								<li>
@@ -327,7 +352,7 @@
 						<div class="extra-nav">
 							<div class="extra-cell">
 								<button id="quik-search-btn" type="button" class="header-search-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
-								{% if not user %}
+								{% if not app.user %}
                         <a href="{{path('app_signup')}}" class="btn btn-primary btn-skew appointment-btn"><span class="skew-inner"><span class="text">Sign Up</span></span></a>
 						{% else %}
 						<a href="{{path('app_logout')}}" class="btn btn-primary btn-skew appointment-btn"><span class="skew-inner"><span class="text">Logout</span></span></a>
@@ -356,15 +381,22 @@
 									<ul class="sub-menu">
 										<li><a href="{{path('app_subs')}}">My Subscriptions</a></li>
 										<li><a href="{{path('app_profile')}}">My Profile</a></li>
-										<li><a href="{{path('app_eventsf')}}">Events</a></li>
+										
 									</ul>
 								</li>
+								<li class="sub-menu-down"><a href="javascript:void(0);">Events</a>
+							<ul class="sub-menu">
+								<li><a href="{{path('app_eventsf')}}">Events</a></li>
+								<li><a href="{{path('rewards')}}">Rewards Hub</a></li>
+							</ul>
+						</li>
 								<li class="sub-menu-down"><a href="javascript:void(0);">Objective</a>
 										<ul class="sub-menu">
 									<li><a href="{{ path('app_objectif') }}">Add Objective</a></li>
 									<li><a href="{{ path('app_Schedule_objectif') }}">Objective Schedule</a></li>
 								</ul>
 								</li>
+								<li><a href="{{ path('getAll_post') }}">blog</a></li>
 							</ul>
 							</div>	
 						</div>
@@ -558,6 +590,8 @@
 <script src="{{asset('main/vendor/datepicker/js/moment.js')}}"></script><!-- DATEPICKER JS -->
 <script src="{{asset('main/vendor/datepicker/js/bootstrap-datetimepicker.min.js')}}"></script><!-- DATEPICKER JS -->
 <script src="{{asset('main/vendor/smartwizard/dist/js/jquery.smartWizard.js')}}"></script><!-- SMARTWIZARD -->
+<script src="{{asset('dashboard/vendor/sweetalert2/dist/sweetalert2.min.js')}}"></script><!-- SWEETALERT -->
+
 <script src="{{asset('main/js/dz.carousel.js')}}"></script><!-- OWL-CAROUSEL -->
 <script src="{{asset('main/js/dz.ajax.js')}}"></script><!-- AJAX -->
 <script src="{{asset('main/js/custom.js')}}"></script><!-- CUSTOM JS -->

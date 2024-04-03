@@ -38,7 +38,7 @@ class UserType extends AbstractType
         ->add('firstname', TextType::class, [
             'required' => true,
             'attr' =>[
-                'pattern' => '[a-zA-Z]*',
+                'pattern' => '[a-zA-Z ]*',
                 'minLength' => 3,
                 'maxLength' => 20,
             ]
@@ -46,7 +46,7 @@ class UserType extends AbstractType
         ->add('lastname', TextType::class, [
             'required' => true,
             'attr' =>[
-                'pattern' => '[a-zA-Z]*',
+                'pattern' => '[a-zA-Z ]*',
                 'minLength' => 3,
                 'maxLength' => 20,
             ]
@@ -65,9 +65,7 @@ class UserType extends AbstractType
         ->add('email', EmailType::class, [
             'required' => true,
             'attr' =>[
-                'pattern' => '[a-zA-Z0-9]*',
-                'minLength' => 3,
-                'maxLength' => 50,
+                'pattern' => '^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$'
             ]
         ])
         ->add('numTel', TelType::class, [
@@ -81,14 +79,14 @@ class UserType extends AbstractType
         ->add('adresse', TextType::class, [
             'required' => true,
             'attr' =>[
-                'pattern' => '[a-zA-Z0-9]*',
+                'pattern' => '[a-zA-Z0-9 ]*',
                 'minLength' => 3,
                 'maxLength' => 50,
             ]
         ])
         ->add('photo', FileType::class, [
             'required' => true,
-        ])
+        ])  
         ;
     }
 
@@ -96,10 +94,7 @@ class UserType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => User::class,
-            'validation_groups' => function (FormInterface $form) {
-                $data = $form->getData();
-                return null === $data->getId() ? ['Default', 'create'] : ['Default', 'update'];
-            },
+            'validation_groups' => ['create', 'Default'],
         ]);
     }
 }

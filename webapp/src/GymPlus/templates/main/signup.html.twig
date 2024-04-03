@@ -2,7 +2,7 @@
 {% block content%}
 	<div class="page-content bg-white">
 		<!-- Banner  -->
-		<div class="dz-bnr-inr style-2" style="background-image: url('{{asset('images/banner/banner-2.png')}}')">
+		<div class="dz-bnr-inr style-2" style="background-image: url('{{asset('main/images/banner/banner-2.png')}}')">
 			<div class="banner-gradient"></div>
 			<div class="container">
 				<div class="row">
@@ -21,16 +21,17 @@
 					</div>
 				</div>	
 				<div class="banner-media">
-					<img src="{{asset('images/banner/pic1.png')}}" alt="/">
+					<img src="{{asset('main/images/banner/pic1.png')}}" alt="/">
 				</div>
 			</div>	
 		</div>
 		<!-- Banner End -->
 		<!-- Have an account? Login-->
-		<a href="{{path('app_login')}}" class="btn btn-primary btn-lg btn-block">Have an account? Click here to Login</a>
+		
 		<section class="appointment-page-1 content-inner-1">
 			<div class="container">
-				
+				<a href="{{path('app_login')}}" class="btn btn-primary btn-lg btn-block">Have an account? Click here to Login</a>
+				<br>
 					<div class="alert alert-danger" style="display: none;" id="error">
 						<i class="fa-solid fa-exclamation-circle"></i> <span id="error-message">test</span>
 
@@ -60,7 +61,7 @@
 						  </a>
 						</li>
 						<li class="nav-item">
-						  <a class="nav-link " href="#wizardStep2">
+						  <a class="nav-link" href="#wizardStep2">
 							<span class="num">
 								<strong>2</strong>
 								<i class="fa-solid fa-check"></i>
@@ -69,7 +70,7 @@
 						  </a>
 						</li>
 						<li class="nav-item">
-						  <a class="nav-link " href="#wizardStep3">
+						  <a class="nav-link" href="#wizardStep3">
 							<span class="num">
 								<strong>3</strong>
 								<i class="fa-solid fa-check"></i>
@@ -96,12 +97,14 @@
 								<div class="input-group input-line">
 									{{ form_widget(form.id, {'attr': {'class': 'form-control', 'placeholder': 'CIN'}}) }}
 								</div>
+								<small class="text-danger">{{ form_errors(form.id) }}</small>
 							</div>
 							<div class="col-md-4 col-lg-4 form-group">
 								{{ form_label(form.username, 'Username', {'label_attr': {'class': 'form-label'}}) }}
 								<div class="input-group input-line">
 									{{ form_widget(form.username, {'attr': {'class': 'form-control', 'placeholder': 'Username'}}) }}
 								</div>
+								<small class="text-danger">{{ form_errors(form.username) }}</small>
 							</div>
 
 							<div class="col-md-4 col-lg-4 form-group">
@@ -109,6 +112,7 @@
 								<div class="input-group input-line">
 									{{ form_widget(form.firstname, {'attr': {'class': 'form-control', 'placeholder': 'First Name'}}) }}
 								</div>
+								<small class="text-danger">{{ form_errors(form.firstname) }}</small>
 							</div>
 
 							<div class="col-md-4 col-lg-4 form-group">
@@ -116,6 +120,7 @@
 								<div class="input-group input-line">
 									{{ form_widget(form.lastname, {'attr': {'class': 'form-control', 'placeholder': 'Last Name'}}) }}
 								</div>
+								<small class="text-danger">{{ form_errors(form.lastname) }}</small>
 							</div>
 
 							<div class="col-md-4 col-lg-4 form-group">
@@ -123,6 +128,7 @@
 								<div class="input-group input-line">
 									{{ form_widget(form.dateNaiss, {'attr': {'class': 'form-control', 'placeholder': 'Date of Birth'}}) }}
 								</div>
+								<small class="text-danger">{{ form_errors(form.dateNaiss) }}</small>
 							</div>
 
 							<div class="col-md-4 col-lg-4 form-group">
@@ -130,6 +136,7 @@
 								<div class="input-group input-line">
 									{{ form_widget(form.password, {'attr': {'class': 'form-control', 'placeholder': 'Password'}}) }}
 								</div>
+								<small class="text-danger">{{ form_errors(form.password) }}</small>
 							</div>
 
 							<div class="col-md-4 col-lg-4 form-group">
@@ -137,6 +144,7 @@
 								<div class="input-group input-line">
 									{{ form_widget(form.email, {'attr': {'class': 'form-control', 'placeholder': 'Email'}}) }}
 								</div>
+								<small class="text-danger">{{ form_errors(form.email) }}</small>
 							</div>
 
 							<div class="col-md-4 col-lg-4 form-group">
@@ -144,6 +152,7 @@
 								<div class="input-group input-line">
 									{{ form_widget(form.numTel, {'attr': {'class': 'form-control', 'placeholder': 'Phone Number'}}) }}
 								</div>
+								<small class="text-danger">{{ form_errors(form.numTel) }}</small>
 							</div>
 
 							<div class="col-md-4 col-lg-4 form-group">
@@ -151,6 +160,7 @@
 								<div class="input-group input-line">
 									{{ form_widget(form.adresse, {'attr': {'class': 'form-control', 'placeholder': 'Address'}}) }}
 								</div>
+								<small class="text-danger">{{ form_errors(form.adresse) }}</small>
 							</div>
 
 							<div class="col-md-4 col-lg-4 form-group">
@@ -158,6 +168,7 @@
 								<div class="input-group input-line">
 									{{ form_widget(form.photo, {'attr': {'class': 'form-control', 'placeholder': 'Upload Photo'}}) }}
 								</div>
+								<small class="text-danger">{{ form_errors(form.photo) }}</small>
 							</div>
 
 						{{ form_end(form) }}
@@ -216,4 +227,14 @@
 		</section>
 		<!-- Call To Action -->
 		</div>
+{% endblock %}
+
+{% block js %}
+	{{ parent() }}
+	<script>
+		{% if app.user %}
+			window.location.href = "{{path('app_home')}}";
+		{% endif %}
+	</script>
+		
 {% endblock %}

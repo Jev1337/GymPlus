@@ -1,3 +1,4 @@
+
 {% extends "main/base.html.twig" %}
 {% block content%}
 	<div class="page-content bg-white">
@@ -65,6 +66,7 @@
 							<div class="m-b30">
 								<label class="label-title">Email Address</label>
 								{{ form_widget(form.email, {'attr': {'class': 'form-control', 'placeholder': 'Email Address'}}) }}
+								<small class="text-danger">{{ form_errors(form.email) }}</small>
 							</div>
 							<div class="m-b10">
 								<label class="label-title">Password</label>
@@ -73,8 +75,10 @@
 									<div class="show-pass">
 										<i class="eye-open fa-regular fa-eye"></i>
 									</div>
+									<small class="text-danger">{{ form_errors(form.password) }}</small>
 								</div>
 							</div>
+							
 							<div class="text-left d-flex align-items justify-content-between m-b30">
 								<a data-bs-toggle="tab" href="#forgot-password" class="m-l5">Forgot Password</a> 
 								<div class="custom-control custom-checkbox">
@@ -83,10 +87,12 @@
 								</div>
 							</div>
 							<div class="text-center">
+
 								{{ form_widget(form.submit, {'attr': {'class': 'btn btn-primary m-b15 w-100', 'value': 'Login'} } ) }}
 								<a href="javascript:void(0);" class="btn-link">Don’t have account?<span> Sign Up</span></a> 
 							</div>
-							<!-- Add other form fields here -->
+							
+        					
 							{{ form_end(form) }}
 							<form id="forgot-password" class="tab-pane fade  col-12 text-center">
 								<h4 class="m-b5 text-white">Forget Password ?</h4>

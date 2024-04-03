@@ -41,7 +41,7 @@
 								<div class="dz-box">
 									<div class="dz-media" id="userphoto" style="cursor: pointer">
 										
-										<img src="{{asset('profileuploads/' ~ user.photo)}}"  alt="">
+										<img src="{{asset('profileuploads/' ~ app.user.photo)}}"  alt="">
 									</div>
 									<div class="dz-info m-t15">
 										<h5 class="dz-title">About Me</h5>
@@ -53,12 +53,7 @@
 					</div>
 					
 					<div class="card-container col-lg-8 col-md-6">
-					{% for message in app.flashes('success') %}
-								<div class="alert alert-success">
-									<i class="fa-solid fa-check"></i>
-									{{ message }}
-								</div>
-							{% endfor %}
+
 							{% for message in app.flashes('error') %}
 								<div class="alert alert-danger">
 									<i class="fa-solid fa-times"></i>
@@ -82,6 +77,7 @@
 									<div class="input-group input-line">
 										{{ form_widget(form.username, {'attr': {'class': 'form-control', 'placeholder': 'Username'}}) }}
 									</div>
+									<small class="text-danger">{{ form_errors(form.username) }}</small>
 								</div>
 
 								<div class="col-md-4 col-lg-4 form-group">
@@ -89,6 +85,7 @@
 									<div class="input-group input-line">
 										{{ form_widget(form.firstname, {'attr': {'class': 'form-control', 'placeholder': 'First Name'}}) }}
 									</div>
+									<small class="text-danger">{{ form_errors(form.firstname) }}</small>
 								</div>
 
 								<div class="col-md-4 col-lg-4 form-group">
@@ -96,6 +93,7 @@
 									<div class="input-group input-line">
 										{{ form_widget(form.lastname, {'attr': {'class': 'form-control', 'placeholder': 'Last Name'}}) }}
 									</div>
+									<small class="text-danger">{{ form_errors(form.lastname) }}</small>
 								</div>
 
 								<div class="col-md-4 col-lg-4 form-group">
@@ -103,6 +101,7 @@
 									<div class="input-group input-line">
 										{{ form_widget(form.dateNaiss, {'attr': {'class': 'form-control', 'placeholder': 'Date of Birth'}}) }}
 									</div>
+									<small class="text-danger">{{ form_errors(form.dateNaiss) }}</small>
 								</div>
 
 								<div class="col-md-4 col-lg-4 form-group">
@@ -110,6 +109,7 @@
 									<div class="input-group input-line">
 										{{ form_widget(form.numTel, {'attr': {'class': 'form-control', 'placeholder': 'Phone Number'}}) }}
 									</div>
+									<small class="text-danger">{{ form_errors(form.numTel) }}</small>
 								</div>
 
 								<div class="col-md-4 col-lg-4 form-group">
@@ -117,6 +117,7 @@
 									<div class="input-group input-line">
 										{{ form_widget(form.adresse, {'attr': {'class': 'form-control', 'placeholder': 'Address'}}) }}
 									</div>
+									<small class="text-danger">{{ form_errors(form.adresse) }}</small>
 								</div>
 
 								<!-- button submit from form and put it to the rightest side -->
@@ -170,6 +171,59 @@
 {% block js %}
 	{{ parent() }}
 	<script>
+	
+		document.getElementById('form-0').addEventListener('submit', function(e) {
+				
+			if(document.getElementById('modify_user_numTel').value != {{ app.user.numTel }}) {
+				e.preventDefault();
+				const req = new XMLHttpRequest();
+				const num = document.getElementById('modify_user_numTel').value;
+				req.open('GET', '/api/sendSms?phone=' + document.getElementById('modify_user_numTel').value);
+				req.send();
+				Swal.fire({
+				title: "Please enter the confirmation code",
+				input: "text",
+				inputAttributes: {
+					autocapitalize: "off"
+				},
+				showCancelButton: true,
+				confirmButtonText: "Confirm",
+				showLoaderOnConfirm: true,
+				
+				preConfirm: async (code) => {
+					try {
+					const githubUrl = `
+						/api/verifyPhone?phone=${num}&code=${code}
+					`;
+					const response = await fetch(githubUrl);
+					if (!response.ok) {
+						return Swal.showValidationMessage(`
+						${JSON.stringify(await response.json())}
+						`);
+					}
+					return response.json();
+					} catch (error) {
+					Swal.showValidationMessage(`
+						Error validating code, please try again.
+					`);
+				}
+			},
+			allowOutsideClick: () => !Swal.isLoading()
+				}).then((result) => {
+				if (result.value.status === "success") {
+					console.log(result);
+					document.getElementById('form-0').submit();
+				}});
+			}
+
+			});
+
+			{% for message in app.flashes('success') %}
+			{% if loop.first %}
+				swal("{{ message }}", "", "success")
+			{% endif %}
+			
+			{% endfor %}
 		document.getElementById('userphoto').addEventListener('click', function() {
 			document.getElementById('imageInput').click();
 		});

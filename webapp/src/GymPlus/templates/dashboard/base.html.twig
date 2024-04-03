@@ -8,7 +8,7 @@
 
 {% block title %}
     
-    <title>Gymove - Fitness Bootstrap Admin Dashboard</title>
+    <title>GymPlus - Fitness Bootstrap Admin Dashboard</title>
     
 {% endblock %}
 
@@ -19,6 +19,17 @@
 	<link href="{{asset('dashboard/vendor/owl-carousel/owl.carousel.css')}}" rel="stylesheet">
     <link href="{{asset('dashboard/css/style.css')}}" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+	<link href="{{asset('dashboard/vendor/sweetalert2/dist/sweetalert2.min.css')}}" rel="stylesheet">
+	<style>
+	
+		.table-title {
+			text-align: center !important;
+			margin-bottom: 20px !important;
+			font-size: 24px !important;
+			font-weight: bold !important;
+			
+		}
+	</style>
 {% endblock %}
 </head>
 <body>
@@ -508,7 +519,7 @@
 										<div class="d-flex bd-highlight">
 											<div class="user_info">
 												<span>New order placed..</span>
-												<p>10 Aug 2020</p>
+												<p>10 Aug 2024</p>
 											</div>
 											<div class="ml-auto">
 												<a href="javascript:void(0)" class="btn btn-primary btn-xs sharp mr-1"><i class="fa fa-pencil"></i></a>
@@ -520,7 +531,7 @@
 										<div class="d-flex bd-highlight">
 											<div class="user_info">
 												<span>Youtube, a video-sharing website..</span>
-												<p>10 Aug 2020</p>
+												<p>10 Aug 2024</p>
 											</div>
 											<div class="ml-auto">
 												<a href="javascript:void(0)" class="btn btn-primary btn-xs sharp mr-1"><i class="fa fa-pencil"></i></a>
@@ -532,7 +543,7 @@
 										<div class="d-flex bd-highlight">
 											<div class="user_info">
 												<span>john just buy your product..</span>
-												<p>10 Aug 2020</p>
+												<p>10 Aug 2024</p>
 											</div>
 											<div class="ml-auto">
 												<a href="javascript:void(0)" class="btn btn-primary btn-xs sharp mr-1"><i class="fa fa-pencil"></i></a>
@@ -544,7 +555,7 @@
 										<div class="d-flex bd-highlight">
 											<div class="user_info">
 												<span>Athan Jacoby</span>
-												<p>10 Aug 2020</p>
+												<p>10 Aug 2024</p>
 											</div>
 											<div class="ml-auto">
 												<a href="javascript:void(0)" class="btn btn-primary btn-xs sharp mr-1"><i class="fa fa-pencil"></i></a>
@@ -584,6 +595,7 @@
 									<input type="text" class="form-control" placeholder="Search here...">
 								</div>
 							</li>
+							<!--
 							<li class="nav-item dropdown notification_dropdown">
                                 <a class="nav-link  ai-icon" href="javascript:void(0)" role="button" data-toggle="dropdown">
                                     <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -601,7 +613,7 @@
 													</div>
 													<div class="media-body">
 														<h6 class="mb-1">Dr sultads Send you Photo</h6>
-														<small class="d-block">29 July 2020 - 02:26 PM</small>
+														<small class="d-block">29 July 2024 - 02:26 PM</small>
 													</div>
 												</div>
 											</li>
@@ -612,7 +624,7 @@
 													</div>
 													<div class="media-body">
 														<h6 class="mb-1">Resport created successfully</h6>
-														<small class="d-block">29 July 2020 - 02:26 PM</small>
+														<small class="d-block">29 July 2024 - 02:26 PM</small>
 													</div>
 												</div>
 											</li>
@@ -623,7 +635,7 @@
 													</div>
 													<div class="media-body">
 														<h6 class="mb-1">Reminder : Treatment Time!</h6>
-														<small class="d-block">29 July 2020 - 02:26 PM</small>
+														<small class="d-block">29 July 2024 - 02:26 PM</small>
 													</div>
 												</div>
 											</li>
@@ -634,7 +646,7 @@
 													</div>
 													<div class="media-body">
 														<h6 class="mb-1">Dr sultads Send you Photo</h6>
-														<small class="d-block">29 July 2020 - 02:26 PM</small>
+														<small class="d-block">29 July 2024 - 02:26 PM</small>
 													</div>
 												</div>
 											</li>
@@ -645,7 +657,7 @@
 													</div>
 													<div class="media-body">
 														<h6 class="mb-1">Resport created successfully</h6>
-														<small class="d-block">29 July 2020 - 02:26 PM</small>
+														<small class="d-block">29 July 2024 - 02:26 PM</small>
 													</div>
 												</div>
 											</li>
@@ -656,7 +668,7 @@
 													</div>
 													<div class="media-body">
 														<h6 class="mb-1">Reminder : Treatment Time!</h6>
-														<small class="d-block">29 July 2020 - 02:26 PM</small>
+														<small class="d-block">29 July 2024 - 02:26 PM</small>
 													</div>
 												</div>
 											</li>
@@ -737,29 +749,34 @@
 									</div>
 								</div>
 							</li>
+							-->
                             <li class="nav-item dropdown header-profile">
                                 <a class="nav-link" href="javascript:void(0)" role="button" data-toggle="dropdown">
-                                    <img src="{{asset('dashboard/images/profile/17.jpg')}}" width="20" alt=""/>
+                                    <img src="{{asset('profileuploads/' ~ app.user.photo)}}" width="20" alt=""/>
 									<div class="header-info">
 										<span class="text-black"><strong>
-											{{ user.username }}
+											{{ app.user.username }}
 										</strong></span>
-										<p class="fs-12 mb-0">Super Admin</p>
+										<p class="fs-12 mb-0">{{ app.user.role|capitalize }}</p>
 									</div>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right">
-                                    <a href="./app-profile.html" class="dropdown-item ai-icon">
+								    
+                                    <a href="{{path('app_dashboard_profile')}}" class="dropdown-item ai-icon">
                                         <svg id="icon-user1" xmlns="http://www.w3.org/2000/svg" class="text-primary" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                                         <span class="ml-2">Profile </span>
                                     </a>
+									<!--
                                     <a href="./email-inbox.html" class="dropdown-item ai-icon">
                                         <svg id="icon-inbox" xmlns="http://www.w3.org/2000/svg" class="text-success" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
                                         <span class="ml-2">Inbox </span>
                                     </a>
-                                    <a href="./page-login.html" class="dropdown-item ai-icon">
+									-->
+                                    <a href="{{path('app_logout')}}" class="dropdown-item ai-icon">
                                         <svg id="icon-logout" xmlns="http://www.w3.org/2000/svg" class="text-danger" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
                                         <span class="ml-2">Logout </span>
                                     </a>
+									
                                 </div>
                             </li>
                         </ul>
@@ -774,145 +791,59 @@
         <div class="deznav">
             <div class="deznav-scroll">
 				<ul class="metismenu" id="menu">
-                  
+                  	<li>
+						<a href="{{ path('app_dashboard') }}">
+							<i class="fa fa-home"></i>
+							<span class="nav-text">Home</span>
+						</a>
+					</li>
+					<li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
+						   <i class="fa fa-calendar"></i>
+							<span class="nav-text">Event Management</span>
+							</a>
+						<ul aria-expanded="false">
+							<li><a href="{{ path('eventb') }}">Manage Events</a></li>
+							<li><a href="{{ path('blacklised') }}">BlackList</a></li>
+						</ul>
+					</li>
+					
+					
+					<li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
+							<i class="fa fa-users"></i>
+							<span class="nav-text">User Management</span>
+						</a>
+                        <ul aria-expanded="false">
+							{% if app.user.role == "admin" %}
+                            	<li><a href="{{ path('app_usermgmt') }}">Manage Accounts</a></li>
+							{% endif %}
+                            <li><a href="./app-new-app.user.html">Manage Subscriptions</a></li>
+                        </ul>
+                    </li>
+					<li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
+							<i class="fa fa-sitemap"></i>
+							<span class="nav-text">Equipments</span>
+							
+						</a>
+                        <ul aria-expanded="false">
+                            <li><a href="{{ path('app_equipments') }}">Manage Equipments</a></li>
+                            <li><a href="{{ path('app_maintenances') }}">Manage Maintenances</a></li>
+                        </ul>
+                    </li>
 					<li>
-						<a href="{{ path('eventb') }}">
-							<i class="fa fa-calendar"></i> Events
+						<a  href="{{ path('getAll_post') }}" aria-expanded="false">
+							<i class="fa fa-wifi"></i>
+							
+							<span class="nav-text">Blog</span>
 						</a>
 					</li>
 
-                    <li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
-							<i class="flaticon-381-television"></i>
-							<span class="nav-text">Apps</span>
-						</a>
-                        <ul aria-expanded="false">
-                            <li><a href="./app-profile.html">Profile</a></li>
-                            <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">Email</a>
-                                <ul aria-expanded="false">
-                                    <li><a href="./email-compose.html">Compose</a></li>
-                                    <li><a href="./email-inbox.html">Inbox</a></li>
-                                    <li><a href="./email-read.html">Read</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="./app-calender.html">Calendar</a></li>
-							<li><a class="has-arrow" href="javascript:void()" aria-expanded="false">Shop</a>
-                                <ul aria-expanded="false">
-                                    <li><a href="./ecom-product-grid.html">Product Grid</a></li>
-									<li><a href="./ecom-product-list.html">Product List</a></li>
-									<li><a href="./ecom-product-detail.html">Product Details</a></li>
-									<li><a href="./ecom-product-order.html">Order</a></li>
-									<li><a href="./ecom-checkout.html">Checkout</a></li>
-									<li><a href="./ecom-invoice.html">Invoice</a></li>
-									<li><a href="./ecom-customers.html">Customers</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </li>
-                    <li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
-							<i class="flaticon-381-controls-3"></i>
-							<span class="nav-text">Charts</span>
-						</a>
-                        <ul aria-expanded="false">
-                            <li><a href="./chart-flot.html">Flot</a></li>
-                            <li><a href="./chart-morris.html">Morris</a></li>
-                            <li><a href="./chart-chartjs.html">Chartjs</a></li>
-                            <li><a href="./chart-chartist.html">Chartist</a></li>
-                            <li><a href="./chart-sparkline.html">Sparkline</a></li>
-                            <li><a href="./chart-peity.html">Peity</a></li>
-                        </ul>
-                    </li>
-                    <li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
-							<i class="flaticon-381-internet"></i>
-							<span class="nav-text">Bootstrap</span>
-						</a>
-                        <ul aria-expanded="false">
-                            <li><a href="./ui-accordion.html">Accordion</a></li>
-                            <li><a href="./ui-alert.html">Alert</a></li>
-                            <li><a href="./ui-badge.html">Badge</a></li>
-                            <li><a href="./ui-button.html">Button</a></li>
-                            <li><a href="./ui-modal.html">Modal</a></li>
-                            <li><a href="./ui-button-group.html">Button Group</a></li>
-                            <li><a href="./ui-list-group.html">List Group</a></li>
-                            <li><a href="./ui-media-object.html">Media Object</a></li>
-                            <li><a href="./ui-card.html">Cards</a></li>
-                            <li><a href="./ui-carousel.html">Carousel</a></li>
-                            <li><a href="./ui-dropdown.html">Dropdown</a></li>
-                            <li><a href="./ui-popover.html">Popover</a></li>
-                            <li><a href="./ui-progressbar.html">Progressbar</a></li>
-                            <li><a href="./ui-tab.html">Tab</a></li>
-                            <li><a href="./ui-typography.html">Typography</a></li>
-                            <li><a href="./ui-pagination.html">Pagination</a></li>
-                            <li><a href="./ui-grid.html">Grid</a></li>
-
-                        </ul>
-                    </li>
-                    <li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
-							<i class="flaticon-381-heart"></i>
-							<span class="nav-text">Plugins</span>
-						</a>
-                        <ul aria-expanded="false">
-                            <li><a href="./uc-select2.html">Select 2</a></li>
-                            <li><a href="./uc-nestable.html">Nestedable</a></li>
-                            <li><a href="./uc-noui-slider.html">Noui Slider</a></li>
-                            <li><a href="./uc-sweetalert.html">Sweet Alert</a></li>
-                            <li><a href="./uc-toastr.html">Toastr</a></li>
-                            <li><a href="./map-jqvmap.html">Jqv Map</a></li>
-                            <li><a href="./uc-lightgallery.html">Lightgallery</a></li>
-                        </ul>
-                    </li>
-                    <li><a href="widget-basic.html" class="ai-icon" aria-expanded="false">
-							<i class="flaticon-381-settings-2"></i>
-							<span class="nav-text">Widget</span>
-						</a>
-					</li>
-                    <li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
-							<i class="flaticon-381-notepad"></i>
-							<span class="nav-text">Forms</span>
-						</a>
-                        <ul aria-expanded="false">
-                            <li><a href="./form-element.html">Form Elements</a></li>
-                            <li><a href="./form-wizard.html">Wizard</a></li>
-                            <li><a href="./form-editor-summernote.html">Summernote</a></li>
-                            <li><a href="form-pickers.html">Pickers</a></li>
-                            <li><a href="form-validation-jquery.html">Jquery Validate</a></li>
-                        </ul>
-                    </li>
-                    <li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
-							<i class="flaticon-381-network"></i>
-							<span class="nav-text">Table</span>
-						</a>
-                        <ul aria-expanded="false">
-                            <li><a href="table-bootstrap-basic.html">Bootstrap</a></li>
-                            <li><a href="table-datatable-basic.html">Datatable</a></li>
-                        </ul>
-                    </li>
-                    <li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
-							<i class="flaticon-381-layer-1"></i>
-							<span class="nav-text">Pages</span>
-						</a>
-                        <ul aria-expanded="false">
-                            <li><a href="./page-register.html">Register</a></li>
-                            <li><a href="./page-login.html">Login</a></li>
-                            <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">Error</a>
-                                <ul aria-expanded="false">
-                                    <li><a href="./page-error-400.html">Error 400</a></li>
-                                    <li><a href="./page-error-403.html">Error 403</a></li>
-                                    <li><a href="./page-error-404.html">Error 404</a></li>
-                                    <li><a href="./page-error-500.html">Error 500</a></li>
-                                    <li><a href="./page-error-503.html">Error 503</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="./page-lock-screen.html">Lock Screen</a></li>
-                        </ul>
-                    </li>
+                   
                 </ul>
-				<div class="add-menu-sidebar">
-					<img src="images/calendar.png" alt="" class="mr-3">
-					<p class="	font-w500 mb-0">Create Workout Plan Now</p>
-				</div>
+				
 				<div class="copyright">
-					<p><strong>Gymove Fitness Admin Dashboard</strong> © 2020 All Rights Reserved</p>
-					<p>Made with <span class="heart"></span> by DexignZone</p>
+
+					<p><strong>GymPlus Fitness Admin Dashboard</strong> © 2024 All Rights Reserved</p>
+					<p>Made with <span class="heart"></span> by UnityKnights</p>
 				</div>
 			</div>
         </div>
@@ -929,7 +860,7 @@
         ***********************************-->
         <div class="footer">
             <div class="copyright">
-                <p>Copyright © Designed &amp; Developed by <a href="http://dexignzone.com/" target="_blank">DexignZone</a> 2020</p>
+                <p>Copyright © Designed &amp; Developed by <a href="http://UnityKnights.com/" target="_blank">UnityKnights</a> 2024</p>
             </div>
         </div>
 	</div>
@@ -943,15 +874,9 @@
     <script src="{{asset('dashboard/js/custom.min.js')}}"></script>
 	<script src="{{asset('dashboard/js/deznav-init.js')}}"></script>
 	<script src="{{asset('dashboard/vendor/owl-carousel/owl.carousel.js')}}"></script>
-	
-	<!-- Chart piety plugin files -->
-    <script src="{{asset('dashboard/vendor/peity/jquery.peity.min.js')}}"></script>
-	
-	<!-- Apex Chart -->
-	<script src="{{asset('dashboard/vendor/apexchart/apexchart.js')}}"></script>
-	
-	<!-- Dashboard 1 -->
-	<script src="{{asset('dashboard/js/dashboard/dashboard-1.js')}}"></script>
+	<script src="{{asset('dashboard/vendor/sweetalert2/dist/sweetalert2.min.js')}}"></script>
+
+
 	<script>
 		function carouselReview(){
 			/*  testimonial one function by = owl.carousel.js */

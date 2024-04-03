@@ -2,42 +2,65 @@
 
 namespace App\Entity;
 
+use App\Repository\PostRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use App\Repository\PostRepository;
+use Symfony\Component\HttpFoundation\File\File;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: PostRepository::class)]
+#[Vich\Uploadable]
 class Post
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $idPost;
+    #[ORM\Column(name: "id_post ")]
+    private ?int $id = null;
 
-    #[ORM\Column]
-    private ?string $mode;
+    #[ORM\Column(name: "user_id", nullable: true)]
+    private ?int $idUser = null;
 
-    #[ORM\Column]
-    private ?string $content;
+    #[ORM\Column(name: "mode", length: 255, nullable: true)]
+    private ?string $mode = null;
 
-    #[ORM\Column]
-    private ?\DateTime $date;
+    #[ORM\Column(name: "content", length: 255, nullable: true)]
+    #[Assert\NotBlank(message: 'Please enter your lastname.')]
+    private ?string $content = null;
 
-    #[ORM\Column]
-    private ?string $photo;
+    #[ORM\Column(name: "date", type: Types::DATE_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $date = null;
 
-    #[ORM\Column]
-    private ?int $likes;
+    #[ORM\Column(name: "photo", length: 255, nullable: true)]
+    private ?string $photo = null;
 
-    #[ORM\Column]
-    private ?int $nbcomnts;
+    #[ORM\Column(name: "likes", nullable: true)]
+    private ?int $likes = null;
 
-    #[ORM\ManyToOne(targetEntity: User::class)]
-    private ?user $user;
+    #[ORM\Column(name: "nbComnts", nullable: true)]
+    private ?int $nbComnts = null;
 
-    public function getIdPost(): ?int
+    #[Vich\UploadableField(mapping: 'img_post', fileNameProperty: 'photo')]
+    private ?File $imageFile = null;
+
+    // #[ORM\Column(nullable: true)]
+    // private ?string $imageName = null;
+
+    public function getId(): ?int
     {
-        return $this->idPost;
+        return $this->id;
+    }
+
+    public function getIdUser(): ?int
+    {
+        return $this->idUser;
+    }
+
+    public function setIdUser(?int $idUser): static
+    {
+        $this->idUser = $idUser;
+
+        return $this;
     }
 
     public function getMode(): ?string
@@ -64,12 +87,12 @@ class Post
         return $this;
     }
 
-    public function getDate(): ?\DateTime
+    public function getDate(): ?\DateTimeInterface
     {
         return $this->date;
     }
 
-    public function setDate(?\DateTime $date): static
+    public function setDate(?\DateTimeInterface $date): static
     {
         $this->date = $date;
 
@@ -87,6 +110,25 @@ class Post
 
         return $this;
     }
+     /**
+     * If manually uploading a file (i.e. not using Symfony Form) ensure an instance
+     * of 'UploadedFile' is injected into this setter to trigger the update. If this
+     * bundle's configuration parameter 'inject_on_load' is set to 'true' this setter
+     * must be able to accept an instance of 'File' as the bundle will inject one here
+     * during Doctrine hydration.
+     *
+     * @param File|\Symfony\Component\HttpFoundation\File\UploadedFile|null $imageFile
+     */
+    public function setImageFile(?File $imageFile = null): void
+    {
+        $this->imageFile = $imageFile;
+
+    }
+
+    public function getImageFile(): ?File
+    {
+        return $this->imageFile;
+    }
 
     public function getLikes(): ?int
     {
@@ -100,29 +142,15 @@ class Post
         return $this;
     }
 
-    public function getNbcomnts(): ?int
+    public function getNbComnts(): ?int
     {
-        return $this->nbcomnts;
+        return $this->nbComnts;
     }
 
-    public function setNbcomnts(?int $nbcomnts): static
+    public function setNbComnts(?int $nbComnts): static
     {
-        $this->nbcomnts = $nbcomnts;
+        $this->nbComnts = $nbComnts;
 
         return $this;
     }
-
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(?User $user): static
-    {
-        $this->user = $user;
-
-        return $this;
-    }
-
-
 }

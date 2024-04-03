@@ -1,4 +1,11 @@
 {% extends 'main/base.html.twig' %}
+
+{% block css %}
+	<link href="{{asset('main/vendor/ScheduleBootsrap/bootstrap.min.css')}}" rel="stylesheet">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+	<link href="{{asset('main/vendor/ScheduleBootsrap/main.min.css')}}" rel="stylesheet">
+	{{ parent() }}
+{% endblock %}
 	
 {% block content %}
 	<div class="page-content bg-white">
@@ -205,7 +212,7 @@
 					</div>
 
 
-					<div class="col-lg-8 order-lg-2 order-1 m-b30 wow bounceInUp  data-wow-duration="0.2s" data-wow-delay="0.2s">
+					<div class="col-lg-8 order-lg-2 order-1 m-b30 wow bounceInUp"  data-wow-duration="0.2s" data-wow-delay="0.2s">
 					     	<div class="row">
 										{% for objectif in objectifs %}
 									 <div class="col-xl-12 col-lg-12 m-b30">
@@ -455,6 +462,9 @@
 
 {% block js %}
 	{{ parent() }}
+	<script src="{{asset('main/js/jquery-3.6.0.min.js')}}"></script><!--  -->
+	<script src="{{asset('main/js/bootstrap.min.js')}}"></script><!--  -->
+	<script src="{{asset('main/js/main.min.js')}}"></script><!-- -->
 	<script src='https://cdn.jsdelivr.net/npm/fullcalendar/index.global.min.js'></script>
 	<script>
 		document.addEventListener('DOMContentLoaded', function() {

@@ -1,4 +1,11 @@
 {% extends 'main/base.html.twig' %}
+
+{% block css %}
+	<link href="{{asset('main/vendor/ScheduleBootsrap/bootstrap.min.css')}}" rel="stylesheet">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+	<link href="{{asset('main/vendor/ScheduleBootsrap/main.min.css')}}" rel="stylesheet">
+	{{ parent() }}
+{% endblock %}
 {% block content %}
 	<div class="page-content bg-white">
 		
@@ -34,7 +41,7 @@
 
 		<!-- numbers list START -->
 
-			<section class="content-inner p-b0 wow slideInLeft data-wow-duration="0.2s" data-wow-delay="0.2s" style="margin-top: -40px;">
+			<section class="content-inner p-b0 wow slideInLeft" data-wow-duration="0.2s" data-wow-delay="0.2s" style="margin-top: -40px;">
 				<div class="container">
 					<div class="row justify-content-center">
 								<div class="col-lg-3 col-10 m-b90">
@@ -508,6 +515,9 @@
 
 {% block js %}
     {{ parent() }}
+	<script src="{{asset('main/js/jquery-3.6.0.min.js')}}"></script><!--  -->
+	<script src="{{asset('main/js/bootstrap.min.js')}}"></script><!--  -->
+	<script src="{{asset('main/js/main.min.js')}}"></script><!-- -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             var calendarEl = document.getElementById('calendar');

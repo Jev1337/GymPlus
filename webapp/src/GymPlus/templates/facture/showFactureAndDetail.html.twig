@@ -1,0 +1,44 @@
+{% extends "main/base.html.twig" %}
+
+{% block body %}
+
+{# templates/facture/show.html.twig #}
+
+<h1>Facture : {{ facture.idfacture }} </h1>
+<h2> Date Vente : {{ facture.datevente ? facture.datevente|date('Y-m-d') : '' }} </h2>
+ 
+<table>
+    <thead>               
+        <tr>
+            <th>Iddetailfacture</th>
+            <th>Prix unitaire</th>
+            <th>Quantité</th>
+            <th>Tauxremise</th>
+            <th>Prix total article</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for detail in detailsFacture %}
+            <tr>
+                <td>{{ detail.iddetailfacture }}</td>
+                <td>{{ detail.prixventeunitaire }}</td>
+                <td>{{ detail.quantite }}</td>
+                <td>{{ detail.tauxremise }}</td>
+                <td>{{ detail.prixtotalarticle}}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h3>Total de la facture: {{ facture.prixtatalpaye }}</h3>
+<h3>Méthode de paiement: {{ facture.methodedepaiement }}</h3>
+
+ <a href="{{ path('app_facture_index') }}">back to list</a>
+
+<a href="{{ path('app_facture_edit', {'idfacture': facture.idfacture}) }}">edit</a>
+
+{{ include('facture/_delete_form.html.twig') }}
+
+
+
+{% endblock %}

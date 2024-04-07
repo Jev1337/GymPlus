@@ -10,7 +10,7 @@ use App\Repository\DetailfactureRepository;
 class Detailfacture
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
+    // #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $iddetailfacture;
 
@@ -26,15 +26,32 @@ class Detailfacture
     #[ORM\Column]
     private ?float $prixtotalarticle;
 
+    // #[ORM\ManyToOne(targetEntity: Facture::class)]
+    // #[ORM\Id]
+    // #[ORM\GeneratedValue(strategy: "NONE")]
+    // #[ORM\OneToOne(targetEntity: Facture::class)]
+    // #[ORM\JoinColumn(name: 'idFacture', referencedColumnName: 'idFacture')]
     #[ORM\ManyToOne(targetEntity: Facture::class)]
+    #[ORM\JoinColumn(name: 'idfacture', referencedColumnName: 'idFacture')]
     private $idfacture;
 
+    // #[ORM\ManyToOne(targetEntity: Produit::class)]
+    // #[ORM\ManyToOne(targetEntity: Produit::class)]
+    // #[ORM\JoinColumn(name: 'idProduit', referencedColumnName: 'idProduit')]
     #[ORM\ManyToOne(targetEntity: Produit::class)]
+    #[ORM\JoinColumn(name: 'idProduit', referencedColumnName: 'idProduit')]
     private $idproduit;
 
     public function getIddetailfacture(): ?int
     {
         return $this->iddetailfacture;
+    }
+
+    public function setIddetailfacture(?int $iddetailfacture): static
+    {
+        $this->iddetailfacture = $iddetailfacture;
+
+        return $this;
     }
 
     public function getPrixventeunitaire(): ?float

@@ -1,0 +1,293 @@
+{% extends "main/base.html.twig" %}
+
+{# {% block title %}Panier index{% endblock %} #}
+
+{# {% block body %} #}
+
+{% block content %}
+
+<div class="page-content bg-white">
+		
+		<!-- Banner  -->
+		<div class="dz-bnr-inr style-2" style="background-image: url('{{asset('main/images/banner/banner-2.png')}}')">
+			<div class="banner-gradient"></div>
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-8">
+						<div class="dz-bnr-inr-entry">
+							<h1>Panier</h1>
+							<!-- Breadcrumb Row -->
+							<nav aria-label="breadcrumb" class="breadcrumb-row">
+								<ul class="breadcrumb">
+									<li class="breadcrumb-item"><a href="index.html">Home</a></li>
+									
+									<li class="breadcrumb-item active" aria-current="page">Panier</li>
+								</ul>
+							</nav>
+							<!-- Breadcrumb Row End -->
+						</div>
+					</div>
+				</div>	
+				<div class="banner-media">
+					<img src="{{asset('main/images/banner/pic4.png')}}" alt="/">
+				</div>
+			</div>	
+		</div>
+
+    <h1>Votre panier</h1>
+
+    <a href="{{ path('app_produit_index') }}">Retour à la liste des produits</a>
+    <br>
+    <a href="{{ path('app_MemmoryGame_index') }}">MemmoryGame</a>
+    
+    {% if items | length > 0 %}
+        <table class="table" id="detailpanier" >
+            <thead>
+                <tr>
+                    <th>Idproduit</th>
+                    <th>Name</th>
+                    <th>Prix</th>
+                    <th>Description</th>
+                    <th>Photo</th>
+                    <th>Promo</th>
+                    <th>Quantité</th>
+                    <th>Total Article</th>
+                    <th>Supprimer produit</th>
+                </tr>
+            </thead>    
+            <tbody>
+                {% for item in items %}
+                    <tr>
+                        <td id="idprod" >{{ item.produit.Idproduit }} </td>
+                        <td>{{item.produit.Name}}</td>
+                        <td id="prixunitaire" >{{item.produit.Prix}}</td>
+                        <td>{{item.produit.Description}}</td>
+                        <td>
+                        {# {{item.produit.Photo}} #}
+                        <img src="{{ asset('images/img_product/' ~ item.produit.Photo) }}" alt="" width="100">
+                        </td>
+                        <td id="promo" >{{item.produit.Promo}}</td>
+                        <td id="Qte" >
+                            <input type="number" class="quantity-input" data-id="{{ item.produit.Idproduit }}" value="{{ item.quantite }}">
+                        </td>
+                        {# <td id="prixToatalArticle">{{ item.produit.Prix * item.quantite }}</td> #}
+                        {# <td class="total-item" id="totalUnArticle" >{{ item.produit.Prix * item.quantite }}</td> #}
+                        <td class="total-item" id="totalUnArticle" >{{ item.produit.Prix * item.quantite * (1 - item.produit.promo ) }}</td>
+                        <td>
+                            <a href="{{ path('panier_remove', {'idproduit': item.produit.Idproduit}) }}">Supprimer</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>    
+            <tfoot>
+                <tr>
+                    {# <td><h4>Total :</h4></td>
+                    <td id="total">{{ total }}</td>
+                    <td></td> #}
+                    {% if gagnant %}
+                        <!-- Si l'utilisateur a gagné, appliquer une réduction de 50% sur le total -->
+                        <td><h4>Total (50% de réduction) :</h4></td>
+                        <td id="total">{{ total * 0.5 }}</td>
+                        <td></td>
+                    {% else %}
+                        <!-- Sinon, afficher le total normal -->
+                        <td><h4>Total :</h4></td>
+                        <td id="total">{{ total }}</td>
+                        <td></td>
+                    {% endif %}
+                </tr>
+            </tfoot>
+        </table>
+    {% else %}
+        <p>Le panier est vide !</p>
+    {% endif %}
+
+    {# <a href="{{ path('valider_panier') }}">Valider le panier</a> #}
+    {# <a href="{{ path('valider_panier') }}" onclick="validerPanier()">Valider le panier</a> #}
+    {# <a href="{{ path('Apres_validation_panier') }}" id="valider-panier" data-url="{{ path('valider_panier') }}">Valider le panier</a> #}
+    <a href="#" id="valider-panier" data-url="{{ path('valider_panier') }}">Valider le panier</a>
+
+
+
+    <script>
+
+            // *****Partie Spiner Quantite
+                // JavaScript code for handling quantity update
+                document.addEventListener('DOMContentLoaded', function() {
+                    const quantityInputs = document.querySelectorAll('.quantity-input');
+
+                    quantityInputs.forEach(function(input) {
+                        input.addEventListener('change', function(event) {
+                            const productId = event.target.getAttribute('data-id');
+                            const newQuantity = event.target.value;
+
+                            updateQuantity(productId, newQuantity);
+                        });
+                    });
+
+                    function updateQuantity(productId, newQuantity) {
+                        fetch(`/panier/update/${productId}?quantity=${newQuantity}`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            // Mettez à jour le total et d'autres parties de la page si nécessaire
+                            document.getElementById('total').textContent = data.total;
+
+                            // Mettre à jour le total de chaque article
+                            const totalItemElements = document.querySelectorAll('.total-item');
+                            totalItemElements.forEach(function(element, index) {
+                                element.textContent = data.totalItems[index];
+                            });
+                        })
+
+                        .catch(error => console.error('Erreur lors de la mise à jour de la quantité :', error));
+                    }
+                });
+
+                
+        //*****Partie Validation du Panier 
+
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const validerPanierButton = document.querySelector('#valider-panier');
+
+            validerPanierButton.addEventListener('click', function() {
+                // Récupérer les données nécessaires depuis le front-end
+                //methodeDePaiement = prompt("Veuillez choisir la méthode de paiement :");
+                methodeDePaiement = "en ligne";
+                console.log(methodeDePaiement);
+
+                //lieu = prompt("Veuillez choisir lieu :");
+                lieu = document.getElementById('place-name').textContent; 
+                console.log(lieu);
+
+
+                total = document.getElementById('total').textContent;
+
+                // Récupérer les détails de chaque produit dans le panier
+
+                const items = document.querySelectorAll("tbody tr");
+                //console.log("tbody tr" ,document.querySelectorAll("tbody tr"));
+
+
+                // Créer un tableau pour stocker les détails de chaque produit dans le panier
+                const panierDetails = [];
+
+            items.forEach(item => {
+                //const idproduit = document.getElementById('idprod').textContent;
+                const idproduit = item.querySelector('#idprod').textContent.trim();
+                console.log("produit" , idproduit);
+
+                const quantite = item.querySelector('.quantity-input').value;
+                //console.log("Qte" ,quantite);
+
+                const prixunitaire = item.querySelector('#prixunitaire').textContent.trim();
+                //console.log("prix uni" ,prixunitaire);
+
+                const promo = item.querySelector('#promo').textContent.trim();
+                //console.log("promo" ,promo);
+
+                const totalUnArticle = item.querySelector('.total-item').textContent.trim();
+                //console.log("total article" ,totalUnArticle);
+
+
+                panierDetails.push({
+                    idproduit: idproduit,
+                    quantite: quantite,
+                    prixunitaire: prixunitaire,
+                    promo: promo,
+                    totalUnArticle: totalUnArticle
+                });
+            });
+
+        
+                // Créer un objet contenant les données à envoyer
+                data = {
+                    methodeDePaiement: methodeDePaiement,
+                    total: total,
+                    lieu: lieu,
+                    panierDetails: panierDetails
+                            
+                };
+
+                console.log("data" ,data);
+                console.log("Json" , JSON.stringify(data));
+
+                // Envoyer les données au back-end via une requête POST
+                fetch('/valider-panier', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+
+                })
+                .then(response => response.json())
+                .then(result => {
+                    // Traiter la réponse du back-end si nécessaire
+                    console.log("resultat" , result);
+                })
+                .catch(error => {
+                    console.error('Erreur', error);
+            });
+            });
+        });   
+
+        
+    </script>
+
+
+
+    {# ****************Map #}
+    {% block stylesheets %}
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    {% endblock %}
+
+    {% block javascripts %}
+        <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    {% endblock %}
+
+    <div id="place-name"></div>
+
+
+    <div id="map-container">
+        <div id="map" style="flex: 1; height: 400px; width: 500px;"></div>
+    </div>
+
+    <input type="hidden" id="publication_lieu" name="publication_lieu" />
+
+    <script>
+        var map = L.map('map').setView([51.505, -0.09], 13);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        var marker;
+       map.on('click', function(e) {
+            if (marker) {
+                map.removeLayer(marker);
+            }
+            marker = L.marker(e.latlng).addTo(map);
+
+            fetch('https://nominatim.openstreetmap.org/reverse?lat=' + e.latlng.lat + '&lon=' + e.latlng.lng + '&format=json')
+                .then(response => response.json())
+                .then(data => {
+                    var country = data.address.country;
+                    var city = data.address.city || data.address.town || data.address.village || data.address.hamlet;
+                    var placeName = city + ', ' + country;
+
+                    // Afficher le nom de la place dans l'élément HTML
+                    document.getElementById('place-name').textContent = placeName;
+                })
+                .catch(error => console.error('Error:', error));
+        });
+
+    </script>
+
+
+
+{% endblock %}

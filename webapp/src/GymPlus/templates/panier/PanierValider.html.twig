@@ -1,0 +1,72 @@
+{% extends "main/base.html.twig" %}
+
+{# {% block title %}test{% endblock %} #}
+
+{# {% block body %} #}
+
+{% block content %}
+
+<div class="page-content bg-white">
+		
+		<!-- Banner  -->
+		<div class="dz-bnr-inr style-2" style="background-image: url('{{asset('main/images/banner/banner-2.png')}}')">
+			<div class="banner-gradient"></div>
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-8">
+						<div class="dz-bnr-inr-entry">
+							<h1>Facture</h1>
+							<!-- Breadcrumb Row -->
+							<nav aria-label="breadcrumb" class="breadcrumb-row">
+								<ul class="breadcrumb">
+									<li class="breadcrumb-item"><a href="index.html">Home</a></li>
+									
+									<li class="breadcrumb-item active" aria-current="page">Facture</li>
+								</ul>
+							</nav>
+							<!-- Breadcrumb Row End -->
+						</div>
+					</div>
+				</div>	
+				<div class="banner-media">
+					<img src="{{asset('main/images/banner/pic4.png')}}" alt="/">
+				</div>
+			</div>	
+		</div>
+
+    <h1>Panier Valide</h1>
+
+
+    <a href="{{ path('app_produit_index') }}">Retour à la liste des produits</a>
+
+    <h1>Facture : {{ facture.idfacture }} </h1>
+    <h2> Date Vente : {{ facture.datevente ? facture.datevente|date('Y-m-d') : '' }} </h2>
+    
+    <table>
+        <thead>               
+            <tr>
+                <th>Iddetailfacture</th>
+                <th>Prix unitaire</th>
+                <th>Quantité</th>
+                <th>Tauxremise</th>
+                <th>Prix total article</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for detail in detailsFacture %}
+                <tr>
+                    <td>{{ detail.iddetailfacture }}</td>
+                    <td>{{ detail.prixventeunitaire }}</td>
+                    <td>{{ detail.quantite }}</td>
+                    <td>{{ detail.tauxremise }}</td>
+                    <td>{{ detail.prixtotalarticle}}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h3>Total de la facture: {{ facture.prixtatalpaye }}</h3>
+    <h3>Méthode de paiement: {{ facture.methodedepaiement }}</h3>
+   
+{% endblock %}
+

@@ -1,0 +1,46 @@
+{% extends "main/base.html.twig" %}
+
+{% block title %}Detailfacture index{% endblock %}
+
+{% block body %}
+    <h1>Detailfacture index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Iddetailfacture</th>
+                <th>Prixventeunitaire</th>
+                <th>Quantite</th>
+                <th>Tauxremise</th>
+                <th>Prixtotalarticle</th>
+                <th>idProduit</th>
+                <th>idFacture</th>
+                <th>actions</th>
+               
+            </tr>
+        </thead>
+        <tbody>
+        {% for detailfacture in detailfactures %}
+            <tr>
+                <td>{{ detailfacture.iddetailfacture }}</td>
+                <td>{{ detailfacture.prixventeunitaire }}</td>
+                <td>{{ detailfacture.quantite }}</td>
+                <td>{{ detailfacture.tauxremise }}</td>
+                <td>{{ detailfacture.prixtotalarticle }}</td>
+                <td>{{ detailfacture.idProduit }}</td>
+                <td>{{ detailfacture.idFacture }}</td>
+                <td>
+                    <a href="{{ path('app_detailfacture_show', {'iddetailfacture': detailfacture.iddetailfacture}) }}">show</a>
+                    <a href="{{ path('app_detailfacture_edit', {'iddetailfacture': detailfacture.iddetailfacture}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_detailfacture_new') }}">Create new</a>
+{% endblock %}

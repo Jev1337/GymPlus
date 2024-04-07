@@ -21,6 +21,15 @@ class DetailfactureRepository extends ServiceEntityRepository
         parent::__construct($registry, Detailfacture::class);
     }
 
+    public function findDetailsByFactureId($factureId)
+    {
+        return $this->createQueryBuilder('d')
+            ->andWhere('d.idfacture = :factureId')
+            ->setParameter('factureId', $factureId)
+            ->getQuery()
+            ->getResult();
+    }
+
 //    /**
 //     * @return Detailfacture[] Returns an array of Detailfacture objects
 //     */

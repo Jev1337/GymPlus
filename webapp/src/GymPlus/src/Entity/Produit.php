@@ -5,22 +5,29 @@ namespace App\Entity;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ProduitRepository;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ProduitRepository::class)]
 class Produit
 {
+    // #[ORM\Id]
+    // #[ORM\GeneratedValue]
+    // #[ORM\Column]
     #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(name: 'idProduit', type: 'integer')]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private ?int $idproduit;
 
     #[ORM\Column]
+    #[Assert\NotBlank(message:"Name Product is required.")]
     private ?string $name;
 
     #[ORM\Column]
+    #[Assert\Positive(message:"Positive price is required.")]
     private ?float $prix;
 
     #[ORM\Column]
+    #[Assert\Positive(message:"Positive stock is required.")]
     private ?int $stock;
 
     #[ORM\Column]
@@ -34,6 +41,7 @@ class Produit
     private ?string $photo;
 
     #[ORM\Column]
+    #[Assert\Positive(message:"Positive limit is required.")]
     private ?int $seuil;
 
     #[ORM\Column]
@@ -41,7 +49,13 @@ class Produit
 
     public function getIdproduit(): ?int
     {
+        // return $this->idproduit;
+        // Vérifie si idproduit est initialisée avant d'y accéder
+    if (isset($this->idproduit)) {
         return $this->idproduit;
+    } else {
+        return null;
+    }
     }
 
     public function getName(): ?string
@@ -138,6 +152,12 @@ class Produit
         $this->promo = $promo;
 
         return $this;
+    }
+
+    public function __toString()
+    {
+        // Retourne une représentation de l'objet Produit sous forme de chaîne
+        return $this->idproduit; // Vous pouvez retourner n'importe quelle propriété qui représente le produit
     }
 
 

@@ -21,6 +21,24 @@ class FactureRepository extends ServiceEntityRepository
         parent::__construct($registry, Facture::class);
     }
 
+    public function findMaxFacture(): array
+    {
+        return $this->createQueryBuilder('a')
+            ->select('MAX(a.idfacture) as maxId')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    public function searchFactureById($value)
+    {
+        return $this->createQueryBuilder('b')
+        ->where('b.idfacture = :c')
+        ->setParameter('c' , $value)        
+        ->getQuery()
+        ->getResult(); 
+    }
+
 //    /**
 //     * @return Facture[] Returns an array of Facture objects
 //     */

@@ -75,7 +75,7 @@ class UserController extends AbstractController
                 }
             }
         }
-        return $this->render('main/login.html.twig', [
+        return $this->render('main/user/login.html.twig', [
             'controller_name' => 'UserController',
             'form' => $form->createView()
         ]);
@@ -188,7 +188,7 @@ class UserController extends AbstractController
         }
         
 
-        return $this->render('main/signup.html.twig', [
+        return $this->render('main/user/signup.html.twig', [
             'controller_name' => 'UserController',
             'form' => $form->createView()
         ]);
@@ -227,7 +227,7 @@ class UserController extends AbstractController
                 return $this->redirectToRoute('app_profile');
             }
         }
-        return $this->render('main/profile.html.twig', [
+        return $this->render('main/user/profile.html.twig', [
             'controller_name' => 'UserController',
             'form' => $form->createView()
         ]);
@@ -274,7 +274,7 @@ class UserController extends AbstractController
     {
 
         if ($repo->isUserSubscribed($this->getUser()->getId())) {
-            return $this->render('main/mysubscriptions.html.twig', [
+            return $this->render('main/user/mysubscriptions.html.twig', [
                 'controller_name' => 'UserController',
                 'subs' => $repo->getOldSubscriptionsByUserId($this->getUser()->getId()),
                 'subnow' => $repo->getCurrentSubByUserId($this->getUser()->getId()),
@@ -282,7 +282,7 @@ class UserController extends AbstractController
             ]);
         }
         
-        return $this->render('main/subscriptions.html.twig', [
+        return $this->render('main/user/subscriptions.html.twig', [
             'controller_name' => 'UserController',
 
         ]);
@@ -301,7 +301,7 @@ class UserController extends AbstractController
             return $this->redirectToRoute('app_home');
         }
         $price = $repo0->getAbonnementPriceByName('GP ' . $id);
-        return $this->render('main/buy.html.twig', [
+        return $this->render('main/user/buy.html.twig', [
             'controller_name' => 'UserController',
             'id' => $id,
             'price' => $price
@@ -394,7 +394,7 @@ class UserController extends AbstractController
         }
 
 
-        return $this->render('dashboard/userlist.html.twig', [
+        return $this->render('dashboard/user/userlist.html.twig', [
             'controller_name' => 'UserController',
             'users' => $repo->findAll(),
             'form' => $form->createView()
@@ -427,7 +427,7 @@ class UserController extends AbstractController
                 return $this->redirectToRoute('app_user_edit', ['id' => $id]);
             }
         }
-        return $this->render('dashboard/profile.html.twig', [
+        return $this->render('dashboard/user/profile.html.twig', [
             'controller_name' => 'UserController',
             'useredit' => $useredit,
             'form' => $form->createView()
@@ -460,7 +460,7 @@ class UserController extends AbstractController
             }
         }
         
-        return $this->render('dashboard/profile.html.twig', [
+        return $this->render('dashboard/user/profile.html.twig', [
             'controller_name' => 'UserController',
             'useredit' => $user,
             'form' => $form->createView()
@@ -482,5 +482,14 @@ class UserController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
         return $this->redirectToRoute('app_usermgmt');
+    }
+
+    #[Route('/dashboard/subscriptions', name: 'app_submgmt')]
+    public function subscriptionManagement(AbonnementRepository $repo): Response
+    {
+        return $this->render('dashboard/user/subscriptions.html.twig', [
+            'controller_name' => 'UserController',
+            'subs' => $repo->findAll()
+        ]);
     }
 }

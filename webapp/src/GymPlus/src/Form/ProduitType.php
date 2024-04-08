@@ -11,6 +11,7 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 
 class ProduitType extends AbstractType
@@ -18,25 +19,74 @@ class ProduitType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('name')
-            ->add('prix')
-            ->add('stock')
-            ->add('description')
-            //->add('categorie')
-            ->add('categorie' , ChoiceType::class , 
-            [
-                'choices'=>
-                [   'food'=>'food',
-                    'equipement'=>'equipement',
-                    'vetement'=>'vetement',
-                ],
-            ])
-            ->add('photo', FileType::class,[
-                    'required' => false,
-                    'mapped' => true, 
-            ])
-            ->add('seuil')
-            ->add('promo')
+            // ->add('name')
+        //     ->add('prix' , null , ['label' => 'Price'] )
+        //     ->add('stock'  , null , ['label' => 'Stock'] )
+        //     ->add('description' , null , ['label' => 'Description'] )
+        //     //->add('categorie')
+        //     ->add('categorie' , ChoiceType::class , 
+        //     [
+        //         'label' => 'Category',
+        //         'choices'=>
+        //         [   'food'=>'food',
+        //             'equipement'=>'equipement',
+        //             'vetement'=>'vetement',
+        //         ],
+        //     ])
+        //     ->add('photo', FileType::class,[
+        //             'required' => false,
+        //             'mapped' => true, 
+        //     ])
+        //     ->add('seuil' , null , ['label' => 'Limit'] )
+        //     ->add('promo' , null , ['label' => 'Discount'] )
+        // ;
+        ->add('name', TextType::class, [
+            'label' => 'Name',
+            'label_attr' => ['style' => 'width: 100px; display: inline-block; text-align: right; margin-right: 10px;'], 
+            'attr' => ['style' => 'display: inline-block; width: calc(100% - 110px); width: 300px;'] 
+        ])
+        ->add('prix' , TextType::class, [
+            'label' => 'Price',
+            'label_attr' => ['style' => 'width: 100px; display: inline-block; text-align: right; margin-right: 10px;'], 
+            'attr' => ['style' => 'display: inline-block; width: calc(100% - 110px); width: 300px;'] 
+        ])
+        ->add('stock', TextType::class, [
+            'label' => 'Stock',
+            'label_attr' => ['style' => 'width: 100px; display: inline-block; text-align: right; margin-right: 10px;'], 
+            'attr' => ['style' => 'display: inline-block; width: calc(100% - 110px); width: 300px;'] 
+        ])
+        ->add('description', TextType::class, [
+            'label' => 'Description',
+            'label_attr' => ['style' => 'width: 100px; display: inline-block; text-align: right; margin-right: 10px;'], 
+            'attr' => ['style' => 'display: inline-block; width: calc(100% - 110px); width: 300px;'] 
+        ])
+        ->add('categorie', ChoiceType::class, [
+            'label' => 'Category',
+            'choices' => [
+                'food' => 'food',
+                'equipement' => 'equipement',
+                'vetement' => 'vetement',
+            ],
+            'label_attr' => ['style' => 'width: 100px; display: inline-block; text-align: right; margin-right: 10px;'], 
+            'attr' => ['style' => 'display: inline-block; width: calc(100% - 110px); width: 300px;'] 
+        ])
+        ->add('photo', FileType::class, [
+            'label' => 'Photo',
+            'required' => false,
+            'mapped' => true,
+            'label_attr' => ['style' => 'width: 100px; display: inline-block; text-align: right; margin-right: 10px;'], 
+            'attr' => ['style' => 'display: inline-block; width: calc(100% - 110px); width: 300px;'] 
+        ])
+        ->add('seuil', TextType::class, [
+            'label' => 'Limit',
+            'label_attr' => ['style' => 'width: 100px; display: inline-block; text-align: right; margin-right: 10px;'], 
+            'attr' => ['style' => 'display: inline-block; width: calc(100% - 110px); width: 300px;'] 
+        ])
+        ->add('promo', TextType::class, [
+            'label' => 'Discount',
+            'label_attr' => ['style' => 'width: 100px; display: inline-block; text-align: right; margin-right: 10px;'], 
+            'attr' => ['style' => 'display: inline-block; width: calc(100% - 110px); width: 300px;'] 
+        ])
         ;
    
 

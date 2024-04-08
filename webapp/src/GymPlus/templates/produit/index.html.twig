@@ -17,13 +17,13 @@
 				<div class="row">
 					<div class="col-lg-8">
 						<div class="dz-bnr-inr-entry">
-							<h1>Products</h1>
+							<h1>Shop</h1>
 							<!-- Breadcrumb Row -->
 							<nav aria-label="breadcrumb" class="breadcrumb-row">
 								<ul class="breadcrumb">
 									<li class="breadcrumb-item"><a href="index.html">Home</a></li>
 									
-									<li class="breadcrumb-item active" aria-current="page">Products</li>
+									<li class="breadcrumb-item active" aria-current="page">Shop</li>
 								</ul>
 							</nav>
 							<!-- Breadcrumb Row End -->
@@ -36,13 +36,11 @@
 			</div>	
 		</div>
 
-    <h1>Produit index</h1>
 
     
 <br>
-    <a href="{{ path('app_produit_new') }}">Create new</a>
-    <br>
-    <a href="{{ path('app_panier') }}">check Panier</a>
+    <a href="{{ path('app_panier') }}" id="valider-panier" data-url="{{ path('valider_panier') }}" class="btn btn-primary btn-skew appointment-btn"><span class="skew-inner"><span class="text"> Check Cart </span></span></a>
+    {# <a href="{{ path('app_panier') }}">check Panier</a> #}
     <br>
  
 <br>
@@ -78,9 +76,10 @@
                 <td>{{ latestProduct.seuil }}</td>
                 <td>{{ latestProduct.promo }}</td>
                 <td>
-                    <a href="{{ path('app_produit_show', {'idproduit': latestProduct.idproduit}) }}">show</a>
-                    <a href="{{ path('app_produit_edit', {'idproduit': latestProduct.idproduit}) }}">edit</a>
-                    <a href="{{ path('panier_add', {'idproduit': latestProduct.idproduit}) }}">Ajouter</a>
+                    <a href="{{ path('app_produit_show', {'idproduit': latestProduct.idproduit}) }}">show Product</a>
+                    {# <a href="{{ path('app_produit_edit', {'idproduit': latestProduct.idproduit}) }}">edit</a> #}
+                    <br>
+                    <a href="{{ path('panier_add', {'idproduit': latestProduct.idproduit}) }}">Add to Cart</a>
                 </td>
             </tr>
         {% else %}

@@ -15,13 +15,13 @@
 				<div class="row">
 					<div class="col-lg-8">
 						<div class="dz-bnr-inr-entry">
-							<h1>Facture</h1>
+							<h1>Invoice</h1>
 							<!-- Breadcrumb Row -->
 							<nav aria-label="breadcrumb" class="breadcrumb-row">
 								<ul class="breadcrumb">
 									<li class="breadcrumb-item"><a href="index.html">Home</a></li>
 									
-									<li class="breadcrumb-item active" aria-current="page">Facture</li>
+									<li class="breadcrumb-item active" aria-current="page">Invoice</li>
 								</ul>
 							</nav>
 							<!-- Breadcrumb Row End -->
@@ -34,39 +34,56 @@
 			</div>	
 		</div>
 
-    <h1>Panier Valide</h1>
+    {# <h1>Panier Valide</h1> #}
 
+    <br>
+    {# <a href="{{ path('app_produit_index') }}">Retour à la liste des produits</a> #}
+    <a href="{{ path('app_produit_index') }}" data-url="{{ path('valider_panier') }}" class="btn btn-primary btn-skew appointment-btn"><span class="skew-inner"><span class="text"> Back To list </span></span></a>
+    <br>
 
-    <a href="{{ path('app_produit_index') }}">Retour à la liste des produits</a>
+    <div class="text-center" >
+        <h4>Invoice ID : {{ facture.idfacture }} </h4>
+        <h4>Sale Date : {{ facture.datevente ? facture.datevente|date('Y-m-d') : '' }} </h4>
+        <br>
 
-    <h1>Facture : {{ facture.idfacture }} </h1>
-    <h2> Date Vente : {{ facture.datevente ? facture.datevente|date('Y-m-d') : '' }} </h2>
-    
-    <table>
-        <thead>               
-            <tr>
-                <th>Iddetailfacture</th>
-                <th>Prix unitaire</th>
-                <th>Quantité</th>
-                <th>Tauxremise</th>
-                <th>Prix total article</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for detail in detailsFacture %}
+        <style>
+            .custom-centered-table {
+                margin: 0 auto; /* Centrer horizontalement */
+            }
+            .custom-centered-table th,
+            .custom-centered-table td {
+                border: 1px solid black; /* Bordure de 1px solide */
+                padding: 8px; /* Espacement du contenu à l'intérieur des cellules */
+            }
+        </style>
+
+        <table class="custom-centered-table">
+            <thead>               
                 <tr>
-                    <td>{{ detail.iddetailfacture }}</td>
-                    <td>{{ detail.prixventeunitaire }}</td>
-                    <td>{{ detail.quantite }}</td>
-                    <td>{{ detail.tauxremise }}</td>
-                    <td>{{ detail.prixtotalarticle}}</td>
+                    <th>Article Number</th>
+                    <th>Unit Price</th>
+                    <th>Quantity</th>
+                    <th>Discount </th>
+                    <th>Total Article Price</th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-
-    <h3>Total de la facture: {{ facture.prixtatalpaye }}</h3>
-    <h3>Méthode de paiement: {{ facture.methodedepaiement }}</h3>
-   
+            </thead>
+            <tbody>
+                {% for detail in detailsFacture %}
+                    <tr>
+                        <td>{{ detail.iddetailfacture }}</td>
+                        <td>{{ detail.prixventeunitaire }}</td>
+                        <td>{{ detail.quantite }}</td>
+                        <td>{{ detail.tauxremise }}</td>
+                        <td>{{ detail.prixtotalarticle}}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+        <br>
+        <h4>Total Invoice Amount : {{ facture.prixtatalpaye }} TND</h4>
+        <h4>Payment Method : {{ facture.methodedepaiement }}</h4>
+    </div>
+</div>
 {% endblock %}
 

@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/produit')]
 class ProduitController extends AbstractController
 {
-    #[Route('/', name: 'app_produit_index', methods: ['GET'])]
+    // #[Route('/', name: 'app_produit_index', methods: ['GET'])]
     // public function index(EntityManagerInterface $entityManager): Response
     // {
     //     $produits = $entityManager
@@ -26,7 +26,7 @@ class ProduitController extends AbstractController
     //         'produits' => $produits,
     //     ]);
     // }
-
+    #[Route('/', name: 'app_produit_index', methods: ['GET'])]
     public function index(EntityManagerInterface $entityManager, ProduitRepository $productRepository): Response
     {
         // Récupérer les trois derniers produits ajoutés
@@ -36,6 +36,21 @@ class ProduitController extends AbstractController
         $produits = $entityManager->getRepository(Produit::class)->findAll();
 
         return $this->render('produit/index.html.twig', [
+            'latestProducts' => $latestProducts,
+            'produits' => $produits,
+        ]);
+    }
+
+    #[Route('/Admin', name: 'app_produit_indexAdmin', methods: ['GET'])]
+    public function indexAdmin(EntityManagerInterface $entityManager, ProduitRepository $productRepository): Response
+    {
+        // Récupérer les trois derniers produits ajoutés
+        $latestProducts = $productRepository->findLatestProducts();
+
+        // Récupérer tous les produits
+        $produits = $entityManager->getRepository(Produit::class)->findAll();
+
+        return $this->render('produit/indexAdmin.html.twig', [
             'latestProducts' => $latestProducts,
             'produits' => $produits,
         ]);
@@ -95,7 +110,7 @@ class ProduitController extends AbstractController
         $entityManager->persist($produit);
         $entityManager->flush();
 
-        return $this->redirectToRoute('app_produit_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_produit_indexAdmin', [], Response::HTTP_SEE_OTHER);
     }
 
     return $this->renderForm('produit/new.html.twig', [
@@ -178,7 +193,7 @@ class ProduitController extends AbstractController
 
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_produit_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_produit_indexAdmin', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('produit/edit.html.twig', [
@@ -196,7 +211,7 @@ class ProduitController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_produit_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_produit_indexAdmin', [], Response::HTTP_SEE_OTHER);
     }
 
 

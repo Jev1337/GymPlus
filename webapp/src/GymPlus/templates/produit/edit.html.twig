@@ -1,13 +1,39 @@
-{% extends "main/base.html.twig" %}
+{% extends 'dashboard/base.html.twig' %}
 
-{% block title %}Edit Produit{% endblock %}
 
-{% block body %}
-    <h1>Edit Produit</h1>
+{% block content %}
 
-    {{ include('produit/_form.html.twig', {'button_label': 'Update'}) }}
+<div class="content-body default-height" style="min-height: 878px;">
+    <div class="container-fluid">
+        <div class="page-titles">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
+                <li class="breadcrumb-item active"><a href="javascript:void(0)">Products</a></li>
+            </ol>
+        </div>
+        <!-- row -->
 
-    <a href="{{ path('app_produit_index') }}">back to list</a>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Edit Product</h4>
+                    </div>
+                    <div class="card-body">
 
-    {{ include('produit/_delete_form.html.twig') }}
+                        {# {{ include('produit/_delete_form.html.twig') }} #}
+                            {# <div class="form-group col-md-4"> #}
+                            <div class="text-center" >
+                                {{ include('produit/_form.html.twig', {'button_label': 'Update'}) }}
+                            </div>
+                            <a href="{{ path('app_produit_indexAdmin') }}" class="btn btn-primary" >back to list</a>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    
 {% endblock %}
+

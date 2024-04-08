@@ -1,43 +1,84 @@
-{% extends "main/base.html.twig" %}
+{% extends 'dashboard/base.html.twig' %}
 
-{% block body %}
 
-{# templates/facture/show.html.twig #}
+{% block content %}
 
-<h1>Facture : {{ facture.idfacture }} </h1>
-<h2> Date Vente : {{ facture.datevente ? facture.datevente|date('Y-m-d') : '' }} </h2>
- 
-<table>
-    <thead>               
-        <tr>
-            <th>Iddetailfacture</th>
-            <th>Prix unitaire</th>
-            <th>Quantité</th>
-            <th>Tauxremise</th>
-            <th>Prix total article</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for detail in detailsFacture %}
-            <tr>
-                <td>{{ detail.iddetailfacture }}</td>
-                <td>{{ detail.prixventeunitaire }}</td>
-                <td>{{ detail.quantite }}</td>
-                <td>{{ detail.tauxremise }}</td>
-                <td>{{ detail.prixtotalarticle}}</td>
-            </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div class="content-body default-height" style="min-height: 878px;">
+    <div class="container-fluid">
+        <div class="page-titles">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
+                <li class="breadcrumb-item active"><a href="javascript:void(0)">Facture</a></li>
+            </ol>
+        </div>
 
-<h3>Total de la facture: {{ facture.prixtatalpaye }}</h3>
-<h3>Méthode de paiement: {{ facture.methodedepaiement }}</h3>
+        <style>
+    /* Style for the h1 element */
+    h1 {
+        color: #333; /* Text color */
+        font-size: 28px; /* Font size */
+        margin-bottom: 20px; /* Bottom margin */
+    }
 
- <a href="{{ path('app_facture_index') }}">back to list</a>
+    /* Style for the h2 element */
+    h2 {
+        color: #333; /* Text color */
+        font-size: 22px; /* Font size */
+        margin-bottom: 10px; /* Bottom margin */
+    }
+</style>
 
-<a href="{{ path('app_facture_edit', {'idfacture': facture.idfacture}) }}">edit</a>
+        <h1>Facture : {{ facture.idfacture }} </h1>
+        <h2> Date Vente : {{ facture.datevente ? facture.datevente|date('Y-m-d') : '' }} </h2>
+        
+        {# <table> #}
+        <div class="row">
+			<div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Detail</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="example5" class="display min-w850">
+                                <thead>               
+                                    <tr>
+                                        <th> <strong class="text-black" style="font-weight: 600;"> Iddetailfacture</th>
+                                        <th> <strong class="text-black" style="font-weight: 600;"> Prix unitaire</th>
+                                        <th> <strong class="text-black" style="font-weight: 600;"> Quantité</th>
+                                        <th> <strong class="text-black" style="font-weight: 600;"> Tauxremise</th>
+                                        <th> <strong class="text-black" style="font-weight: 600;"> Prix total article</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for detail in detailsFacture %}
+                                        <tr>
+                                            <td> <strong class="text-black" style="font-weight: 600;"> {{ detail.iddetailfacture }}</td>
+                                            <td>{{ detail.prixventeunitaire }}</td>
+                                            <td>{{ detail.quantite }}</td>
+                                            <td>{{ detail.tauxremise }}</td>
+                                            <td>{{ detail.prixtotalarticle}} TND</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-{{ include('facture/_delete_form.html.twig') }}
+        <h2>Total de la facture : {{ facture.prixtatalpaye }} TND</h2>
+        <h2>Méthode de paiement : {{ facture.methodedepaiement }}</h2>
+
+        {# <a href="{{ path('app_facture_edit', {'idfacture': facture.idfacture}) }}">edit</a> #}
+        {# {{ include('facture/_delete_form.html.twig') }} #}
+        <a href="{{ path('app_facture_index') }}" class="btn btn-primary" >back to list</a>
+        {# <a href="{{ path('app_facture_new')}}" class="btn btn-primary" >Create new</a> #}
+
+
+    </div>
+</div>
 
 
 

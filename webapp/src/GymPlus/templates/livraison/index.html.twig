@@ -1,135 +1,155 @@
-{% extends "main/base.html.twig" %}
+{% extends "dashboard/base.html.twig" %}
 
-{# {% block title %}Livraison index{% endblock %} #}
+{% block content %}
+<div class="content-body default-height" style="min-height: 878px;">
+    <div class="container-fluid">
+        <div class="page-titles">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
+                <li class="breadcrumb-item active"><a href="javascript:void(0)">Delivery</a></li>
+            </ol>
+        </div>
+        <!-- row -->
 
-{% block body %}
+        {% block stylesheetscolor %}
+            <style>
+                .etat-delivered {
+                    color: #28a745; /* texte vert */
+                }
 
-    <h1>Livraison index</h1>
+                .etat-en-cours {
+                    color: #ff0000; /* texte rouge */
+                }
+            </style>
+        {% endblock %}
 
-    {% block stylesheetscolor %}
-        <style>
-            .etat-delivered {
-                color: #28a745; /* texte vert */
-            }
+        {# <table class="table"> #}
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Delivery</h4>
+                    </div>
+                    <div class="card-body">
+                        {# <div class="table-title">Facture</div> #}
+                        <div class="table-responsive">
+                            <table class="table table-responsive-md" id="complete-products-table">
+                                <thead>
+                                    <tr>
+                                        <th> <strong class="text-black" style="font-weight: 600;"> Idlivraison </strong> </th>
+                                        <th> <strong class="text-black" style="font-weight: 600;"> Idfacture </strong> </th>
+                                        <th> <strong class="text-black" style="font-weight: 600;"> Idclient </strong> </th>
+                                        <th> <strong class="text-black" style="font-weight: 600;"> Lieu </strong> </th>
+                                        <th> <strong class="text-black" style="font-weight: 600;"> Etat </strong> </th>
+                                        <th> <strong class="text-black" style="font-weight: 600;"> actions </strong> </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {% for livraison in livraisons %}
+                                    <tr>
+                                        <td> <strong class="text-black" style="font-weight: 600;"> {{ livraison.idlivraison }} </strong></td>
+                                        <td>{{ livraison.idfacture }}</td>
+                                        <td>{{ livraison.idclient }}</td>
+                                        {# <td>{{ livraison.lieu }}</td> #}
 
-            .etat-en-cours {
-                color: #ff0000; /* texte rouge */
-            }
-        </style>
-    {% endblock %}
+                                                            <td class="place-column" data-lieu="{{ livraison.lieu }}">{{ livraison.lieu }}</td>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Idlivraison</th>
-                <th>Idfacture</th>
-                <th>Idclient</th>
-                <th>Lieu</th>
-                <th>Etat</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for livraison in livraisons %}
-            <tr>
-                <td>{{ livraison.idlivraison }}</td>
-                <td>{{ livraison.idfacture }}</td>
-                <td>{{ livraison.idclient }}</td>
-                {# <td>{{ livraison.lieu }}</td> #}
+                                        <td class="{% if livraison.etat == 'Delivered' %}etat-delivered{% elseif livraison.etat == 'en cours' %}etat-en-cours{% endif %}">
+                                            {{ livraison.etat }}
+                                        </td>
+                                        <td>
+                                            {# <a href="{{ path('app_livraison_show', {'idlivraison': livraison.idlivraison}) }}">show</a> #}
+                                            <a href="{{ path('app_livraison_edit', {'idlivraison': livraison.idlivraison}) }} " class="btn btn-primary">edit</a>
+                                        </td>
+                                    </tr>
+                                    {% else %}
+                                    <tr>
+                                        <td colspan="6">no records found</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
 
-                                    <td class="place-column" data-lieu="{{ livraison.lieu }}">{{ livraison.lieu }}</td>
+                            {# ****************Map #}
+                            {% block stylesheets %}
+                            <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+                            {% endblock %}
 
-                <td class="{% if livraison.etat == 'Delivered' %}etat-delivered{% elseif livraison.etat == 'en cours' %}etat-en-cours{% endif %}">
-                    {{ livraison.etat }}
-                </td>
-                <td>
-                    <a href="{{ path('app_livraison_show', {'idlivraison': livraison.idlivraison}) }}">show</a>
-                    <a href="{{ path('app_livraison_edit', {'idlivraison': livraison.idlivraison}) }}">edit</a>
-                </td>
-            </tr>
-            {% else %}
-            <tr>
-                <td colspan="6">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+                            {% block javascripts %}
+                                <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+                            {% endblock %}
 
-    <a href="{{ path('app_livraison_new') }}">Create new</a>
-
-    
-
-    {# ****************Map #}
-    {% block stylesheets %}
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    {% endblock %}
-
-    {% block javascripts %}
-        <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    {% endblock %}
-
-    <div id="place-name"></div>
-
-
-    <div id="map-container">
-        <div id="map" style="flex: 1; height: 400px; width: 500px;"></div>
-    </div>
-
-    <input type="hidden" id="publication_lieu" name="publication_lieu" />
-
-    <script>
-        var map = L.map('map').setView([51.505, -0.09], 13);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        }).addTo(map);
-
-        var marker;
-       map.on('click', function(e) {
-        if (marker) {
-            map.removeLayer(marker);
-        }
-        marker = L.marker(e.latlng).addTo(map);
-
-        fetch('https://nominatim.openstreetmap.org/reverse?lat=' + e.latlng.lat + '&lon=' + e.latlng.lng + '&format=json')
-            .then(response => response.json())
-            .then(data => {
-                var country = data.address.country;
-                var city = data.address.city || data.address.town || data.address.village || data.address.hamlet;
-                var placeName = city + ', ' + country;
-
-                // Afficher le nom de la place dans l'élément HTML
-                document.getElementById('place-name').textContent = placeName;
-            })
-            .catch(error => console.error('Error:', error));
-        });
+                            <div id="place-name"></div>
 
 
-        // Écouteur de clic sur la colonne Lieu
-            document.querySelectorAll('.place-column').forEach(item => {
-                item.addEventListener('click', event => {
-                    var placeName = item.dataset.lieu;
+                            <div id="map-container">
+                                <div id="map" style="flex: 1; height: 400px; width: 500px;"></div>
+                            </div>
 
-                    // Utilisation des données pour centrer la carte et placer un marqueur
-                    fetch('https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(placeName))
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.length > 0) {
-                                var lat = data[0].lat;
-                                var lon = data[0].lon;
-                                map.setView([lat, lon], 13);
+                            <input type="hidden" id="publication_lieu" name="publication_lieu" />
+
+                            <script>
+                                var map = L.map('map').setView([51.505, -0.09], 13);
+                                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                                }).addTo(map);
+
+                                var marker;
+                            map.on('click', function(e) {
                                 if (marker) {
                                     map.removeLayer(marker);
                                 }
-                                marker = L.marker([lat, lon]).addTo(map);
-                                document.getElementById('place-name').textContent = placeName;
-                            } else {
-                                console.error('Location not found');
-                            }
-                        })
-                        .catch(error => console.error('Error:', error));
-                });
-            });
+                                marker = L.marker(e.latlng).addTo(map);
 
-    </script>
-    
+                                fetch('https://nominatim.openstreetmap.org/reverse?lat=' + e.latlng.lat + '&lon=' + e.latlng.lng + '&format=json')
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        var country = data.address.country;
+                                        var city = data.address.city || data.address.town || data.address.village || data.address.hamlet;
+                                        var placeName = city + ', ' + country;
+
+                                        // Afficher le nom de la place dans l'élément HTML
+                                        document.getElementById('place-name').textContent = placeName;
+                                    })
+                                    .catch(error => console.error('Error:', error));
+                                });
+
+
+                                // Écouteur de clic sur la colonne Lieu
+                                    document.querySelectorAll('.place-column').forEach(item => {
+                                        item.addEventListener('click', event => {
+                                            var placeName = item.dataset.lieu;
+
+                                            // Utilisation des données pour centrer la carte et placer un marqueur
+                                            fetch('https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(placeName))
+                                                .then(response => response.json())
+                                                .then(data => {
+                                                    if (data.length > 0) {
+                                                        var lat = data[0].lat;
+                                                        var lon = data[0].lon;
+                                                        map.setView([lat, lon], 13);
+                                                        if (marker) {
+                                                            map.removeLayer(marker);
+                                                        }
+                                                        marker = L.marker([lat, lon]).addTo(map);
+                                                        document.getElementById('place-name').textContent = placeName;
+                                                    } else {
+                                                        console.error('Location not found');
+                                                    }
+                                                })
+                                                .catch(error => console.error('Error:', error));
+                                        });
+                                    });
+
+                            </script>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+       
 {% endblock %}

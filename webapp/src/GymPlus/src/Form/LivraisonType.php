@@ -21,19 +21,32 @@ class LivraisonType extends AbstractType
             // ->add('lieu')
             // ->add('etat')
             ->add('idfacture', TextType::class, [
+                'label' => 'Invoice ID',
+                'label_attr' => ['style' => 'width: 100px; display: inline-block; text-align: right; margin-right: 10px;'], 
+                'attr' => ['style' => 'display: inline-block; width: calc(100% - 110px); width: 300px;'] ,
                 'disabled' => true, // Rend le champ non modifiable
             ])
+           
             ->add('idclient', TextType::class, [
+                'label' => 'Client ID',
+                'label_attr' => ['style' => 'width: 100px; display: inline-block; text-align: right; margin-right: 10px;'], 
+                'attr' => ['style' => 'display: inline-block; width: calc(100% - 110px); width: 300px;'] ,
                 'disabled' => true, // Rend le champ non modifiable
             ])
             ->add('lieu', TextType::class, [
+                'label' => 'Location',
+                'label_attr' => ['style' => 'width: 100px; display: inline-block; text-align: right; margin-right: 10px;'], 
+                'attr' => ['style' => 'display: inline-block; width: calc(100% - 110px); width: 300px;'] ,
                 'disabled' => true, // Rend le champ non modifiable
             ])
             ->add('etat', ChoiceType::class, [
                 'choices' => [
                     'Delivered' => 'Delivered',
-                    'En cours' => 'En cours',
+                    'En cours' => strtolower('En cours'),
                 ],
+                'label' => 'Status',
+                'label_attr' => ['style' => 'width: 100px; display: inline-block; text-align: right; margin-right: 10px;'], 
+                'attr' => ['style' => 'display: inline-block; width: calc(100% - 110px); width: 300px;'] ,
             ]);
         ;
     }

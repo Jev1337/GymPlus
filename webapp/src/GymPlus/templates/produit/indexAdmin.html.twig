@@ -1,0 +1,173 @@
+{% extends "dashboard/base.html.twig" %}
+
+{% block content %}
+<div class="content-body default-height" style="min-height: 878px;">
+    <div class="container-fluid">
+        <div class="page-titles">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
+                <li class="breadcrumb-item active"><a href="javascript:void(0)">Products</a></li>
+            </ol>
+        </div>
+        <!-- row -->
+            
+        <br>
+            <a href="{{ path('app_produit_new') }}" class="btn btn-primary" >Create new</a>
+        <br>
+        <br>
+
+            
+
+        {# <table class="table"> #}
+            
+        <input id="search-input" type="form-control" placeholder="search..." style="width: 400px; border-radius: 10px;" >
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            <script>
+                $(document).ready(function() {
+                    $("#search-input").on("keyup", function() {
+                        var value = $(this).val().toLowerCase();
+                        // Sélectionner les lignes du deuxième tableau seulement
+                        $("#complete-products-table tbody tr").filter(function() {
+                            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+                        });
+                    });
+                });
+            </script>
+
+        <br>
+        <br>
+
+            <select id="category-filter" style="width: 200px; border-radius: 10px;">
+                <option value="">All categories</option>
+                <option value="food">Food</option>
+                <option value="vetement">Vêtement</option>
+                <option value="equipement">Équipement</option>
+            </select>
+
+            <script>
+                $(document).ready(function() {
+                    $("#category-filter").on("change", function() {
+                        var category = $(this).val().toLowerCase();
+                        filterByCategory(category);
+                    });
+
+                    function filterByCategory(category) {
+                        $("#complete-products-table tbody tr").each(function() {
+                            var rowCategory = $(this).find("td:eq(5)").text().toLowerCase(); // Index 5 corresponds to the column containing the category
+                            if (category === "" || rowCategory === category) {
+                                $(this).show();
+                            } else {
+                                $(this).hide();
+                            }
+                        });
+                     }
+                });
+            </script>
+
+            <select id="sort-select" style="width: 200px; border-radius: 10px;">
+                <option value="asc">Price Ascending</option>
+                <option value="desc">Price Descending</option>
+            </select>
+
+            <script>
+                $(document).ready(function() {
+                    $("#sort-select").on("change", function() {
+                        var order = $(this).val();
+                        sortTableByPrice(order);
+                    });
+
+                    function sortTableByPrice(order) {
+                        var rows = $("#complete-products-table tbody tr").get();
+
+                        rows.sort(function(a, b) {
+                            var priceA = parseFloat($(a).find("td:eq(2)").text()); // Index 2 corresponds to the column containing the price
+                            var priceB = parseFloat($(b).find("td:eq(2)").text());
+
+                            if (order === 'asc') {
+                                return priceA - priceB;
+                            } else {
+                                return priceB - priceA;
+                            }
+                        });
+
+                        $("#complete-products-table tbody").empty(); // Clear the table body
+
+                        $.each(rows, function(index, row) {
+                            $("#complete-products-table tbody").append(row);
+                        });
+                    }
+                });
+            </script>
+
+            <br>
+            <br>
+
+
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Products</h4>
+                    </div>
+                    <div class="card-body">
+                        {# <div class="table-title">Facture</div> #}
+                        <div class="table-responsive">
+                            <table class="table table-responsive-md" id="complete-products-table">
+                            {# <table class="table" id="complete-products-table"> #}
+                            <thead>
+                                <tr>
+                                    <th> <strong class="text-black" style="font-weight: 600;"> Idproduit</strong> </th>
+                                    <th> <strong class="text-black" style="font-weight: 600;"> Name</strong> </th>
+                                    <th> <strong class="text-black" style="font-weight: 600;"> Prix</strong> </th>
+                                    <th> <strong class="text-black" style="font-weight: 600;"> Stock</strong> </th>
+                                    <th> <strong class="text-black" style="font-weight: 600;"> Description</strong> </th>
+                                    <th> <strong class="text-black" style="font-weight: 600;"> Categorie</strong> </th>
+                                    <th> <strong class="text-black" style="font-weight: 600;"> Photo</strong> </th>
+                                    <th> <strong class="text-black" style="font-weight: 600;"> Seuil</strong> </th>
+                                    <th> <strong class="text-black" style="font-weight: 600;"> Promo</strong> </th>
+                                    <th> <strong class="text-black" style="font-weight: 600;"> actions</strong> </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for produit in produits %}
+                                <tr>
+                                    <td> <strong class="text-black" style="font-weight: 600;"> {{ produit.idproduit }} </strong> </td>
+                                    <td>{{ produit.name }}</td>
+                                    <td>{{ produit.prix }}</td>
+                                    <td>{{ produit.stock }}</td>
+                                    <td>{{ produit.description }}</td>
+                                    <td>{{ produit.categorie }}</td>
+                                    <td> 
+                                        <img src="{{ asset('images/img_product/' ~ produit.photo) }}" alt="" width="100">
+                                    </td>
+                                    <td>{{ produit.seuil }}</td>
+                                    <td>{{ produit.promo }}</td>
+                                    <td>
+                                        <div class="dropdown ms-auto text-end c-pointer">
+                                            <div class="btn-link" data-toggle="dropdown">
+                                                <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><rect x="0" y="0" width="24" height="24"></rect><circle fill="#000000" cx="5" cy="12" r="2"></circle><circle fill="#000000" cx="12" cy="12" r="2"></circle><circle fill="#000000" cx="19" cy="12" r="2"></circle></g></svg>
+                                            </div>
+                                            <div class="dropdown-menu dropdown-menu-right">
+                                                <a href="{{ path('app_produit_edit', {'idproduit': produit.idproduit}) }}" class="dropdown-item text-center" >edit</a>
+                                                <div class="text-center">
+                                                    {{ include('produit/_delete_form.html.twig') }} 
+                                                </div>                               
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="10">no records found</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

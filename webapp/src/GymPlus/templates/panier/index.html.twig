@@ -15,13 +15,13 @@
 				<div class="row">
 					<div class="col-lg-8">
 						<div class="dz-bnr-inr-entry">
-							<h1>Panier</h1>
+							<h1>shopping cart</h1>
 							<!-- Breadcrumb Row -->
 							<nav aria-label="breadcrumb" class="breadcrumb-row">
 								<ul class="breadcrumb">
 									<li class="breadcrumb-item"><a href="index.html">Home</a></li>
 									
-									<li class="breadcrumb-item active" aria-current="page">Panier</li>
+									<li class="breadcrumb-item active" aria-current="page">shopping cart</li>
 								</ul>
 							</nav>
 							<!-- Breadcrumb Row End -->
@@ -34,79 +34,129 @@
 			</div>	
 		</div>
 
-    <h1>Votre panier</h1>
-
-    <a href="{{ path('app_produit_index') }}">Retour à la liste des produits</a>
     <br>
-    <a href="{{ path('app_MemmoryGame_index') }}">MemmoryGame</a>
+    <a href="{{ path('app_produit_index') }}" class="btn btn-primary btn-skew appointment-btn"><span class="skew-inner"><span class="text">back to list</span></span></a>
+    {# <a href="{{ path('app_produit_index') }}">Retour à la liste des produits</a> #}
+    <br>
+    <style>
+            h5 {
+                font-family: Arial, sans-serif; /* Choisir la police de caractères */
+                font-size: 20px; /* Choisir la taille de la police */
+                color: #333; /* Choisir la couleur du texte */
+                font-weight: bold; /* Choisir l'épaisseur du texte */
+                /*text-align: center;  Aligner le texte au centre */
+                margin-top: 20px; /* Définir la marge en haut */
+            }
+        </style>
     
     {% if items | length > 0 %}
-        <table class="table" id="detailpanier" >
-            <thead>
-                <tr>
-                    <th>Idproduit</th>
-                    <th>Name</th>
-                    <th>Prix</th>
-                    <th>Description</th>
-                    <th>Photo</th>
-                    <th>Promo</th>
-                    <th>Quantité</th>
-                    <th>Total Article</th>
-                    <th>Supprimer produit</th>
-                </tr>
-            </thead>    
-            <tbody>
-                {% for item in items %}
-                    <tr>
-                        <td id="idprod" >{{ item.produit.Idproduit }} </td>
-                        <td>{{item.produit.Name}}</td>
-                        <td id="prixunitaire" >{{item.produit.Prix}}</td>
-                        <td>{{item.produit.Description}}</td>
-                        <td>
-                        {# {{item.produit.Photo}} #}
-                        <img src="{{ asset('images/img_product/' ~ item.produit.Photo) }}" alt="" width="100">
-                        </td>
-                        <td id="promo" >{{item.produit.Promo}}</td>
-                        <td id="Qte" >
-                            <input type="number" class="quantity-input" data-id="{{ item.produit.Idproduit }}" value="{{ item.quantite }}">
-                        </td>
-                        {# <td id="prixToatalArticle">{{ item.produit.Prix * item.quantite }}</td> #}
-                        {# <td class="total-item" id="totalUnArticle" >{{ item.produit.Prix * item.quantite }}</td> #}
-                        <td class="total-item" id="totalUnArticle" >{{ item.produit.Prix * item.quantite * (1 - item.produit.promo ) }}</td>
-                        <td>
-                            <a href="{{ path('panier_remove', {'idproduit': item.produit.Idproduit}) }}">Supprimer</a>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>    
-            <tfoot>
-                <tr>
-                    {# <td><h4>Total :</h4></td>
-                    <td id="total">{{ total }}</td>
-                    <td></td> #}
-                    {% if gagnant %}
-                        <!-- Si l'utilisateur a gagné, appliquer une réduction de 50% sur le total -->
-                        <td><h4>Total (50% de réduction) :</h4></td>
-                        <td id="total">{{ total * 0.5 }}</td>
-                        <td></td>
-                    {% else %}
-                        <!-- Sinon, afficher le total normal -->
-                        <td><h4>Total :</h4></td>
-                        <td id="total">{{ total }}</td>
-                        <td></td>
-                    {% endif %}
-                </tr>
-            </tfoot>
-        </table>
+        <section class="content-inner">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-8">
+						<div class="table-responsive">
+							<table class="table check-tbl wow fadeInUp" data-wow-delay="0.4s" style="visibility: visible; animation-delay: 0.4s; animation-name: fadeInUp;">
+								<thead>
+									<tr>
+                                        <th>id Product</th>
+										<th>Photo Product</th>
+										<th>Name</th>
+										<th>Price</th>
+                                        <th>Promo</th>
+										<th>Quantity</th>
+										<th>total</th>
+										<th> Delete</th>
+									</tr>
+								</thead>
+                                <tbody>
+                                    {% for item in items %}
+                                        <tr>
+                                            <td id="idprod" >{{ item.produit.Idproduit }} </td>
+                                            <td>                        
+                                                <img src="{{ asset('images/img_product/' ~ item.produit.Photo) }}" alt="" style="width: 150px;">
+                                            </td>
+                                            <td> {{item.produit.Name}} </td>
+                                            <td id="prixunitaire" >{{item.produit.Prix}}</td>
+                                            {# <td>{{item.produit.Description}}</td> #}               
+                                            <td id="promo" >{{item.produit.Promo}}</td>
+                                            <td id="Qte" >
+                                                <input type="number" class="quantity-input" data-id="{{ item.produit.Idproduit }}" value="{{ item.quantite }}" style="width: 50px;">
+                                            </td>
+                                            {# <td id="prixToatalArticle">{{ item.produit.Prix * item.quantite }}</td> #}
+                                            {# <td class="total-item" id="totalUnArticle" >{{ item.produit.Prix * item.quantite }}</td> #}
+                                            <td class="total-item" id="totalUnArticle" >{{ item.produit.Prix * item.quantite * (1 - item.produit.promo ) }} </td>
+                                            <td>
+                                                <a href="{{ path('panier_remove', {'idproduit': item.produit.Idproduit}) }}">Delete</a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>  
+							</table>
+						</div>
+						
+					</div>
+					<div class="col-lg-4">
+						<div class="cart-sidebar side-bar sticky-top wow fadeInUp" data-wow-delay="0.4s" style="visibility: visible; animation-delay: 0.4s; animation-name: fadeInUp;">
+							<h6 class="title">Cart Details</h6>
+							<div class="cart-detail m-b20">
+								<table>
+									<tbody>
+										
+										<tr>
+											
+											<td>
+												Unlock exclusive discounts by playing our game 
+                                                <a href="{{ path('app_MemmoryGame_index') }}" class="btn btn-primary btn-skew appointment-btn"><span class="skew-inner"><span class="text">MemmoryGame</span></span></a>      
+											</td>
+										</tr>
+										<tr>
+											<td>
+												Use the map to pick your delivery location
+											</td>
+										</tr>
+										 <tr>
+											<td>
+												{# <h6 class="mb-0">Total</h6>
+											</td>
+											<td class="price">
+												$506.00 #}
+											</td>
+										</tr> 
+									</tbody>
+                                        <tfoot>
+                                            <tr>
+                                                {# <td><h4>Total :</h4></td>
+                                                <td id="total">{{ total }}</td>
+                                                <td></td> #}
+                                                {% if gagnant %}
+                                                    <!-- Si l'utilisateur a gagné, appliquer une réduction de 50% sur le total -->
+                                                    <td><h4>Total (50% de réduction) :</h4></td>
+                                                    <td id="total">{{ total * 0.5 }} </td>
+                                                    <td></td>
+                                                {% else %}
+                                                    <!-- Sinon, afficher le total normal -->
+                                                    <td><h4>Total :</h4></td>
+                                                    <td id="total">{{ total }} </td>
+                                                    <td></td>
+                                                {% endif %}
+                                            </tr>
+                                        </tfoot>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
     {% else %}
-        <p>Le panier est vide !</p>
+        <h5 class="text-center" >Le panier est vide !</h5>
     {% endif %}
 
     {# <a href="{{ path('valider_panier') }}">Valider le panier</a> #}
     {# <a href="{{ path('valider_panier') }}" onclick="validerPanier()">Valider le panier</a> #}
     {# <a href="{{ path('Apres_validation_panier') }}" id="valider-panier" data-url="{{ path('valider_panier') }}">Valider le panier</a> #}
-    <a href="#" id="valider-panier" data-url="{{ path('valider_panier') }}">Valider le panier</a>
-
+    {# <br> #}
 
 
     <script>
@@ -162,7 +212,8 @@
                 console.log(methodeDePaiement);
 
                 //lieu = prompt("Veuillez choisir lieu :");
-                lieu = document.getElementById('place-name').textContent; 
+                //lieu = document.getElementById('place-name').textContent; 
+                lieu = "tunisie";
                 console.log(lieu);
 
 
@@ -244,19 +295,23 @@
 
     {# ****************Map #}
     {% block stylesheets %}
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+        <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     {% endblock %}
 
     {% block javascripts %}
         <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     {% endblock %}
 
-    <div id="place-name"></div>
-
-
-    <div id="map-container">
+    
+    <h5 class="text-center" > Choose your delivery location :</h5>
+    <div id="place-name" class="text-center"></div>
+    {# <div id="map-container" class="text-center">
         <div id="map" style="flex: 1; height: 400px; width: 500px;"></div>
-    </div>
+    </div> #}
+    <div id="map-container" class="text-center">
+    <div id="map" style="height: 400px; width: 500px; margin: 0 auto;"></div>
+</div>
+
 
     <input type="hidden" id="publication_lieu" name="publication_lieu" />
 
@@ -287,6 +342,18 @@
         });
 
     </script>
+
+    <br>
+        <div class="text-center" >
+            {# "{{ path('Apres_validation_panier') }}" #}
+            <a href="#" id="valider-panier" data-url="{{ path('valider_panier') }}" class="btn btn-primary btn-skew appointment-btn"><span class="skew-inner"><span class="text"> Validate </span></span></a>
+        </div>
+    <br>
+
+
+
+
+
 
 
 

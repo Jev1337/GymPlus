@@ -1,6 +1,5 @@
 {% extends "main/base.html.twig" %}
 
-{% block title %}Produit{% endblock %}
 
 {% block body %}
     <h1>Produit</h1>
@@ -64,9 +63,9 @@
 
     <a href="{{ path('app_produit_index') }}">back to list</a>
 
-    <a href="{{ path('app_produit_edit', {'idproduit': produit.idproduit}) }}">edit</a>
+    {# <a href="{{ path('app_produit_edit', {'idproduit': produit.idproduit}) }}">edit</a> #}
 
-    {{ include('produit/_delete_form.html.twig') }}
+    {# {{ include('produit/_delete_form.html.twig') }} #}
 
 
     {# <button onclick="openVideo()">Voir la vidéo</button> 

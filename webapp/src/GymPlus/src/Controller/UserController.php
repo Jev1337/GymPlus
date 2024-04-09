@@ -22,6 +22,9 @@ use App\Annotation\ProtectedRoute;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use App\Form\AdminUserType;
 use Karser\Recaptcha3Bundle\Validator\Constraints\Recaptcha3Validator;
+use Symfony\Component\Mime\Part\DataPart;
+use Symfony\Component\Mime\Part\Multipart\FormDataPart;
+use GuzzleHttp\Client as GuzzleClient;
 
 
 class UserController extends AbstractController
@@ -561,4 +564,142 @@ class UserController extends AbstractController
         return new JsonResponse(['status' => $status, 'userphoto'=> $user->getPhoto(), 'userid' => $user->getId(), 'userfn' => $user->getFirstname(), 'userln' => $user->getLastname(), 'userdob' => $user->getDateNaiss()], 200);
         
     }
+
+    #[Route('/api/checkface', name: 'app_faceidcheck')]
+    public function checkFace(Request $request, UserRepository $user, ManagerRegistry $reg): Response
+    {
+        $image = $request->get('image');
+        $user = $user->findUserByEmail($request->get('email'));
+        if (!$user) {
+            return new JsonResponse(['status' => 'error', 'details' => 'User does not exist!'], 400);
+        }
+        $faceid = $user->getFaceid();
+        if (!$faceid) {
+            return new JsonResponse(['status' => 'error', 'details' => 'User does not have a faceid!'], 400);
+        }
+        $fidts = $user->getFaceidTs();
+        if ($fidts->diff(new \DateTime())->format('%a') >= 30) {
+            $user->setFaceid(null);
+            $user->setFaceidTs(null);
+            $reg->getManager()->persist($user);
+            $reg->getManager()->flush();
+            return new JsonResponse(['status' => 'error', 'details' => 'Faceid expired!'], 400);
+        }
+        try{
+            $guzzle = new GuzzleClient();
+            $resp = $guzzle->request('POST', 'https://api-us.faceplusplus.com/facepp/v3/detect', [
+                'multipart' => [
+                    [
+                        'name' => 'api_key',
+                        'contents' => 'oVAqEDbCYmaILayXJdKAsuYbFcJ0LBP6'
+                    ],
+                    [
+                        'name' => 'api_secret',
+                        'contents' => 'e76obC1xsr-zSMynWZoQCt62vWDgtZ6O'
+                    ],
+                    [
+                        'name' => 'image_base64',
+                        'contents' => $image,
+                    ],
+                    [
+                        'name' => 'return_attributes',
+                        'contents' => 'emotion'
+                    ]
+                ]
+            ]);
+            $faceidcmp = json_decode((string) $resp->getBody(), true)['faces'][0]['face_token'];
+            dump("Request 1 Sent...");
+            $resp = $guzzle->request('POST', 'https://api-us.faceplusplus.com/facepp/v3/compare', [
+                'multipart' => [
+                    [
+                        'name' => 'api_key',
+                        'contents' => 'oVAqEDbCYmaILayXJdKAsuYbFcJ0LBP6'
+                    ],
+                    [
+                        'name' => 'api_secret',
+                        'contents' => 'e76obC1xsr-zSMynWZoQCt62vWDgtZ6O'
+                    ],
+                    [
+                        'name' => 'face_token1',
+                        'contents' => $faceidcmp
+                    ],
+                    [
+                        'name' => 'face_token2',
+                        'contents' => $faceid
+                    ]
+                ]
+            ]);
+            dump("Request 2 Sent...");
+            $confidence = json_decode((string) $resp->getBody(),true)['confidence'];
+            if ($confidence > 80) {
+                $user->setFaceid($faceidcmp);
+                $user->setFaceidTs(new \DateTime());
+                $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
+                $this->get('security.token_storage')->setToken($token);
+                $this->get('session')->set('_security_main', serialize($token));
+                $reg->getManager()->persist($user);
+                $reg->getManager()->flush();
+                return new JsonResponse(['status' => 'success', 'details'=> 'Match!'], 200);
+            }else{
+                return new JsonResponse(['status' => 'error', 'details'=> 'No match!'], 400);
+            }
+        } catch (\GuzzleHttp\Exception\RequestException $e) {
+            $content = json_decode($e->getResponse()->getBody()->getContents(), true);
+            return new JsonResponse(['status' => 'error', 'details'=> $content], 400);
+        }
+        return new JsonResponse(['status' => 'error', 'details'=> 'Error in network!'], 400);
+    }
+
+    #[Route('/api/verifylogin', name: 'app_verifylogin')]
+    public function verifyLogin(Request $request, UserRepository $repo): Response
+    {
+        $form = $this->createForm(LoginType::class);
+        $form->handleRequest($request);
+        if ($form->isSubmitted()) {
+            if (!$form->isValid()) {
+                $errorArray = [];
+                foreach ($form->getErrors(true) as $error) {
+                    $errorArray[] = $error->getMessage();
+                }
+                return new JsonResponse(['status' => 'error', 'errors' => $errorArray], 200);
+            }else{
+                $userlog = $form->getData();
+                $user = $repo->findUserByEmail($userlog->getEmail());
+                if($user){
+                    if(password_verify($userlog->getPassword(), $user->getPassword())){
+                        $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
+                        $this->get('security.token_storage')->setToken($token);
+                        $this->get('session')->set('_security_main', serialize($token));
+                        return new JsonResponse(['status' => 'success'], 200);
+                    }else{
+                        return new JsonResponse(['status' => 'error', 'errors' => ['Invalid Email or Password']], 200);
+                    }
+                }else{
+                    return new JsonResponse(['status' => 'error', 'errors' => ['Invalid Email or Password']], 200);
+                }
+            }
+        }
+    }
+
+    //checks if email exists
+    #[Route('/api/verifyface', name: 'app_verifyface')]
+    public function verifyEmail(Request $request, UserRepository $repo): Response
+    {
+        $email = $request->get('email');
+        $user = $repo->findUserByEmail($email);
+        if ($user && $user->getFaceid() != null) {
+            if ($user->getFaceidTs()->diff(new \DateTime())->format('%a') < 30) {
+                return new JsonResponse(['exists' => true], 200);
+            }else{
+                $user->setFaceid(null);
+                $user->setFaceidTs(null);
+                $repo->getManager()->persist($user);
+                $repo->getManager()->flush();
+            }
+        }
+        return new JsonResponse(['exists' => false], 200);
+    }
+
+   
+
 }

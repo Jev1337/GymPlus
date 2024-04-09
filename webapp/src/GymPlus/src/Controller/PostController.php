@@ -6,53 +6,48 @@ use App\Entity\Post;
 use App\Form\PostType;
 use App\Repository\CommentaireRepository;
 use App\Repository\PostRepository;
+use App\Repository\UserRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 class PostController extends AbstractController
 {
     #[Route('/post', name: 'getAll_post')]
-    public function getAllPosts(Request $req, PostRepository $rep, CommentaireRepository $crep, ManagerRegistry $manager): Response
+    public function getAllPosts(Request $req, PostRepository $rep, UserRepository $urep, CommentaireRepository $crep, ManagerRegistry $manager): Response
     {
         $em = $manager->getManager();
         $dateImmutable = date_create('now');
         
         $user = $this->getUser();
-        if ($user->getRole() != 'client') {
-            return $this->redirectToRoute('app_dashboard');
-        }
-
         $post = new Post();
-        
         $form = $this->createForm(PostType::class, $post); //bch thot les info mte3i ml formulaire lel $author
         
         $form->handleRequest($req); //bch te5ou request eli tbaathet mel form
         if ($form->isSubmitted() && $form->isValid()) {
             $post->setDate($dateImmutable);
-        $post->setNbComnts(0);
-        $post->setIdUser($user->getId());
-        $post->setLikes(0);
+            $post->setUser($user);
+            
+            $post->setNbComnts(0);
+            $post->setLikes(0);
             $em->persist($post);
             $em->flush();
             return $this->redirectToRoute('getAll_post');
         }
-        //Affichage
+        //affichage 
 
         $posts = $rep->findAll();
         for ($i=0; $i < sizeof($posts); $i++) { 
-            // $users = $urep->findById($posts[$i]->getIdUser());
             $this->updateNbComnt($crep,$posts[$i],$rep,$manager);
+            // echo($posts[$i]->getIdUser().' ');
+            // $posts[$i]->setUser($urep->find($posts[$i]->getIdUser()));   
         }
         
         return $this->renderForm('main/post/index.html.twig', [
             'posts' => $posts,
-            'user' => $user,
             'form' => $form,
-            // 'users' => $users
         ]);
     }
     

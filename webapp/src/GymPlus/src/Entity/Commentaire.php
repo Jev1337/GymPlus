@@ -29,6 +29,9 @@ class Commentaire
     #[ORM\Column(name: "likes", nullable: true)]
     private ?int $likes = null;
 
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'comments')]
+    private ?User $user = null;
+
     // #[ORM\ManyToOne(inversedBy: 'comnts')]
     // private ?Post $post = null;
 
@@ -42,9 +45,9 @@ class Commentaire
         return $this->userId;
     }
 
-    public function setUserId(?int $userId): static
+    public function setUserId(): static
     {
-        $this->userId = $userId;
+        $this->userId = $this->user->getId();
 
         return $this;
     }
@@ -108,4 +111,16 @@ class Commentaire
 
     //     return $this;
     // }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
+
+        return $this;
+    }
 }

@@ -485,11 +485,80 @@ class UserController extends AbstractController
     }
 
     #[Route('/dashboard/subscriptions', name: 'app_submgmt')]
-    public function subscriptionManagement(AbonnementRepository $repo): Response
+    public function subscriptionManagement(AbonnementRepository $repo0, UserRepository $repo1): Response
     {
+        $subs = $repo0->findAll();
+        $users = $repo1->getClientList();
+
+        $nonsubbedusers = [];
+        foreach ($users as $user) {
+            if (!$repo0->isUserSubscribed($user->getId())) {
+                array_push($nonsubbedusers, $user);
+            }
+        }
+
+        $subbedusers = array_map(function($user) use ($repo0) {
+            return [
+                'user' => $user,
+                'sub' => $repo0->getCurrentSubByUserId($user->getId())
+            ];
+        }, array_filter($users, function($user) use ($repo0) {
+            return $repo0->isUserSubscribed($user->getId());
+        }));
+        
+
         return $this->render('dashboard/user/subscriptions.html.twig', [
             'controller_name' => 'UserController',
-            'subs' => $repo->findAll()
+            'subs' => $subs,
+            'nusers' => $nonsubbedusers,
+            'susers' => $subbedusers
+            
         ]);
+    }
+
+    #[Route('/dashboard/subscribe/{id}/{sub}', name: 'app_subuser')]
+    public function subscribeUser(UserRepository $repo, AbonnementRepository $repo1, AbonnementDetailsRepository $repo0, $id,$sub, ManagerRegistry $reg): Response
+    {
+        $user = $repo->findUserById($id);
+        $abonnement = null;
+        if ($repo1->isUserSubscribed($user->getId())) {
+            $abonnement = $repo1->getCurrentSubByUserId($user->getId());
+        }else{
+            $abonnement = new Abonnement();
+            $abonnement->setUser($user);
+        }
+        if ($sub == 1)
+            $abonnement->setDatefinab((new \DateTime('+3 month')));
+        else if($sub == 2)
+            $abonnement->setDatefinab((new \DateTime('+6 month')));
+        else
+            $abonnement->setDatefinab((new \DateTime('+12 month')));
+        $type = $repo0->getAbonnementDetailsByName('GP ' . $sub);
+        $abonnement->setType($type);
+        $reg->getManager()->persist($abonnement);
+        $reg->getManager()->flush();
+        return $this->redirectToRoute('app_submgmt');
+    }
+
+    #[Route('/dashboard/unsubscribe/{id}', name: 'app_removesub')]
+    public function unsubscribeUser(AbonnementRepository $repo, $id, ManagerRegistry $reg): Response
+    {
+        $sub = $repo->getCurrentSubByUserId($id);
+        $reg->getManager()->remove($sub);
+        $reg->getManager()->flush();
+        return $this->redirectToRoute('app_submgmt');
+    }
+
+    #[Route('/api/getUserSubDetails/{id}', name: 'app_getsubdetails')]
+    public function getUserSubDetails(UserRepository $repo0, AbonnementRepository $repo, $id): Response
+    {
+        $sub = $repo->getCurrentSubByUserId($id);
+        $user = $repo0->findUserById($id);
+        $status = $repo->isUserSubscribed($id);
+        if ($status) {
+            return new JsonResponse(['status' => $status, 'userphoto'=> $user->getPhoto(), 'subtype'=> $sub->getType()->getName(), 'expdate' => $sub->getDatefinab(), 'userid' => $user->getId(), 'userfn' => $user->getFirstname(), 'userln' => $user->getLastname(), 'userdob' => $user->getDateNaiss()], 200);
+        }
+        return new JsonResponse(['status' => $status, 'userphoto'=> $user->getPhoto(), 'userid' => $user->getId(), 'userfn' => $user->getFirstname(), 'userln' => $user->getLastname(), 'userdob' => $user->getDateNaiss()], 200);
+        
     }
 }

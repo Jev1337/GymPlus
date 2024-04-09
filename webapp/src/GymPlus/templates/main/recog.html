@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Face Detection</title>
+    <!-- Load Face-API.js library -->
+    <script src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api@latest/dist/face-api.min.js"></script>
+    <!-- Load jQuery for AJAX request -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <h1>Face Detection</h1>
+    <video id="video" width="640" height="480" autoplay></video>
+    <canvas id="canvas" style="display: none;"></canvas>
+    <script>
+        // Function to start the camera and perform face detection
+        async function startCamera() {
+            const video = document.getElementById('video');
+            const canvas = document.getElementById('canvas');
+            const context = canvas.getContext('2d');
+
+            // Load models
+            await faceapi.nets.tinyFaceDetector.loadFromUri('https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.13/model/');
+            await faceapi.nets.faceLandmark68Net.loadFromUri('https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.13/model/');
+            await faceapi.nets.faceRecognitionNet.loadFromUri('https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.13/model/');
+
+            // Start video stream
+            navigator.mediaDevices.getUserMedia({ video: {} })
+                .then(function (stream) {
+                    video.srcObject = stream;
+                })
+                .catch(function (err) {
+                    console.error('Error accessing the camera: ', err);
+                });
+            sent = 0;
+            // Detect face in real-time
+            video.addEventListener('play', () => {
+                const displaySize = { width: video.width, height: video.height };
+                
+                setInterval(async () => {
+                    const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceDescriptors();
+                    if (detections.length > 0 && sent == 0) {
+                        sent = 1;
+                        // Face detected, capture image
+                        context.drawImage(video, 0, 0, displaySize.width, displaySize.height);
+                        const imgData = canvas.toDataURL();
+
+                        // Stop video stream
+                        video.srcObject.getTracks().forEach(track => track.stop());
+
+                        // Send AJAX request
+                        $.ajax({
+                            url: 'YOUR_SERVER_URL',
+                            type: 'POST',
+                            data: { image: imgData },
+                            success: function (response) {
+                                console.log('Image sent successfully');
+                            },
+                            error: function (err) {
+                                console.error('Error sending image: ', err);
+                            }
+                        });
+
+                        // Stop the interval
+                        clearInterval(this);
+                    }
+                }, 1000); // Adjust the interval as needed
+            });
+        }
+
+        // Start camera when the page loads
+        document.addEventListener('DOMContentLoaded', startCamera);
+    </script>
+</body>
+</html>

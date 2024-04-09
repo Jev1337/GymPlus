@@ -89,6 +89,11 @@
 							<div class="text-center">
 
 								{{ form_widget(form.submit, {'attr': {'class': 'btn btn-primary m-b15 w-100', 'value': 'Login'} } ) }}
+								<!-- button with a face icon -->
+								<a href="#" class="btn" id="faceid"><img src="{{asset('main/images/Face_ID_logo.svg.png')}}" alt="Face ID" style="width: 40px; height: 40px;"></a>
+								<br>
+								<video id="video" width="1280" height="720" autoplay style="display: none;"></video>
+								<canvas id="canvas" style="display: none;" width="1280" height="720"></canvas>
 								<a href="javascript:void(0);" class="btn-link">Don’t have account?<span> Sign Up</span></a> 
 							</div>
 							
@@ -113,4 +118,124 @@
 		</section>
 		
 	</div>
+{% endblock %}
+
+{% block js %}
+	{{ parent() }}
+		<script src="{{ asset('main/js/face-api.min.js') }}"></script>
+	    <script>
+		let intervalId = null;
+		let sent = 0;
+        // Function to start the camera and perform face detection
+        async function startCamera() {
+			const email = document.getElementById('login_email').value;
+            const video = document.getElementById('video');
+            const canvas = document.getElementById('canvas');
+            const context = canvas.getContext('2d');
+
+            // Load models
+            await faceapi.nets.tinyFaceDetector.loadFromUri('{{ asset('main/bins/')}}');
+            await faceapi.nets.faceLandmark68Net.loadFromUri('{{ asset('main/bins/')}}');
+            await faceapi.nets.faceRecognitionNet.loadFromUri('{{ asset('main/bins/')}}');
+
+            // Start video stream
+            navigator.mediaDevices.getUserMedia({ video: {} })
+                .then(function (stream) {
+                    video.srcObject = stream;
+                })
+                .catch(function (err) {
+                    console.error('Error accessing the camera: ', err);
+                });
+
+            sent = 0;
+            // Detect face in real-time
+            video.addEventListener('play', () => {
+                const displaySize = { width: video.width, height: video.height };
+                intervalId = setInterval(async () => {
+                    const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceDescriptors();
+                    if (detections.length > 0 && sent == 0) {
+						console.log('Face detected');
+                        sent = 1;
+                        // Face detected, capture image
+                        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+						const imgData = canvas.toDataURL('image/jpeg');
+
+						//write the image to a new element
+						var img = document.createElement('img');
+						img.src = imgData;
+						document.body.appendChild(img);
+
+                        // Stop video stream
+                        video.srcObject.getTracks().forEach(track => track.stop());
+                        // Send AJAX request
+                        $.ajax({
+                            url: '{{ path('app_faceidcheck') }}',
+                            type: 'POST',
+                            data: { image: imgData, email: email  },
+                            success: function (response) {
+                                if (response.status == 'success') {
+									window.location.href = '{{ path('app_home') }}';
+								} else {
+									swal("Oops...", "Face not recognized! Please try again.", "error")
+								}
+                            },
+                            error: function (err) {
+                                swal("Oops...", "Something went wrong! Please try again.", "error")
+                            }
+                        });
+
+						// remove clicked class
+						document.getElementById('faceid').classList.remove('clicked');
+                        // Stop the interval
+                        clearInterval(this);
+                    }
+					
+                }, 1000); // Adjust the interval as needed
+            });
+        }
+
+        // Start camera when the button is clicked
+        document.getElementById('faceid').addEventListener('click', function () {
+			if(document.getElementById('faceid').classList.contains('clicked')) return;
+
+			const email = document.getElementById('login_email').value;
+			
+			$.ajax({
+				url: '{{ path('app_verifyface') }}',
+				type: 'POST',
+				data: { email: email },
+				success: function (response) {
+					if (response.exists) {
+						startCamera();
+						document.getElementById('faceid').classList.add('clicked');
+						swal({
+							title: "Scanning your face...",
+							text: "Hang tight! We are scanning your face for verification.",
+							imageUrl: "{{asset('main/images/face.gif')}}",	
+							showCancelButton: true,
+							showConfirmButton: false,
+						}).then((result) => {
+							if (result.dismiss === swal.DismissReason.cancel) {
+								if (sent == 0){
+									swal("Cancelled", "FaceID verification cancelled.", "error");
+									if (video.srcObject) {
+										video.srcObject.getTracks().forEach(track => track.stop());
+									}
+									if (intervalId) {
+										clearInterval(intervalId);
+									}
+								}
+							}
+						});
+					} else {
+						swal("Oops...", "Either account does not exist, FaceID Expired or FaceID is not setup.", "error")
+					}
+				},
+				error: function (err) {
+					swal("Oops...", "Something went wrong! Please try again.", "error")
+				}
+			});
+        });
+    </script>
+
 {% endblock %}

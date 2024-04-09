@@ -11,6 +11,7 @@
 </head>
 <body>
     <h1>Face Detection</h1>
+    <button id="startButton">Start</button>
     <video id="video" width="640" height="480" autoplay style="display: none;"></video>
     <canvas id="canvas" style="display: none;"></canvas>
     <script>
@@ -33,11 +34,11 @@
                 .catch(function (err) {
                     console.error('Error accessing the camera: ', err);
                 });
-            sent = 0;
+
+            let sent = 0;
             // Detect face in real-time
             video.addEventListener('play', () => {
                 const displaySize = { width: video.width, height: video.height };
-                
                 setInterval(async () => {
                     const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceDescriptors();
                     if (detections.length > 0 && sent == 0) {
@@ -69,8 +70,11 @@
             });
         }
 
-        // Start camera when the page loads
-        document.addEventListener('DOMContentLoaded', startCamera);
+        // Start camera when the button is clicked
+        document.getElementById('startButton').addEventListener('click', function () {
+            startCamera();
+            this.disabled = true;
+        });
     </script>
 </body>
 </html>

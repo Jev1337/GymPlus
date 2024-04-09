@@ -561,12 +561,4 @@ class UserController extends AbstractController
         return new JsonResponse(['status' => $status, 'userphoto'=> $user->getPhoto(), 'userid' => $user->getId(), 'userfn' => $user->getFirstname(), 'userln' => $user->getLastname(), 'userdob' => $user->getDateNaiss()], 200);
         
     }
-    #[Route('/api/getUserSubDetails/{id}', name: 'app_getsubdetails')]
-    public function getSubList(AbonnementRepository $repo): Response
-    {
-        return $this->render('dashboard/user/subscriptions.html.twig', [
-            'controller_name' => 'UserController',
-            'subs' => $repo->findAll()
-        ]);
-    }
 }

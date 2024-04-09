@@ -148,8 +148,7 @@
 {% endblock %}
 
 {% block js %}
-	{{ parent() }}
-	<script src="{{asset('main/js/jquery-3.6.0.min.js')}}"></script><!--  -->
-	<script src="{{asset('main/js/bootstrap.min.js')}}"></script><!--  -->
 	<script src="{{asset('main/js/main.min.js')}}"></script><!-- -->
+	{{ parent() }}
+	
 {% endblock %}

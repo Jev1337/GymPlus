@@ -37,14 +37,15 @@ class AuthentificationSubscriber implements EventSubscriberInterface
         $protectedRoutes = ['app_subs', 'app_buy', 'app_profile', 'app_photo', 'app_logout', 'app_dashboard', 'app_objectif'
         , 'app_Schedule_objectif', 'app_events', 'eventb', 'event_delete', 'event_edit', 'app_eventsf', 'event_join', 'event_leave', 'getAll_post'
         , 'app_equipments', 'app_equipments_edit', 'app_equipments_delete', 'app_maintenances', 'app_maintenances_edit', 'app_maintenances_delete'
-        , 'app_usermgmt', 'app_user_delete', 'app_user_edit', 'app_photo_admin', 'app_submgmt'];
+        , 'app_usermgmt', 'app_user_delete', 'app_user_edit', 'app_photo_admin', 'app_submgmt', 'app_removesub', 'app_subuser'];
 
         // Routes that require client role
         $clientRoutes = ['app_home', 'app_subs', 'app_buy', 'app_profile', 'app_objectif', 'app_Schedule_objectif', 'event_join', 'event_leave','app_eventsf','getAll_post','rewards','points','belt','bag','whey'];
         
         // Routes that require staff role
         $staffRoutes = ['app_dashboard', 'app_events', 'eventb', 'event_delete', 'event_edit','eventParticipant_kick','eventParticipant', 'app_equipments', 'app_equipments_edit'
-        , 'app_equipments_delete', 'app_maintenances', 'app_maintenances_edit', 'app_maintenances_delete','blacklised','ban','unban', 'app_dashboard_profile', 'app_submgmt'];
+        , 'app_equipments_delete', 'app_maintenances', 'app_maintenances_edit', 'app_maintenances_delete','blacklised','ban','unban', 'app_dashboard_profile', 'app_submgmt', 'app_getsubdetails'
+        , 'app_removesub', 'app_subuser' ];
         
         // Routes that require admin role (inherits staff routes)
         $adminRoutes = $staffRoutes;

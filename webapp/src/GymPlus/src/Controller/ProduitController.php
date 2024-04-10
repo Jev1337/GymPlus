@@ -11,6 +11,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+
 
 #[Route('/produit')]
 class ProduitController extends AbstractController
@@ -27,7 +29,20 @@ class ProduitController extends AbstractController
     //     ]);
     // }
     #[Route('/', name: 'app_produit_index', methods: ['GET'])]
-    public function index(EntityManagerInterface $entityManager, ProduitRepository $productRepository): Response
+    // public function index(EntityManagerInterface $entityManager, ProduitRepository $productRepository): Response
+    // {
+    //     // Récupérer les trois derniers produits ajoutés
+    //     $latestProducts = $productRepository->findLatestProducts();
+
+    //     // Récupérer tous les produits
+    //     $produits = $entityManager->getRepository(Produit::class)->findAll();
+
+    //     return $this->render('produit/index.html.twig', [
+    //         'latestProducts' => $latestProducts,
+    //         'produits' => $produits,
+    //     ]);
+    // }
+    public function index(SessionInterface $session ,EntityManagerInterface $entityManager, ProduitRepository $productRepository): Response
     {
         // Récupérer les trois derniers produits ajoutés
         $latestProducts = $productRepository->findLatestProducts();
@@ -35,9 +50,29 @@ class ProduitController extends AbstractController
         // Récupérer tous les produits
         $produits = $entityManager->getRepository(Produit::class)->findAll();
 
+        //Panier
+        $panier = $session->get('panier' , []);
+        $panierWithData = [];
+        foreach($panier as $idproduit => $quantite)
+        {
+            $panierWithData[] = [
+                'produit'=> $productRepository->find($idproduit),
+                'quantite' => $quantite
+            ];             
+        }
+        $total = 0;
+        foreach($panierWithData as $item)
+        {
+            $totalItem = $item['produit']->getPrix() * $item['quantite'] * (1 - $item['produit']->getPromo());
+            $total += $totalItem;
+        }
+
         return $this->render('produit/index.html.twig', [
             'latestProducts' => $latestProducts,
             'produits' => $produits,
+
+            'items' => $panierWithData,
+            'total' => $total,
         ]);
     }
 

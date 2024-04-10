@@ -1,84 +1,255 @@
 {% extends "main/base.html.twig" %}
 
+{% block content %}
 
-{% block body %}
-    <h1>Produit</h1>
-
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Idproduit</th>
-                <td>{{ produit.idproduit }}</td>
-            </tr>
-            <tr>
-                <th>Name</th>
-                <td>{{ produit.name }}</td>
-            </tr>
-            <tr>
-                <th>Prix</th>
-                <td>{{ produit.prix }}</td>
-            </tr>
-            <tr>
-                <th>Stock</th>
-                <td>{{ produit.stock }}</td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td>{{ produit.description }}</td>
-            </tr>
-            <tr>
-                <th>Categorie</th>
-                <td>{{ produit.categorie }}</td>
-            </tr>
-            <tr>
-                <th>Photo</th>
-                <td>{{ produit.photo }}  <img src="{{ asset('images/img_product/' ~ produit.photo) }}" alt="" width="100"> </td>
-            </tr>
-            <tr>
-                <th>Seuil</th>
-                <td>{{ produit.seuil }}</td>
-            </tr>
-            <tr>
-                <th>Promo</th>
-                <td>{{ produit.promo }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="page-content bg-white">
+		
+            <!-- Banner  -->
+            <div class="dz-bnr-inr style-2" style="background-image: url('{{asset('main/images/banner/banner-2.png')}}')">
+                <div class="banner-gradient"></div>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <div class="dz-bnr-inr-entry">
+                                <h1>Product Detail</h1>
+                                <!-- Breadcrumb Row -->
+                                <nav aria-label="breadcrumb" class="breadcrumb-row">
+                                    <ul class="breadcrumb">
+                                        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                                        
+                                        <li class="breadcrumb-item active" aria-current="page">Product Detail</li>
+                                    </ul>
+                                </nav>
+                                <!-- Breadcrumb Row End -->
+                            </div>
+                        </div>
+                    </div>	
+                    <div class="banner-media">
+                        <img src="{{asset('main/images/banner/pic4.png')}}" alt="/">
+                    </div>
+                </div>	
+            </div>
 
 
-    {% if videoExists %}
-        <h2>Vidéo</h2>
-        {# <video controls> #}
-        <video controls width="320" height="240">
-            <source src="{{ asset(videoUrl) }}" type="video/mp4">
-            Votre navigateur ne prend pas en charge la lecture de vidéos.
-        </video>
-    {% else %}
-        <p>
-        {# Aucune vidéo n'est associée à cette photo. #}
-        </p>
-    {% endif %}
-
-<br>
-
-    <a href="{{ path('app_produit_index') }}">back to list</a>
-
-    {# <a href="{{ path('app_produit_edit', {'idproduit': produit.idproduit}) }}">edit</a> #}
-
-    {# {{ include('produit/_delete_form.html.twig') }} #}
+            <br>
+            {# <a href="{{ path('app_produit_index') }}">back to list</a> #}
+            <a href="{{ path('app_produit_index') }}" class="btn btn-primary btn-skew appointment-btn"><span class="skew-inner"><span class="text">back to list</span></span></a>
 
 
-    {# <button onclick="openVideo()">Voir la vidéo</button> 
-    {% block javascriptsvid %}
-        <script>
-            function openVideo() {
-                var videoUrl = "{{ videoUrl }}";
-                // Ouvrir la vidéo dans une nouvelle fenêtre
-                window.open(videoUrl, '_blank');
-            }
-        </script>
-    {% endblock %} #}
+            <div class="page-content bg-white">
+                    <!-- Our Product Detail -->
+                    <section class="content-inner pb-0">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6">
+                                    <div class="dz-product-detail sticky-top side-bar left">
+                                        <div class="swiper product-gallery-swiper2" id="lightgallery">
+                                            <div class="swiper-wrapper">
+                                                <div class="swiper-slide">
+                                                    <div class="dz-media DZoomImage wow fadeInUp" data-wow-delay="0.4s">
+                                                        <img src="{{ asset('images/img_product/' ~ produit.photo) }}" alt="image" width="500" height="500">
+                                                    </div>
+                                                </div>
+                                                <div class="swiper-slide">
+                                                    <div class="dz-media DZoomImage wow fadeInUp" data-wow-delay="0.6s">
+                                                        {% if videoExists %}
+                                                            {# <h2>Vidéo</h2> #}
+                                                            {# <video controls> #}
+                                                            <video controls width="500" height="500"> 
+                                                                <source src="{{ asset(videoUrl) }}" type="video/mp4">
+                                                                Votre navigateur ne prend pas en charge la lecture de vidéos.
+                                                            </video>
+                                                        {% else %}
+                                                            <p>
+                                                            {# Aucune vidéo n'est associée à cette photo. #}
+                                                            </p>
+                                                        {% endif %}										
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="swiper product-gallery-swiper thumb-swiper-lg swiper-vertical">
+                                            <div class="swiper-wrapper">
+                                                <div class="swiper-slide">
+                                                    {# <a href="javascript:void(0)" class="wow fadeInUp" data-wow-delay="0.9s"> #}
+                                                    <img src="{{ asset('images/img_product/' ~ produit.photo) }}" alt="image" style="width: 50px; height: 50px;">
+                                                    {# </a> #}
+                                                </div>
+                                                <div class="swiper-slide">
+                                                    {% if videoExists %}
+                                                        {# <h2>Vidéo</h2> #}
+                                                        {# <video controls> #}
+                                                        <video controls width="100" height="100"> 
+                                                            <source src="{{ asset(videoUrl) }}" type="video/mp4">
+                                                            Votre navigateur ne prend pas en charge la lecture de vidéos.
+                                                        </video>
+                                                    {% else %}
+                                                        <p>
+                                                        {# Aucune vidéo n'est associée à cette photo. #}
+                                                        </p>
+                                                    {% endif %}									
+                                                </div>
+                                            </div>
+                                        </div>					
+                                    </div>	
+                                </div>
+                                <div class="col-lg-6 col-md-6">
+                                    <div class="dz-product-detail style-1">
+                                        <div class="dz-content">
+                                            <div class="dz-content-footer">
+                                                <div class="dz-content-start">
+                                                    <h4 class="title m-b5 wow fadeInUp" data-wow-delay="1.3s">{{ produit.name }}</h4>
+                                                    <div class="review-num wow fadeInUp" data-wow-delay="1.4s">
+                                                        <ul class="dz-rating me-2">
+                                                            <li>
+                                                                <svg width="14" height="13" viewBox="0 0 14 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                    <path d="M6.74805 0.234375L8.72301 4.51608L13.4054 5.07126L9.9436 8.27267L10.8625 12.8975L6.74805 10.5944L2.63355 12.8975L3.5525 8.27267L0.090651 5.07126L4.77309 4.51608L6.74805 0.234375Z" fill="#FF8A00"></path>
+                                                                </svg>
+                                                            </li>	
+                                                            <li>
+                                                                <svg width="14" height="13" viewBox="0 0 14 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                    <path d="M6.74805 0.234375L8.72301 4.51608L13.4054 5.07126L9.9436 8.27267L10.8625 12.8975L6.74805 10.5944L2.63355 12.8975L3.5525 8.27267L0.090651 5.07126L4.77309 4.51608L6.74805 0.234375Z" fill="#FF8A00"></path>
+                                                                </svg>
+                                                            </li>
+                                                            <li>
+                                                                <svg width="14" height="13" viewBox="0 0 14 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                    <path d="M6.74805 0.234375L8.72301 4.51608L13.4054 5.07126L9.9436 8.27267L10.8625 12.8975L6.74805 10.5944L2.63355 12.8975L3.5525 8.27267L0.090651 5.07126L4.77309 4.51608L6.74805 0.234375Z" fill="#FF8A00"></path>
+                                                                </svg>
+                                                            </li>
+                                                            <li>
+                                                                <svg width="14" height="13" viewBox="0 0 14 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                    <path opacity="0.2" d="M6.74805 0.234375L8.72301 4.51608L13.4054 5.07126L9.9436 8.27267L10.8625 12.8975L6.74805 10.5944L2.63355 12.8975L3.5525 8.27267L0.090651 5.07126L4.77309 4.51608L6.74805 0.234375Z" fill="#5E626F"></path>
+                                                                </svg>
 
-
+                                                            </li>
+                                                            <li>
+                                                                <svg width="14" height="13" viewBox="0 0 14 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                    <path opacity="0.2" d="M6.74805 0.234375L8.72301 4.51608L13.4054 5.07126L9.9436 8.27267L10.8625 12.8975L6.74805 10.5944L2.63355 12.8975L3.5525 8.27267L0.090651 5.07126L4.77309 4.51608L6.74805 0.234375Z" fill="#5E626F"></path>
+                                                                </svg>
+                                                            </li>	
+                                                        </ul>
+                                                        <span class="text-secondary me-2">4.7 Rating</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {# <p class="para-text wow fadeInUp" data-wow-delay="1.5s">
+                                                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+                                            </p> #}
+                                            <div class="meta-content wow fadeInUp" data-wow-delay="1.6s">
+                                                <div class="">
+                                                    <span class="price-name">Price</span>
+                                                    <span class="price-num">{{ produit.prix }} TND</span>
+                                                </div>
+                                                {# <div class="btn-quantity quantity-sm d-sm-block me-0">
+                                                    <label class="form-label">Quantity</label>
+                                                    <input  type="text" value="1" name="demo_vertical2">
+                                                </div> #}
+                                            </div>
+                                            <div class="cart-btn wow fadeInUp" data-wow-delay="1.7s">
+                                                <a href="{{ path('panier_add', {'idproduit': produit.idproduit}) }}" class="btn btn-secondary text-uppercase btn-lg">Add To Cart</a>
+                                                <a href="#" class="btn btn-light btn-lg">
+                                                    <svg class="m-r5" width="19" height="17" viewBox="0 0 19 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M9.24805 16.9986C8.99179 16.9986 8.74474 16.9058 8.5522 16.7371C7.82504 16.1013 7.12398 15.5038 6.50545 14.9767L6.50229 14.974C4.68886 13.4286 3.12289 12.094 2.03333 10.7794C0.815353 9.30968 0.248047 7.9162 0.248047 6.39391C0.248047 4.91487 0.755203 3.55037 1.67599 2.55157C2.60777 1.54097 3.88631 0.984375 5.27649 0.984375C6.31552 0.984375 7.26707 1.31287 8.10464 1.96065C8.52734 2.28763 8.91049 2.68781 9.24805 3.15459C9.58574 2.68781 9.96875 2.28763 10.3916 1.96065C11.2292 1.31287 12.1807 0.984375 13.2197 0.984375C14.6098 0.984375 15.8885 1.54097 16.8202 2.55157C17.741 3.55037 18.248 4.91487 18.248 6.39391C18.248 7.9162 17.6809 9.30968 16.4629 10.7792C15.3733 12.094 13.8075 13.4285 11.9944 14.9737C11.3747 15.5016 10.6726 16.1001 9.94376 16.7374C9.75136 16.9058 9.50417 16.9986 9.24805 16.9986ZM5.27649 2.03879C4.18431 2.03879 3.18098 2.47467 2.45108 3.26624C1.71033 4.06975 1.30232 5.18047 1.30232 6.39391C1.30232 7.67422 1.77817 8.81927 2.84508 10.1066C3.87628 11.3509 5.41011 12.658 7.18605 14.1715L7.18935 14.1743C7.81021 14.7034 8.51402 15.3033 9.24654 15.9438C9.98344 15.302 10.6884 14.7012 11.3105 14.1713C13.0863 12.6578 14.6199 11.3509 15.6512 10.1066C16.7179 8.81927 17.1938 7.67422 17.1938 6.39391C17.1938 5.18047 16.7858 4.06975 16.045 3.26624C15.3152 2.47467 14.3118 2.03879 13.2197 2.03879C12.4197 2.03879 11.6851 2.29312 11.0365 2.79465C10.4585 3.24179 10.0558 3.80704 9.81975 4.20255C9.69835 4.40593 9.48466 4.52733 9.24805 4.52733C9.01143 4.52733 8.79774 4.40593 8.67635 4.20255C8.44041 3.80704 8.03777 3.24179 7.45961 2.79465C6.811 2.29312 6.07643 2.03879 5.27649 2.03879Z" fill="black"></path>
+                                                    </svg>
+                                                    Add To Wishlist
+                                                </a>
+                                            </div>
+                                            <div class="dz-info wow fadeInUp" data-wow-delay="1.7s">
+                                                <ul>
+                                                    <li>
+                                                        <strong>Product id:</strong>
+                                                        <span>{{ produit.idproduit }}</span>
+                                                    </li>
+                                                    <li>
+                                                        <strong>Category:</strong>
+                                                        <span>{{ produit.categorie }}</span>
+                                                    </li>
+                                                    <li>
+                                                        <strong>Share:</strong>
+                                                        <span>											
+                                                            <a href="https://www.facebook.com/dexignzone" target="_blank">
+                                                                <i class="fa-brands fa-facebook-f"></i>
+                                                            </a>
+                                                        </span>
+                                                        <span>											
+                                                            <a href="https://www.linkedin.com/showcase/3686700/admin/" target="_blank">
+                                                                <i class="fa-brands fa-linkedin-in"></i>
+                                                            </a>
+                                                        </span>
+                                                        <span>											
+                                                            <a href="https://www.instagram.com/dexignzone/" target="_blank">
+                                                                <i class="fa-brands fa-instagram"></i>
+                                                            </a>
+                                                        </span>
+                                                        <span>											
+                                                            <a href="https://twitter.com/dexignzones" target="_blank">
+                                                                <i class="fa-brands fa-twitter"></i>
+                                                            </a>
+                                                        </span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <section class="content-inner-4 pb-0"> 
+                        <div class="container">
+                            <div class="product-description">
+                                <div class="dz-tabs style-1 wow fadeInUp" data-wow-delay="1.0s">					
+                                    <ul class="nav nav-tabs center" id="myTab1" role="tablist">
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">Description</button>
+                                        </li>
+                                    </ul>
+                                    <div class="tab-content" id="myTabContent">
+                                        <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
+                                            <div class="detail-bx text-center">
+                                                <h5 class="title">{{ produit.name}}</h5>
+                                                <p class="para-text">
+                                                    {{ produit.description }}									
+                                                </p>
+                                            </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <!-- Our Product Detail -->
+                    
+                                    
+                    
+                </div>
+                
+                
+                
+                
+                
+            </div>
+    
+        <!-- JAVASCRIPT FILES ========================================= -->
+        <script src="assets/js/jquery.min.js"></script><!-- JQUERY.MIN JS -->
+        <script src="assets/vendor/wow/wow.js"></script><!-- WOW.JS -->
+        <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script><!-- BOOTSTRAP MIN JS -->
+        <script src="assets/vendor/bootstrap-select/dist/js/bootstrap-select.min.js"></script><!-- BOOTSTRAP SELECT MIN JS -->
+        <script src="assets/vendor/bootstrap-touchspin/bootstrap-touchspin.js"></script><!-- BOOTSTRAP TOUCHSPIN JS -->
+        <script src="assets/vendor/swiper/swiper-bundle.min.js"></script><!-- SWIPER JS -->
+        <script src="assets/vendor/nouislider/nouislider.min.js"></script><!-- NOUSLIDER MIN JS-->
+        <script src="assets/js/dz.carousel.js"></script><!-- OWL-CAROUSEL -->
+        <script src="assets/vendor/masonry/masonry-4.2.2.js"></script><!-- MASONRY -->
+        <script src="assets/vendor/masonry/isotope.pkgd.min.js"></script><!-- ISOTOPE -->
+        <script src="assets/vendor/lightgallery/dist/lightgallery.min.js"></script><!-- LIGHT GALLERY -->
+        <script src="assets/vendor/lightgallery/dist/plugins/thumbnail/lg-thumbnail.min.js"></script><!-- LIGHT GALLERY -->
+        <script src="assets/vendor/lightgallery/dist/plugins/zoom/lg-zoom.min.js"></script><!-- LIGHT GALLERY -->
+        <script src="assets/vendor/imagesloaded/imagesloaded.js"></script><!-- IMAGESLOADED -->
+        <script src="assets/vendor/wnumb/wNumb.js"></script><!-- wNumb JS-->
+        <script src="assets/js/jquery.star-rating-svg.js"></script><!-- Star Rating JS -->
+        <script src="assets/js/dz.ajax.js"></script><!-- AJAX -->
+        <script src="assets/js/custom.js"></script><!-- CUSTOM JS -->
+    </div>
 
 {% endblock %}

@@ -1,221 +1,224 @@
-{# {% extends 'base.html.twig' %} #}
 {% extends "main/base.html.twig" %}
-
-
-{# {% block title %}Produit index{% endblock %} #}
-
-{# {% block body %} #}
 
 {% block content %}
 
-<div class="page-content bg-white">
+    <div class="page-content bg-white">
 		
-		<!-- Banner  -->
-		<div class="dz-bnr-inr style-2" style="background-image: url('{{asset('main/images/banner/banner-2.png')}}')">
-			<div class="banner-gradient"></div>
-			<div class="container">
-				<div class="row">
-					<div class="col-lg-8">
-						<div class="dz-bnr-inr-entry">
-							<h1>Shop</h1>
-							<!-- Breadcrumb Row -->
-							<nav aria-label="breadcrumb" class="breadcrumb-row">
-								<ul class="breadcrumb">
-									<li class="breadcrumb-item"><a href="index.html">Home</a></li>
-									
-									<li class="breadcrumb-item active" aria-current="page">Shop</li>
-								</ul>
-							</nav>
-							<!-- Breadcrumb Row End -->
-						</div>
-					</div>
-				</div>	
-				<div class="banner-media">
-					<img src="{{asset('main/images/banner/pic4.png')}}" alt="/">
-				</div>
-			</div>	
-		</div>
+            <!-- Banner  -->
+            <div class="dz-bnr-inr style-2" style="background-image: url('{{asset('main/images/banner/banner-2.png')}}')">
+                <div class="banner-gradient"></div>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <div class="dz-bnr-inr-entry">
+                                <h1>Shop</h1>
+                                <!-- Breadcrumb Row -->
+                                <nav aria-label="breadcrumb" class="breadcrumb-row">
+                                    <ul class="breadcrumb">
+                                        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                                        
+                                        <li class="breadcrumb-item active" aria-current="page">Shop</li>
+                                    </ul>
+                                </nav>
+                                <!-- Breadcrumb Row End -->
+                            </div>
+                        </div>
+                    </div>	
+                    <div class="banner-media">
+                        <img src="{{asset('main/images/banner/pic4.png')}}" alt="/">
+                    </div>
+                </div>	
+            </div>
+
+        <br>
+            {# <a href="{{ path('app_panier') }}" id="valider-panier" data-url="{{ path('valider_panier') }}" class="btn btn-primary btn-skew appointment-btn"><span class="skew-inner"><span class="text"> Check Cart </span></span></a> #}
+            {# <a href="{{ path('app_panier') }}">check Panier</a> #}
+        <br>
+        <br>
+
+        <!-- Our Shop -->
+            <section class="content-inner">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-xl-8 col-lg-12 m-b30">
+                            <h2>recently added :</h2>  
+                            <div class="row">
+                                {% for latestProduct in latestProducts %}
+                                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12">
+                                        <div class="shop-card style-1 hover-aware wow fadeInUp" data-wow-delay="0.6s">
+                                            <div class="dz-media">
+                                            
+                                                <img src="{{ asset('images/img_product/' ~ latestProduct.photo) }}" alt="" >
+                                                <div class="shop-meta">
+                                                    <ul>
+                                                        <li><a href="{{ path('app_produit_show', {'idproduit': latestProduct.idproduit}) }}">Quick View</a></li>
+                                                        <li><a href="javascript:void(0)"><i class="yith-wcwl-icon fa fa-heart"></i>	</a></li>	
+                                                        <li><a href="{{ path('panier_add', {'idproduit': latestProduct.idproduit}) }}"><i class="fa-solid fa-cart-shopping"></i></a></li>
+                                                    </ul>
+                                                </div> 
+                                                <div class="effect"></div>
+                                            </div>
+                                            <div class="dz-content">
+                                                <h4 class="title"><a href="product-detail.html">{{ latestProduct.name }}</a></h4>
+                                                <p><span class=" font-weight-600">{{ latestProduct.prix }} TND</span> </p>
+                                                {# <p><span class=" font-weight-600">{{ latestProduct.idproduit }}</span> </p> #}
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    <p>no records found</p>
+                                {% endfor %}           
+                            </div>
+
+<style>
+    .dz-media img {
+        width: 100%;
+        height: 200px; /* Hauteur fixe pour toutes les images */
+        object-fit: cover; /* Pour couvrir toute la zone de l'image */
+    }
+</style>
+
+                            <hr> <!-- Séparateur entre les deux tableaux -->
+                            <h2>Our Products :</h2>
+                            <div class="row">
+                                    {% for produit in produits %}
+                                        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12">
+                                            <div class="shop-card style-1 hover-aware wow fadeInUp" data-wow-delay="0.6s">
+                                                <div class="dz-media">
+                                                    <img src="{{ asset('images/img_product/' ~ produit.photo) }}" alt="">
+                                                    <div class="shop-meta">
+                                                        <ul>
+                                                            <li><a href="{{ path('app_produit_show', {'idproduit': produit.idproduit}) }}">Quick View</a></li>
+                                                            <li><a href="javascript:void(0)"><i class="yith-wcwl-icon fa fa-heart"></i>	</a></li>	
+                                                            <li><a href="{{ path('panier_add', {'idproduit': produit.idproduit}) }}"><i class="fa-solid fa-cart-shopping"></i></a></li>
+                                                        </ul>
+                                                    </div> 
+                                                    <div class="effect"></div>
+                                                </div>
+                                                <div class="dz-content">
+                                                    <h4 class="title"><a href="product-detail.html">{{ produit.name }}</a></h4>
+                                                    <p><span class=" font-weight-600">{{ produit.prix }} TND</span> </p>
+                                                    {# <p><span class=" font-weight-600">{{ latestProduct.idproduit }}</span> </p> #}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% else %}
+                                        <p>no records found</p>
+                                    {% endfor %}           
+                            </div>
+
+                            {#<h2>Our Products :</h2>
+                             <div class="row">
+                                {% for produit in produits %}
+                                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12">
+                                        <div class="shop-card style-1 hover-aware wow fadeInUp" data-wow-delay="0.6s">
+                                            <div class="dz-media">
+                                                <img src="{{ asset('images/img_product/' ~ produit.photo) }}" alt="">
+                                                <div class="shop-meta">
+                                                    <ul>
+                                                        <li><a href="{{ path('app_produit_show', {'idproduit': produit.idproduit}) }}">Quick View</a></li>
+                                                        <li><a href="javascript:void(0)"><i class="yith-wcwl-icon fa fa-heart"></i> </a></li>   
+                                                        <li><a href="{{ path('panier_add', {'idproduit': produit.idproduit}) }}"><i class="fa-solid fa-cart-shopping"></i></a></li>
+                                                    </ul>
+                                                </div> 
+                                                <div class="effect"></div>
+                                            </div>
+                                            <div class="dz-content">
+                                                <h4 class="title"><a href="product-detail.html">{{ produit.name }}</a></h4>
+                                                <p><span class=" font-weight-600">{{ produit.prix }} TND</span> </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% if loop.index % 3 == 0 %}
+                                        </div><div class="row">
+                                    {% endif %}
+                                {% else %}
+                                    <p>no records found</p>
+                                {% endfor %}           
+                            </div> #}
 
 
-    
-<br>
-    <a href="{{ path('app_panier') }}" id="valider-panier" data-url="{{ path('valider_panier') }}" class="btn btn-primary btn-skew appointment-btn"><span class="skew-inner"><span class="text"> Check Cart </span></span></a>
-    {# <a href="{{ path('app_panier') }}">check Panier</a> #}
-    <br>
- 
-<br>
+                            <div class="row page wow fadeInUp" data-wow-delay="2.4s">
+                                <div class="col-sm-6 m-b15">
+                                    <p class="page-text"></p>
+                                </div>
+                                <div class="col-sm-6 m-b15">
+                                    <nav aria-label="Shop Pagination">
+                                        <ul class="pagination style-1">
+                                            <li class="page-item"><a class="page-link prev" href="javascript:void(0);">Prev</a></li>
+                                            <li class="page-item"><a class="page-link active" href="javascript:void(0);">1</a></li>
+                                            <li class="page-item"><a class="page-link" href="javascript:void(0);">2</a></li>
+                                            <li class="page-item"><a class="page-link" href="javascript:void(0);">3</a></li>
+                                            <li class="page-item"><a class="page-link next" href="javascript:void(0);">Next</a></li>
+                                        </ul>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-lg-12">
+                            <div class="shop-filter side-bar sticky-top">
+                                <aside>
+                                    <div class="widget">
+                                        <div class="widget-title wow fadeInUp" data-wow-delay="0.4s">
+                                            <h4 class="title">Cart</h4>
+                                            <br>
+                                            <a href="{{ path('app_panier') }}" id="valider-panier" data-url="{{ path('valider_panier') }}" class="btn btn-primary btn-skew appointment-btn"><span class="skew-inner"><span class="text"> Check Cart </span></span></a>
+                                        </div>
+                                        <div class="wow fadeInUp" data-wow-delay="1.0s">
+                                            {% if items | length > 0 %}
+                                            <div class="table-responsive">
+                                                <table class="table check-tbl wow fadeInUp" data-wow-delay="0.4s" style="visibility: visible; animation-delay: 0.4s; animation-name: fadeInUp;">
+                                                    <thead>
+                                                        <tr>
+                                                            <th></th>
+                                                            <th></th>
+                                                        </tr> 
+                                                    </thead>
+                                                    <tbody>
+                                                        {% for item in items %}
+                                                            <tr>
+                                                                <td>                        
+                                                                    <img src="{{ asset('images/img_product/' ~ item.produit.Photo) }}" alt="" style="width: 150px;">
+                                                                </td>
+                                                                <td> {{item.produit.Name}} 
+                                                                <br>
+                                                                {{item.produit.Prix}} TND</td>
+                                                            </tr>
+                                                        {% endfor %}
+                                                    </tbody>  
+                                                </table>
+                                            </div>
+                                            {% else %}
+                                                <h5 class="text-center" >Le panier est vide !</h5>
+                                            {% endif %}
+						                </div>
+					                </div>
+                                </aside>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- Our Shop-->
 
-    <h2>recently added :</h2>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Idproduit</th>
-                <th>Name</th>
-                <th>Prix</th>
-                <th>Stock</th>
-                <th>Description</th>
-                <th>Categorie</th>
-                <th>Photo</th>
-                <th>Seuil</th>
-                <th>Promo</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for latestProduct in latestProducts %}
-            <tr>
-                <td>{{ latestProduct.idproduit }}</td>
-                <td>{{ latestProduct.name }}</td>
-                <td>{{ latestProduct.prix }}</td>
-                <td>{{ latestProduct.stock }}</td>
-                <td>{{ latestProduct.description }}</td>
-                <td>{{ latestProduct.categorie }}</td>
-                <td> 
-                    <img src="{{ asset('images/img_product/' ~ latestProduct.photo) }}" alt="" width="100">
-                </td>
-                <td>{{ latestProduct.seuil }}</td>
-                <td>{{ latestProduct.promo }}</td>
-                <td>
-                    <a href="{{ path('app_produit_show', {'idproduit': latestProduct.idproduit}) }}">show Product</a>
-                    {# <a href="{{ path('app_produit_edit', {'idproduit': latestProduct.idproduit}) }}">edit</a> #}
-                    <br>
-                    <a href="{{ path('panier_add', {'idproduit': latestProduct.idproduit}) }}">Add to Cart</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="10">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
 
-    <hr> <!-- Séparateur entre les deux tableaux -->
+        <!-- JAVASCRIPT FILES ========================================= -->
+        <script src="assets/js/jquery.min.js"></script><!-- JQUERY.MIN JS -->
+        <script src="assets/vendor/wow/wow.js"></script><!-- WOW.JS -->
+        <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script><!-- BOOTSTRAP MIN JS -->
+        <script src="assets/vendor/bootstrap-select/dist/js/bootstrap-select.min.js"></script><!-- BOOTSTRAP SELECT MIN JS -->
+        <script src="assets/vendor/bootstrap-touchspin/bootstrap-touchspin.js"></script><!-- BOOTSTRAP TOUCHSPIN JS -->
+        <script src="assets/vendor/wnumb/wNumb.js"></script><!-- wNumb JS-->
+        <script src="assets/vendor/nouislider/nouislider.min.js"></script><!-- NOUSLIDER MIN JS-->
+        <script src="assets/vendor/magnific-popup/magnific-popup.js"></script><!-- MAGNIFIC POPUP JS -->
+        <script src="assets/js/dz.carousel.js"></script><!-- OWL-CAROUSEL -->
+        <script src="assets/js/dz.ajax.js"></script><!-- AJAX -->
+        <script src="assets/js/custom.js"></script><!-- CUSTOM JS -->
 
-    <h2>Liste complète des produits :</h2>
-    {# <table class="table"> #}
-       
-            <input id="search-input" type="form-control" placeholder="Chercher..." style="width: 400px; border-radius: 10px;" >
-            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-            <script>
-                $(document).ready(function() {
-                    $("#search-input").on("keyup", function() {
-                        var value = $(this).val().toLowerCase();
-                        // Sélectionner les lignes du deuxième tableau seulement
-                        $("#complete-products-table tbody tr").filter(function() {
-                            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
-                        });
-                    });
-                });
-            </script>
-
-            <select id="category-filter">
-                <option value="">Toutes les catégories</option>
-                <option value="food">Food</option>
-                <option value="vetement">Vêtement</option>
-                <option value="equipement">Équipement</option>
-            </select>
-
-            <script>
-                $(document).ready(function() {
-                    $("#category-filter").on("change", function() {
-                        var category = $(this).val().toLowerCase();
-                        filterByCategory(category);
-                    });
-
-                    function filterByCategory(category) {
-                        $("#complete-products-table tbody tr").each(function() {
-                            var rowCategory = $(this).find("td:eq(5)").text().toLowerCase(); // Index 5 corresponds to the column containing the category
-                            if (category === "" || rowCategory === category) {
-                                $(this).show();
-                            } else {
-                                $(this).hide();
-                            }
-                        });
-                    }
-                });
-            </script>
-
-    <select id="sort-select">
-        <option value="asc">Croissant</option>
-        <option value="desc">Décroissant</option>
-    </select>
-
-    <script>
-        $(document).ready(function() {
-            $("#sort-select").on("change", function() {
-                var order = $(this).val();
-                sortTableByPrice(order);
-            });
-
-            function sortTableByPrice(order) {
-                var rows = $("#complete-products-table tbody tr").get();
-
-                rows.sort(function(a, b) {
-                    var priceA = parseFloat($(a).find("td:eq(2)").text()); // Index 2 corresponds to the column containing the price
-                    var priceB = parseFloat($(b).find("td:eq(2)").text());
-
-                    if (order === 'asc') {
-                        return priceA - priceB;
-                    } else {
-                        return priceB - priceA;
-                    }
-                });
-
-                $("#complete-products-table tbody").empty(); // Clear the table body
-
-                $.each(rows, function(index, row) {
-                    $("#complete-products-table tbody").append(row);
-                });
-            }
-        });
-    </script>
+    </div> 
 
 
 
 
-    <table class="table" id="complete-products-table">
-
-        <thead>
-            <tr>
-                <th>Idproduit</th>
-                <th>Name</th>
-                <th>Prix</th>
-                <th>Stock</th>
-                <th>Description</th>
-                <th>Categorie</th>
-                <th>Photo</th>
-                <th>Seuil</th>
-                <th>Promo</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for produit in produits %}
-            <tr>
-                <td>{{ produit.idproduit }}</td>
-                <td>{{ produit.name }}</td>
-                <td>{{ produit.prix }}</td>
-                <td>{{ produit.stock }}</td>
-                <td>{{ produit.description }}</td>
-                <td>{{ produit.categorie }}</td>
-                <td> 
-                    <img src="{{ asset('images/img_product/' ~ produit.photo) }}" alt="" width="100">
-                </td>
-                <td>{{ produit.seuil }}</td>
-                <td>{{ produit.promo }}</td>
-                <td>
-                    <a href="{{ path('app_produit_show', {'idproduit': produit.idproduit}) }}">show</a>
-                    <a href="{{ path('app_produit_edit', {'idproduit': produit.idproduit}) }}">edit</a>
-                    <a href="{{ path('panier_add', {'idproduit': produit.idproduit}) }}">Ajouter</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="10">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
 
 {% endblock %}

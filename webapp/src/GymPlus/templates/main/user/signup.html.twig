@@ -204,7 +204,12 @@
 										Please choose a correct photo.
 									</div>
 								</div>
-							
+								<div class="col-md-4 col-lg-4 form-check form-switch mt-4">
+									<label for="faceid" class="form-label mt-2">&nbsp;&nbsp;Face ID</label>
+									<input class="form-check-input" type="checkbox" role="switch" id="faceid" name="faceid" style="height: 30px; width: 60px;">
+								</div>
+								<video id="video" width="1280" height="720" autoplay style="display: none;"></video>
+								<canvas id="canvas" style="display: none;" width="1280" height="720"></canvas>
 						{{ form_end(form) }}
 
 
@@ -268,11 +273,14 @@
 {% endblock %}
 
 {% block js %}
+	<script src="{{ asset('main/js/face-api.min.js') }}"></script>
 	{{ parent() }}
 	<script>
 		{% if app.user %}
 			window.location.href = "{{path('app_home')}}";
 		{% endif %}
+		
 	</script>
+	
 		
 {% endblock %}

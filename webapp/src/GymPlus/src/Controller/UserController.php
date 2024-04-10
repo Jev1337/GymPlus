@@ -174,9 +174,17 @@ class UserController extends AbstractController
             if(!$form->isValid()){
                 $this->addFlash('error', 'There was an error with the form, please check the fields and try again!');
             }else{
+                
+                    
                 $usersig = $form->getData();
                 $usersig->setPassword(password_hash($usersig->getPassword(), PASSWORD_BCRYPT));
                 $usersig->setRole('client');
+
+                
+                if ($request->get('faceid') != null && $request->get('faceid') != '' && $request->get('faceid') != 'undefined'){
+                    $usersig->setFaceid($request->get('faceid'));
+                    $usersig->setFaceidTs(new \DateTime());
+                }
                 $photo = $form['photo']->getData();
                 $filename = 'USERIMG' . $usersig->getId() . '.' . $photo->guessExtension();
                 $targetdir = $this->getParameter('kernel.project_dir') . '/public/profileuploads/';
@@ -700,6 +708,40 @@ class UserController extends AbstractController
         return new JsonResponse(['exists' => false], 200);
     }
 
+    #[Route('/api/getfacetoken', name: 'app_getfacetoken')]
+    public function getFaceToken(Request $request, UserRepository $repo): Response
+    {
+        $image = $request->get('image');
+        try{
+            $guzzle = new GuzzleClient();
+            $resp = $guzzle->request('POST', 'https://api-us.faceplusplus.com/facepp/v3/detect', [
+                'multipart' => [
+                    [
+                        'name' => 'api_key',
+                        'contents' => 'oVAqEDbCYmaILayXJdKAsuYbFcJ0LBP6'
+                    ],
+                    [
+                        'name' => 'api_secret',
+                        'contents' => 'e76obC1xsr-zSMynWZoQCt62vWDgtZ6O'
+                    ],
+                    [
+                        'name' => 'image_base64',
+                        'contents' => $image,
+                    ],
+                    [
+                        'name' => 'return_attributes',
+                        'contents' => 'emotion'
+                    ]
+                ]
+            ]);
+            $faceidcmp = json_decode((string) $resp->getBody(), true)['faces'][0]['face_token'];
+            dump("Request 1 Sent...");
+            return new JsonResponse(['status' => 'success', 'facetoken' => $faceidcmp], 200);
+        } catch (\GuzzleHttp\Exception\RequestException $e) {
+            $content = json_decode($e->getResponse()->getBody()->getContents(), true);
+            return new JsonResponse(['status' => 'error', 'details'=> $content], 400);
+        }
+    }
    
 
 }

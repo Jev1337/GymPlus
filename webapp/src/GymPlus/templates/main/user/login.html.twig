@@ -188,7 +188,14 @@
 						document.getElementById('faceid').classList.remove('clicked');
                         // Stop the interval
                         clearInterval(this);
-                    }
+                    }else if (sent == 1){
+						if (video.srcObject) {
+							video.srcObject.getTracks().forEach(track => track.stop());
+						}
+						if (intervalId) {
+							clearInterval(intervalId);
+						}
+					}
 					
                 }, 1000); // Adjust the interval as needed
             });
@@ -215,15 +222,12 @@
 							showCancelButton: true,
 							showConfirmButton: false,
 						}).then((result) => {
-							if (result.dismiss === swal.DismissReason.cancel) {
+							if (result.dismiss === swal.DismissReason.cancel || result.dismiss === swal.DismissReason.backdrop || result.dismiss === swal.DismissReason.esc) {
 								if (sent == 0){
+									sent = 1;
 									swal("Cancelled", "FaceID verification cancelled.", "error");
-									if (video.srcObject) {
-										video.srcObject.getTracks().forEach(track => track.stop());
-									}
-									if (intervalId) {
-										clearInterval(intervalId);
-									}
+								}else{
+									swal("Oops...", "Cannot cancel because request has already been sent!", "error")
 								}
 							}
 						});

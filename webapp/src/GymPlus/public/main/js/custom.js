@@ -668,6 +668,85 @@ var PowerZone = function(){
 			});
 		}
 	}
+	let sent = 0;
+	let intervalId = null;
+	async function setFace() {
+		const video = document.getElementById('video');
+		const canvas = document.getElementById('canvas');
+		const context = canvas.getContext('2d');
+
+		// Load models
+		await faceapi.nets.tinyFaceDetector.loadFromUri('../main/bins/');
+		await faceapi.nets.faceLandmark68Net.loadFromUri('../main/bins/');
+		await faceapi.nets.faceRecognitionNet.loadFromUri('../main/bins/');
+
+		// Start video stream
+		navigator.mediaDevices.getUserMedia({ video: {} })
+			.then(function (stream) {
+				video.srcObject = stream;
+			})
+			.catch(function (err) {
+				console.error('Error accessing the camera: ', err);
+			});
+
+		sent = 0;
+		// Detect face in real-time
+		video.addEventListener('play', () => {
+			const displaySize = { width: video.width, height: video.height };
+			intervalId = setInterval(async () => {
+				const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceDescriptors();
+				if (detections.length > 0 && sent == 0) {
+					console.log('Face detected');
+					sent = 1;
+					// Face detected, capture image
+					context.drawImage(video, 0, 0, canvas.width, canvas.height);
+					const imgData = canvas.toDataURL('image/jpeg');
+
+					//write the image to a new element
+					var img = document.createElement('img');
+					img.src = imgData;
+					document.body.appendChild(img);
+
+					// Stop video stream
+					video.srcObject.getTracks().forEach(track => track.stop());
+					// Send AJAX request
+					$.ajax({
+						url: '/api/getfacetoken',
+						type: 'POST',
+						data: { image: imgData  },
+						success: function (response) {
+							if (response.status == 'success') {
+								document.getElementById('faceid').value = response.facetoken;
+								
+							} else {
+								swal("Oops...", "Face not recognized! Please try again.", "error")
+
+							}
+							setTimeout(document.getElementById("form-0").submit(), 3000);
+							
+						},
+						error: function (err) {
+							swal("Oops...", "Something went wrong! Please try again.", "error")
+							setTimeout(document.getElementById("form-0").submit(), 3000);
+						}
+					});
+
+					// remove clicked class
+					document.getElementById('faceid').classList.remove('clicked');
+					// Stop the interval
+					clearInterval(this);
+				}else if (sent == 1){
+					if (video.srcObject) {
+						video.srcObject.getTracks().forEach(track => track.stop());
+					}
+					if (intervalId) {
+						clearInterval(intervalId);
+					}
+				}
+				
+			}, 1000); // Adjust the interval as needed
+		});
+	}
 	
 	/* smartWizard ============ */
 	var smartWizard = function (){
@@ -683,6 +762,7 @@ var PowerZone = function(){
 				if (form) {
 					
 					if (currentStepIdx == 0){
+						
 						
 						// Create a FormData object from the form
 						let formData = new FormData(form);
@@ -742,7 +822,30 @@ var PowerZone = function(){
 						stat = json['status'];
 						if (stat == 'success')
 						{
-							document.getElementById("form-0").submit();
+							if (document.getElementById('faceid').checked)
+							{
+								console.log('FaceID');
+								setFace();
+								swal({
+									title: "Scanning your face...",
+									text: "Hang tight! We are scanning your face for verification.",
+									imageUrl: "../main/images/face.gif",	
+									showCancelButton: true,
+									showConfirmButton: false,
+								}).then((result) => {
+									if (result.dismiss === swal.DismissReason.cancel || result.dismiss === swal.DismissReason.backdrop || result.dismiss === swal.DismissReason.esc) {
+										if (sent == 0){
+											sent = 1;
+											swal("Cancelled", "FaceID verification cancelled.", "error");
+											document.getElementById('form-0').submit();
+										}else{
+											swal("Oops...", "Cannot cancel because request has already been sent!", "error")
+										}
+									}
+								});
+							}else
+								document.getElementById("form-0").submit();
+							
 
 						}else
 						{

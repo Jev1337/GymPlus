@@ -150,7 +150,7 @@
 		</section>
 
     {% else %}
-        <h5 class="text-center" >Le panier est vide !</h5>
+        <h5 class="text-center" >The cart is empty!</h5>
     {% endif %}
 
     {# <a href="{{ path('valider_panier') }}">Valider le panier</a> #}
@@ -208,12 +208,14 @@
             validerPanierButton.addEventListener('click', function() {
                 // Récupérer les données nécessaires depuis le front-end
                 //methodeDePaiement = prompt("Veuillez choisir la méthode de paiement :");
-                methodeDePaiement = "en ligne";
+                //methodeDePaiement = document.getElementById('methodepayment').textContent; //"en ligne";
+                const methodeDePaiement = document.querySelector('input[name="methodepayment"]:checked').value;
+
                 console.log(methodeDePaiement);
 
                 //lieu = prompt("Veuillez choisir lieu :");
-                //lieu = document.getElementById('place-name').textContent; 
-                lieu = "tunisie";
+                lieu = document.getElementById('place-name').textContent; 
+                //lieu = "tunisie";
                 console.log(lieu);
 
 
@@ -229,31 +231,36 @@
                 const panierDetails = [];
 
             items.forEach(item => {
-                //const idproduit = document.getElementById('idprod').textContent;
-                const idproduit = item.querySelector('#idprod').textContent.trim();
-                console.log("produit" , idproduit);
+                const idprodElement = item.querySelector('#idprod');
+                if (idprodElement !== null) {
+                    const idproduit = idprodElement.textContent.trim();
+                    console.log("produit", idproduit);
 
-                const quantite = item.querySelector('.quantity-input').value;
-                //console.log("Qte" ,quantite);
+                    const quantite = item.querySelector('.quantity-input').value;
+                    console.log("Qte", quantite);
 
-                const prixunitaire = item.querySelector('#prixunitaire').textContent.trim();
-                //console.log("prix uni" ,prixunitaire);
+                    const prixunitaire = item.querySelector('#prixunitaire').textContent.trim();
+                    console.log("prix uni", prixunitaire);
 
-                const promo = item.querySelector('#promo').textContent.trim();
-                //console.log("promo" ,promo);
+                    const promo = item.querySelector('#promo').textContent.trim();
+                    console.log("promo", promo);
 
-                const totalUnArticle = item.querySelector('.total-item').textContent.trim();
-                //console.log("total article" ,totalUnArticle);
+                    const totalUnArticle = item.querySelector('.total-item').textContent.trim();
+                    console.log("total article", totalUnArticle);
 
 
-                panierDetails.push({
-                    idproduit: idproduit,
-                    quantite: quantite,
-                    prixunitaire: prixunitaire,
-                    promo: promo,
-                    totalUnArticle: totalUnArticle
-                });
+                    panierDetails.push({
+                        idproduit: idproduit,
+                        quantite: quantite,
+                        prixunitaire: prixunitaire,
+                        promo: promo,
+                        totalUnArticle: totalUnArticle
+                    });
+                } else {
+                    console.log("L'élément idprod n'a pas été trouvé dans cette ligne du panier.");
+                }
             });
+
 
         
                 // Créer un objet contenant les données à envoyer
@@ -309,7 +316,7 @@
         <div id="map" style="flex: 1; height: 400px; width: 500px;"></div>
     </div> #}
     <div id="map-container" class="text-center">
-    <div id="map" style="height: 400px; width: 500px; margin: 0 auto;"></div>
+    <div id="map" style="height: 400px; width: 1000px; margin: 0 auto;"></div>
 </div>
 
 
@@ -342,11 +349,29 @@
         });
 
     </script>
+<style>
+.text-center label {
+    margin-right: 33px; /* ou toute autre valeur que vous souhaitez */
+}
+</style>
+
+
+    <br>
+        <h5 class="text-center" > Choose your payment method :</h5>
+        <div class="text-center">
+            <input type="radio" id="methodepayment" name="methodepayment" value="en_ligne">
+            <label for="en_ligne">Online</label>
+            
+            <input type="radio" id="methodepayment" name="methodepayment" value="carte">
+            <label for="carte">Card</label>
+
+            <input type="radio" id="methodepayment" name="methodepayment" value="espece">
+            <label for="espece">Cash</label>
+        </div>
 
     <br>
         <div class="text-center" >
-            {# "{{ path('Apres_validation_panier') }}" #}
-            <a href="#" id="valider-panier" data-url="{{ path('valider_panier') }}" class="btn btn-primary btn-skew appointment-btn"><span class="skew-inner"><span class="text"> Validate </span></span></a>
+            <a href="{{ path('Apres_validation_panier') }}" id="valider-panier" data-url="{{ path('valider_panier') }}" class="btn btn-primary btn-skew appointment-btn"><span class="skew-inner"><span class="text"> Validate </span></span></a>
         </div>
     <br>
 

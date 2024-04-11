@@ -36,12 +36,12 @@
                             <table class="table table-responsive-md" id="complete-products-table">
                                 <thead>
                                     <tr>
-                                        <th> <strong class="text-black" style="font-weight: 600;"> Idlivraison </strong> </th>
-                                        <th> <strong class="text-black" style="font-weight: 600;"> Idfacture </strong> </th>
-                                        <th> <strong class="text-black" style="font-weight: 600;"> Idclient </strong> </th>
-                                        <th> <strong class="text-black" style="font-weight: 600;"> Lieu </strong> </th>
-                                        <th> <strong class="text-black" style="font-weight: 600;"> Etat </strong> </th>
-                                        <th> <strong class="text-black" style="font-weight: 600;"> actions </strong> </th>
+                                        <th> <strong class="text-black" style="font-weight: 600;"> Delivery ID </strong> </th>
+                                        <th> <strong class="text-black" style="font-weight: 600;"> Invoice ID </strong> </th>
+                                        <th> <strong class="text-black" style="font-weight: 600;"> Client ID </strong> </th>
+                                        <th> <strong class="text-black" style="font-weight: 600;"> Location </strong> </th>
+                                        <th> <strong class="text-black" style="font-weight: 600;"> Status </strong> </th>
+                                        <th> <strong class="text-black" style="font-weight: 600;"> Actions </strong> </th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -54,7 +54,7 @@
 
                                                             <td class="place-column" data-lieu="{{ livraison.lieu }}">{{ livraison.lieu }}</td>
 
-                                        <td class="{% if livraison.etat == 'Delivered' %}etat-delivered{% elseif livraison.etat == 'en cours' %}etat-en-cours{% endif %}">
+                                        <td class="{% if livraison.etat == 'Delivered' %}etat-delivered{% elseif livraison.etat == 'In progress' %}etat-en-cours{% endif %}">
                                             {{ livraison.etat }}
                                         </td>
                                         <td>
@@ -83,7 +83,7 @@
 
 
                             <div id="map-container">
-                                <div id="map" style="flex: 1; height: 400px; width: 500px;"></div>
+                                <div id="map" style="flex: 1; height: 400px; width: 900px;"></div>
                             </div>
 
                             <input type="hidden" id="publication_lieu" name="publication_lieu" />

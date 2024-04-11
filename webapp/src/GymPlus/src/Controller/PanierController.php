@@ -250,7 +250,20 @@ class PanierController extends AbstractController
             $detailFacture->setPrixtotalarticle($detailData['totalUnArticle']);
             //$detailFacture->setIdproduit($detailData['idproduit']);
             $produit = $entityManager->getRepository(Produit::class)->find($detailData['idproduit']);
-            $detailFacture->setIdproduit($produit);
+
+            if ($produit) {
+                // Déduire la quantité achetée du stock du produit
+                $quantiteAchetee = $detailData['quantite'];
+                $nouveauStock = $produit->getStock() - $quantiteAchetee;
+        
+                // Mettre à jour le stock du produit
+                $produit->setStock($nouveauStock);
+        
+                // Ajouter le détail de la facture
+                $detailFacture->setIdproduit($produit);
+            }
+
+            // $detailFacture->setIdproduit($produit);
 
             $detailFacture->setIdFacture($defaultfacture);
 
@@ -258,7 +271,6 @@ class PanierController extends AbstractController
             $indice++;
         }
 
-        
         $entityManager->flush();
 
         //*****Partie Livraison */
@@ -267,7 +279,7 @@ class PanierController extends AbstractController
         $livraison->setIdfacture($repo->findMaxFacture()[0]["maxId"]+0);
         $livraison->setIdclient(12345632);
         $livraison->setLieu($data['lieu']); 
-        $livraison->setEtat("en cours");
+        $livraison->setEtat("In progress");
 
     
         // Enregistrer la livr$livraison dans la base de données

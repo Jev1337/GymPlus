@@ -42,7 +42,7 @@ class LivraisonType extends AbstractType
             ->add('etat', ChoiceType::class, [
                 'choices' => [
                     'Delivered' => 'Delivered',
-                    'En cours' => strtolower('En cours'),
+                    'In progress' => 'In progress' ,//strtolower('In progress'),
                 ],
                 'label' => 'Status',
                 'label_attr' => ['style' => 'width: 100px; display: inline-block; text-align: right; margin-right: 10px;'], 

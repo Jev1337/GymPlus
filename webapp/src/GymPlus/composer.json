@@ -16,6 +16,7 @@
         "doctrine/orm": "^2.17",
         "endroid/qr-code-bundle": "^5.0",
         "karser/karser-recaptcha3-bundle": "^0.1.26",
+        "mercuryseries/flashy-bundle": "^5.1",
         "sensio/framework-extra-bundle": "^6.2",
         "symfony/asset": "5.4.*",
         "symfony/console": "5.4.*",

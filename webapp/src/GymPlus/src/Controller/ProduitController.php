@@ -6,6 +6,7 @@ use App\Entity\Produit;
 use App\Form\ProduitType;
 use App\Repository\ProduitRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use MercurySeries\FlashyBundle\FlashyNotifier;
 use SebastianBergmann\Environment\Console;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -77,19 +78,42 @@ class ProduitController extends AbstractController
     }
 
     #[Route('/Admin', name: 'app_produit_indexAdmin', methods: ['GET'])]
-    public function indexAdmin(EntityManagerInterface $entityManager, ProduitRepository $productRepository): Response
+    public function indexAdmin(EntityManagerInterface $entityManager, ProduitRepository $productRepository , FlashyNotifier $flashy): Response
     {
-        // Récupérer les trois derniers produits ajoutés
-        $latestProducts = $productRepository->findLatestProducts();
-
-        // Récupérer tous les produits
         $produits = $entityManager->getRepository(Produit::class)->findAll();
+        
+        $stockInsuffisant = [];
+        
+        foreach ($produits as $produit) {
+            if ($produit->getSeuil() >= $produit->getStock()) {
+                // Stock insuffisant
+                $stockInsuffisant[$produit->getIdproduit()] = $produit->getName();
+            }
+        }
+    
+        $messageAvertissement = '';
+        foreach ($stockInsuffisant as $idProduit => $nomProduit) {
+            $messageAvertissement .= " ID: $idProduit Name: $nomProduit ";
+        }
+    
+        if (!empty($messageAvertissement)) {
+            $messageFinal = '';
+            if (!empty($messageAvertissement)) {
+                $messageFinal .= "Insufficient stock : $messageAvertissement";
+            }
+            $flashy->error($messageFinal);
 
+        } else {
+            $flashy->success("All products have sufficient stock.");
+        }
+    
         return $this->render('produit/indexAdmin.html.twig', [
-            'latestProducts' => $latestProducts,
             'produits' => $produits,
         ]);
     }
+    
+
+
 
     // #[Route('/sort-by-price-ajax', name: 'app_produit_sort_by_price_ajax', methods: ['GET'])]
     // public function sortByPriceAjax(EntityManagerInterface $entityManager, ProduitRepository $productRepository): Response

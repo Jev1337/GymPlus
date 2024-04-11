@@ -1,0 +1,137 @@
+{% extends "main/base.html.twig" %}
+
+{% block content %}
+
+    <div class="page-content bg-white">
+		
+            <!-- Banner  -->
+            <div class="dz-bnr-inr style-2" style="background-image: url('{{asset('main/images/banner/banner-2.png')}}')">
+                <div class="banner-gradient"></div>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <div class="dz-bnr-inr-entry">
+                                <h1>Wishlist</h1>
+                                <!-- Breadcrumb Row -->
+                                <nav aria-label="breadcrumb" class="breadcrumb-row">
+                                    <ul class="breadcrumb">
+                                        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                                        
+                                        <li class="breadcrumb-item active" aria-current="page">Wishlist</li>
+                                    </ul>
+                                </nav>
+                                <!-- Breadcrumb Row End -->
+                            </div>
+                        </div>
+                    </div>	
+                    <div class="banner-media">
+                        <img src="{{asset('main/images/banner/pic3.png')}}" alt="/">
+                    </div>
+                </div>	
+            </div>
+{# 
+    {% if items | length >0 %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Add Cart</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                    <tr>
+                        <td>                                                
+                            <img src="{{ asset('images/img_product/' ~ item.produit.Photo) }}" alt="" style="width: 150px;">
+                        </td>
+                        <td>{{item.produit.Name}}</td>
+                        <td>{{item.produit.Prix}}</td>
+                        <td>
+                            <a href="{{ path('wishList_remove', {'idproduit': item.produit.Idproduit}) }}">Delete</a>
+                            <a href="{{ path('panier_add', {'idproduit': item.produit.Idproduit}) }}">add cart</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+
+        </table>
+    {% else %}
+        <p> vide </p>
+    {% endif %} #}
+
+
+
+<div class="page-content bg-white">
+		
+		<!-- Our Shop Cart-->
+		<div class="content-inner">
+			<div class="container">
+				<div class="row justify-content-center">
+					<div class="col-lg-9">
+						<div class="table-responsive">
+                            {% if items | length >0 %}
+							<table class="table check-tbl wow fadeInUp" data-wow-delay="0.4s">
+								<thead>
+									<tr>
+										<th>Product</th>
+										<th>Name</th>
+										<th>Price</th>
+										<th>Add Cart</th>
+										<th>Delete</th>
+									</tr>
+								</thead>
+								<tbody>
+                                    {% for item in items %}
+									<tr>
+										<td class="product-item-img">
+                                            <img src="{{ asset('images/img_product/' ~ item.produit.Photo) }}" alt="" style="width: 150px;">
+                                        </td>
+										<td class="product-item-name"><a href="product-detail.html">{{item.produit.Name}}</a></td>
+										<td class="product-item-price">{{item.produit.Prix}} TND</td>
+										<td class="product-item-totle"><a href="{{ path('panier_add', {'idproduit': item.produit.Idproduit}) }}" class="btn btn-light text-nowrap">Add To Cart</a></td>
+										<td class="product-item-close"><a href="{{ path('wishList_remove', {'idproduit': item.produit.Idproduit}) }}"><i class="ti-close"></i></a></td>
+									</tr>
+                                    {% endfor %}
+								</tbody>
+							</table>
+                            {% else %}
+                                <h3 class="text-center" > vide </h3>
+                            {% endif %}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Our Shop Cart-->
+		
+	</div>
+	
+</div>
+    <!-- JAVASCRIPT FILES ========================================= -->
+    {# <script src="assets/js/jquery.min.js"></script><!-- JQUERY.MIN JS -->
+    <script src="assets/vendor/wow/wow.js"></script><!-- WOW.JS -->
+    <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script><!-- BOOTSTRAP MIN JS -->
+    <script src="assets/vendor/bootstrap-select/dist/js/bootstrap-select.min.js"></script><!-- BOOTSTRAP SELECT MIN JS -->
+    <script src="assets/vendor/bootstrap-touchspin/bootstrap-touchspin.js"></script><!-- BOOTSTRAP TOUCHSPIN JS -->
+    <script src="assets/vendor/wnumb/wNumb.js"></script><!-- wNumb JS-->
+    <script src="assets/vendor/nouislider/nouislider.min.js"></script><!-- NOUSLIDER MIN JS-->
+    <script src="assets/vendor/magnific-popup/magnific-popup.js"></script><!-- MAGNIFIC POPUP JS -->
+    <script src="assets/vendor/masonry/masonry-4.2.2.js"></script><!-- MASONRY -->
+    <script src="assets/vendor/masonry/isotope.pkgd.min.js"></script><!-- ISOTOPE -->
+    <script src="assets/vendor/imagesloaded/imagesloaded.js"></script><!-- IMAGESLOADED -->
+    <script src="assets/vendor/lightgallery/js/lightgallery.min.js"></script>
+    <script src="assets/vendor/lightgallery/dist/plugins/thumbnail/lg-thumbnail.min.js"></script>
+    <script src="assets/vendor/lightgallery/dist/plugins/zoom/lg-zoom.min.js"></script>
+    <script src="assets/vendor/swiper/swiper-bundle.min.js"></script><!-- SWIPER JS -->
+    <script src="assets/js/dz.carousel.js"></script><!-- OWL-CAROUSEL -->
+    <script src="assets/js/dz.ajax.js"></script><!-- AJAX -->
+    <script src="assets/js/custom.js"></script><!-- CUSTOM JS --> #}
+
+    
+
+{% endblock %}
+
+	
+	

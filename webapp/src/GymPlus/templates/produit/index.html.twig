@@ -52,7 +52,7 @@
                                                 <div class="shop-meta">
                                                     <ul>
                                                         <li><a href="{{ path('app_produit_show', {'idproduit': latestProduct.idproduit}) }}">Quick View</a></li>
-                                                        <li><a href="javascript:void(0)"><i class="yith-wcwl-icon fa fa-heart"></i>	</a></li>	
+                                                        <li><a href="{{ path('wishList_add', {'idproduit': latestProduct.idproduit}) }}"><i class="yith-wcwl-icon fa fa-heart"></i>	</a></li>	
                                                         <li><a href="{{ path('panier_add', {'idproduit': latestProduct.idproduit}) }}"><i class="fa-solid fa-cart-shopping"></i></a></li>
                                                     </ul>
                                                 </div> 
@@ -89,7 +89,7 @@
                                                     <div class="shop-meta">
                                                         <ul>
                                                             <li><a href="{{ path('app_produit_show', {'idproduit': produit.idproduit}) }}">Quick View</a></li>
-                                                            <li><a href="javascript:void(0)"><i class="yith-wcwl-icon fa fa-heart"></i>	</a></li>	
+                                                            <li><a href="{{ path('wishList_add', {'idproduit': produit.idproduit}) }}"><i class="yith-wcwl-icon fa fa-heart"></i></a></li>	
                                                             <li><a href="{{ path('panier_add', {'idproduit': produit.idproduit}) }}"><i class="fa-solid fa-cart-shopping"></i></a></li>
                                                         </ul>
                                                     </div> 

@@ -38,7 +38,7 @@
                                     <tr>
                                         <td> <strong class="text-black" style="font-weight: 600;"> {{ facture.idfacture }}</td>
                                         <td>{{ facture.datevente ? facture.datevente|date('Y-m-d') : '' }}</td>
-                                        <td>{{ facture.prixtatalpaye }} TND</td>
+                                        <td> $ {{ facture.prixtatalpaye }} </td>
                                         <td>{{ facture.methodedepaiement }}</td>
                                         <td>
                                             <a href="{{ path('app_factureDetail_show', {'idfacture': facture.idfacture}) }}" class="btn btn-primary" >show</a>

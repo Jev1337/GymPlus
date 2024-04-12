@@ -52,12 +52,15 @@
             }
             .custom-centered-table th,
             .custom-centered-table td {
-                border: 1px solid black; /* Bordure de 1px solide */
+                border: 0px solid black; 
                 padding: 8px; /* Espacement du contenu à l'intérieur des cellules */
+            }
+            .custom-btn-width {
+                width: 200px; /* Ou la largeur souhaitée en pixels, pour exemple */
             }
         </style>
 
-        <table class="custom-centered-table">
+        <table class="custom-centered-table" >
             <thead>               
                 <tr>
                     <th>Article Number</th>
@@ -81,9 +84,34 @@
         </table>
         
         <br>
-        <h4>Total Invoice Amount : {{ facture.prixtatalpaye }} TND</h4>
+        <h4>Total Invoice Amount : $ {{ facture.prixtatalpaye }} </h4>
         <h4>Payment Method : {{ facture.methodedepaiement }}</h4>
+        <br>
+        {% if facture.methodedepaiement == 'Card' %}
+             <form action="{{ path('checkout') }}" method="POST">
+                <button type="submit" class="btn btn-secondary custom-btn-width wow fadeInUp" data-wow-delay="0.9s" style="visibility: visible; animation-delay: 0.9s; animation-name: fadeInUp;">
+                    Pay with Stripe
+                </button>
+            </form>
+        {% endif %}
+        {# <form action="/checkout" method="POST">
+            <button type="submit">Checkout</button>
+        </form> #}
+        {# <form action="{{ path('checkout') }}" method="POST">
+                <button type="submit" class="btn btn-secondary custom-btn-width wow fadeInUp" data-wow-delay="0.9s" style="visibility: visible; animation-delay: 0.9s; animation-name: fadeInUp;">
+                    Pay with Stripe test
+                </button>
+        </form> #}
+
+        <br>
+        <br>
+
+
     </div>
 </div>
+
+
+
+
 {% endblock %}
 

@@ -60,7 +60,7 @@
                                             </div>
                                             <div class="dz-content">
                                                 <h4 class="title"><a href="product-detail.html">{{ latestProduct.name }}</a></h4>
-                                                <p><span class=" font-weight-600">{{ latestProduct.prix }} TND</span> </p>
+                                                <p><span class=" font-weight-600"> $ {{ latestProduct.prix }} </span> </p>
                                                 {# <p><span class=" font-weight-600">{{ latestProduct.idproduit }}</span> </p> #}
                                             </div>
                                         </div>
@@ -97,7 +97,7 @@
                                                 </div>
                                                 <div class="dz-content">
                                                     <h4 class="title"><a href="product-detail.html">{{ produit.name }}</a></h4>
-                                                    <p><span class=" font-weight-600">{{ produit.prix }} TND</span> </p>
+                                                    <p><span class=" font-weight-600"> $ {{ produit.prix }} </span> </p>
                                                     {# <p><span class=" font-weight-600">{{ latestProduct.idproduit }}</span> </p> #}
                                                 </div>
                                             </div>
@@ -182,7 +182,7 @@
                                                                 </td>
                                                                 <td> {{item.produit.Name}} 
                                                                 <br>
-                                                                {{item.produit.Prix}} TND</td>
+                                                                 $ {{item.produit.Prix}} </td>
                                                             </tr>
                                                         {% endfor %}
                                                     </tbody>  

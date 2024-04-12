@@ -89,7 +89,7 @@
                                             <img src="{{ asset('images/img_product/' ~ item.produit.Photo) }}" alt="" style="width: 150px;">
                                         </td>
 										<td class="product-item-name"><a href="product-detail.html">{{item.produit.Name}}</a></td>
-										<td class="product-item-price">{{item.produit.Prix}} TND</td>
+										<td class="product-item-price"> $ {{item.produit.Prix}}</td>
 										<td class="product-item-totle"><a href="{{ path('panier_add', {'idproduit': item.produit.Idproduit}) }}" class="btn btn-light text-nowrap">Add To Cart</a></td>
 										<td class="product-item-close"><a href="{{ path('wishList_remove', {'idproduit': item.produit.Idproduit}) }}"><i class="ti-close"></i></a></td>
 									</tr>

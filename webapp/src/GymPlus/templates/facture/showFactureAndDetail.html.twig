@@ -57,7 +57,7 @@
                                             <td>{{ detail.prixventeunitaire }}</td>
                                             <td>{{ detail.quantite }}</td>
                                             <td>{{ detail.tauxremise }}</td>
-                                            <td>{{ detail.prixtotalarticle}} TND</td>
+                                            <td> $ {{ detail.prixtotalarticle}}</td>
                                         </tr>
                                     {% endfor %}
                                 </tbody>
@@ -68,7 +68,7 @@
             </div>
         </div>
 
-        <h2>Total de la facture : {{ facture.prixtatalpaye }} TND</h2>
+        <h2>Total de la facture : $ {{ facture.prixtatalpaye }} </h2>
         <h2>Méthode de paiement : {{ facture.methodedepaiement }}</h2>
 
         {# <a href="{{ path('app_facture_edit', {'idfacture': facture.idfacture}) }}">edit</a> #}

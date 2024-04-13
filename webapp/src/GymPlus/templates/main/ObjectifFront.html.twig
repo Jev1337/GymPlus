@@ -1,4 +1,11 @@
 {% extends "main/base.html.twig" %}
+
+{% block css %}
+	<link href="{{asset('main/vendor/ScheduleBootsrap/bootstrap.min.css')}}" rel="stylesheet">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+	<link href="{{asset('main/vendor/ScheduleBootsrap/main.min.css')}}" rel="stylesheet">
+	{{ parent() }}
+{% endblock %}
 {% block content %}
 
 
@@ -226,7 +233,6 @@
 
 {% block js %}
     {{ parent() }}
-
     <script>
         function isNumeric(event) {
             const inputValue = event.key;
@@ -237,6 +243,9 @@
         $(document).ready(function() {
             $('form').on('submit', function(e) {
                 e.preventDefault();
+
+
+
 
                 $.ajax({
                     url: $(this).attr('action'),

@@ -1,0 +1,286 @@
+{% extends "main/base.html.twig" %}
+{% block content%}
+	<div class="page-content bg-white">
+		<!-- Banner  -->
+		<div class="dz-bnr-inr style-2" style="background-image: url('{{asset('main/images/banner/banner-2.png')}}')">
+			<div class="banner-gradient"></div>
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-8">
+						<div class="dz-bnr-inr-entry">
+							<h1>Sign Up</h1>
+							<!-- Breadcrumb Row -->
+							<nav aria-label="breadcrumb" class="breadcrumb-row">
+								<ul class="breadcrumb">
+									<li class="breadcrumb-item"><a href="index.html">Home</a></li>
+									<li class="breadcrumb-item active" aria-current="page">Sign Up</li>
+								</ul>
+							</nav>
+							<!-- Breadcrumb Row End -->
+						</div>
+					</div>
+				</div>	
+				<div class="banner-media">
+					<img src="{{asset('main/images/banner/pic1.png')}}" alt="/">
+				</div>
+			</div>	
+		</div>
+		<!-- Banner End -->
+		<!-- Have an account? Login-->
+		
+		<section class="appointment-page-1 content-inner-1">
+			<div class="container">
+				<a href="{{path('app_login')}}" class="btn btn-primary btn-lg btn-block">Have an account? Click here to Login</a>
+				<br>
+					<div class="alert alert-danger" style="display: none;" id="error">
+						<i class="fa-solid fa-exclamation-circle"></i> <span id="error-message">test</span>
+
+					</div>
+					{% for message in app.flashes('success') %}
+							<div class="alert alert-success">
+								<i class="fa-solid fa-check"></i>
+								{{ message }}
+							</div>
+						{% endfor %}
+						{% for message in app.flashes('error') %}
+							<div class="alert alert-danger">
+								<i class="fa-solid fa-times"></i>
+								{{ message }}
+							</div>
+					{% endfor %}
+				
+				<div id="smartwizard" class="wizard-form">
+					<ul class="nav">
+						
+						<li class="nav-item">
+						  <a class="nav-link" href="#wizardStep1">
+							<span class="num">
+								<strong>1</strong>
+								<i class="fa-solid fa-check"></i>
+							</span>
+							Account Information
+						  </a>
+						</li>
+						<li class="nav-item">
+						  <a class="nav-link" href="#wizardStep2">
+							<span class="num">
+								<strong>2</strong>
+								<i class="fa-solid fa-check"></i>
+							</span>
+							Verification
+						  </a>
+						</li>
+						<li class="nav-item">
+						  <a class="nav-link" href="#wizardStep3">
+							<span class="num">
+								<strong>3</strong>
+								<i class="fa-solid fa-check"></i>
+							</span>
+							Done
+						  </a>
+						</li>
+					</ul>
+
+					<div class="tab-content">
+	
+					
+						
+						<div id="wizardStep1" class="tab-pane" role="tabpanel" aria-labelledby="wizardStep1">
+							<h5 class="m-b5">Your New Account</h5>
+							<p class="m-b0">You are about to create a new account.</p>
+							<p class="m-b30">Please provide your details in the form below to proceed with your signup. You will confirm your phone number in the next step.</p>
+							
+							
+								{{ form_start(form, {'attr': { 'id': 'form-0', 'class' : 'row'}}) }}
+								<div class="col-md-2 col-lg-2 form-group">
+									{{ form_label(form.id, 'CIN', {'label_attr': {'class': 'form-label'}}) }}
+									<div class="input-group input-line">
+										{{ form_widget(form.id, {'attr': {'class': 'form-control', 'placeholder': 'CIN'}}) }}
+									</div>
+									<div class="invalid-feedback">
+										Please choose a correct CIN.
+									</div>
+								</div>
+								<div class="col-md-2 col-lg-2 form-group">
+									{{ form_label(form.username, 'Username', {'label_attr': {'class': 'form-label'}}) }}
+									<div class="input-group input-line">
+										{{ form_widget(form.username, {'attr': {'class': 'form-control', 'placeholder': 'Username'}}) }}
+									</div>
+									<div class="invalid-feedback">
+										Please choose a correct username.
+									</div>
+								</div>
+
+								<div class="col-md-2 col-lg-2 form-group">
+									{{ form_label(form.firstname, 'First Name', {'label_attr': {'class': 'form-label'}}) }}
+									<div class="input-group input-line">
+										{{ form_widget(form.firstname, {'attr': {'class': 'form-control', 'placeholder': 'First Name'}}) }}
+									</div>
+									<div class="invalid-feedback">
+										Please choose a correct first name.
+									</div>
+								</div>
+
+								<div class="col-md-2 col-lg-2 form-group">
+									{{ form_label(form.lastname, 'Last Name', {'label_attr': {'class': 'form-label'}}) }}
+									<div class="input-group input-line">
+										{{ form_widget(form.lastname, {'attr': {'class': 'form-control', 'placeholder': 'Last Name'}}) }}
+									</div>
+									<div class="invalid-feedback">
+										Please choose a correct last name.
+									</div>
+								</div>
+
+								<div class="col-md-4 col-lg-4 form-group">
+									{{ form_label(form.dateNaiss, 'Date of Birth', {'label_attr': {'class': 'form-label'}}) }}
+									<div class="input-group input-line">
+										{{ form_widget(form.dateNaiss, {'attr': {'class': 'form-control', 'placeholder': 'Date of Birth'}}) }}
+									</div>
+									<div class="invalid-feedback">
+										Please choose a correct date of birth.
+									</div>
+								</div>
+
+								<div class="col-md-4 col-lg-4 form-group">
+									{{ form_label(form.email, 'Email', {'label_attr': {'class': 'form-label'}}) }}
+									<div class="input-group input-line">
+										{{ form_widget(form.email, {'attr': {'class': 'form-control', 'placeholder': 'Email'}}) }}
+									</div>
+									<div class="invalid-feedback">
+										Please choose a correct email.
+									</div>
+								</div>
+
+								<div class="col-md-4 col-lg-4 form-group">
+									{{ form_label(form.password, 'Password', {'label_attr': {'class': 'form-label'}}) }}
+									<div class="input-group input-line">
+										{{ form_widget(form.password, {'attr': {'class': 'form-control', 'placeholder': 'Password'}}) }}
+									</div>
+									<div class="invalid-feedback">
+										Please choose a correct password.
+									</div>
+								</div>
+
+								<div class="col-md-4 col-lg-4 form-group">
+									<label for="confirm_password" class="form-label">Confirm Password</label>
+									<div class="input-group input-line">
+										<input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="Confirm Password" required>
+									</div>
+									<div class="invalid-feedback">
+										Please choose a correct password.
+									</div>
+									<script>
+										var password = document.getElementById("user_password")
+										, confirm_password = document.getElementById("confirm_password");
+
+										function validatePassword(){
+											if(password.value != confirm_password.value) {
+												confirm_password.setCustomValidity("Passwords Don't Match");
+											} else {
+												confirm_password.setCustomValidity('');
+											}
+										}
+
+										password.onchange = validatePassword;
+										confirm_password.onkeyup = validatePassword;
+									</script>
+								</div>
+								
+								<div class="col-md-4 col-lg-4 form-group">
+									{{ form_label(form.numTel, 'Phone Number', {'label_attr': {'class': 'form-label'}}) }}
+									<div class="input-group input-line">
+										{{ form_widget(form.numTel, {'attr': {'class': 'form-control', 'placeholder': 'Phone Number'}}) }}
+									</div>
+									<div class="invalid-feedback">
+										Please choose a correct phone number.
+									</div>
+								</div>
+								<div class="col-md-4 col-lg-4 form-group">
+									{{ form_label(form.photo, 'Upload Photo', {'label_attr': {'class': 'form-label'}}) }}
+									<div class="input-group input-line">
+										{{ form_widget(form.photo, {'attr': {'class': 'form-control', 'placeholder': 'Upload Photo'}}) }}
+									</div>
+									<div class="invalid-feedback">
+										Please choose a correct photo.
+									</div>
+								</div>
+								<div class="col-md-4 col-lg-4 form-check form-switch mt-4">
+									<label for="faceid" class="form-label mt-2">&nbsp;&nbsp;Face ID</label>
+									<input class="form-check-input" type="checkbox" role="switch" id="faceid" name="faceid" style="height: 30px; width: 60px;">
+								</div>
+								<video id="video" width="1280" height="720" autoplay style="display: none;"></video>
+								<canvas id="canvas" style="display: none;" width="1280" height="720"></canvas>
+						{{ form_end(form) }}
+
+
+						</div>
+						
+						<div id="wizardStep3" class="tab-pane" role="tabpanel" aria-labelledby="wizardStep3">
+							<h5>Verification Code</h5>
+							<p class="m-b0">You will receive a verification code on your phone number. Please input the code below to verify your account.</p>
+							<form class="row" id="form-1">
+								<div class="col-md-12 form-group">
+									<div class="input-group input-line">
+										<input type="text" class="form-control" placeholder="Verification Code" id="code" required>
+									</div>
+								</div>
+							</form>
+						</div>
+
+						<div id="wizardStep3" class="tab-pane" role="tabpanel" aria-labelledby="wizardStep3">
+							<div class="successful-box text-center">
+								<div class="successful-check"><i class="fa-solid fa-check"></i></div>
+								<h2>Your Account Has Been Created Successfully!</h2>
+								<a href="{{path('app_home')}}">Not Redirected? Click Here</a>					
+							</div>
+						</div>
+					</div>
+				</div>  
+				
+			</div>
+		</section>
+		
+		
+		<!-- Call To Action -->
+		<section class="call-action style-2 bg-img-fix bg-primary">
+			<div class="container">
+				<div class="inner-content">
+					<div class="row justify-content-between align-items-center">
+						<div class="text-center text-lg-start col-xl-6 m-lg-b20 wow fadeInUp" data-wow-delay="0.2s" style="visibility: visible; animation-delay: 0.2s; animation-name: fadeInUp;">
+							<h2 class="title m-0"><span class="font-weight-400">Subscribe To Our </span>Newsletter</h2>
+						</div>
+						<div class="text-center text-lg-end col-xl-6 wow fadeInUp" data-wow-delay="0.4s" style="visibility: visible; animation-delay: 0.4s; animation-name: fadeInUp;">
+							<form class="dzSubscribe" action="{{asset('script/mailchamp.php')}}" method="post">
+								<div class="dzSubscribeMsg"></div>
+								<div class="form-group">
+									<div class="input-group mb-0"> 
+										<div class="input-skew">
+											<input name="dzEmail" required="required" type="email" class="form-control" placeholder="Your Email Address">
+										</div>
+										<div class="input-group-addon">
+											<button name="submit" value="Submit" type="submit" class="btn btn-secondary btn-lg btn-skew h-100"><span class="skew-inner"><span class="text">Subscribe Now</span></span></button>
+										</div>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		<!-- Call To Action -->
+		</div>
+{% endblock %}
+
+{% block js %}
+	<script src="{{ asset('main/js/face-api.min.js') }}"></script>
+	{{ parent() }}
+	<script>
+		{% if app.user %}
+			window.location.href = "{{path('app_home')}}";
+		{% endif %}
+		
+	</script>
+	
+		
+{% endblock %}

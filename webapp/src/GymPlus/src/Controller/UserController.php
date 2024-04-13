@@ -22,6 +22,9 @@ use App\Annotation\ProtectedRoute;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use App\Form\AdminUserType;
 use Karser\Recaptcha3Bundle\Validator\Constraints\Recaptcha3Validator;
+use Symfony\Component\Mime\Part\DataPart;
+use Symfony\Component\Mime\Part\Multipart\FormDataPart;
+use GuzzleHttp\Client as GuzzleClient;
 
 
 class UserController extends AbstractController
@@ -53,23 +56,6 @@ class UserController extends AbstractController
         $form = $this->createForm(LoginType::class, $userlog);
         $form->handleRequest($request);
         if($form->isSubmitted()){
-            /*
-            $client = HttpClient::create();
-            $response = $client->request('POST', 'https://www.google.com/recaptcha/api/siteverify', [
-                'body' => [
-                    'secret' => '6LdlPKkpAAAAAJt_IYp6Nk2pIimy6h4UEJTyk9tQ',
-                    'response' => $form['captcha']->getData(),
-                ]]);
-            $data = $response->toArray();
-            if (!$data['success']) {
-                $this->addFlash('error', 'Recaptcha validation failed, please try again!');
-                return $this->redirectToRoute('app_login');
-            }else{
-                if ($data['score'] < 0.5) {
-                    $this->addFlash('error', 'Recaptcha validation failed, please try again!');
-                    return $this->redirectToRoute('app_login');
-                }
-            }*/
             if (!$form->isValid()) {
                $this->addFlash('error', 'There was an error with the form, please check the fields and try again!');
             }else{
@@ -92,7 +78,7 @@ class UserController extends AbstractController
                 }
             }
         }
-        return $this->render('main/login.html.twig', [
+        return $this->render('main/user/login.html.twig', [
             'controller_name' => 'UserController',
             'form' => $form->createView()
         ]);
@@ -135,14 +121,53 @@ class UserController extends AbstractController
     }
 
     
+    #[Route('/api/auth/verify', name: 'api_verify')]
+    public function verify(Request $request, UserRepository $repo): Response
+    {
+        $form = $this->createForm(UserType::class);
+        $form->handleRequest($request);
+        
+        if($form->isSubmitted() ){
+            if(!$form->isValid()){
+                $errorArray = [];
+                foreach ($form->getErrors(true) as $error) {
+                    $errorArray[] = $error->getMessage();
+                }
+                return new JsonResponse(['status' => 'error', 'errors' => $errorArray], 200);
+            }else{
+                $usersig = $form->getData();
+                $errorArray = [];
+                if ($repo->findUserByEmail($usersig->getEmail())) {
+                    //append error to array
+                    array_push($errorArray, 'Email already exists');
+                }
+                if ($repo->findUserByUsername($usersig->getUsername())) {
+                    //append error to array
+                    array_push($errorArray, 'Username already exists');
+                }
+                if ($repo->findUserByPhone($usersig->getNumTel())) {
+                    //append error to array
+                    array_push($errorArray, 'Phone number already exists');
+                }
+                if ($repo->findUserById($usersig->getId())) {
+                    //append error to array
+                    array_push($errorArray, 'CIN already exists');
+                }
+                if (count($errorArray) > 0) {
+                    return new JsonResponse(['status' => 'error', 'errors' => $errorArray], 200);
+                }
+                return new JsonResponse(['status' => 'success'], 200);
+            }
+        }
+    }
+
     #[Route('/auth/signup', name: 'app_signup')]
     public function signup(Request $request, ManagerRegistry $reg, UserRepository $repo): Response
     {
         if ($this->getUser()) {
             return $this->redirectToRoute('app_home');
         }
-        $usersig = new User();
-        $form = $this->createForm(UserType::class, $usersig);
+        $form = $this->createForm(UserType::class);
         $form->handleRequest($request);
         
         if($form->isSubmitted() ){
@@ -150,24 +175,16 @@ class UserController extends AbstractController
                 $this->addFlash('error', 'There was an error with the form, please check the fields and try again!');
             }else{
                 
-                if ($repo->findUserByEmail($usersig->getEmail())) {
-                    $this->addFlash('error', 'Email already exists');
-                    return $this->redirectToRoute('app_signup');
-                }
-                if ($repo->findUserByUsername($usersig->getUsername())) {
-                    $this->addFlash('error', 'Username already exists');
-                    return $this->redirectToRoute('app_signup');
-                }
-                if ($repo->findUserByPhone($usersig->getNumTel())) {
-                    $this->addFlash('error', 'Phone number already exists');
-                    return $this->redirectToRoute('app_signup');
-                }
-                if ($repo->findUserById($usersig->getId())) {
-                    $this->addFlash('error', 'CIN already exists');
-                    return $this->redirectToRoute('app_signup');
-                }
+                    
+                $usersig = $form->getData();
                 $usersig->setPassword(password_hash($usersig->getPassword(), PASSWORD_BCRYPT));
                 $usersig->setRole('client');
+
+                
+                if ($request->get('faceid') != null && $request->get('faceid') != '' && $request->get('faceid') != 'undefined'){
+                    $usersig->setFaceid($request->get('faceid'));
+                    $usersig->setFaceidTs(new \DateTime());
+                }
                 $photo = $form['photo']->getData();
                 $filename = 'USERIMG' . $usersig->getId() . '.' . $photo->guessExtension();
                 $targetdir = $this->getParameter('kernel.project_dir') . '/public/profileuploads/';
@@ -182,7 +199,7 @@ class UserController extends AbstractController
         }
         
 
-        return $this->render('main/signup.html.twig', [
+        return $this->render('main/user/signup.html.twig', [
             'controller_name' => 'UserController',
             'form' => $form->createView()
         ]);
@@ -221,7 +238,7 @@ class UserController extends AbstractController
                 return $this->redirectToRoute('app_profile');
             }
         }
-        return $this->render('main/profile.html.twig', [
+        return $this->render('main/user/profile.html.twig', [
             'controller_name' => 'UserController',
             'form' => $form->createView()
         ]);
@@ -268,7 +285,7 @@ class UserController extends AbstractController
     {
 
         if ($repo->isUserSubscribed($this->getUser()->getId())) {
-            return $this->render('main/mysubscriptions.html.twig', [
+            return $this->render('main/user/mysubscriptions.html.twig', [
                 'controller_name' => 'UserController',
                 'subs' => $repo->getOldSubscriptionsByUserId($this->getUser()->getId()),
                 'subnow' => $repo->getCurrentSubByUserId($this->getUser()->getId()),
@@ -276,7 +293,7 @@ class UserController extends AbstractController
             ]);
         }
         
-        return $this->render('main/subscriptions.html.twig', [
+        return $this->render('main/user/subscriptions.html.twig', [
             'controller_name' => 'UserController',
 
         ]);
@@ -295,7 +312,7 @@ class UserController extends AbstractController
             return $this->redirectToRoute('app_home');
         }
         $price = $repo0->getAbonnementPriceByName('GP ' . $id);
-        return $this->render('main/buy.html.twig', [
+        return $this->render('main/user/buy.html.twig', [
             'controller_name' => 'UserController',
             'id' => $id,
             'price' => $price
@@ -388,7 +405,7 @@ class UserController extends AbstractController
         }
 
 
-        return $this->render('dashboard/userlist.html.twig', [
+        return $this->render('dashboard/user/userlist.html.twig', [
             'controller_name' => 'UserController',
             'users' => $repo->findAll(),
             'form' => $form->createView()
@@ -421,7 +438,7 @@ class UserController extends AbstractController
                 return $this->redirectToRoute('app_user_edit', ['id' => $id]);
             }
         }
-        return $this->render('dashboard/profile.html.twig', [
+        return $this->render('dashboard/user/profile.html.twig', [
             'controller_name' => 'UserController',
             'useredit' => $useredit,
             'form' => $form->createView()
@@ -454,7 +471,7 @@ class UserController extends AbstractController
             }
         }
         
-        return $this->render('dashboard/profile.html.twig', [
+        return $this->render('dashboard/user/profile.html.twig', [
             'controller_name' => 'UserController',
             'useredit' => $user,
             'form' => $form->createView()
@@ -477,4 +494,254 @@ class UserController extends AbstractController
         }
         return $this->redirectToRoute('app_usermgmt');
     }
+
+    #[Route('/dashboard/subscriptions', name: 'app_submgmt')]
+    public function subscriptionManagement(AbonnementRepository $repo0, UserRepository $repo1): Response
+    {
+        $subs = $repo0->findAll();
+        $users = $repo1->getClientList();
+
+        $nonsubbedusers = [];
+        foreach ($users as $user) {
+            if (!$repo0->isUserSubscribed($user->getId())) {
+                array_push($nonsubbedusers, $user);
+            }
+        }
+
+        $subbedusers = array_map(function($user) use ($repo0) {
+            return [
+                'user' => $user,
+                'sub' => $repo0->getCurrentSubByUserId($user->getId())
+            ];
+        }, array_filter($users, function($user) use ($repo0) {
+            return $repo0->isUserSubscribed($user->getId());
+        }));
+        
+
+        return $this->render('dashboard/user/subscriptions.html.twig', [
+            'controller_name' => 'UserController',
+            'subs' => $subs,
+            'nusers' => $nonsubbedusers,
+            'susers' => $subbedusers
+            
+        ]);
+    }
+
+    #[Route('/dashboard/subscribe/{id}/{sub}', name: 'app_subuser')]
+    public function subscribeUser(UserRepository $repo, AbonnementRepository $repo1, AbonnementDetailsRepository $repo0, $id,$sub, ManagerRegistry $reg): Response
+    {
+        $user = $repo->findUserById($id);
+        $abonnement = null;
+        if ($repo1->isUserSubscribed($user->getId())) {
+            $abonnement = $repo1->getCurrentSubByUserId($user->getId());
+        }else{
+            $abonnement = new Abonnement();
+            $abonnement->setUser($user);
+        }
+        if ($sub == 1)
+            $abonnement->setDatefinab((new \DateTime('+3 month')));
+        else if($sub == 2)
+            $abonnement->setDatefinab((new \DateTime('+6 month')));
+        else
+            $abonnement->setDatefinab((new \DateTime('+12 month')));
+        $type = $repo0->getAbonnementDetailsByName('GP ' . $sub);
+        $abonnement->setType($type);
+        $reg->getManager()->persist($abonnement);
+        $reg->getManager()->flush();
+        return $this->redirectToRoute('app_submgmt');
+    }
+
+    #[Route('/dashboard/unsubscribe/{id}', name: 'app_removesub')]
+    public function unsubscribeUser(AbonnementRepository $repo, $id, ManagerRegistry $reg): Response
+    {
+        $sub = $repo->getCurrentSubByUserId($id);
+        $reg->getManager()->remove($sub);
+        $reg->getManager()->flush();
+        return $this->redirectToRoute('app_submgmt');
+    }
+
+    #[Route('/api/getUserSubDetails/{id}', name: 'app_getsubdetails')]
+    public function getUserSubDetails(UserRepository $repo0, AbonnementRepository $repo, $id): Response
+    {
+        $sub = $repo->getCurrentSubByUserId($id);
+        $user = $repo0->findUserById($id);
+        $status = $repo->isUserSubscribed($id);
+        if ($status) {
+            return new JsonResponse(['status' => $status, 'userphoto'=> $user->getPhoto(), 'subtype'=> $sub->getType()->getName(), 'expdate' => $sub->getDatefinab(), 'userid' => $user->getId(), 'userfn' => $user->getFirstname(), 'userln' => $user->getLastname(), 'userdob' => $user->getDateNaiss()], 200);
+        }
+        return new JsonResponse(['status' => $status, 'userphoto'=> $user->getPhoto(), 'userid' => $user->getId(), 'userfn' => $user->getFirstname(), 'userln' => $user->getLastname(), 'userdob' => $user->getDateNaiss()], 200);
+        
+    }
+
+    #[Route('/api/checkface', name: 'app_faceidcheck')]
+    public function checkFace(Request $request, UserRepository $user, ManagerRegistry $reg): Response
+    {
+        $image = $request->get('image');
+        $user = $user->findUserByEmail($request->get('email'));
+        if (!$user) {
+            return new JsonResponse(['status' => 'error', 'details' => 'User does not exist!'], 400);
+        }
+        $faceid = $user->getFaceid();
+        if (!$faceid) {
+            return new JsonResponse(['status' => 'error', 'details' => 'User does not have a faceid!'], 400);
+        }
+        $fidts = $user->getFaceidTs();
+        if ($fidts->diff(new \DateTime())->format('%a') >= 30) {
+            $user->setFaceid(null);
+            $user->setFaceidTs(null);
+            $reg->getManager()->persist($user);
+            $reg->getManager()->flush();
+            return new JsonResponse(['status' => 'error', 'details' => 'Faceid expired!'], 400);
+        }
+        try{
+            $guzzle = new GuzzleClient();
+            $resp = $guzzle->request('POST', 'https://api-us.faceplusplus.com/facepp/v3/detect', [
+                'multipart' => [
+                    [
+                        'name' => 'api_key',
+                        'contents' => 'oVAqEDbCYmaILayXJdKAsuYbFcJ0LBP6'
+                    ],
+                    [
+                        'name' => 'api_secret',
+                        'contents' => 'e76obC1xsr-zSMynWZoQCt62vWDgtZ6O'
+                    ],
+                    [
+                        'name' => 'image_base64',
+                        'contents' => $image,
+                    ],
+                    [
+                        'name' => 'return_attributes',
+                        'contents' => 'emotion'
+                    ]
+                ]
+            ]);
+            $faceidcmp = json_decode((string) $resp->getBody(), true)['faces'][0]['face_token'];
+            dump("Request 1 Sent...");
+            $resp = $guzzle->request('POST', 'https://api-us.faceplusplus.com/facepp/v3/compare', [
+                'multipart' => [
+                    [
+                        'name' => 'api_key',
+                        'contents' => 'oVAqEDbCYmaILayXJdKAsuYbFcJ0LBP6'
+                    ],
+                    [
+                        'name' => 'api_secret',
+                        'contents' => 'e76obC1xsr-zSMynWZoQCt62vWDgtZ6O'
+                    ],
+                    [
+                        'name' => 'face_token1',
+                        'contents' => $faceidcmp
+                    ],
+                    [
+                        'name' => 'face_token2',
+                        'contents' => $faceid
+                    ]
+                ]
+            ]);
+            dump("Request 2 Sent...");
+            $confidence = json_decode((string) $resp->getBody(),true)['confidence'];
+            if ($confidence > 80) {
+                $user->setFaceid($faceidcmp);
+                $user->setFaceidTs(new \DateTime());
+                $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
+                $this->get('security.token_storage')->setToken($token);
+                $this->get('session')->set('_security_main', serialize($token));
+                $reg->getManager()->persist($user);
+                $reg->getManager()->flush();
+                return new JsonResponse(['status' => 'success', 'details'=> 'Match!'], 200);
+            }else{
+                return new JsonResponse(['status' => 'error', 'details'=> 'No match!'], 400);
+            }
+        } catch (\GuzzleHttp\Exception\RequestException $e) {
+            $content = json_decode($e->getResponse()->getBody()->getContents(), true);
+            return new JsonResponse(['status' => 'error', 'details'=> $content], 400);
+        }
+        return new JsonResponse(['status' => 'error', 'details'=> 'Error in network!'], 400);
+    }
+
+    #[Route('/api/verifylogin', name: 'app_verifylogin')]
+    public function verifyLogin(Request $request, UserRepository $repo): Response
+    {
+        $form = $this->createForm(LoginType::class);
+        $form->handleRequest($request);
+        if ($form->isSubmitted()) {
+            if (!$form->isValid()) {
+                $errorArray = [];
+                foreach ($form->getErrors(true) as $error) {
+                    $errorArray[] = $error->getMessage();
+                }
+                return new JsonResponse(['status' => 'error', 'errors' => $errorArray], 200);
+            }else{
+                $userlog = $form->getData();
+                $user = $repo->findUserByEmail($userlog->getEmail());
+                if($user){
+                    if(password_verify($userlog->getPassword(), $user->getPassword())){
+                        $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
+                        $this->get('security.token_storage')->setToken($token);
+                        $this->get('session')->set('_security_main', serialize($token));
+                        return new JsonResponse(['status' => 'success'], 200);
+                    }else{
+                        return new JsonResponse(['status' => 'error', 'errors' => ['Invalid Email or Password']], 200);
+                    }
+                }else{
+                    return new JsonResponse(['status' => 'error', 'errors' => ['Invalid Email or Password']], 200);
+                }
+            }
+        }
+    }
+
+    //checks if email exists
+    #[Route('/api/verifyface', name: 'app_verifyface')]
+    public function verifyEmail(Request $request, UserRepository $repo): Response
+    {
+        $email = $request->get('email');
+        $user = $repo->findUserByEmail($email);
+        if ($user && $user->getFaceid() != null) {
+            if ($user->getFaceidTs()->diff(new \DateTime())->format('%a') < 30) {
+                return new JsonResponse(['exists' => true], 200);
+            }else{
+                $user->setFaceid(null);
+                $user->setFaceidTs(null);
+                $repo->getManager()->persist($user);
+                $repo->getManager()->flush();
+            }
+        }
+        return new JsonResponse(['exists' => false], 200);
+    }
+
+    #[Route('/api/getfacetoken', name: 'app_getfacetoken')]
+    public function getFaceToken(Request $request, UserRepository $repo): Response
+    {
+        $image = $request->get('image');
+        try{
+            $guzzle = new GuzzleClient();
+            $resp = $guzzle->request('POST', 'https://api-us.faceplusplus.com/facepp/v3/detect', [
+                'multipart' => [
+                    [
+                        'name' => 'api_key',
+                        'contents' => 'oVAqEDbCYmaILayXJdKAsuYbFcJ0LBP6'
+                    ],
+                    [
+                        'name' => 'api_secret',
+                        'contents' => 'e76obC1xsr-zSMynWZoQCt62vWDgtZ6O'
+                    ],
+                    [
+                        'name' => 'image_base64',
+                        'contents' => $image,
+                    ],
+                    [
+                        'name' => 'return_attributes',
+                        'contents' => 'emotion'
+                    ]
+                ]
+            ]);
+            $faceidcmp = json_decode((string) $resp->getBody(), true)['faces'][0]['face_token'];
+            dump("Request 1 Sent...");
+            return new JsonResponse(['status' => 'success', 'facetoken' => $faceidcmp], 200);
+        } catch (\GuzzleHttp\Exception\RequestException $e) {
+            $content = json_decode($e->getResponse()->getBody()->getContents(), true);
+            return new JsonResponse(['status' => 'error', 'details'=> $content], 400);
+        }
+    }
+   
+
 }

@@ -29,18 +29,27 @@
         <section class="content-inner">
             <div class="container">
                 <div class="row justify-content-center gap-5">
-                <div class="container d-grid shadow p-3 m-5 rounded align-items-center" style="width: 60rem; height: 12rem; ">
+                <div class="container d-grid shadow p-3 m-5 rounded align-items-center" style="width: 60rem; height: 14rem; ">
                 {{ form_start(form) }}
-                    {{ form_widget(form.content, {'attr': {'class': 'form-control rounded', 'placeholder': 'Express your thoughts' }}
-                    ) }}
+                    <div class="d-flex flex-column gap-3">
+                        <div class="d-flex gap-3 align-items-center">
+                            <img style="width:3rem; height:3rem; border-radius:50%" src="{{asset('profileuploads/' ~ app.user.photo)}}" alt="image" />
+                            <div>
+                                <h5 class="card-title">
+                                    {{ app.user.username }}
+                                </h5>
+                            </div>
+                        </div>
+                        {{ form_widget(form.content, {'attr': {'class': 'form-control rounded', 'placeholder': 'Express your thoughts' }}) }}
 
-                    <div class="d-grid gap-2 mt-3 d-md-flex justify-content-md-start" style="height: 2.5rem;">
-                        {{ form_widget(form.imageFile) }}
-                        {{ form_widget(form.post, {'attr': {'class': 'btn h-3 btn-outline-primary rounded'}}
-                        ) }}
-
+                        <div class="d-grid gap-3 d-md-flex justify-content-md-start" style="height: 2.5rem;">
+                            {{ form_widget(form.imageFile) }}
+                            {{ form_widget(form.post, {'attr': {'class': 'btn h-3 btn-outline-primary rounded'}}
+                            ) }}
+                        </div>
+                        
                     </div>
-                    {{ form_end(form) }}
+                {{ form_end(form) }}
                 </div>
 
                     <div class="d-flex flex-column align-items-center">
@@ -49,14 +58,15 @@
                                 <div class="card-body">
                                     <div class="d-flex justify-content-between">
                                         <div class="d-flex gap-3">
-                                            <img style="width:3rem; height:3rem; border-radius:50%" src="{{asset('profileuploads/' ~ app.user.photo)}}" alt="image" />
+                                            <img style="width:3rem; height:3rem; border-radius:50%" src="{{asset('profileuploads/' ~ post.user.photo)}}" alt="image" />
                                             <div>
                                                 <h5 class="card-title">
-                                                    {{ app.user.username }}
+                                                    {{ post.user.username }}
                                                 </h5>
                                                 <div class="">
                                                     {{ post.date ? post.date|date('Y-m-d') : '' }}
                                                 </div>
+                                                
                                             </div>
                                         </div>
                                         {% if post.idUser == app.user.id %}

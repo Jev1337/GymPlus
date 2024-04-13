@@ -1,0 +1,161 @@
+{% extends 'main/base.html.twig' %}
+	
+{% block content %}
+	<div class="page-content bg-white">
+
+		<!-- Banner  -->
+		<div class="dz-bnr-inr style-2" style="background-image: url('assets/images/banner/banner-2.png')">
+			<div class="banner-gradient"></div>
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-8">
+						<div class="dz-bnr-inr-entry">
+							<h1>Our Pricing</h1>
+							<!-- Breadcrumb Row -->
+							<nav aria-label="breadcrumb" class="breadcrumb-row">
+								<ul class="breadcrumb">
+									<li class="breadcrumb-item"><a href="index.html">Home</a></li>
+									<li class="breadcrumb-item active" aria-current="page">Our Pricing</li>
+								</ul>
+							</nav>
+							<!-- Breadcrumb Row End -->
+						</div>
+					</div>
+				</div>	
+				<div class="banner-media">
+					<img src="assets/images/banner/pic1.png" alt="/">
+				</div>
+			</div>	
+		</div>
+		<!-- Banner End -->
+		
+		<!-- Our Team -->
+		<section class="content-inner">
+			<div class="container">
+				<div class="section-head style-2 text-center wow fadeInUp" data-wow-delay="0.4s" >
+					<h2 class="title">Choose Your Perfect Plan</h2>
+				</div>
+				<div class="row justify-content-center">
+					<div class="col-lg-4 col-md-6 m-b30">
+						<div class="pricingtable-wrapper style-3 wow fadeInUp" data-wow-delay="0.4s">
+							<div class="pricingtable-inner">
+								<div class="pricingtable-price">
+									<div class="pricingtable-title">GP One</div>
+									<h2 class="pricingtable-bx">$20<small>/ Per User Per Month</small></h2>
+									<p class="m-b20">Basic Plan.</p>
+									<div class="pricingtable-button">
+										{% if app.user %}
+											<a href="{{path('app_buy', {'id': 1})}}" class="btn btn-dark rounded-0 d-block m-b10"><span>Buy Now</span></a>
+										{% else %}
+											<a href="{{path('app_login')}}" class="btn btn-dark rounded-0 d-block m-b10"><span>Buy Now</span></a>
+										{% endif %}
+										<a href="#" class="btn btn-outline-dark rounded-0 d-block"><span>Chat To Sales</span></a>
+									</div>
+								</div>
+								<div class="pricingtable-features">
+									<h6 class="pricingtable-sub-title">Features</h6>
+									<p class="text">Everything in Our Free Plan Plus...</p>
+									<ul>
+										<li>Review Your Question</li>
+										<li>Work with Resources </li>
+										<li>Analysis of Your "I Have"</li>
+										<li>Pool Access</li>
+										<li>Support & Mentoring</li>
+									</ul>
+								</div>
+							</div>
+							<div class="effect"></div>
+						</div>
+					</div>
+					<div class="col-lg-4 col-md-6 m-b30">
+						<div class="pricingtable-wrapper style-3 box-hover wow fadeInUp" data-wow-delay="0.6s">
+							<div class="pricingtable-inner">
+								<div class="pricingtable-price">
+									<div class="pricingtable-title">GP Two</div>
+									<div class="pricingtable-title premium">Popular Plan</div>
+									<h2 class="pricingtable-bx">$30<small>/ Per User Per Month</small></h2>
+									<p class="m-b20">More Time More Gain!</p>
+									<div class="pricingtable-button">
+										{% if app.user %}
+											<a href="{{path('app_buy', {'id': 2})}}" class="btn btn-dark rounded-0 d-block m-b10"><span>Buy Now</span></a>
+										{% else %}
+											<a href="{{path('app_login')}}" class="btn btn-dark rounded-0 d-block m-b10"><span>Buy Now</span></a>
+										{% endif %}
+										<a href="#" class="btn btn-outline-dark rounded-0 d-block"><span>Chat To Sales</span></a>
+									</div>
+								</div>
+								<div class="pricingtable-features">
+									<h6 class="pricingtable-sub-title">Features</h6>
+									<p class="text">Everything in Our GP One Plan Plus...</p>
+									<ul>
+										<li>Sona Access</li>
+									</ul>
+								</div>
+							</div>
+							<div class="effect"></div>
+						</div>
+					</div>
+					<div class="col-lg-4 col-md-6 m-b30">
+						<div class="pricingtable-wrapper style-3 wow fadeInUp" data-wow-delay="0.8s">
+							<div class="pricingtable-inner">
+								<div class="pricingtable-price">
+									<div class="pricingtable-title">GP Three</div>
+									<h2 class="pricingtable-bx">$50<small>/ Per User Per Month</small></h2>
+									<p class="m-b20">Everything you need</p>
+									<div class="pricingtable-button">
+										{% if app.user %}
+											<a href="{{path('app_buy', {'id': 3})}}" class="btn btn-dark rounded-0 d-block m-b10"><span>Buy Now</span></a>
+										{% else %}
+											<a href="{{path('app_login')}}" class="btn btn-dark rounded-0 d-block m-b10"><span>Buy Now</span></a>
+										{% endif %}
+										<a href="#" class="btn btn-outline-dark rounded-0 d-block"><span>Chat To Sales</span></a>
+									</div>
+								</div>
+								<div class="pricingtable-features">
+									<h6 class="pricingtable-sub-title">Features</h6>
+									<p class="text">Everything in Our GP Two Plan Plus...</p>
+									<ul>
+										<li>SPA Access</li>
+									</ul>
+								</div>
+							</div>
+							<div class="effect"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		<!-- Our Team -->
+		
+		<!-- Call To Action -->
+		<section class="call-action style-2 bg-img-fix bg-primary">
+			<div class="container">
+				<div class="inner-content">
+					<div class="row justify-content-between align-items-center">
+						<div class="text-center text-lg-start col-xl-6 m-lg-b20 wow fadeInUp" data-wow-delay="0.2s" style="visibility: visible; animation-delay: 0.2s; animation-name: fadeInUp;">
+							<h2 class="title m-0"><span class="font-weight-400">Subscribe To Our </span>Newsletter</h2>
+						</div>
+						<div class="text-center text-lg-end col-xl-6 wow fadeInUp" data-wow-delay="0.4s" style="visibility: visible; animation-delay: 0.4s; animation-name: fadeInUp;">
+							<form class="dzSubscribe" action="assets/script/mailchamp.php" method="post">
+								<div class="dzSubscribeMsg"></div>
+								<div class="form-group">
+									<div class="input-group mb-0"> 
+										<div class="input-skew">
+											<input name="dzEmail" required="required" type="email" class="form-control" placeholder="Your Email Address">
+										</div>
+										<div class="input-group-addon">
+											<button name="submit" value="Submit" type="submit" class="btn btn-secondary btn-lg btn-skew h-100"><span class="skew-inner"><span class="text">Subscribe Now</span></span></button>
+										</div>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		<!-- Call To Action -->
+		
+	</div>
+	
+{% endblock %}

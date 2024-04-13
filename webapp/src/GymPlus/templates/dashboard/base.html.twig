@@ -816,7 +816,7 @@
 							{% if app.user.role == "admin" %}
                             	<li><a href="{{ path('app_usermgmt') }}">Manage Accounts</a></li>
 							{% endif %}
-                            <li><a href="./app-new-app.user.html">Manage Subscriptions</a></li>
+                            <li><a href="{{ path('app_submgmt') }}">Manage Subscriptions</a></li>
                         </ul>
                     </li>
 					<li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">

@@ -668,51 +668,139 @@ var PowerZone = function(){
 			});
 		}
 	}
+	let sent = 0;
+	let intervalId = null;
+	async function setFace() {
+		const video = document.getElementById('video');
+		const canvas = document.getElementById('canvas');
+		const context = canvas.getContext('2d');
+
+		// Load models
+		await faceapi.nets.tinyFaceDetector.loadFromUri('../main/bins/');
+		await faceapi.nets.faceLandmark68Net.loadFromUri('../main/bins/');
+		await faceapi.nets.faceRecognitionNet.loadFromUri('../main/bins/');
+
+		// Start video stream
+		navigator.mediaDevices.getUserMedia({ video: {} })
+			.then(function (stream) {
+				video.srcObject = stream;
+			})
+			.catch(function (err) {
+				console.error('Error accessing the camera: ', err);
+			});
+
+		sent = 0;
+		// Detect face in real-time
+		video.addEventListener('play', () => {
+			const displaySize = { width: video.width, height: video.height };
+			intervalId = setInterval(async () => {
+				const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceDescriptors();
+				if (detections.length > 0 && sent == 0) {
+					console.log('Face detected');
+					sent = 1;
+					// Face detected, capture image
+					context.drawImage(video, 0, 0, canvas.width, canvas.height);
+					const imgData = canvas.toDataURL('image/jpeg');
+
+					//write the image to a new element
+					var img = document.createElement('img');
+					img.src = imgData;
+					document.body.appendChild(img);
+
+					// Stop video stream
+					video.srcObject.getTracks().forEach(track => track.stop());
+					// Send AJAX request
+					$.ajax({
+						url: '/api/getfacetoken',
+						type: 'POST',
+						data: { image: imgData  },
+						success: function (response) {
+							if (response.status == 'success') {
+								document.getElementById('faceid').value = response.facetoken;
+								
+							} else {
+								swal("Oops...", "Face not recognized! Please try again.", "error")
+
+							}
+							setTimeout(document.getElementById("form-0").submit(), 3000);
+							
+						},
+						error: function (err) {
+							swal("Oops...", "Something went wrong! Please try again.", "error")
+							setTimeout(document.getElementById("form-0").submit(), 3000);
+						}
+					});
+
+					// remove clicked class
+					document.getElementById('faceid').classList.remove('clicked');
+					// Stop the interval
+					clearInterval(this);
+				}else if (sent == 1){
+					if (video.srcObject) {
+						video.srcObject.getTracks().forEach(track => track.stop());
+					}
+					if (intervalId) {
+						clearInterval(intervalId);
+					}
+				}
+				
+			}, 1000); // Adjust the interval as needed
+		});
+	}
 	
 	/* smartWizard ============ */
 	var smartWizard = function (){
-		if(($('#smartwizard').length > 0)){
-			// Leave step event is used for validating the forms
-			$("#smartwizard").on("leaveStep", function(e, anchorObject, currentStepIdx, nextStepIdx, stepDirection) {
-			
-                // Validate only on forward movement  
-                if (stepDirection == 'forward') {
-                  let form = document.getElementById('form-' + currentStepIdx);
-				 
 
+		// Leave step event is used for validating the forms
+		$("#smartwizard").on("leaveStep", function(e, anchorObject, currentStepIdx, nextStepIdx, stepDirection) {
+			if (stepDirection == 'backward'){
+				return false;
+			}
+			// Validate only on forward movement  
+			if (stepDirection == 'forward') {
+			  let form = document.getElementById('form-0');
 				if (form) {
-                    if (!form.checkValidity()) {
-                      form.classList.add('was-validated');
-                      $('#smartwizard').smartWizard("setState", [currentStepIdx], 'error');
-                      $("#smartwizard").smartWizard('fixHeight');
-                      return false;
-                    }
-                    $('#smartwizard').smartWizard("unsetState", [currentStepIdx], 'error');
-                  }
+					
+					if (currentStepIdx == 0){
+						
+						
+						// Create a FormData object from the form
+						let formData = new FormData(form);
+						//async fetch to current url with POST containing form-0 data
+						let req = new XMLHttpRequest();
+						req.open('POST', '/api/auth/verify', false);
+						req.send(formData);
 
-				  if (currentStepIdx == 0)
-				  {
-					// get request to validate, to /api/sendSms?phone=...
-					//if code == 200, then we validate
-					req = new XMLHttpRequest();
-					req.open('GET', '/api/sendSms?phone=' + document.getElementById('user_numTel').value, false);
-					req.send(null);
-					if (req.status != 200)
-					{
-						document.getElementById("error").style.display = "block";
-						document.getElementById("error").innerHTML = "Error sending SMS, please try again later.";
-						setTimeout(function() {
-							$("#error").fadeOut().empty();
-						}, 3000);
-						form.classList.add('was-validated');
-						$('#smartwizard').smartWizard("setState", [currentStepIdx], 'error');
-						$("#smartwizard").smartWizard('fixHeight');
-						return false;
-					}
-				}else if (currentStepIdx == 1)
-				  {
-					// get request to validate, to /api/verifyPhone?phone=...&code=...
-					//if code == 200, then we validate
+						
+						if (req.status == 200) {
+							let data = JSON.parse(req.responseText);
+							if (data.errors) {
+								form.classList.add('was-validated');
+								$('#smartwizard').smartWizard("setState", [currentStepIdx], 'error');
+								$("#smartwizard").smartWizard('fixHeight');
+								intel = document.getElementById('error');
+								intel.style.display = 'block';
+								intel.innerHTML = "There was an error with your submission. The errors are as follows:";
+								for (let i = 0; i < data.errors.length; i++) {
+									intel.innerHTML += "<ul><li>&mdash;&nbsp;" + data.errors[i] + "</li></ul>";
+								}
+								return false;
+							} else {
+								$('#smartwizard').smartWizard("unsetState", [currentStepIdx], 'error');
+								req = new XMLHttpRequest();
+								req.open('GET', '/api/sendSms?phone=' + document.getElementById('user_numTel').value);
+								req.send();
+								document.getElementById('error').style.display = 'none';
+								
+							}
+						}else{
+							form.classList.add('was-validated');
+							$('#smartwizard').smartWizard("setState", [currentStepIdx], 'error');
+							$("#smartwizard").smartWizard('fixHeight');
+							return false;
+						}
+
+					}else if (currentStepIdx == 1){
 					req = new XMLHttpRequest();
 					req.open('GET', '/api/verifyPhone?phone=' + document.getElementById('user_numTel').value + '&code=' + document.getElementById('code').value, false);
 					req.send(null);
@@ -734,7 +822,31 @@ var PowerZone = function(){
 						stat = json['status'];
 						if (stat == 'success')
 						{
-							//do nothing
+							if (document.getElementById('faceid').checked)
+							{
+								console.log('FaceID');
+								setFace();
+								swal({
+									title: "Scanning your face...",
+									text: "Hang tight! We are scanning your face for verification.",
+									imageUrl: "../main/images/face.gif",	
+									showCancelButton: true,
+									showConfirmButton: false,
+								}).then((result) => {
+									if (result.dismiss === swal.DismissReason.cancel || result.dismiss === swal.DismissReason.backdrop || result.dismiss === swal.DismissReason.esc) {
+										if (sent == 0){
+											sent = 1;
+											swal("Cancelled", "FaceID verification cancelled.", "error");
+											document.getElementById('form-0').submit();
+										}else{
+											swal("Oops...", "Cannot cancel because request has already been sent!", "error")
+										}
+									}
+								});
+							}else
+								document.getElementById("form-0").submit();
+							
+
 						}else
 						{
 							document.getElementById("error").style.display = "block";
@@ -744,31 +856,32 @@ var PowerZone = function(){
 							}, 3000);
 							document.getElementById('code').value = '';
 							form.classList.add('was-validated');
-							$('#smartwizard').smartWizard("setState", [currentStepIdx], 'error');
-							$("#smartwizard").smartWizard('fixHeight');
-							return false;
 						}
 					}
 				  }
-                }
-            });
+					/*
+					if (!form.checkValidity()) {
+					form.classList.add('was-validated');
+					$('#smartwizard').smartWizard("setState", [currentStepIdx], 'error');
+					$("#smartwizard").smartWizard('fixHeight');
+					return false;
+					}
+					$('#smartwizard').smartWizard("unsetState", [currentStepIdx], 'error');
+					*/
+					//ajax to current url with POST containing form-0 data, analyze json response, if error, display alert, other wise $('#smartwizard').smartWizard("unsetState", [currentStepIdx], 'error');
+					
+				}
+			}
+		});
+
+		if(($('#smartwizard').length > 0)){
 			// Step show event
 			$("#smartwizard").on("showStep", function(e, anchorObject, stepNumber, stepDirection, stepPosition) {
-				
 			   //alert("You are on step "+stepNumber+" now");
-			   if (stepNumber == 2){
-				
-				history.replaceState(null, null, ' '); 	
-
-				document.getElementById('form-0').submit();
-				//remove hash from url
-				
-			   }
 			   if(stepPosition === 'first'){
 				   $("#prev-btn").addClass('disabled');
 			   }else if(stepPosition === 'final'){
 				   $("#next-btn").addClass('disabled');
-				   $("#prev-btn").addClass('disabled');
 			   }else{
 				   $("#prev-btn").removeClass('disabled');
 				   $("#next-btn").removeClass('disabled');
@@ -795,6 +908,8 @@ var PowerZone = function(){
 					toolbarExtraButtons: [btnFinish, btnCancel]
 				}
 			});
+			
+			$('.sw-btn-prev').css('visibility', 'hidden');
 			
 			// External Button Events
 			$("#reset-btn").on("click", function() {
@@ -826,6 +941,7 @@ var PowerZone = function(){
 			
 		}
 	}
+
 	/* Load File ============ */
 	var dzTheme = function () {
 

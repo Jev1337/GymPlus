@@ -42,62 +42,109 @@
                                  {{ form_start(form, {'attr': {'class': 'dz-form dzForm', 'id': 'objectif', 'novalidate': 'novalidate'} }) }} 
 									<div class="form-group">
 											<label class="form-label">Weight Objectif</label>
-											<div class="input-group" >
-											{{ form_widget(form.poidsobj, {'attr': {'class': 'form-control', 'placeholder': 'Weight Objectif'}}) }}
-															</div>
-
-											<div>
-														{% if form_errors(form.poidsobj)|length > 0 %}
-																<div class="alert alert-danger alert-dismissible fade show">
-																	<svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
-																		stroke-linecap="round" stroke-linejoin="round" class="mr-2">
-																		<polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon>
-																		<line x1="15" y1="9" x2="9" y2="15"></line>
-																		<line x1="9" y1="9" x2="15" y2="15"></line>
-																	</svg>
-																	<strong>Error:</strong> {{ form_errors(form.poidsobj) }}<br>
-																	<button type="button" class="close h-100" data-bs-dismiss="alert" aria-label="Close">
-																		<span><i class="fa-solid fa-xmark"></i></span>
-																	</button>
-																</div>
-																{% endif %}
-															</div>
+												<div class="input-group" >
+														{{ form_widget(form.poidsobj, {'attr': {'class': 'form-control', 'id': 'poidsobj', 'onkeypress': 'return isNumeric(event)', 'placeholder': 'Objective Weight kg'}}) }}
+																</div>	
+														{% set poidsobjErrors = form_errors(form.poidsobj) | striptags %}
+														{% if poidsobjErrors %}
+															<div class="alert alert-danger  alert-dismissible fade show">
+														<svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+															<strong>Warning!</strong> {{ poidsobjErrors }}.
+														<button type="button" class="close h-100" data-bs-dismiss="alert" aria-label="Close">
+															<span><i class="fa-solid fa-xmark"></i></span>
+														</button>
+												</div>
+												{% endif %}
 
 												<label class="form-label">Weight Actuelle</label>
 												<div class="input-group">
-												{{ form_widget(form.poidsact, {'attr': {'class': 'form-control', 'placeholder': 'Weight Actuelle'}}) }}
-												</div>
-
-													<label class="form-label">Height</label>
-													<div class="input-group">
-													{{ form_widget(form.taille, {'attr': {'class': 'form-control', 'placeholder': 'Height'}}) }}
+												{{ form_widget(form.poidsact, {'attr': {'class': 'form-control', 'placeholder': 'Actual Weight kg', 'id': 'poidsact', 'onkeypress': 'return isNumeric(event)'}}) }}
 													</div>
+														{% set poidsactErrors = form_errors(form.poidsact) | striptags %}
+														 {% if poidsactErrors %}
+																	<div class="alert alert-danger  alert-dismissible fade show">
+																<svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+																<strong>Warning!</strong> {{ poidsactErrors }}.
+																<button type="button" class="close h-100" data-bs-dismiss="alert" aria-label="Close">
+																	<span><i class="fa-solid fa-xmark"></i></span>
+																</button>
+													</div>
+														 {% endif %}
+																		<label class="form-label">Height</label>
+																		<div class="input-group">
+																		{{ form_widget(form.taille, {'attr': {'class': 'form-control', 'placeholder': 'Height cm', 'id': 'taille', 'onkeypress': 'return isNumeric(event)'}}) }}
+																		</div>
+																	{% set tailleErrors = form_errors(form.taille) | striptags %}
+																		{% if tailleErrors %}
+																			<div class="alert alert-danger  alert-dismissible fade show">
+																				<svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+																				<strong>Warning!</strong> {{ tailleErrors }}.
+																				<button type="button" class="close h-100" data-bs-dismiss="alert" aria-label="Close">
+																					<span><i class="fa-solid fa-xmark"></i></span>
+																				</button>
+																			</div>
+																		{% endif %}
+																												
 
 															<label class="form-label">Something To Say*</label>
 															<div class="input-group">
 															{{ form_widget(form.alergie, {'attr': {'class': 'form-control', 'placeholder': 'Something To Say*'}}) }}
 															</div>
-									
-																<label class="form-label" for="{{ form.typeobj.vars.id }}">Type Objectif</label>
+									                                        {% set alergieErrors = form_errors(form.alergie) | striptags %}
+																		{% if alergieErrors %}
+																			<div class="alert alert-danger  alert-dismissible fade show">
+																				<svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+																				<strong>Warning!</strong> {{ alergieErrors }}.
+																				<button type="button" class="close h-100" data-bs-dismiss="alert" aria-label="Close">
+																					<span><i class="fa-solid fa-xmark"></i></span>
+																				</button>
+																			</div>
+																		{% endif %}
+
+
+												<label class="form-label" for="{{ form.typeobj.vars.id }}">Type Objectif</label>
+												<div class="input-group">
+												{{ form_widget(form.typeobj, {'attr': {'class': 'form-control', 'placeholder': '', 'id': form.typeobj.vars.id}}) }}
+												</div>
+                                                                               
+															<label class="form-label">Date</label>
 																<div class="input-group">
-																{{ form_widget(form.typeobj, {'attr': {'class': 'form-control', 'placeholder': '', 'id': form.typeobj.vars.id}}) }}
+																	{{ form_widget(form.datef, {'attr': {'class': 'form-control', 'placeholder': 'Date of objective'}}) }}
+																</div>
+																	      {% set datefErrors = form_errors(form.datef) | striptags %}
+																		{% if datefErrors %}
+																			<div class="alert alert-danger  alert-dismissible fade show">
+																				<svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+																				<strong>Warning!</strong> {{ datefErrors }}.
+																				<button type="button" class="close h-100" data-bs-dismiss="alert" aria-label="Close">
+																					<span><i class="fa-solid fa-xmark"></i></span>
+																				</button>
+																			</div>
+																		{% endif %}
+                                                                                          
+																<label class="form-label">Coach</label>
+																<div class="input-group">
+															{{ form_widget(form.coachid, {'attr': {'class': 'form-control'}}) }}
+																		</div>
+
+																	<div class="text-center">
+																{{ form_widget(form.submit, {'attr': {'class': 'btn btn-primary w-100 btnhover', 'value': 'Add Objectif'} } ) }}
+															</div>				
+													</div>
+															<div class="alert alert-success alert-dismissible fade show" role="alert" style="display: none;" id="success-alert">
+																	<svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+																		<polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon>
+																		<line x1="15" y1="9" x2="9" y2="15"></line>
+																		<line x1="9" y1="9" x2="15" y2="15"></line>
+																	</svg>
+																	<strong>Success!</strong> Adding successfully submitted.
+																	<button type="button" class="close h-100" data-bs-dismiss="alert" aria-label="Close">
+																		<span><i class="fa-solid fa-xmark"></i></span>
+																	</button>
 																</div>
 
-																			<label class="form-label">Date</label>
-																			<div class="input-group">
-																			{{ form_widget(form.datef, {'attr': {'class': 'form-control', 'placeholder': 'Date of objectif'}}) }}
-																			</div>
-
-																							<label class="form-label">Coach</label>
-																							<div class="input-group">
-																							{{ form_widget(form.coachid, {'attr': {'class': 'form-control'}}) }}
-																							</div>
-
-																										<div class="text-center">
-																										{{ form_widget(form.submit, {'attr': {'class': 'btn btn-primary w-100 btnhover', 'value': 'Add Objectif'} } ) }}
-																										</div>				
-									</div>
-									  {{ form_end(form) }}
+												
+															 {{ form_end(form) }}
 
 
 								</div>
@@ -142,7 +189,7 @@
 					</div>
 				</div> 
 			</div>
-		</section>
+			</section>
 
 		</div>
 		<section class="call-action style-2 bg-img-fix bg-primary m-0"  style="margin-top: 20px;">
@@ -177,8 +224,35 @@
  
 {% endblock %}
 
+{% block js %}
+    {{ parent() }}
 
+    <script>
+        function isNumeric(event) {
+            const inputValue = event.key;
+            const isNumeric = /^[\d.,]*$/.test(inputValue);
+            return isNumeric;
+        }
 
+        $(document).ready(function() {
+            $('form').on('submit', function(e) {
+                e.preventDefault();
 
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: $(this).attr('method'),
+                    data: $(this).serialize(),
+                    success: function(response) {
+                        if(response.success) {
+                            $('.alert-success').show();
+                        } else {
+                            // Handle error
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}
 
-						
+					

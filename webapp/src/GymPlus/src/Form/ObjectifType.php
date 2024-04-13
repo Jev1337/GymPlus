@@ -36,7 +36,6 @@ class ObjectifType extends AbstractType
                     'Version ++' => 'Version ++',
                 ],
                 'label' => 'Type',
-                'placeholder' => 'Select an option',
             ])
             ->add('datef', DateType::class, [
                 'widget' => 'single_text',

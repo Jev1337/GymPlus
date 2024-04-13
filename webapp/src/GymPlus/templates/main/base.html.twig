@@ -50,8 +50,10 @@
     <link href="{{asset('main/vendor/smartwizard/dist/css/smart_wizard.css')}}" rel="stylesheet">
 	<link href="{{asset('main/vendor/datepicker/css/bootstrap-datetimepicker.min.css')}}" rel="stylesheet">
 	<link href="{{asset('dashboard/vendor/sweetalert2/dist/sweetalert2.min.css')}}" rel="stylesheet">
+
     <!-- Custom Stylesheet -->
     <link rel="stylesheet" href="{{asset('main/css/style.css')}}">
+
 	<link class="skin" rel="stylesheet" href="{{asset('main/css/skin/skin-5.css')}}">
 
 	<!-- Google Fonts -->
@@ -145,6 +147,10 @@
 							<ul class="sub-menu">
 								<li><a href="{{ path('app_objectif') }}">Add Objective</a></li>
 								<li><a href="{{ path('app_Schedule_objectif') }}">Objective Schedule</a></li>
+								<li><a href="{{ path('app_Tracker') }}">Calories Tracker</a></li>
+								<li><a href="{{ path('app_ExerciceGenerator') }}">Exercice Generator</a></li>
+								<li><a href="{{ path('app_ChatGpt') }}">Smart Coach</a></li>
+
 							</ul>
 						</li>
 						<li><a href="{{ path('getAll_post') }}">blog</a></li>
@@ -268,6 +274,10 @@
 							<ul class="sub-menu">
 								<li><a href="{{ path('app_objectif') }}">Add Objective</a></li>
 								<li><a href="{{ path('app_Schedule_objectif') }}">Objective Schedule</a></li>
+								<li><a href="{{ path('app_Tracker') }}">Calories Tracker</a></li>
+								<li><a href="{{ path('app_ExerciceGenerator') }}">Exercice Generator</a></li>
+								<li><a href="{{ path('app_ChatGpt') }}">Smart Coach</a></li>
+
 							</ul>
 						</li>
 						<li><a href="{{ path('getAll_post') }}">blog</a></li>
@@ -394,6 +404,10 @@
 										<ul class="sub-menu">
 									<li><a href="{{ path('app_objectif') }}">Add Objective</a></li>
 									<li><a href="{{ path('app_Schedule_objectif') }}">Objective Schedule</a></li>
+									<li><a href="{{ path('app_Tracker') }}">Calories Tracker</a></li>
+									<li><a href="{{ path('app_ExerciceGenerator') }}">Exercice Generator</a></li>
+									<li><a href="{{ path('app_ChatGpt') }}">Smart Coach</a></li>
+
 								</ul>
 								</li>
 								<li><a href="{{ path('getAll_post') }}">blog</a></li>
@@ -573,11 +587,11 @@
 {% endblock %}
 
 {% block js %}
+
 <!-- JAVASCRIPT FILES ========================================= -->
 <script src="{{asset('main/js/jquery-3.6.0.min.js')}}"></script><!--  -->
 <script src="{{asset('main/js/bootstrap.min.js')}}"></script><!--  -->
 <script src="{{asset('main/js/main.min.js')}}"></script><!-- -->
-
 <script src="{{asset('main/js/jquery.min.js')}}"></script><!-- JQUERY.MIN JS -->
 <script src="{{asset('main/vendor/wow/wow.js')}}"></script><!-- WOW.JS -->
 <script src="{{asset('main/vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script><!-- BOOTSTRAP.MIN JS -->
@@ -591,6 +605,7 @@
 <script src="{{asset('main/vendor/datepicker/js/bootstrap-datetimepicker.min.js')}}"></script><!-- DATEPICKER JS -->
 <script src="{{asset('main/vendor/smartwizard/dist/js/jquery.smartWizard.js')}}"></script><!-- SMARTWIZARD -->
 <script src="{{asset('dashboard/vendor/sweetalert2/dist/sweetalert2.min.js')}}"></script><!-- SWEETALERT -->
+
 
 <script src="{{asset('main/js/dz.carousel.js')}}"></script><!-- OWL-CAROUSEL -->
 <script src="{{asset('main/js/dz.ajax.js')}}"></script><!-- AJAX -->

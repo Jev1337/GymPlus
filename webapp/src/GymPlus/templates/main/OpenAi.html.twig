@@ -1,0 +1,104 @@
+{% extends "main/base.html.twig" %}
+
+{% block content %}
+<div class="page-content bg-white">		
+		<!--banner-->
+			<div class="contact-bnr"  style="background-image: url({{asset('main/images/background/bg9.png')}});">
+				<div class="container">
+					<div class="row">
+						<div class="col-lg-6">
+							<div class="contact-info style-1 text-start text-white">
+                          <svg class="title animation-text" viewBox="0 0 1320 300">
+									<text x="0" y="1em">Transform Your</text>
+									<text x="0" y="2em">Body at GymPlus!</text>
+								</svg>					
+								<br></br>		
+								<p class="text wow fadeInUp" data-wow-delay="0.2s"><span class="text-decoration-underline text-white"><a class="text-white" href="javascript:void(0)">PowerZone is here to help you;</a></span> <br> Our experts are available to answer any questions you might have. We’ve got the answers.</p>
+								<div class="contact-bottom wow fadeInUp" data-wow-delay="0.3s">
+									<div class="contact-left">
+										<h3>Call Us</h3>
+										<ul>
+											<li><a href="tel:+011234567890">+01-123-456-7890</a></li>
+											<li><a href="tel:+019785687400">+01-978-568-7400</a></li>
+										</ul>
+									</div>
+									<div class="contact-right">
+										<h3>Email Us</h3>
+										<ul>
+											<li>help@example.com</li>
+										</ul>
+									</div>		
+								</div>
+							</div>
+						</div>
+
+                    
+                  
+                <div class="col-lg-6 ">
+
+                    <div class="container" style="display: flex; flex-direction: column; align-items: flex-start; padding: 0px; position: relative; width: 900px; height: 600px; left: -18%; top: 10px; background: #343541; transform: scale(0.8);">                               
+                            
+                                <div>
+									<img src="{{ asset('main/images/gptChat/avatar.png') }}" alt="avatar" class="avatar" style="width: 30px; height: 30px; border-radius: 2px; flex: none; order: 0; flex-grow: 0; position: absolute; top: 45px;">
+									<span class="question" style="width: 656px; height: 28px; font-family: 'Segoe UI'; font-style: normal; font-weight: 400; font-size: 16px; line-height: 28px; display: flex; align-items: center; color: #D1D5DB; flex: none; order: 1; flex-grow: 1; position: absolute; top: 64px; left: 100px;" id="question">{{ question }}</span>
+								</div>
+
+                                <div class="response-wrapper" style="margin-top: 70px; display: flex; flex-direction: row; align-items: flex-start; padding: 24px 48px; gap: 24px; height: 216px; background: #444654; flex: none; order: 1; align-self: stretch; flex-grow: 0; overflow: auto;">
+                                    <img src="{{asset('main/images/gptChat/gpt.png')}}" alt="gpt" class="gpt-logo" style="width: 30px; height: 30px; border-radius: 2px; flex: none; order: 0; flex-grow: 0;">
+                                    <div class="response-content" style="flex-grow: 1; color: #D1D5DB;">{{ response }}</div>
+                                </div>
+
+                                <div class="type" style="display: flex; flex-direction: column; align-items: flex-start; padding: 24px 0px; gap: 4px; width: 874px; height: 134px; flex: none; order: 2; align-self: stretch; flex-grow: 0; background: #343541;">
+                                    <div class="input-div" style="display: flex; flex-direction: column; align-items: flex-start; padding: 0px 48px; gap: 8px; width: 874px; height: 50px; flex: none; order: 0; align-self: stretch; flex-grow: 0;">
+                                        
+                                        <form action="{{path('send_chat')}}" method="post">
+                                            <div class="text-input" style="margin-top: 140px; display: flex; flex-direction: row; justify-content: flex-end; align-items: center; width: 778px; height: 50px; background: #444654; box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1); border-radius: 6px; flex: none; order: 0; align-self: stretch; flex-grow: 0;">
+                                                <input type="text" name="text" id="text" placeholder="" class="text" style="position: absolute; left: 98px; display: flex; flex-direction: row; justify-content: flex-end; align-items: center; width: 653px; height: 38px; background: #444654; box-shadow: 0px 0px 15px rgb(0 0 0 / 10%); flex: none; order: 0; align-self: stretch; flex-grow: 0; border: none; top: 533px; color: white; text-decoration: none; outline: none;">
+                                            </div>
+                                            
+                                            <button type="submit" class="btn" style="position: absolute; border: none; background: none;">
+                                                <img src="{{asset('main/images/gptChat/send.png')}}" alt="send" class="send" style="width: 26px; height: 30px; flex: none; order: 0; flex-grow: 0; position: absolute; left: 728px; top: -38px; cursor: pointer;">
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                    </div>
+                </div>
+				</div>
+			</div>
+
+
+	<section class="call-action style-2 bg-img-fix bg-primary m-0"  style="margin-top: 20px;">
+			<div class="container">
+				<div class="inner-content">
+					<div class="row justify-content-between align-items-center">
+						<div class="text-center text-lg-start col-xl-6 m-lg-b20 wow fadeInUp" data-wow-delay="0.2s">
+							<h2 class="title m-0"><span class="font-weight-400">Subscribe To Our </span>Newsletter</h2>
+						</div>
+						<div class="text-center text-lg-end col-xl-6 wow fadeInUp" data-wow-delay="0.4s">
+							<form class="dzSubscribe" action="{{asset('main/script/mailchamp.php')}}" method="post">
+								<div class="dzSubscribeMsg"></div>
+								<div class="form-group">
+									<div class="input-group mb-0"> 
+										<div class="input-skew">
+											<input name="dzEmail" required="required" type="email" class="form-control" placeholder="Your Email Address">
+										</div>
+										<div class="input-group-addon">
+											<button name="submit" value="Submit" type="submit" class="btn btn-secondary btn-lg btn-skew h-100"><span class="skew-inner"><span class="text">Subscribe Now</span></span></button>
+										</div>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+
+	</div>
+
+
+{% endblock %}
+
+

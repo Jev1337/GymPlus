@@ -29,6 +29,35 @@ class EventParticipantsRepository extends ServiceEntityRepository
 
         return $participant !== null;
     }
+    
+    
+    
+   
+public function getNextEventDate($userId)
+{
+    $conn = $this->getEntityManager()->getConnection();
+
+    $sql = '
+        SELECT ed.event_date as date 
+        FROM event_participants ep
+        INNER JOIN event_details ed ON ep.event_details_id = ed.id
+        WHERE ep.user_id = :userId
+        ORDER BY ed.event_date ASC
+        LIMIT 1
+    ';
+
+    $stmt = $conn->executeQuery($sql, ['userId' => $userId]);
+
+    // Fetch the result as an associative array
+    $result = $stmt->fetchAssociative();
+
+    return $result ? new \DateTime($result['date']) : null;
+}
+
+    
+    
+    
+
 
 //    /**
 //     * @return EventParticipants[] Returns an array of EventParticipants objects

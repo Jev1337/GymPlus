@@ -39,7 +39,9 @@
             </div>
         </div>
     </a>
+    <div id="countdown"></div>
 </div>
+
 		<!-- Our Events -->
 		<section class="content-inner">
 		
@@ -97,23 +99,39 @@
 {% block js %}
 {{parent()}}
 <script>
-   {% set claimStatusFlashes = app.flashes('claimStatus') %}
-   {% if claimStatusFlashes is not empty %}
-    {% set status = claimStatusFlashes[0] %}
-    if ('{{ status }}' === 'success') {
-        Swal.fire({
-            title: "Good job!",
-            text: "You clicked the button!",
-            icon: "success"
-        });
-    } else if ('{{ status }}' === 'error') {
-        Swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text: "Something went wrong!",
-            footer: '<a href="#">Why do I have this issue?</a>'
-        });
-    }
-{% endif %}
-</script>
+    {% set claimStatusFlashes = app.flashes('claimStatus') %}
+    {% if claimStatusFlashes is not empty %}
+     {% set status = claimStatusFlashes[0] %}
+     if ('{{ status }}' === 'success') {
+         Swal.fire({
+             title: "Good job!",
+             text: "You clicked the button!",
+             icon: "success"
+         });
+     } else if ('{{ status }}' === 'error') {
+         Swal.fire({
+             icon: "error",
+             title: "Oops...",
+             text: "Something went wrong!",
+             footer: '<a href="#">Why do I have this issue?</a>'
+         });
+     }
+     {% endif %}
+     var countdown = new Date("{{ nextEventDate|date('Y/m/d H:i:s') }}").getTime();
+     var x = setInterval(function() {
+         var now = new Date().getTime();
+         var distance = countdown - now;
+         var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+         var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+         var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+         var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+         document.getElementById("countdown").innerHTML = "<h2>Your Next Event Is In :</h2><h3>" + days + "d " + hours + "h "
+             + minutes + "m " + seconds + "s </h3>";
+         if (distance < 0) {
+             clearInterval(x);
+             document.getElementById("countdown").innerHTML = "<h2>No Upcoming Events For You</h2>"; 
+         }
+     }, 1000);
+     
+ </script>
 {% endblock %}

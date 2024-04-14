@@ -16,11 +16,21 @@ use App\Entity\EventParticipants;
 use App\Repository\EventParticipantsRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\EventDetailsEditType;
-
+use App\Entity\BlackListed;
 use Endroid\QrCode\Builder\BuilderInterface;
 use Endroid\QrCodeBundle\Response\QrCodeResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use App\Entity\BlackListed;
+use Eluceo\iCal\Component\Calendar;
+use Eluceo\iCal\Component\Event;
+use Endroid\QrCode\QrCode;
+
+use Endroid\QrCode\Builder\Builder;
+use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\ErrorCorrectionLevel;
+use Endroid\QrCode\Label\LabelAlignment;
+use Endroid\QrCode\Label\Font\NotoSans;
+use Endroid\QrCode\RoundBlockSizeMode;
+use Endroid\QrCode\Writer\PngWriter;
 
 
 class EventbController extends AbstractController
@@ -105,20 +115,26 @@ public function delete($id, ManagerRegistry $registry): Response
             
         ]);
     }
-    #[Route('/eventf', name: 'app_eventsf')]
+    
+#[Route('/eventf', name: 'app_eventsf')]
 public function eventf(ManagerRegistry $registry): Response
 {
+    
     /** @var User $user */
     $user = $this->getUser();
+
+    // Get the EventParticipants repository
+    $eventParticipantsRepository = $registry->getRepository(EventParticipants::class);
+
+    // Get the next event date
+    $userId = $user->getId();
+    $nextEventDate = $this->eventParticipantsRepository->getNextEventDate($userId);
 
     // Check if the user is in the blacklist
     $blacklist = $registry->getRepository(BlackListed::class)->findOneBy(['idUser' => $user]);
 
     if ($blacklist) {
-        // Add a flash message to inform the user
-       //$this->addFlash('warning', 'You are banned until ' . $blacklist->getEndBan()->format('Y-m-d') . '. You cannot access this page.');
-       
-        // Redirect to a different route (replace 'banned_route' with the actual route name)
+        // Redirect to a different route
         return $this->redirectToRoute('app_home');
     }
 
@@ -143,36 +159,73 @@ public function eventf(ManagerRegistry $registry): Response
         'events' => $eventsWithUserStatus,
         'user' => $user,
         'user_points' => $userPoints,
+        'nextEventDate' => $nextEventDate, // Pass the next event date to the template
     ]);
 }
+
     #user join event by clicking on join
     #user gets 100 points for joining an event 
-    #[Route('/eventf/join/{id}', name: 'event_join')]
-    public function join($id, ManagerRegistry $registry, BuilderInterface $qrCodeBuilder): Response
-    {
-        /** @var User $user */
-        $user = $this->getUser();
-        
-        $event = $registry->getRepository(EventDetails::class)->find($id);
-        $event->setNbPlaces($event->getNbPlaces()-1);
-        $user->setEventPoints($user->getEventPoints() + 100);
-        $entityManager = $registry->getManager();
-        $entityManager->persist($user);
-        $entityManager->flush();
-        $entityManager->persist($event);
-        $entityManager->flush();
-        $eventParticipant = new EventParticipants();
-        $eventParticipant->setUserId($user->getId());
-        $eventParticipant->setEventDetailsId($id);
-        $entityManager->persist($eventParticipant);
-        $entityManager->flush();
-        
+
+#[Route('/eventf/join/{id}', name: 'event_join')]
+public function join($id, ManagerRegistry $registry, BuilderInterface $qrCodeBuilder): Response
+{
+    /** @var User $user */
+    $user = $this->getUser();
     
+    $eventDetails = $registry->getRepository(EventDetails::class)->find($id);
+    $eventDetails->setNbPlaces($eventDetails->getNbPlaces()-1);
+    $user->setEventPoints($user->getEventPoints() + 100);
+    $entityManager = $registry->getManager();
+    $entityManager->persist($user);
+    $entityManager->flush();
+    $entityManager->persist($eventDetails);
+    $entityManager->flush();
+    $eventParticipant = new EventParticipants();
+    $eventParticipant->setUserId($user->getId());
+    $eventParticipant->setEventDetailsId($id);
+    $entityManager->persist($eventParticipant);
+    $entityManager->flush();
 
-        return $this->redirectToRoute('app_eventsf');
-        //redirect to route appeventsf
+    // Create the iCalendar event
+    $event = (new \Eluceo\iCal\Domain\Entity\Event())
+        ->setSummary($eventDetails->getName())
+        ->setDescription($eventDetails->getType())
+        ->setOccurrence(
+            new \Eluceo\iCal\Domain\ValueObject\SingleDay(
+                new \Eluceo\iCal\Domain\ValueObject\Date(
+                    \DateTimeImmutable::createFromFormat(
+                        'Y-m-d', 
+                        $eventDetails->getEventDate()->format('Y-m-d')
+                    )
+                )
+            )
+        );
 
-    }
+    // Create the iCalendar file
+    $calendar = new \Eluceo\iCal\Domain\Entity\Calendar([$event]);
+    $componentFactory = new \Eluceo\iCal\Presentation\Factory\CalendarFactory();
+    $iCalendarComponent = $componentFactory->createCalendar($calendar);
+      /*  
+    // Create the QR code
+    $result = Builder::create()
+        ->writer(new PngWriter())
+        ->writerOptions([])
+        ->data((string)$iCalendarComponent)
+        ->encoding(new Encoding('UTF-8'))
+        ->errorCorrectionLevel(ErrorCorrectionLevel::High)
+        ->size(300)
+        ->margin(10)
+        ->roundBlockSizeMode(RoundBlockSizeMode::Margin)
+        ->validateResult(false)
+        ->build();
+
+    $response = new QrCodeResponse($result);
+
+    return $response;*/
+    return $this->redirectToRoute('app_eventsf');
+}
+
+   
 #[Route('/eventf/leave/{id}', name: 'event_leave')]
 public function leaveEvent($id, ManagerRegistry $registry)
 {   /** @var User $user */
@@ -386,7 +439,11 @@ public function claimBag(Request $request, EntityManagerInterface $entityManager
         $entityManager->flush();
         return $this->redirectToRoute('blacklised');
     }
- 
+    
+    
+  
+   
+   
 
 
 

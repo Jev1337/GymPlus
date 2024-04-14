@@ -139,8 +139,11 @@ public function eventf(ManagerRegistry $registry): Response
     }
 
     $userPoints = $user->getEventPoints();
-    $events = $registry->getRepository(EventDetails::class)->findAll();
+  
 
+    $events = $registry->getRepository(EventDetails::class)->findFutureEvents();
+
+    
     $eventsWithUserStatus = [];
     foreach ($events as $event) {
         $isUserParticipant = $this->eventParticipantsRepository->findOneBy([

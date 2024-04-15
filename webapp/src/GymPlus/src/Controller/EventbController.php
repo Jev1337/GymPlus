@@ -32,7 +32,7 @@ use Endroid\QrCode\Label\LabelAlignment;
 use Endroid\QrCode\Label\Font\NotoSans;
 use Endroid\QrCode\RoundBlockSizeMode;
 use Endroid\QrCode\Writer\PngWriter;
-
+use Twilio\TwiML\Messaging\Redirect;
 
 class EventbController extends AbstractController
 {   private $eventParticipantsRepository;
@@ -129,18 +129,17 @@ public function eventf(ManagerRegistry $registry): Response
     /** @var User $user */
     $user = $this->getUser();
 
-    // Get the EventParticipants repository
+    
     $eventParticipantsRepository = $registry->getRepository(EventParticipants::class);
 
-    // Get the next event date
+    
     $userId = $user->getId();
     $nextEventDate = $this->eventParticipantsRepository->getNextEventDate($userId);
-
-    // Check if the user is in the blacklist
+    
     $blacklist = $registry->getRepository(BlackListed::class)->findOneBy(['idUser' => $user]);
 
     if ($blacklist) {
-        // Redirect to a different route
+        
         return $this->redirectToRoute('app_home');
     }
 
@@ -169,12 +168,11 @@ public function eventf(ManagerRegistry $registry): Response
         'events' => $eventsWithUserStatus,
         'user' => $user,
         'user_points' => $userPoints,
-        'nextEventDate' => $nextEventDate, // Pass the next event date to the template
+        'nextEventDate' => $nextEventDate,
     ]);
 }
 
-    #user join event by clicking on join
-    #user gets 100 points for joining an event 
+    
 
 #[Route('/eventf/join/{id}', name: 'event_join')]
 public function join($id, ManagerRegistry $registry, BuilderInterface $qrCodeBuilder): Response
@@ -195,7 +193,7 @@ public function join($id, ManagerRegistry $registry, BuilderInterface $qrCodeBui
     $eventParticipant->setEventDetailsId($id);
     $entityManager->persist($eventParticipant);
     $entityManager->flush();
-
+/*
     // Create the iCalendar event
     $event = (new \Eluceo\iCal\Domain\Entity\Event())
         ->setSummary($eventDetails->getName())
@@ -232,7 +230,8 @@ public function join($id, ManagerRegistry $registry, BuilderInterface $qrCodeBui
 
     $response = new QrCodeResponse($result);
 
-    return $response;
+    return $response;*/
+    return $this->redirectToRoute( 'app_eventsf');
     
 }
 
@@ -276,7 +275,7 @@ public function eventParticipants($id, ManagerRegistry $registry): Response
     $event = $registry->getRepository(EventDetails::class)->find($id);
     $eventParticipants = $registry->getRepository(EventParticipants::class)->findBy(['event_details_id' => $id]);
 
-    // Fetch the User entities associated with the EventParticipants entities
+    
     $participantsUsers = array_map(function($participant) use ($registry) {
         $userId = $participant->getUserId();
         return $registry->getRepository(User::class)->find($userId);
@@ -293,7 +292,7 @@ public function eventParticipants($id, ManagerRegistry $registry): Response
 #[Route('/eventf/kick/{userId}/{eventDetailsId}', name: 'eventParticipant_kick')]
 public function kick($userId, $eventDetailsId, ManagerRegistry $registry): Response
 {
-    // Use both parts of the composite key to find the EventParticipants entity
+    
     $eventParticipant = $registry->getRepository(EventParticipants::class)->findOneBy([
         'user_id' => $userId,
         'event_details_id' => $eventDetailsId,
@@ -303,7 +302,7 @@ public function kick($userId, $eventDetailsId, ManagerRegistry $registry): Respo
         throw $this->createNotFoundException('No participant found for id '.$userId);
     }
 
-    // Get the User entity of the kicked user and reduce its points
+    
     
     $kickedUser = $registry->getRepository(User::class)->find($userId);
     $kickedUser->setEventPoints($kickedUser->getEventPoints() - 100);
@@ -313,7 +312,7 @@ public function kick($userId, $eventDetailsId, ManagerRegistry $registry): Respo
 
     $entityManager = $registry->getManager();
     $entityManager->remove($eventParticipant);
-    $entityManager->persist($kickedUser); // Persist the changes to the User entity
+    $entityManager->persist($kickedUser); 
     $entityManager->flush();
 
     return $this->redirectToRoute('eventParticipant', ['id' => $eventDetailsId]);
@@ -328,7 +327,7 @@ public function rewards(ManagerRegistry $registry, SessionInterface $session): R
     // Check if the user is in the blacklist
     $blacklist = $registry->getRepository(BlackListed::class)->findOneBy(['idUser' => $user]);
     if ($blacklist) {
-        // Add a flash message to inform the user
+        
        //$this->addFlash('warning', 'You are banned until ' . $blacklist->getEndBan()->format('Y-m-d') . '. You cannot access this page.');
        
         // Redirect to a different route (replace 'banned_route' with the actual route name)

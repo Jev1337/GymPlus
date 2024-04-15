@@ -25,6 +25,8 @@ use Karser\Recaptcha3Bundle\Validator\Constraints\Recaptcha3Validator;
 use Symfony\Component\Mime\Part\DataPart;
 use Symfony\Component\Mime\Part\Multipart\FormDataPart;
 use GuzzleHttp\Client as GuzzleClient;
+use App\Entity\AbonnementDetails;
+use App\Form\GPPricesType;
 
 
 class UserController extends AbstractController
@@ -174,13 +176,9 @@ class UserController extends AbstractController
             if(!$form->isValid()){
                 $this->addFlash('error', 'There was an error with the form, please check the fields and try again!');
             }else{
-                
-                    
                 $usersig = $form->getData();
                 $usersig->setPassword(password_hash($usersig->getPassword(), PASSWORD_BCRYPT));
                 $usersig->setRole('client');
-
-                
                 if ($request->get('faceid') != null && $request->get('faceid') != '' && $request->get('faceid') != 'undefined'){
                     $usersig->setFaceid($request->get('faceid'));
                     $usersig->setFaceidTs(new \DateTime());
@@ -281,7 +279,7 @@ class UserController extends AbstractController
 
 
     #[Route('/member/subscriptions', name: 'app_subs')]
-    public function subscriptions(AbonnementRepository $repo): Response
+    public function subscriptions(AbonnementRepository $repo, AbonnementDetailsRepository $repo0): Response
     {
 
         if ($repo->isUserSubscribed($this->getUser()->getId())) {
@@ -295,7 +293,9 @@ class UserController extends AbstractController
         
         return $this->render('main/user/subscriptions.html.twig', [
             'controller_name' => 'UserController',
-
+            'gp1price' => $repo0->getAbonnementPriceByName('GP 1'),
+            'gp2price' => $repo0->getAbonnementPriceByName('GP 2'),
+            'gp3price' => $repo0->getAbonnementPriceByName('GP 3')
         ]);
     }
 
@@ -496,7 +496,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/dashboard/subscriptions', name: 'app_submgmt')]
-    public function subscriptionManagement(AbonnementRepository $repo0, UserRepository $repo1): Response
+    public function subscriptionManagement(AbonnementRepository $repo0, AbonnementDetailsRepository $repo2, UserRepository $repo1, ManagerRegistry $reg, Request $request): Response
     {
         $subs = $repo0->findAll();
         $users = $repo1->getClientList();
@@ -517,14 +517,52 @@ class UserController extends AbstractController
             return $repo0->isUserSubscribed($user->getId());
         }));
         
+        if ($this->getUser()->getRole() == "admin"){
 
+            $form = $this->createForm(GPPricesType::class);
+            //init form values with 3 number fields
+            $form->get('gpprice1')->setData($repo2->getAbonnementPriceByName('GP 1'));
+            $form->get('gpprice2')->setData($repo2->getAbonnementPriceByName('GP 2'));
+            $form->get('gpprice3')->setData($repo2->getAbonnementPriceByName('GP 3'));
+
+            $form->handleRequest($request);
+
+            if ($form->isSubmitted() && $form->isValid()) {
+                $data = $form->getData();
+                if ($data['gpprice1'] == null || $data['gpprice2'] == null || $data['gpprice3'] == null) {
+                    $this->addFlash('error', 'Prices cannot be null!');
+                    return $this->redirectToRoute('app_submgmt');
+                }
+                //check nan
+                if (is_nan($data['gpprice1']) || is_nan($data['gpprice2']) || is_nan($data['gpprice3'])) {
+                    $this->addFlash('error', 'Prices must be numbers!');
+                    return $this->redirectToRoute('app_submgmt');
+                }
+                if ($data['gpprice1'] < 0 || $data['gpprice2'] < 0 || $data['gpprice3'] < 0) {
+                    $this->addFlash('error', 'Prices cannot be negative!');
+                    return $this->redirectToRoute('app_submgmt');
+                }
+                $repo2->getAbonnementDetailsByName('GP 1')->setPrix($data['gpprice1']);
+                $repo2->getAbonnementDetailsByName('GP 2')->setPrix($data['gpprice2']);
+                $repo2->getAbonnementDetailsByName('GP 3')->setPrix($data['gpprice3']);
+                $reg->getManager()->flush();
+            }
+            return $this->render('dashboard/user/subscriptions.html.twig', [
+                'controller_name' => 'UserController',
+                'subs' => $subs,
+                'nusers' => $nonsubbedusers,
+                'susers' => $subbedusers,
+                'form' => $form->createView()
+                
+            ]);
+        }
         return $this->render('dashboard/user/subscriptions.html.twig', [
             'controller_name' => 'UserController',
             'subs' => $subs,
             'nusers' => $nonsubbedusers,
             'susers' => $subbedusers
-            
         ]);
+
     }
 
     #[Route('/dashboard/subscribe/{id}/{sub}', name: 'app_subuser')]

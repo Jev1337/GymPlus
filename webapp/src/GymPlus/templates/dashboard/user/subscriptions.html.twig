@@ -188,6 +188,47 @@
                         </div>
                     </div>
 				</div>
+				{% if form is defined %}
+				<div class="row">
+					<div class="col-sm-6 mx-auto">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">GP Prices</h4>
+                            </div>
+                            <div class="card-body">
+							{{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+								
+								<div class="input-group mb-3 input-primary">
+                                            {{ form_widget(form.gpprice1, {'attr': {'class': 'form-control'}}) }}
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">GP 1 Price</span>
+                                            </div>
+                                        </div>
+										<div class="input-group mb-3 input-primary">
+											{{ form_widget(form.gpprice2, {'attr': {'class': 'form-control'}}) }}
+											<div class="input-group-append">
+												<span class="input-group-text">GP 2 Price</span>
+											</div>
+											</div>
+											<div class="input-group mb-3 input-primary">
+												{{ form_widget(form.gpprice3, {'attr': {'class': 'form-control'}}) }}
+												<div class="input-group-append">
+													<span class="input-group-text">GP 3 Price</span>
+												</div>
+													</div>
+
+													<button type="submit" class="btn btn-primary">Update Prices</button>
+
+
+								
+								</div>
+
+								{{ form_end(form) }}
+							</div>
+						</div>
+					</div>
+				</div>
+				{% endif %}
                     
 			</div>
         </div>
@@ -201,9 +242,6 @@
 	<!-- Datatable -->
 	<script src="{{asset('dashboard/vendor/datatables/js/jquery.dataTables.min.js')}}"></script>
 	<script src="{{asset('dashboard/js/plugins-init/datatables.init.js')}}"></script>
-<<<<<<< HEAD
 	<script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 	<script src="{{asset('dashboard/js/plugins-init/html5-qrcode.init.js')}}"></script>
-=======
->>>>>>> main
 {% endblock %}

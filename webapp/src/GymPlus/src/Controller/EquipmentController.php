@@ -124,6 +124,15 @@ class EquipmentController extends AbstractController
         return $this->redirectToRoute('app_maintenances');
     }
 
+    #[Route('/equipments', name: 'app_memequipments')]
+    public function index(EquipementsDetailsRepository $repo): Response
+    {
+        return $this->render('main/equipments/equipments.html.twig', [
+            'controller_name' => 'EquipmentController',
+            'equipments' => $repo->getEquipementsDetails(),
+        ]);
+    }
+
     
     
 

@@ -71,7 +71,7 @@ class EventDetails
      */
     #[ORM\Column(nullable: false)]
     private ?int $nbPlaces;
-
+    
     #[ORM\Column(nullable: false)]
     private ?int $nbTotal;
 

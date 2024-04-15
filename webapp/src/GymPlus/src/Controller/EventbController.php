@@ -14,6 +14,7 @@ use App\Entity\User;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Entity\EventParticipants;
 use App\Repository\EventParticipantsRepository;
+use App\Repository\EventDetailsRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\EventDetailsEditType;
 use App\Entity\BlackListed;
@@ -35,11 +36,16 @@ use Endroid\QrCode\Writer\PngWriter;
 
 class EventbController extends AbstractController
 {   private $eventParticipantsRepository;
+    private $eventdetailsRepository;
 
-    public function __construct(EventParticipantsRepository $eventParticipantsRepository)
+    public function __construct(EventParticipantsRepository $eventParticipantsRepository,EventDetailsRepository $eventDetailsRepository)
     {
         $this->eventParticipantsRepository = $eventParticipantsRepository;
+        $this->eventdetailsRepository = $eventDetailsRepository;
+
     }
+   
+    
     #[Route('/add_event', name: 'app_events')]
     public function add_event(Request $request, ManagerRegistry $registry): Response
     {
@@ -142,7 +148,8 @@ public function eventf(ManagerRegistry $registry): Response
   
 
     $events = $registry->getRepository(EventDetails::class)->findFutureEvents();
-
+    
+   //$events=$eventdetailsRepository->findFutureEvents();
     
     $eventsWithUserStatus = [];
     foreach ($events as $event) {
@@ -203,12 +210,13 @@ public function join($id, ManagerRegistry $registry, BuilderInterface $qrCodeBui
                 )
             )
         );
+      
 
     // Create the iCalendar file
     $calendar = new \Eluceo\iCal\Domain\Entity\Calendar([$event]);
     $componentFactory = new \Eluceo\iCal\Presentation\Factory\CalendarFactory();
     $iCalendarComponent = $componentFactory->createCalendar($calendar);
-      /*  
+      
     // Create the QR code
     $result = Builder::create()
         ->writer(new PngWriter())
@@ -224,8 +232,8 @@ public function join($id, ManagerRegistry $registry, BuilderInterface $qrCodeBui
 
     $response = new QrCodeResponse($result);
 
-    return $response;*/
-    return $this->redirectToRoute('app_eventsf');
+    return $response;
+    
 }
 
    

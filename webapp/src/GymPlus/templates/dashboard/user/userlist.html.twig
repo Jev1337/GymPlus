@@ -39,7 +39,7 @@
 								<strong>Error!</strong> {{ message }}
 							</div>
 							{% endfor %}
-							{{ form_start(form, { 'class': 'centered-form'}) }}
+							{{ form_start(form, {'attr': { 'class': 'centered-form', 'novalidate': 'novalidate'}}) }}
 								<div class="form-row">
 									<div class="form-group col-md-4">
 										{{ form_label(form.id) }}

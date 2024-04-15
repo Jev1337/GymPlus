@@ -1,7 +1,9 @@
 <?php
 namespace App\Controller;
 use App\Form\ObjectifType;
+use App\Form\PlanningType;
 use App\Entity\Objectif;
+use App\Entity\Planning;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,7 +30,7 @@ class ObjectifController extends AbstractController
     #[Route('/RedirectionToChatGpt', name: 'app_ChatGpt')]
     public function chatGpt( ? string $question, ? string $response): Response
     {
-        return $this->render('main/OpenAi.html.twig', [
+        return $this->render('main/test.html.twig', [
             'question' => $question,
             'response' => $response
         ]);
@@ -107,41 +109,49 @@ class ObjectifController extends AbstractController
     }*/
   
     #[Route('/add_Objectif', name: 'app_objectif')]
-    public function add_Objectif(Request $request, ManagerRegistry $registry): Response
-    {
+    public function add_Objectif(Request $request, ManagerRegistry $registry): Response {
         $user = $this->getUser();
         $obj = new Objectif();
         $form = $this->createForm(ObjectifType::class, $obj);
-        $userId = $user->getId(); 
+        $userId = $user->getId();
         $entityManager = $registry->getManager();
-        $userEntity = $entityManager->getRepository(User::class)->find($userId); 
+        $userEntity = $entityManager->getRepository(User::class)->find($userId);
         $obj->setUserid($userEntity);
-        $currentDate = new \DateTime(); 
-        $obj->setDated($currentDate); 
+        $currentDate = new \DateTime();
+        $obj->setDated($currentDate);
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $registry->getManager();
-            $entityManager->persist($obj);
-            $entityManager->flush();
-
-            if ($request->isXmlHttpRequest()) {
-                return new JsonResponse(['success' => 'Success! Adding successfully submitted.']);
+    
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                $entityManager->persist($obj);
+                $entityManager->flush();
+    
+                if ($request->isXmlHttpRequest()) {
+                    return new JsonResponse(['success' => 'Success! Adding successfully submitted.']);
+                } else {
+                    $this->addFlash(
+                        'success',
+                        'Success! Adding successfully submitted.'
+                    );
+                    return $this->redirectToRoute('app_objectif');
+                }
             } else {
-                $this->addFlash(
-                    'success',
-                    'Success! Adding successfully submitted.'
-                );
-                return $this->redirectToRoute('app_objectif'); 
+                $errors = $form->getErrors(true);
+                $errorsArray = [];
+                foreach ($errors as $error) {
+                    $errorsArray[$error->getOrigin()->getName()] = $error->getMessage();
+                }
+                return new JsonResponse($errorsArray, 400);
             }
         }
-
+    
         return $this->render('main\ObjectifFront.html.twig', [
             'controller_name' => 'ObjectifController',
-            'user' => $user, 
+            'user' => $user,
             'form' => $form->createView(),
         ]);
-    
     }
+    
 
 
 
@@ -329,8 +339,98 @@ public function getGeneratedExercices(Request $request): Response
     }
 
 
+    
+
+      
+    #[Route('/dashbord_Objective', name: 'Dashbord_Objective')]
+    public function dash_obj(ManagerRegistry $registry): Response
+    {  
+        $user = $this->getUser();
+        $userId = $user->getId(); 
+        $entityManager = $registry->getManager();
+        $objectifs = $entityManager->getRepository(Objectif::class)->findBy(['coachid' => $userId]);
+
+        return $this->render('dashboard\gestionSuivi/plan.html.twig', [
+            'controller_name' => 'ObjectifController',
+            'user' => $user,
+            'objectifs' => $objectifs,
+
+        ]);
+    }
+
+
+    
+    #[Route('/objectif/deletee/{id}', name: 'delete_Obj')]
+    public function deleteObjective2($id, ManagerRegistry $registry): Response
+    {
+        $user = $this->getUser();
+        $userId = $user->getId(); 
+        $entityManager = $registry->getManager();
+       
+        $obj = $registry->getRepository(Objectif::class)->find($id);
+        if (!$obj) {
+            throw $this->createNotFoundException('Objective not found.');
+        }
+        $entityManager->remove($obj);
+        $entityManager->flush();
+
+        $objectifs = $entityManager->getRepository(Objectif::class)->findBy(['userid' => $userId]);
+
+        $html = $this->renderView('dashboard\gestionSuivi/liste_obj.html.twig', [
+            'objectifs' => $objectifs
+        ]);
+
+        return new Response($html);
+    }
+    
 
 
 
+    #[Route('/make-planing/{objectiveId}', name: 'MakePlaning')]
+    public function MakePlaning($objectiveId, ManagerRegistry $registry, Request $request): Response
+    {  
+        $form = $this->createForm(PlanningType::class);
+        $user = $this->getUser();
+       // $obj = $registry->getRepository(Objectif::class)->find($objectiveId);    
+        $form->handleRequest($request);
 
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                $plan=$form->getData();
+              //  dd($request->files->get);
+               dd($request);
+                $entityManager = $registry->getManager();
+                $entityManager->persist($plan);
+                $entityManager->flush();
+    
+                if ($request->isXmlHttpRequest()) {
+                    return new JsonResponse(['success' => 'Success! Adding successfully submitted.']);
+                } else {
+                    $this->addFlash(
+                        'success',
+                        'Success! Adding successfully submitted.'
+                    );
+                    return $this->redirectToRoute('Dashbord_Objective');
+                }
+            } else {
+                $errors = $form->getErrors(true);
+                $errorsArray = [];
+                foreach ($errors as $error) {
+                    $errorsArray[$error->getOrigin()->getName()] = $error->getMessage();
+                }
+                return new JsonResponse($errorsArray, 400);
+            }
+        }
+
+        return $this->render('dashboard\gestionSuivi/MakingPlaning.html.twig', [
+            'controller_name' => 'ObjectifController',
+            'user' => $user,
+           // 'obj' => $obj,
+            'form' => $form->createView(),
+        ]);
+    }
+
+   
+
+  
 }

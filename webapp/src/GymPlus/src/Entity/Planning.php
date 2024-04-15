@@ -6,6 +6,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\PlanningRepository;
 
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: PlanningRepository::class)]
 class Planning
@@ -16,13 +17,15 @@ class Planning
     private ?int $idPlanning;
 
     #[ORM\Column]
-    private ?int $trainingprog;
+
+    private ?string $trainingprog;
 
     #[ORM\Column]
-    private ?int $foodprog;
+    private ?string $foodprog;
 
 
     #[ORM\ManyToOne(targetEntity: Objectif::class)]
+    #[ORM\JoinColumn(name: "idobjectif", referencedColumnName: "idobjectif")]
     private ?Objectif $idobjectif;
 
     public function getIdPlanning(): ?int

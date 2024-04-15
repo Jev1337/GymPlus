@@ -31,7 +31,9 @@ class MaintenanceType extends AbstractType
             ->add('equipementsDetails', EntityType::class, [
                 'required' => true,
                 'class' => EquipementsDetails::class,
-                'choice_label' => 'id',
+                'choice_label' => function(EquipementsDetails $equipement) {
+                    return $equipement->getId() . ' - ' . $equipement->getName();
+                },
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('ed')
                         ->where('ed.etat = :etat1 or ed.etat = :etat2')

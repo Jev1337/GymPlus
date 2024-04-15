@@ -62,7 +62,7 @@
 						{% endfor %}
 						<div class="tab-content nav">
 							
-							{{ form_start(form, {'attr': {'class': 'tab-pane active col-12', 'id': 'login'} }) }}
+							{{ form_start(form, {'attr': {'class': 'tab-pane active col-12', 'id': 'login', 'novalidate':'novalidate'} }) }}
 							<div class="m-b30">
 								<label class="label-title">Email Address</label>
 								{{ form_widget(form.email, {'attr': {'class': 'form-control', 'placeholder': 'Email Address'}}) }}

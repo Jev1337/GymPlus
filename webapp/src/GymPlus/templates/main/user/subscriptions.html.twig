@@ -4,7 +4,7 @@
 	<div class="page-content bg-white">
 
 		<!-- Banner  -->
-		<div class="dz-bnr-inr style-2" style="background-image: url('assets/images/banner/banner-2.png')">
+		<div class="dz-bnr-inr style-2" style="background-image: url('{{asset('main/images/banner/banner-2.png')}}')">
 			<div class="banner-gradient"></div>
 			<div class="container">
 				<div class="row">
@@ -23,7 +23,7 @@
 					</div>
 				</div>	
 				<div class="banner-media">
-					<img src="assets/images/banner/pic1.png" alt="/">
+					<img src="{{asset('main/images/banner/pic1.png')}}" alt="/">
 				</div>
 			</div>	
 		</div>
@@ -41,7 +41,7 @@
 							<div class="pricingtable-inner">
 								<div class="pricingtable-price">
 									<div class="pricingtable-title">GP One</div>
-									<h2 class="pricingtable-bx">$20<small>/ Per User Per Month</small></h2>
+									<h2 class="pricingtable-bx">${{gp1price}}<small>/ Per User Per 3 Months</small></h2>
 									<p class="m-b20">Basic Plan.</p>
 									<div class="pricingtable-button">
 										{% if app.user %}
@@ -73,7 +73,7 @@
 								<div class="pricingtable-price">
 									<div class="pricingtable-title">GP Two</div>
 									<div class="pricingtable-title premium">Popular Plan</div>
-									<h2 class="pricingtable-bx">$30<small>/ Per User Per Month</small></h2>
+									<h2 class="pricingtable-bx">${{gp2price}}<small>/ Per User Per 6 Months</small></h2>
 									<p class="m-b20">More Time More Gain!</p>
 									<div class="pricingtable-button">
 										{% if app.user %}
@@ -100,7 +100,7 @@
 							<div class="pricingtable-inner">
 								<div class="pricingtable-price">
 									<div class="pricingtable-title">GP Three</div>
-									<h2 class="pricingtable-bx">$50<small>/ Per User Per Month</small></h2>
+									<h2 class="pricingtable-bx">${{gp3price}}<small>/ Per User Per 12 Months</small></h2>
 									<p class="m-b20">Everything you need</p>
 									<div class="pricingtable-button">
 										{% if app.user %}
@@ -136,7 +136,7 @@
 							<h2 class="title m-0"><span class="font-weight-400">Subscribe To Our </span>Newsletter</h2>
 						</div>
 						<div class="text-center text-lg-end col-xl-6 wow fadeInUp" data-wow-delay="0.4s" style="visibility: visible; animation-delay: 0.4s; animation-name: fadeInUp;">
-							<form class="dzSubscribe" action="assets/script/mailchamp.php" method="post">
+							<form class="dzSubscribe" action="{{asset('main/script/mailchamp.php')}}" method="post">
 								<div class="dzSubscribeMsg"></div>
 								<div class="form-group">
 									<div class="input-group mb-0"> 

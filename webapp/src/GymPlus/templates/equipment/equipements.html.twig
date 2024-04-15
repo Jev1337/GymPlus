@@ -32,7 +32,7 @@
 								<h4 class="card-title">Add Equipement</h4>
 							</div>
 							<div class="card-body">
-							{{ form_start(form, { 'class': 'centered-form'}) }}
+							{{ form_start(form, { 'attr':{ 'class': 'centered-form', 'novalidate': 'novalidate'}}) }}
 								<div class="form-row">
 									<div class="form-group col-md-4">
 										{{ form_label(form.name) }}

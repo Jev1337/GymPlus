@@ -32,7 +32,7 @@ use Endroid\QrCode\Label\LabelAlignment;
 use Endroid\QrCode\Label\Font\NotoSans;
 use Endroid\QrCode\RoundBlockSizeMode;
 use Endroid\QrCode\Writer\PngWriter;
-use Twilio\TwiML\Messaging\Redirect;
+
 
 class EventbController extends AbstractController
 {   private $eventParticipantsRepository;

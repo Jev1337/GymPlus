@@ -1,0 +1,55 @@
+:root{
+	
+	/* Primary */
+	--primary: #44CEFF;
+	--primary-hover: #039bd1;
+	--primary-dark: #039bd1;
+	--primary-text: #44CEFF;
+	
+	/* Primary RGBA */
+	--rgba-primary-1: rgba(68,206,255,0.1);
+	--rgba-primary-2: rgba(68,206,255,0.2);
+	--rgba-primary-3: rgba(68,206,255,0.3);
+	--rgba-primary-4: rgba(68,206,255,0.4);
+	--rgba-primary-5: rgba(68,206,255,0.5);
+	--rgba-primary-05: rgba683,206,255,0.05);
+	--rgba-primary-6: rgba(68,206,255,0.6);
+	--rgba-primary-7: rgba(68,206,255,0.7);
+	--rgba-primary-8: rgba(68,206,255,0.8);
+	--rgba-primary-9: rgba(68,206,255,0.9);
+	
+	/* Secondary RGBA */
+	--rgba-secondary-1: rgba(0,22,30,0.1);
+	--rgba-secondary-2: rgba(0,22,30,0.2);
+	--rgba-secondary-3: rgba(0,22,30,0.3);
+	--rgba-secondary-4: rgba(0,22,30,0.4);
+	--rgba-secondary-5: rgba(0,22,30,0.5);
+	--rgba-secondary-6: rgba(0,22,30,0.6);
+	--rgba-secondary-7: rgba(0,22,30,0.7);
+	--rgba-secondary-8: rgba(0,22,30,0.8);
+	--rgba-secondary-9: rgba(0,22,30,0.9);
+	
+	
+	/* Other */
+	--secondary: #00161e;
+	--theme-text-color: #fff;
+	--title: #000000;
+	
+	/* Gradient */
+	--gradient: linear-gradient(89deg, #44CEFF 1.12%, #039bd1 44%);
+	--gradient-1: linear-gradient(90deg, #44CEFF 47.55%, #039bd1 100.15%);
+	--gradient-2: linear-gradient(90deg, #44CEFF 0%, #039bd1 100%);
+	
+	/* Box Shadow */
+	--primary-shadow: linear-gradient(90deg, #44CEFF 47.55%, #039bd1 100.15%);
+	
+	/* extra variable */
+	--theme1-bg-pattern1: url(../images/pattern/theme/bg-pattern5.svg);
+	--theme1-bg-pattern2: url(../images/main-slider/slider2/background/bg5.png);
+	
+	--theme3-bg-color: #420b17;
+	--theme3-secondary: #160105;
+	--theme3-secondary2: #3a4042;
+	--secondary-dark : #0d2c36;
+	
+}

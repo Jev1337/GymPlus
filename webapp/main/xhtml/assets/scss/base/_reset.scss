@@ -1,0 +1,370 @@
+* {
+    outline: none;
+    padding: 0;
+
+    &::after {
+        margin : 0;
+        padding: 0;
+    }
+
+    &::before {
+        margin : 0;
+        padding: 0;
+    }
+}
+
+body {
+    line-height: 1.6;
+	color:$body-color;
+	font-size: 1rem;
+	font-family: var(--font-family-base);
+	@include respond('phone'){
+		font-size: 15px;
+	}
+}
+h1 a, 
+h2 a, 
+h3 a, 
+h4 a, 
+h5 a, 
+h6 a{
+	color: var(--title);
+}
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6{
+	font-family:var(--font-family-title);
+	color:var(--title);
+}
+
+h1,
+.h1{
+	line-height:1.2;
+	font-size: $h1-font-size;
+	font-weight:900;
+	
+	@include respond('phone-land'){
+		font-size: 2.25rem;
+	}
+}
+h2,
+.h2{
+	font-size: $h2-font-size;
+	line-height:1.2;
+	font-weight:900;
+	
+	@include respond('phone-land'){
+		font-size: 1.875rem;
+	}
+}
+h3,
+.h3{
+	line-height:1.1;
+	font-size: $h3-font-size;
+	font-weight:900;
+	@include respond('tab-port'){
+		font-size: 1.625rem;
+	}
+	@include respond('phone-land'){
+		font-size: 1.375rem;
+	}
+}
+h4,
+.h4{
+	font-size: $h4-font-size;
+	line-height: 1;
+	font-weight: 700;
+	
+	@include respond('tab-port'){
+		font-size: 1.375rem;
+	}
+	@include respond('phone'){
+		font-size: 1.25rem;
+	}
+}
+h5,
+.h5{
+	font-size: $h5-font-size;
+	line-height:1;
+	font-weight:900;
+	
+}
+h6,
+.h6{
+	font-size: $h6-font-size;
+	line-height:1;
+	font-weight:900;
+}
+
+ul {
+    padding: 0;
+    margin: 0;
+}
+img {
+    border-style: none;
+    height: auto;
+    max-width: 100%;
+    vertical-align: middle;
+}
+li {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+    outline        : none;
+	color          : var(--primary);	
+	@include transitionMedium;	
+    &:hover,
+    &:focus,
+    &.active {
+        text-decoration: none;
+        outline        : none;
+		color:var(--primary-hover);
+    }
+}
+
+// COLOR
+.text-primary{
+	color:var(--primary) !important; 	
+}
+.bg-primary {
+    background-color: var(--primary) !important;
+}
+.bg-secondary{
+	background-color: var(--secondary) !important;
+}
+.bg-secondary-2{
+    background-color: var(--secondary-2) !important;
+}
+.text-secondary{
+	color:var(--secondary) !important; 	
+}
+.text-secondary-2{
+    color: var(--secondary-2) !important;
+}
+
+b,
+strong,
+.strong {
+    font-weight: 500;
+}
+
+.h-0 {
+    height: 0;
+}
+
+#main-wrapper {
+    opacity       : 0;
+    transition    : all 0.25s ease-in;
+    overflow      : hidden;
+    position      : relative;
+    z-index       : 1;
+    margin-top    : 60px;
+
+    &.show {
+        opacity: 1;
+    }
+}
+
+.content-body {
+    margin-left  : 65px;
+    margin-top   : 18px;
+    margin-right : 6px;
+    margin-bottom: 45px;
+}
+.container-fluid{
+	padding-left:30px;
+	padding-right:30px;
+	
+	@include respond('tab-land'){
+		padding-left:20px;
+		padding-right:20px;
+	}
+	@include respond('phone'){
+		padding-left:15px;
+		padding-right:15px;
+	}
+}
+
+
+// Selection
+::selection {
+	color: $white;
+	background:var(--primary);
+}
+.modal-backdrop{
+	z-index: 99999;
+}
+.modal{
+	z-index: 100000;
+}
+
+/* Flaticon */
+[class*="flaticon-"]{
+	font-family: "Flaticon";
+	vertical-align:middle;
+}
+
+// Section Specing
+.content-inner{
+	padding-top:100px;
+	padding-bottom:90px;
+	@include respond('laptop'){
+		padding-top:80px;
+		padding-bottom:70px;
+	}
+	@include respond('tab-port'){
+		padding-top:60px;
+		padding-bottom:40px;
+	}
+	@include respond('phone'){
+		padding-top:50px;
+		padding-bottom:20px;
+	}
+}
+.content-inner-1{
+	padding-top:120px;
+	padding-bottom:120px;
+	@include respond('laptop'){
+		padding-top:100px;
+		padding-bottom:100px;
+	}
+	@include respond('tab-port'){
+		padding-top:70px;
+		padding-bottom:70px;
+	}
+	@include respond('phone'){
+		padding-top:50px;
+		padding-bottom:50px;
+	}
+}
+.content-inner-2{
+	padding-top:120px;
+	padding-bottom:0;
+	@include respond('laptop'){
+		padding-top:100px;
+	}
+	@include respond('tab-port'){
+		padding-top:70px;
+	}
+	@include respond('phone'){
+		padding-top:50px;
+	}
+}
+.content-inner-3{
+	padding-top: 60px;
+	padding-bottom: 30px;
+	@include respond('tab-port'){
+		padding-top:40px;
+		padding-bottom: 20px;
+	}
+	@include respond('phone'){
+		padding-top:30px;
+		padding-bottom: 10px;
+	}
+}
+.content-inner-4{
+	padding-top: 45px;
+	padding-bottom: 20px;
+	
+	@include respond('phone'){
+		padding-top:30px;
+		padding-bottom: 20px;
+	}
+}
+
+.mfp-bg {
+    z-index: 99999;
+}
+.mfp-wrap {
+    z-index: 100000;
+}
+.rounded{
+	border-radius: var(--border-radius-base)!important;
+}
+@include respond('tab-port'){
+	.dz-order-1 {
+		order: 1;
+		margin-top: 20px;
+	}
+}
+.resize-wrapper{
+	margin-left: calc((100% - 1170px) / 2);
+}
+.theme-text-color{
+	color: var(--theme-text-color)
+}
+.bg-parallax {
+    background-attachment: fixed;
+}
+
+.layout-dark{
+	background-color: var(--secondary); 
+	p,
+	a,	
+	h1,	
+	h2,	
+	h3,	
+	h4,	
+	h5,	
+	h6{
+		color:#fff;
+	}	
+	.pr-list{
+		&.style-1{
+			li{
+				color:#fff !important;
+			}
+		}
+	}	
+	.main-bnr-three{
+		.banner-inner {
+			background-color: var(--secondary) !important; 
+			.banner-content {
+				.title {
+					color: #fff;
+				}
+				.para{
+					color:#fff;
+				}
+			}
+		}
+	}
+	.bg-secondary {
+		background-color: #fff !important;
+	}
+	.dz-card.style-3 {
+		background-color: var(--secondary);
+		.title {
+			color:#fff;
+		}
+		.dz-content{
+			.dz-body {
+				background: var(--secondary); 
+				p{
+					color:#fff;
+				}
+			}
+			.dz-date{
+				color:#fff;
+			}
+		}
+	}
+	
+	.about-bx3 .dz-media .title{
+		color:#fff;
+	}
+	
+	.nav-tabs.style-2{
+		.nav-link {
+			color: #fff;
+			border-bottom:5px solid rgba(255,255,255,0.1);
+		}
+	}
+}
+
+.DZ-theme-btn,
+.styleswitcher{
+	&.hide{
+		display: none;
+	}
+}

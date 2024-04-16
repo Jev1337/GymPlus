@@ -1,0 +1,107 @@
+// ft-clients
+.site-footer{
+	&.style-3{
+		position: relative;
+		z-index: 2;
+		.footer-top{
+			background-color:var(--secondary);
+			padding-bottom:100px;
+			position: unset;
+			@include respond('tab-port'){
+				padding-bottom:80px;
+			}
+		}
+		.sub-footer-title{
+			color: var(--primary);
+			text-align: center;
+			font-family: var(--font-family-title);
+			font-size: 14px;
+			font-weight: 500;
+			letter-spacing: 2.1px;
+			text-transform: uppercase;
+			margin-bottom:12px;
+		}
+		.para{
+			color: #FFF;
+			font-size: 15px;
+			font-weight: 500;
+			text-transform: uppercase;
+		}
+		.mid-content{
+			margin-bottom:70px;
+			@include respond('tab-port'){
+				margin-bottom:40px;
+			}
+		}
+		.social-links{
+			ul{
+				text-align:center;
+				li{
+					margin: 0 20px;
+					display: inline-block;
+					a{
+						color: #FFF;
+						font-size: 15px;
+						font-weight: 500;
+						text-transform: uppercase;
+					}
+					&:hover{
+						a{
+							color:var(--primary);
+						}
+					}
+				}
+			}
+		}
+		.footer-menu{
+			margin-bottom:70px;
+			@include respond('tab-port'){
+				margin-bottom:40px;
+			}
+			ul{
+				text-align: center;
+				li{
+					margin: 0 45px;
+					display: inline-block;
+					border-bottom:1px solid transparent;
+					@include transitionMedium;
+					&:hover{
+						border-bottom:1px solid var(--primary);
+					}
+					a{
+						color: #FFF;
+						font-family: var(--font-family-title);
+						font-size: 18px;
+						font-weight: 400;
+						letter-spacing: 2.7px;
+						text-transform: uppercase;
+					}
+					@include respond('tab-port'){
+						margin: 0 15px;
+					}
+				}
+			}
+		}
+		.footer-bottom {
+			background-color: var(--theme3-secondary2);
+			.copyright-text {
+				color: #FFF;
+				text-align: center;
+				font-family:var(--font-family-title);
+				font-size: 14px;
+				font-weight: 400;
+				letter-spacing: 2.1px;
+				text-transform: uppercase;
+				a{
+					color: var(--primary);
+				}
+			}
+		}
+		canvas.particles-js-canvas-el {
+			position: absolute;
+			top: 0;
+			left: 0;
+			opacity: 0.5;
+		}
+	}
+}

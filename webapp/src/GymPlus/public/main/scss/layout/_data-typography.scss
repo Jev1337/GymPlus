@@ -1,0 +1,114 @@
+.data-typography-1{
+	
+	// Google Fonts
+	@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+	
+	// Font Variable
+	--font-family-base: 'Poppins', sans-serif;
+	--font-family-title: 'Kuunari';
+	
+}
+
+.data-typography-2{
+	color: rgba(255, 255, 255, 0.6);
+	background-color: var(--theme3-bg-color);
+	
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6{
+		color: #fff;
+		
+		a{
+			color: #fff;
+		}
+	}
+	.dz-card{
+		background-color: var(--secondary);
+	}
+	
+	--title				: #fff;
+	--secondary: var(--theme3-secondary);
+	--secondary-2: var(--theme3-secondary2);
+	
+	.theme-bg{
+		background-color: var(--theme3-bg-color);
+	}
+	
+	.comments-area .comment-list > .comment .comment-body {
+		border-bottom-color: rgba(255, 255, 255, 0.1);
+	}
+	
+	.dz-team.style-1{
+		.dz-name{
+			background-color: var(--theme3-secondary2);
+			color: #fff;
+		}
+	}
+	.calculate-table .weight-info b,
+	.calculate-table table thead th,
+	.section-head p{		
+		color: #fff;
+	}
+	
+	.dz-box.gallery .content .view-btn{
+		background-color: var(--primary);
+	}
+
+	.form-control{
+		color: #fff;
+		background-color: transparent;
+		border: 1px solid rgba(255,255,255,0.1);
+		
+		&::placeholder{
+			color: rgba(255, 255, 255, 0.7);
+		}
+	}
+	.default-select .btn.dropdown-toggle,
+	.default-select .dropdown-toggle.wp-block-button__link{
+		color: rgba(255, 255, 255, 0.7);
+	}
+	.dz-page-text ul > li:before,
+	.dz-page-text ol > li:before,
+	.dz-card.blog-single .dz-post-text ul > li:before,
+	.dz-card.blog-single .dz-post-text ol > li:before{
+		background-color: var(--primary);
+	}
+	.swiper-pagination.style-2 .swiper-pagination-bullet{
+		color: var(--theme3-secondary2);
+	}
+	.service_menu_nav{
+		background: var(--secondary);
+	}
+	.recent-posts-entry .widget-post-bx .widget-post:not(:last-child){
+		border-image-source: linear-gradient(90deg, rgba(212, 212, 212, 0.30) 0%, rgba(0, 0, 0, 0) 100%);
+	}
+	.comment-respond .comment-form p{
+		&.comment-form-author input,
+		&.comment-form-email input,
+		&.comment-form-comment textarea{
+			color: #fff;
+			&:focus{
+				background: transparent;
+			}
+			&::placeholder{
+				color: rgba(255, 255, 255, 0.8);
+			}
+		}
+	}
+	
+	.calculate-table table thead tr,
+	.calculate-table table tbody tr{
+		border-bottom-color: rgba(255, 255, 255, 0.2);	
+	}
+	
+	.calculate-table table th, 
+	.calculate-table table td{
+		border-right-color: rgba(255, 255, 255, 0.2);	
+	}
+	.inquiry-modal .modal-content{
+		background: var(--theme3-bg-color);
+	}
+}

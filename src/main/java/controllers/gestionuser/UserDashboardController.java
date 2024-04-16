@@ -784,9 +784,9 @@ public class UserDashboardController {
                 }
                 userprofile_imageview.setImage(null);
                 user_imageview.setImage(null);
-                File oldFile = new File("src/assets/profileuploads/" +GlobalVar.getUser().getPhoto());
+                File oldFile = new File("webapp/src/gymplus/public/profileuploads/" +GlobalVar.getUser().getPhoto());
                 oldFile.delete();
-                Files.copy(file.toPath(), new File("src/assets/profileuploads/USERIMG"+ GlobalVar.getUser().getId() + file.getName().substring(file.getName().lastIndexOf("."))).toPath(), StandardCopyOption.REPLACE_EXISTING);
+                Files.copy(file.toPath(), new File("webapp/src/gymplus/public/profileuploads/USERIMG"+ GlobalVar.getUser().getId() + file.getName().substring(file.getName().lastIndexOf("."))).toPath(), StandardCopyOption.REPLACE_EXISTING);
                 Client client = new Client(GlobalVar.getUser().getId(), username_tf.getText(), firstname_tf.getText(), lastname_tf.getText(), dateofbirth_tf.getValue().toString(), GlobalVar.getUser().getPassword(), email_tf.getText(), phone_tf.getText(), address_ta.getText(), "USERIMG"+ GlobalVar.getUser().getId() + file.getName().substring(file.getName().lastIndexOf(".")), GlobalVar.getUser().getFaceid(), GlobalVar.getUser().getFaceid_ts());
                 clientService.update(client);
                 GlobalVar.setUser(client);
@@ -811,7 +811,7 @@ public class UserDashboardController {
             try {
                 userprofile_imageview.setImage(null);
                 user_imageview.setImage(null);
-                File file = new File("src/assets/profileuploads/" +GlobalVar.getUser().getPhoto());
+                File file = new File("webapp/src/gymplus/public/profileuploads/" +GlobalVar.getUser().getPhoto());
                 file.delete();
                 clientService.delete(GlobalVar.getUser().getId());
             }catch (Exception e){
@@ -1147,7 +1147,7 @@ public class UserDashboardController {
     }
     private void initProfile(){
         String photoname = GlobalVar.getUser().getPhoto();
-        user_imageview.setImage(new Image(new File("src/assets/profileuploads/" +photoname).toURI().toString()));
+        user_imageview.setImage(new Image(new File("webapp/src/gymplus/public/profileuploads/" +photoname).toURI().toString()));
         Circle clip1 = new Circle(user_imageview.getFitWidth()/2, user_imageview.getFitHeight()/2, user_imageview.getFitWidth()/2);
         user_imageview.setClip(clip1);
         user_imageview.setPreserveRatio(false);
@@ -1155,7 +1155,7 @@ public class UserDashboardController {
         clip2.setArcWidth(30);
         clip2.setArcHeight(30);
         cover_imageview.setClip(clip2);
-        userprofile_imageview.setImage(new Image(new File("src/assets/profileuploads/" +photoname).toURI().toString()));
+        userprofile_imageview.setImage(new Image(new File("webapp/src/gymplus/public/profileuploads/" +photoname).toURI().toString()));
         Circle clip3 = new Circle(userprofile_imageview.getFitWidth()/2, userprofile_imageview.getFitHeight()/2, userprofile_imageview.getFitWidth()/2);
         userprofile_imageview.setPreserveRatio(false);
         userprofile_imageview.setClip(clip3);

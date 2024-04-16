@@ -1,0 +1,267 @@
+{% extends "main/base.html.twig" %}
+
+{% block css %}
+	<link href="{{asset('main/vendor/ScheduleBootsrap/bootstrap.min.css')}}" rel="stylesheet">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+	<link href="{{asset('main/vendor/ScheduleBootsrap/main.min.css')}}" rel="stylesheet">
+	{{ parent() }}
+{% endblock %}
+{% block content %}
+
+
+	<div class="page-content bg-white">		
+		<!--banner-->
+			<div class="contact-bnr"  style="background-image: url({{asset('main/images/background/bg9.png')}});">
+				<div class="container">
+					<div class="row">
+						<div class="col-lg-6">
+
+							<div class="contact-info style-1 text-start text-white">
+                          <svg class="title animation-text" viewBox="0 0 1320 300">
+									<text x="0" y="1em">Transform Your</text>
+									<text x="0" y="2em">Body at GymPlus!</text>
+								</svg>					
+								<br></br>		
+								<p class="text wow fadeInUp" data-wow-delay="0.2s"><span class="text-decoration-underline text-white"><a class="text-white" href="javascript:void(0)">PowerZone is here to help you;</a></span> <br> Our experts are available to answer any questions you might have. We’ve got the answers.</p>
+								<div class="contact-bottom wow fadeInUp" data-wow-delay="0.3s">
+									<div class="contact-left">
+										<h3>Call Us</h3>
+										<ul>
+											<li><a href="tel:+011234567890">+01-123-456-7890</a></li>
+											<li><a href="tel:+019785687400">+01-978-568-7400</a></li>
+										</ul>
+									</div>
+									<div class="contact-right">
+										<h3>Email Us</h3>
+										<ul>
+											<li>help@example.com</li>
+										</ul>
+									</div>		
+								</div>
+							</div>
+						</div>
+					
+					
+
+						<div class="col-lg-6"   >
+							<div class="contact-area1 style-1 m-r20 m-md-r0 wow fadeInUp"  data-wow-delay="0.5s">
+								   <div class="dzFormMsg" ></div>
+                                 {{ form_start(form, {'attr': {'class': 'dz-form dzForm', 'id': 'objectif', 'novalidate': 'novalidate'} }) }} 
+									<div class="form-group">
+											<label class="form-label">Weight Objectif</label>
+												<div class="input-group" >
+														{{ form_widget(form.poidsobj, {'attr': {'class': 'form-control', 'id': 'poidsobj', 'onkeypress': 'return isNumeric(event)', 'placeholder': 'Objective Weight kg'}}) }}
+																</div>	
+														{% set poidsobjErrors = form_errors(form.poidsobj) | striptags %}
+														{% if poidsobjErrors %}
+															<div class="alert alert-danger  alert-dismissible fade show">
+														<svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+															<strong>Warning!</strong> {{ poidsobjErrors }}.
+														<button type="button" class="close h-100" data-bs-dismiss="alert" aria-label="Close">
+															<span><i class="fa-solid fa-xmark"></i></span>
+														</button>
+												</div>
+												{% endif %}
+
+												<label class="form-label">Weight Actuelle</label>
+												<div class="input-group">
+												{{ form_widget(form.poidsact, {'attr': {'class': 'form-control', 'placeholder': 'Actual Weight kg', 'id': 'poidsact', 'onkeypress': 'return isNumeric(event)'}}) }}
+													</div>
+														{% set poidsactErrors = form_errors(form.poidsact) | striptags %}
+														 {% if poidsactErrors %}
+																	<div class="alert alert-danger  alert-dismissible fade show">
+																<svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+																<strong>Warning!</strong> {{ poidsactErrors }}.
+																<button type="button" class="close h-100" data-bs-dismiss="alert" aria-label="Close">
+																	<span><i class="fa-solid fa-xmark"></i></span>
+																</button>
+													</div>
+														 {% endif %}
+																		<label class="form-label">Height</label>
+																		<div class="input-group">
+																		{{ form_widget(form.taille, {'attr': {'class': 'form-control', 'placeholder': 'Height cm', 'id': 'taille', 'onkeypress': 'return isNumeric(event)'}}) }}
+																		</div>
+																	{% set tailleErrors = form_errors(form.taille) | striptags %}
+																		{% if tailleErrors %}
+																			<div class="alert alert-danger  alert-dismissible fade show">
+																				<svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+																				<strong>Warning!</strong> {{ tailleErrors }}.
+																				<button type="button" class="close h-100" data-bs-dismiss="alert" aria-label="Close">
+																					<span><i class="fa-solid fa-xmark"></i></span>
+																				</button>
+																			</div>
+																		{% endif %}
+																												
+
+															<label class="form-label">Something To Say*</label>
+															<div class="input-group">
+															{{ form_widget(form.alergie, {'attr': {'class': 'form-control', 'placeholder': 'Something To Say*'}}) }}
+															</div>
+									                                        {% set alergieErrors = form_errors(form.alergie) | striptags %}
+																		{% if alergieErrors %}
+																			<div class="alert alert-danger  alert-dismissible fade show">
+																				<svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+																				<strong>Warning!</strong> {{ alergieErrors }}.
+																				<button type="button" class="close h-100" data-bs-dismiss="alert" aria-label="Close">
+																					<span><i class="fa-solid fa-xmark"></i></span>
+																				</button>
+																			</div>
+																		{% endif %}
+
+
+												<label class="form-label" for="{{ form.typeobj.vars.id }}">Type Objectif</label>
+												<div class="input-group">
+												{{ form_widget(form.typeobj, {'attr': {'class': 'form-control', 'placeholder': '', 'id': form.typeobj.vars.id}}) }}
+												</div>
+                                                                               
+															<label class="form-label">Date</label>
+																<div class="input-group">
+																	{{ form_widget(form.datef, {'attr': {'class': 'form-control', 'placeholder': 'Date of objective'}}) }}
+																</div>
+																	      {% set datefErrors = form_errors(form.datef) | striptags %}
+																		{% if datefErrors %}
+																			<div class="alert alert-danger  alert-dismissible fade show">
+																				<svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+																				<strong>Warning!</strong> {{ datefErrors }}.
+																				<button type="button" class="close h-100" data-bs-dismiss="alert" aria-label="Close">
+																					<span><i class="fa-solid fa-xmark"></i></span>
+																				</button>
+																			</div>
+																		{% endif %}
+                                                                                          
+																<label class="form-label">Coach</label>
+																<div class="input-group">
+															{{ form_widget(form.coachid, {'attr': {'class': 'form-control'}}) }}
+																		</div>
+
+																	<div class="text-center">
+																{{ form_widget(form.submit, {'attr': {'class': 'btn btn-primary w-100 btnhover', 'value': 'Add Objectif'} } ) }}
+															</div>				
+													</div>
+															<div class="alert alert-success alert-dismissible fade show" role="alert" style="display: none;" id="success-alert">
+																	<svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+																		<polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon>
+																		<line x1="15" y1="9" x2="9" y2="15"></line>
+																		<line x1="9" y1="9" x2="15" y2="15"></line>
+																	</svg>
+																	<strong>Success!</strong> Adding successfully submitted.
+																	<button type="button" class="close h-100" data-bs-dismiss="alert" aria-label="Close">
+																		<span><i class="fa-solid fa-xmark"></i></span>
+																	</button>
+																</div>
+
+												
+															 {{ form_end(form) }}
+
+
+								</div>
+								
+							</div>
+							
+						</div>
+						
+					</div>
+				</div>
+			</div>
+
+		<div class="content-inner-2 pt-0">
+		 <section class="content-inner portfolio-wrapper">
+			<div class="portfolio-wrapper-inner" style="margin-top: -60px;">
+				<div class="swiper portfolio-slider" >
+					<div class="swiper-wrapper" id="lightgallery">
+						<div class="swiper-slide">
+							<div class="dz-box style-3 overlay-shine wow fadeInUp" data-wow-delay="1.2s">
+									<img src="{{ asset('main/images/gallery/grid1/AAAA.jpg') }}" alt="Image Description">
+							</div>
+						</div>
+						<div class="swiper-slide">
+							<div class="dz-box style-3 overlay-shine wow fadeInUp" data-wow-delay="1.4s">
+									<img src="{{ asset('main/images/gallery/grid1/BBBB.jpg') }}" alt="Image Description">
+								
+							</div>
+						</div>
+						<div class="swiper-slide">
+							<div class="dz-box style-3 overlay-shine wow fadeInUp" data-wow-delay="1.6s">
+									<img src="{{ asset('main/images/gallery/grid1/CCCC.jpg') }}" alt="Image Description">
+								
+							</div>
+						</div>
+						<div class="swiper-slide">
+							<div class="dz-box style-3 overlay-shine wow fadeInUp" data-wow-delay="1.7s">
+									<img src="{{ asset('main/images/gallery/grid1/DDDD.jpg') }}" alt="Image Description">
+								
+							</div>
+						</div>
+						
+					</div>
+				</div> 
+			</div>
+			</section>
+
+		</div>
+		<section class="call-action style-2 bg-img-fix bg-primary m-0"  style="margin-top: 20px;">
+			<div class="container">
+				<div class="inner-content">
+					<div class="row justify-content-between align-items-center">
+						<div class="text-center text-lg-start col-xl-6 m-lg-b20 wow fadeInUp" data-wow-delay="0.2s">
+							<h2 class="title m-0"><span class="font-weight-400">Subscribe To Our </span>Newsletter</h2>
+						</div>
+						<div class="text-center text-lg-end col-xl-6 wow fadeInUp" data-wow-delay="0.4s">
+							<form class="dzSubscribe" action="{{asset('main/script/mailchamp.php')}}" method="post">
+								<div class="dzSubscribeMsg"></div>
+								<div class="form-group">
+									<div class="input-group mb-0"> 
+										<div class="input-skew">
+											<input name="dzEmail" required="required" type="email" class="form-control" placeholder="Your Email Address">
+										</div>
+										<div class="input-group-addon">
+											<button name="submit" value="Submit" type="submit" class="btn btn-secondary btn-lg btn-skew h-100"><span class="skew-inner"><span class="text">Subscribe Now</span></span></button>
+										</div>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		<!-- Call To Action -->
+		</div>
+
+ 
+{% endblock %}
+
+{% block js %}
+    {{ parent() }}
+    <script>
+        function isNumeric(event) {
+            const inputValue = event.key;
+            const isNumeric = /^[\d.,]*$/.test(inputValue);
+            return isNumeric;
+        }
+
+        $(document).ready(function() {
+            $('form').on('submit', function(e) {
+                e.preventDefault();
+
+
+
+
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: $(this).attr('method'),
+                    data: $(this).serialize(),
+                    success: function(response) {
+                        if(response.success) {
+                            $('.alert-success').show();
+                        } else {
+                            // Handle error
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}
+
+					

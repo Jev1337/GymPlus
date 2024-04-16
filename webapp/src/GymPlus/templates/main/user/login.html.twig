@@ -1,0 +1,245 @@
+
+{% extends "main/base.html.twig" %}
+{% block content%}
+	<div class="page-content bg-white">
+
+		<section class="p-0 overflow-hidden">
+			<div class="row">
+				<div class="col-xxl-6 col-xl-6 col-lg-6 col-md-12 p-a0">
+					<div class="swiper login-slider">
+						<div class="swiper-wrapper">
+							<div class="swiper-slide">
+								<div class="banner-login" style="background-image: url({{asset('main/images/about/image-box/pic1.jpg')}})">
+									<div class="banner-content">
+										<h2 class="title wow fadeInUp" data-wow-delay="0.4s">The Powerhouse Team Behind Your Transformation!</h2>
+										<p class="text wow fadeInUp" data-wow-delay="0.6s">Nunc vulputate urna ut erat posuere accumsan. Curabitur ut commodo mauris, ac volutpat dui. Nullam eget enim ut mi bibendum ultrices. Pellentesque non feugiat nisi.</p>
+									</div>
+								</div>
+							</div>
+							<div class="swiper-slide">
+								<div class="banner-login" style="background-image: url({{asset('main/images/about/image-box/pic2.jpg')}})">
+									<div class="banner-content">
+										<h2 class="title wow fadeInUp" data-wow-delay="0.4s">The Powerhouse Team Behind Your Transformation!</h2>
+										<p class="text wow fadeInUp" data-wow-delay="0.6s">Nunc vulputate urna ut erat posuere accumsan. Curabitur ut commodo mauris, ac volutpat dui. Nullam eget enim ut mi bibendum ultrices. Pellentesque non feugiat nisi.</p>
+									</div>
+								</div>
+							</div>
+							<div class="swiper-slide">
+								<div class="banner-login" style="background-image: url({{asset('main/images/about/image-box/pic3.jpg')}})">
+									<div class="banner-content">
+										<h2 class="title wow fadeInUp" data-wow-delay="0.4s">The Powerhouse Team Behind Your Transformation!</h2>
+										<p class="text wow fadeInUp" data-wow-delay="0.6s">Nunc vulputate urna ut erat posuere accumsan. Curabitur ut commodo mauris, ac volutpat dui. Nullam eget enim ut mi bibendum ultrices. Pellentesque non feugiat nisi.</p>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="container">
+							<div class="num-pagination wow fadeInUp" data-wow-delay="0.8s">
+								<div class="swiper-pagination main-pagination style-2"></div>
+							</div>
+						</div>
+						<div class="main-btn wow fadeInUp" data-wow-delay="1.0s">
+							<div class="main-btn-prev btn-prev"><i class="fa-solid fa-arrow-left"></i></div>
+							<div class="main-btn-next btn-next"><i class="fa-solid fa-arrow-right"></i></div>
+						</div>
+					</div>
+				</div>
+				<div class="col-xxl-6 col-xl-6 col-lg-6 col-md-12 end-side-content">
+					<div class="login-area sticky-top wow fadeInUp" data-wow-delay="0.4s">
+						<h2 class="title">Welcome Back</h2>
+						<p class="text-white text-center m-b25">Please login to your account</p>
+						{% for message in app.flashes('success') %}
+								<div class="alert alert-success">
+									<i class="fa-solid fa-check"></i>
+									{{ message }}
+								</div>
+							{% endfor %}
+							{% for message in app.flashes('error') %}
+								<div class="alert alert-danger">
+									<i class="fa-solid fa-times"></i>
+									{{ message }}
+								</div>
+						{% endfor %}
+						<div class="tab-content nav">
+							
+							{{ form_start(form, {'attr': {'class': 'tab-pane active col-12', 'id': 'login', 'novalidate':'novalidate'} }) }}
+							<div class="m-b30">
+								<label class="label-title">Email Address</label>
+								{{ form_widget(form.email, {'attr': {'class': 'form-control', 'placeholder': 'Email Address'}}) }}
+								<small class="text-danger">{{ form_errors(form.email) }}</small>
+							</div>
+							<div class="m-b10">
+								<label class="label-title">Password</label>
+								<div class="secure-input">
+									{{ form_widget(form.password, {'attr': {'class': 'form-control dz-password', 'placeholder': 'Password'}}) }}
+									<div class="show-pass">
+										<i class="eye-open fa-regular fa-eye"></i>
+									</div>
+									<small class="text-danger">{{ form_errors(form.password) }}</small>
+								</div>
+							</div>
+							
+							<div class="text-left d-flex align-items justify-content-between m-b30">
+								<a data-bs-toggle="tab" href="#forgot-password" class="m-l5">Forgot Password</a> 
+								<div class="custom-control custom-checkbox">
+									<input type="checkbox" class="form-check-input" id="basic_checkbox_1">
+									<label class="form-check-label" for="basic_checkbox_1">Remember Me</label>
+								</div>
+							</div>
+							<div class="text-center">
+
+								{{ form_widget(form.submit, {'attr': {'class': 'btn btn-primary m-b15 w-100', 'value': 'Login'} } ) }}
+								<!-- button with a face icon -->
+								<a href="#" class="btn" id="faceid"><img src="{{asset('main/images/Face_ID_logo.svg.png')}}" alt="Face ID" style="width: 40px; height: 40px;"></a>
+								<br>
+								<video id="video" width="1280" height="720" autoplay style="display: none;"></video>
+								<canvas id="canvas" style="display: none;" width="1280" height="720"></canvas>
+								<a href="javascript:void(0);" class="btn-link">Don’t have account?<span> Sign Up</span></a> 
+							</div>
+							
+        					
+							{{ form_end(form) }}
+							<form id="forgot-password" class="tab-pane fade  col-12 text-center">
+								<h4 class="m-b5 text-white">Forget Password ?</h4>
+								<small class="font-weight-600 m-b20 d-block text-white">We will send you an email to reset your password. </small>
+								<div class="mb-3">
+									<label class="label-title">E-MAIL *</label>
+									<input name="dzName" required="" class="form-control" placeholder="Your Email Id" type="email">
+								</div>
+								<div class="text-center"> 
+									<a class="btn btn-light m-r10 rounded-0" data-bs-toggle="tab" href="#login">Back</a>
+									<button class="btn btn-primary rounded-0">Submit</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		
+	</div>
+{% endblock %}
+
+{% block js %}
+	{{ parent() }}
+		<script src="{{ asset('main/js/face-api.min.js') }}"></script>
+	    <script>
+		let intervalId = null;
+		let sent = 0;
+        // Function to start the camera and perform face detection
+        async function startCamera() {
+			const email = document.getElementById('login_email').value;
+            const video = document.getElementById('video');
+            const canvas = document.getElementById('canvas');
+            const context = canvas.getContext('2d');
+
+            // Load models
+            await faceapi.nets.tinyFaceDetector.loadFromUri('{{ asset('main/bins/')}}');
+            await faceapi.nets.faceLandmark68Net.loadFromUri('{{ asset('main/bins/')}}');
+            await faceapi.nets.faceRecognitionNet.loadFromUri('{{ asset('main/bins/')}}');
+
+            // Start video stream
+            navigator.mediaDevices.getUserMedia({ video: {} })
+                .then(function (stream) {
+                    video.srcObject = stream;
+                })
+                .catch(function (err) {
+                    console.error('Error accessing the camera: ', err);
+                });
+
+            sent = 0;
+            // Detect face in real-time
+            video.addEventListener('play', () => {
+                const displaySize = { width: video.width, height: video.height };
+                intervalId = setInterval(async () => {
+                    const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceDescriptors();
+                    if (detections.length > 0 && sent == 0) {
+						console.log('Face detected');
+                        sent = 1;
+                        // Face detected, capture image
+                        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+						const imgData = canvas.toDataURL('image/jpeg');
+
+						//write the image to a new element
+						var img = document.createElement('img');
+						img.src = imgData;
+						document.body.appendChild(img);
+
+                        // Stop video stream
+                        video.srcObject.getTracks().forEach(track => track.stop());
+                        // Send AJAX request
+                        $.ajax({
+                            url: '{{ path('app_faceidcheck') }}',
+                            type: 'POST',
+                            data: { image: imgData, email: email  },
+                            success: function (response) {
+                                if (response.status == 'success') {
+									window.location.href = '{{ path('app_home') }}';
+								} else {
+									swal("Oops...", "Face not recognized! Please try again.", "error")
+								}
+                            },
+                            error: function (err) {
+                                swal("Oops...", "Something went wrong! Please try again.", "error")
+                            }
+                        });
+
+						// remove clicked class
+						document.getElementById('faceid').classList.remove('clicked');
+                        // Stop the interval
+                        clearInterval(this);
+                    }else if (sent == 1){
+						if (video.srcObject) {
+							video.srcObject.getTracks().forEach(track => track.stop());
+						}
+						if (intervalId) {
+							clearInterval(intervalId);
+						}
+					}
+					
+                }, 1000); // Adjust the interval as needed
+            });
+        }
+
+        // Start camera when the button is clicked
+        document.getElementById('faceid').addEventListener('click', function () {
+			if(document.getElementById('faceid').classList.contains('clicked')) return;
+
+			const email = document.getElementById('login_email').value;
+			
+			$.ajax({
+				url: '{{ path('app_verifyface') }}',
+				type: 'POST',
+				data: { email: email },
+				success: function (response) {
+					if (response.exists) {
+						startCamera();
+						document.getElementById('faceid').classList.add('clicked');
+						swal({
+							title: "Scanning your face...",
+							text: "Hang tight! We are scanning your face for verification.",
+							imageUrl: "{{asset('main/images/face.gif')}}",	
+							showCancelButton: true,
+							showConfirmButton: false,
+						}).then((result) => {
+							if (result.dismiss === swal.DismissReason.cancel || result.dismiss === swal.DismissReason.backdrop || result.dismiss === swal.DismissReason.esc) {
+								if (sent == 0){
+									sent = 1;
+									swal("Cancelled", "FaceID verification cancelled.", "error");
+								}else{
+									swal("Oops...", "Cannot cancel because request has already been sent!", "error")
+								}
+							}
+						});
+					} else {
+						swal("Oops...", "Either account does not exist, FaceID Expired or FaceID is not setup.", "error")
+					}
+				},
+				error: function (err) {
+					swal("Oops...", "Something went wrong! Please try again.", "error")
+				}
+			});
+        });
+    </script>
+
+{% endblock %}

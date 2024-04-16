@@ -16,7 +16,7 @@ public class MediaPlayerController {
 
 
 
-    private MediaPlayer mediaPlayer;
+    private static MediaPlayer mediaPlayer;
 
     @FXML
     void chooseMusic(MouseEvent event) {
@@ -33,6 +33,7 @@ public class MediaPlayerController {
 
     @FXML
     void pause(MouseEvent event) {
+
         mediaPlayer.pause();
     }
 

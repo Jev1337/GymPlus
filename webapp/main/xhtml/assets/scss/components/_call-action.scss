@@ -1,0 +1,234 @@
+.call-action {
+	position: relative;
+	z-index: unset;
+	
+	&.style-2 {
+		margin-top: 50px;
+		z-index:9;
+		.inner-content{
+			background: transparent;
+			margin: 0;
+			overflow: visible;
+			box-shadow: none;
+			padding: 50px 0 30px;
+			padding-top: 0;
+
+			&:after {
+				content: none;
+			}
+			.title  {
+				font-size: 50px;
+    			font-style: italic;
+				color: var(--theme-text-color);
+			}
+			@include respond('tab-port'){
+   			 	.title  {
+					font-size: 40px;
+				}
+			}
+			@include respond('phone-land'){
+   			 	.title  {
+					font-size: 36px;
+				}
+			}
+			@include respond('phone'){
+   			 	.title  {
+					font-size: 35px;
+				}
+			}
+		}
+		&:after{
+			content: "";
+			background-image: var(--theme1-bg-pattern1);
+		    background-attachment: unset;
+    		background-size: cover;
+			position: absolute;
+			top: -48px;
+			left: 0;
+			width: 100%;
+			height: 50px;
+			z-index:-1;
+		}
+		.input-skew{
+			.form-control{
+				height: 100%;
+				&:placeholder{
+					transform: skewX(0deg);
+				}
+			}
+		}
+		@include respond('phone'){
+			.input-group-addon{
+				width: 100%;
+			}
+			.input-skew {
+				width: 100%;
+				margin: 0 10px 15px;
+			}
+		}
+		.form-group{
+			margin-bottom:0;
+		}
+	}
+	&.footer-action{
+		margin-bottom: -100px;
+		position: relative;
+		z-index: 9;
+	}
+	&.style-3{
+		z-index: 99;
+		padding-top: 20px;
+		padding-bottom: 30px;
+		margin-top: 10px;
+		&:after {
+			content: "";
+			background-image: var(--theme1-bg-pattern1);
+		    background-attachment: unset;
+    		background-size: cover;
+			position: absolute;
+			left: 0;
+			width: 100%;
+			top: -48px;
+			height: 50px;
+			path {
+				fill: #000;
+			}
+			
+			@include respond('phone-land'){
+				top: -33px;
+				height: 35px;
+			}
+		}
+		@include respond('laptop'){
+			padding-top: 10px;
+			padding-bottom: 20px;
+		}
+
+		.action-title {
+			@include respond('phone'){
+				text-align:center;
+			}
+			h2{
+				margin: 0;
+				line-height: 1;
+				font-size: 50px;
+				font-weight: 500;
+				font-style: italic;
+				color: var(--theme-text-color);
+				span {
+					font-weight: 900;
+				}
+			}
+			h3{
+				margin: 0;
+				font-size: 30px;
+				font-weight: 500;
+				font-style: italic;
+				color: var(--theme-text-color);
+			}
+			@include respond('laptop'){
+				h2 {
+					font-size: 42px;
+				}
+				h3 {
+					font-size: 25px;
+				}	
+			}
+			@include custommq ($max:1199px){
+				h2 {
+					font-size: 35px;
+				}
+				h3 {
+					font-size: 21px;
+				}	
+			}
+			@include respond('phone'){
+				h2 {
+					font-size:28px;
+				}
+				h3 {
+					font-size: 16px;
+				}	
+			}
+		}
+		.contact {
+			text-align: right;
+			@include respond('tab-port'){
+				text-align: center;
+			}
+			h2  a{
+				font-size: 50px;
+				font-style: italic;
+				line-height: 1;
+				margin: 0;
+				color: var(--theme-text-color);
+				font-weight: 900;
+				@include respond('phone-land'){
+					font-size: 38px;
+				}
+				@include respond('phone'){
+					font-size: 26px;
+				}
+			}
+			h4 {
+				font-style: italic;
+				font-weight: 500;
+				margin-bottom:0;
+				font-size: 24px;
+				color: var(--theme-text-color);
+			}
+			@include respond('laptop'){
+				h2 {
+					font-size: 42px;
+				}
+				h4 {
+					font-size: 20px;
+				}	
+			}
+			@include custommq ($max:1199px){
+				h2 {
+					font-size: 35px;
+				}
+				h4 {
+					font-size: 18px;
+					margin-bottom: 2px;
+				}	
+			}
+			@include respond('phone'){
+				h2 {
+					font-size: 28px;
+				}
+				h4 {
+					font-size:17px;
+				}	
+			}
+		}
+	}
+}
+
+@keyframes upToRight {
+	49% {
+		transform: translateX(100%); 
+	}
+	50% {
+		opacity: 0;
+		transform: translateX(-100%); 
+	}
+	51% {
+		opacity: 1; 
+	}
+}
+
+
+@keyframes upToDown {
+	49% {
+		transform: translateY(100%);
+	}
+	50% {
+		opacity: 0;
+		transform: translateY(-100%);
+	}
+	51% {
+		opacity: 1;
+	}	
+}

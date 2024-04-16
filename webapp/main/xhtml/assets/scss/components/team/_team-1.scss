@@ -1,0 +1,479 @@
+.dz-team{
+	// Style 1
+	&.style-1{
+		position:relative;
+		margin-bottom: 100px;
+		.dz-media{
+			@include transitionMedium;
+			img{
+				padding-bottom: 20px;
+				height: 100%;
+				object-fit: cover;
+				@include transitionMedium;
+				@include custommq ($max:1199px){
+	    			padding-bottom: 10px;
+				}
+				@include respond('tab-port'){
+				    padding-bottom: 0px;
+				}
+			}
+			.overlay-content{
+				position:absolute;
+			}
+			&:after{
+				content: '';
+				position: absolute;
+				top: 0;
+				right: 0;
+				width: 5px;
+				height: 100%;
+				background: transparent;
+				transition: 0.5s;
+			}
+		}
+		.team-social{
+			position: absolute;
+			right: 0;
+			top: 25px;
+			z-index: 3;
+			li{
+				position: relative;
+				a{
+    				font-size: 16px;
+    				width: 100%;
+    				height: 100%;
+					transform: skewY(12deg);
+					display:inline-block;
+					color:var(--title);
+					opacity:0;
+					margin-bottom: 5px;
+					background-color: var(--primary);
+					height: 45px;
+					line-height: 45px;
+					width: 45px;
+					text-align:center;
+					transform: translateX(50px) skewY(-12deg);
+					@for $i from 1 to 4 {
+					   &:nth-child(#{$i}) { transition: $i * 0.2s; }
+					}
+				}
+			}
+		}
+		.dz-position{
+			margin-bottom:0;
+		    font-size: 21px;
+			font-weight: 500;
+			padding: 12px 0;
+			padding-right: 25px;
+		    text-align: end;
+    		width: 75%;
+			position: absolute;
+		    bottom: -60px;
+		    right: 0px;
+		    text-transform: uppercase;
+		    z-index: 2;
+		    @include transitionMedium;
+		    color: white !important;
+		    background-color: var(--secondary);
+		    @include custommq($max: 1199px) {
+				font-size: 16px;
+				padding: 8px 25px;
+				bottom: -50px;
+			}
+			@include respond('phone-land'){
+    			padding-right: 18px;
+    			padding-left: 0;
+			}
+		}
+		.dz-name{
+		    text-transform: uppercase;
+		    background-color: var(--primary);
+			margin-bottom:0px;
+			padding: 25px 25px 25px 0;
+			text-align: right;
+			width: 100%;
+		    font-size: 40px;
+		    font-weight: 900;
+	        position: absolute;
+	        letter-spacing: 4.4px;
+		    bottom: -15px;
+		    right: 0px;
+		    z-index: 1;
+			@include respond('laptop'){
+				font-size: 32px;
+			}
+			@include custommq($max: 1199px) {
+				font-size: 28px;
+				padding: 17px 25px;
+				padding-left: 0;
+				font-weight: 600;
+			}
+			@include respond('phone-land'){
+    			padding-right: 18px;
+    			padding-left: 0;
+			}
+		}
+		.dz-content{
+			position: absolute;
+		    width: 100%;
+	        transform: skewY(-17deg);
+		}
+		&:hover,
+		&.active{
+			.team-social{
+				li{
+					a{
+						transform: translateY(0px) skewY(-12deg);
+						opacity:1;
+					}
+				}
+			}
+			.dz-media{
+				img{
+					transform: scale(1.1);
+				}
+				&:after{
+					background: var(--primary);
+				}
+			}
+
+		}
+	}
+	
+// Style 2
+	&.style-2{
+		position:relative;
+		margin-bottom: 100px;
+		.dz-media{
+			@include transitionMedium;
+			img{
+				height: 100%;
+				object-fit: cover;
+				@include custommq ($max:1199px){
+	    			padding-bottom: 10px;
+				}
+				@include respond('tab-port'){
+				    padding-bottom: 0px;
+				}
+			}
+			.overlay-content{
+				position:absolute;
+			}
+		}
+		.team-social{
+		    position: absolute;
+			right: 20px;
+			top: 20px;
+			z-index: 3;
+			li{
+				position: relative;
+				a{
+    				font-size: 16px;
+					display:inline-block;
+					color:var(--primary);
+					background:#fff;
+					height: 35px;
+					line-height: 35px;
+					width: 35px;
+					opacity:0;
+					margin-bottom: 5px;
+					text-align:center;
+					transform: translateX(50px);
+					@for $i from 1 to 4 {
+						&:nth-child(#{$i}) { transition: $i * 0.2s; }
+					}
+				}
+			}
+		}
+		.dz-position{
+			font-size: 16px;
+			font-weight: 500;
+			color:#fff;
+		}
+		.dz-name{
+			font-size: 30px;
+			font-weight: 500;
+			color:#fff;
+		}
+		.dz-content{
+			position: absolute;
+		    width: 100%;
+			background:var(--primary);
+			padding:15px;
+			text-align:center;
+		}
+		&:hover,
+		&.active{
+			.team-social{
+				li{
+					a{
+						transform: translateY(0px);
+						opacity:1;
+					}
+				}
+			}
+		}
+	}
+	
+	// Style 3
+	&.style-3{
+		position: relative;
+		overflow: hidden;
+		.dz-media{
+			@include transitionMedium;
+			margin:0;
+			img{
+				height: 100%;
+				object-fit: cover;
+				@include custommq ($max:1199px){
+	    			padding-bottom: 10px;
+				}
+				@include respond('tab-port'){
+				    padding-bottom: 0px;
+				}
+			}
+			.overlay-content{
+				position:absolute;
+			}
+		}
+		.team-social{
+			position: absolute;
+			left: 20px;
+			top: 20px;
+			z-index: 3;
+			display: flex;
+			gap: 8px;
+			li{
+				position: relative;
+				a{
+    				font-size: 16px;
+					display:inline-block;
+					color:var(--title);
+					background:#fff;
+					height: 35px;
+					line-height: 35px;
+					width: 35px;
+					opacity:0;
+					margin-bottom: 5px;
+					text-align:center;
+					transform: translateX(-50px);
+					@for $i from 1 to 4 {
+						&:nth-child(#{$i}) { transition: $i * 0.2s; }
+					}
+				}
+			}
+		}
+		.dz-position{
+			font-size: 13px;
+			font-weight: 500;
+			color:#fff;
+		}
+		.dz-name{
+			font-size: 30px;
+			font-weight: 700;
+			color: #fff;
+			margin-bottom: 0;
+			font-style: italic;
+		}
+		.dz-content{
+			position: absolute;
+			width: fit-content;
+			background: var(--primary);
+			padding: 15px;
+			bottom: 5%;
+			&:after{
+				content: '';
+				position: absolute;
+				right: -9px;
+				top: 0;
+				width: 20px;
+				height: 100%;
+				background: var(--primary);
+				transform: skew(-10deg, 1deg);
+				z-index: 0;
+			}
+		}
+		&:hover,
+		&.active{
+			.team-social{
+				li{
+					a{
+						transform: translateY(0px);
+						opacity:1;
+					}
+				}
+			}
+		}
+	}
+	
+	// Style 4
+	&.style-4{
+		position:relative;
+		@include transitionMedium;
+		@include respond('tab-port'){
+			margin-bottom:40px;
+		}
+		.dz-media{
+			@include transitionMedium;
+			max-height:270px;
+			z-index:1;
+			&:after{
+				content: '';
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				background: var(--secondary);
+				mix-blend-mode: lighten;
+				z-index: 0;
+			}
+			img{
+				height: 100%;
+				@include transitionMedium;
+				object-fit: cover;
+				@include custommq ($max:1199px){
+	    			padding-bottom: 10px;
+				}
+				@include respond('tab-port'){
+				    padding-bottom: 0px;
+				}
+			}
+			.overlay-content{
+				position:absolute;
+			}
+		}
+		.dz-name{
+			font-size: 14px;
+			font-weight: 700;
+			color:var(--title);
+			letter-spacing: 1.4px;
+			text-transform: uppercase;
+			background: var(--primary);
+			width: fit-content;
+			padding: 5px 10px;
+			font-family: var(--font-family-title);
+			@include transitionMedium;
+			transform: translate(-100%, 0%);
+			margin: 0;
+		}
+		.dz-position{
+			font-size: 20px;
+			font-weight: 700;
+			color:#fff;
+			letter-spacing: 2px;
+			text-transform: uppercase;
+			background: var(--secondary);
+			width: fit-content;
+			padding: 10px;
+			font-family: var(--font-family-title);
+			@include transitionMedium;
+			transform: translate(0%, 130%);
+			margin-bottom:0;
+		}
+
+		.dz-content{
+			position: absolute;
+			@include transitionMedium;
+			overflow:hidden;
+			bottom: -40px;
+			z-index: 99;
+		}
+		&:hover,
+		&.active{
+			.dz-content{
+				.dz-position{
+					transform: translate(0%, 0%);
+				}
+				.dz-name{
+					transform: translate(0%, 0%);
+				}
+			}
+			.dz-media{
+				img{
+					transform: scale(1.1);
+				}
+			}
+			
+		}
+	}
+	
+	
+
+}
+.team-slider {
+	.dz-team{
+		margin-bottom: 90px;
+		@include respond('phone-land'){
+			margin-bottom: 70px;
+		}
+		@include respond('phone'){
+			margin-bottom: 80px;
+			margin-left: 15px;
+			margin-right: 15px;
+		}
+	}
+}
+
+.team-slider-wrapper {
+	.btn-next,
+	.btn-prev {
+		position: absolute;
+	    top: 50%;
+	    left: 8%;
+	    color: #fff;
+	}
+	.btn-next {
+	    right: 8%;
+	    left: auto;
+	}
+	.num-pagination{
+		margin-top: 50px;
+		@include respond('phone-land'){
+			margin-top: 30px;
+		}
+		@include respond('phone'){
+			margin-top: 20px;
+		}
+	}
+	&:hover{
+		.btn-prev {
+		    left: 12%;
+		}
+		.btn-next {
+		    right: 12%;
+		}
+	}
+	@include respond('wide-desktop'){
+		.btn-prev {
+		    left: 50px;
+		}
+		.btn-next {
+		    right: 50px;
+		}
+		&:hover {
+			.btn-prev {
+			    left: 100px;
+			}
+			.btn-next {
+			    right: 100px;
+			}
+		}
+	}
+	@include respond('laptop'){
+		.btn-prev {
+		    left: 50px;
+		}
+		.btn-next {
+		    right: 50px;
+		}
+		&:hover {
+			.btn-prev {
+			    left: 50px;
+			}
+			.btn-next {
+			    right: 50px;
+			}
+		}
+	}
+}

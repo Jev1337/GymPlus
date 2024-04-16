@@ -41,15 +41,15 @@
             <Label fx:id="PoidsActLabel" layoutX="162.0" layoutY="202.0" text="Poids Actuelle" />
             <Label fx:id="TailleLabel" layoutX="162.0" layoutY="228.0" text="Taille" />
             <Separator layoutX="36.0" layoutY="257.0" prefHeight="3.0" prefWidth="215.0" />
-            <Label fx:id="descriptionLbale" layoutX="47.0" layoutY="85.0" prefHeight="21.0" prefWidth="222.0" text="Label" />
+            <Label fx:id="descriptionLbale" layoutX="47.0" layoutY="89.0" prefHeight="21.0" prefWidth="222.0" text="Label" />
             <ImageView fitHeight="35.0" fitWidth="35.0" layoutX="17.0" layoutY="264.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../assets/images/Calendar.png" />
                </image>
             </ImageView>
-            <Text fill="#504df2" layoutX="69.0" layoutY="282.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Début" />
+            <Text fill="#504df2" layoutX="69.0" layoutY="287.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Début" />
             <Separator layoutX="141.0" layoutY="270.0" orientation="VERTICAL" prefHeight="73.0" prefWidth="16.0" />
-            <Text fill="#504df2" layoutX="188.0" layoutY="282.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Fin" />
+            <Text fill="#504df2" layoutX="188.0" layoutY="288.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Fin" />
             <Label fx:id="DateDLabel" layoutX="54.0" layoutY="306.0" text="20/20/2023" />
             <Label fx:id="DateFinLabel" layoutX="160.0" layoutY="306.0" text="20/20/2023" />
             <Text fill="#504df2" layoutX="53.0" layoutY="168.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nom" />

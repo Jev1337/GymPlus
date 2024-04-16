@@ -1,0 +1,146 @@
+{% extends "main/base.html.twig" %}
+{% block content %}
+
+<div class="page-content bg-white">
+		
+		<!-- Banner  -->
+		<div class="dz-bnr-inr style-2" style="background-image: url('{{asset('main/images/banner/banner-2.png')}}')">
+			<div class="banner-gradient"></div>
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-8">
+						<div class="dz-bnr-inr-entry">
+							<h1>Events</h1>
+							<!-- Breadcrumb Row -->
+							<nav aria-label="breadcrumb" class="breadcrumb-row">
+								<ul class="breadcrumb">
+									<li class="breadcrumb-item"><a href="index.html">Home</a></li>
+									
+									<li class="breadcrumb-item active" aria-current="page">Events</li>
+								</ul>
+							</nav>
+							<!-- Breadcrumb Row End -->
+						</div>
+					</div>
+				</div>	
+				<div class="banner-media">
+					<img src="{{asset('main/images/banner/pic4.png')}}" alt="/">
+				</div>
+			</div>	
+		</div>
+		<!-- Banner End -->
+	<div class="container text-center my-4">
+    <a href="{{ path('rewards') }}" class="text-decoration-none text-dark">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Event Points</h5>
+                <p class="card-text">{{ user_points }}</p>
+               
+            </div>
+        </div>
+    </a>
+    <div id="countdown"></div>
+</div>
+
+		<!-- Our Events -->
+		<section class="content-inner">
+		
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="row justify-content-center">
+		{% for event in events %}
+    <div class="col-xl-6 col-lg-8">
+        <div class="dz-card style-1 blog-half m-b30 overlay-shine wow fadeInUp" data-wow-delay="0.2s">
+            <div class="dz-media">
+                
+                <a href="javascript:void(0);"><img src="{{ asset('main/images/event/' ~ event.event.type ~ '.jpg') }}" alt="/"></a>
+            </div>
+            <div class="dz-info">
+                <div class="dz-meta">
+                    <ul>
+                        <li class="dz-date">
+                            <span>{{ event.event.eventDate|date('d') }}</span> {{ event.event.eventDate|date('M') }}
+                        </li>
+                        <li class="dz-time">
+                            <a href="javascript:void(0);">{{ event.event.eventDate|date('g:i a') }}</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <h4 class="dz-title"><a href="event-detail.html">{{ event.event.name }}</a></h4>
+                <p>Type: {{ event.event.type }}</p>
+                <p>Duration: {{ event.event.duree }} Minutes</p>
+                <p>Remaining Spots: {{ event.event.nbPlaces }}</p>
+                <form action="{{ event.isUserParticipant ? path('event_leave', {'id': event.event.id}) : path('event_join', {'id': event.event.id}) }}" method="post">
+    <button type="submit" class="btn btn-skew appointment-btn join-button {{ event.isUserParticipant ? 'btn-danger' : 'btn-primary' }}">
+    <span class="skew-inner"><span class="text">{{ event.isUserParticipant ? 'Leave' : 'Join' }}</span></span>
+</button>
+
+</form>
+	
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+							
+						
+					</div>
+				</div>
+			</div>
+		</section>
+		<!-- Our Events -->
+		
+		
+		
+	</div>
+
+{% endblock %}
+{% block js %}
+{{parent()}}
+<script>
+    {% set claimStatusFlashes = app.flashes('claimStatus') %}
+    {% if claimStatusFlashes is not empty %}
+     {% set status = claimStatusFlashes[0] %}
+     if ('{{ status }}' === 'success') {
+         Swal.fire({
+             title: "Good job!",
+             text: "You clicked the button!",
+             icon: "success"
+         });
+     } else if ('{{ status }}' === 'error') {
+         Swal.fire({
+             icon: "error",
+             title: "Oops...",
+             text: "Something went wrong!",
+             footer: '<a href="#">Why do I have this issue?</a>'
+         });
+     }
+     {% endif %}
+     {% if nextEventDate is null %}
+     document.getElementById("countdown").innerHTML = "<h2>No Upcoming Events For You</h2>";
+ {% else %}
+     
+         var countdown = new Date("{{ nextEventDate|date('Y/m/d H:i:s') }}").getTime();
+        
+         var x = setInterval(function() {
+             var now = new Date().getTime();
+             var distance = countdown - now;
+         
+             if (distance <= 0) {
+                 clearInterval(x);
+                 document.getElementById("countdown").innerHTML = "<h2>No Upcoming Events For You</h2>";
+                 return;
+             }
+         
+             var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+             var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+             var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+             var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+             document.getElementById("countdown").innerHTML = "<h2>Your Next Event Is In :</h2><h3>" + days + "d " + hours + "h "
+                 + minutes + "m " + seconds + "s </h3>";
+         }, 1000);
+ 
+ {% endif %}
+</script>
+{% endblock %}

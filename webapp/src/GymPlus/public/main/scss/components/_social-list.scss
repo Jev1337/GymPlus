@@ -1,0 +1,130 @@
+.dz-social-icon{
+	ul{
+		li{
+			display:inline-block;
+			padding-left: 5px;
+			padding-right: 5px;
+			a{
+				font-size: 18px;
+				color:#fff;
+				@include transitionMedium;
+				&:hover{
+					color:var(--primary);
+				}
+			}
+			&:first-child {
+				padding-left: 0;
+				margin-left: 0;
+			}
+		}
+	}
+	&.dark {
+		ul{
+			li a {
+				color:$dark;
+			}
+		}
+	}
+	&.style-1{	
+		ul{
+			li{
+				display:inline-block;
+				a{
+					
+					display:inline-block;
+					height: 40px;
+					width: 40px;
+					min-width: 40px;
+					line-height: 40px;
+					font-size: 16px;
+					text-align: center;
+					background-color:var(--primary);
+					color: var(--theme-text-color);
+					@include transitionMedium;
+					@include respond ('phone-land'){
+						height: 32px;
+						width: 32px;
+						min-width: 32px;
+						line-height: 32px;
+						font-size: 14px;					
+					}
+				}
+			}
+		}
+		&.dark {
+			ul li a{
+				&:hover {
+					background-color: #fff;
+					color: var(--title);
+					i{
+					color: var(--title);
+					}
+				}
+			}
+		}
+	}
+	&.style-2{
+		ul{
+			li{
+				a{
+					height: 45px;
+					min-width: 45px;
+					line-height: 45px;
+					font-size: 18px;
+					text-align: center;
+					border-radius: var(--border-radius-base);
+					@include transitionMedium;
+					border: 1px solid black;
+					color:black;
+					&:hover {
+						border-color:var(--primary);
+						background-color:var(--primary);
+						color:white;
+						box-shadow: 0px 12px 20px 0px var(--rgba-primary-3);
+					}
+					@include respond ('phone-land'){
+						height: 40px;
+						width: 40px;
+						min-width: 40px;
+						line-height: 40px;
+						font-size: 16px;
+					}
+				}
+			}
+		}
+	}
+	&.style-3{	
+		ul{
+			li{
+				display:inline-block;
+				a{
+					height: 40px;
+					width: 40px;
+					min-width: 40px;
+					line-height: 40px;
+					font-size: 16px;
+					text-align: center;
+					background-color: #373737;
+					color:#fff;
+					@include transitionMedium;
+					&:hover{
+						background-color: var(--primary);
+					}
+					@include respond ('phone-land'){
+						height: 40px;
+						width: 40px;
+						min-width: 40px;
+						line-height: 40px;
+						font-size: 16px;
+					}
+				}
+			}
+		}
+		&.dark {
+			ul li a:hover {
+				background-color: #fff;
+				color: #000;
+			}
+		}
+	}
+}

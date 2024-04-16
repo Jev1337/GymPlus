@@ -103,7 +103,7 @@ public class BlogController {
         File file = new File(photo_tf.getText());
         try {
             if (!photo_tf.getText().isEmpty()) {
-                File dest = new File("src/assets/profileuploads/USERIMG" + file.getName().substring(file.getName().lastIndexOf(".")));
+                File dest = new File("webapp/src/gymplus/public/profileuploads/USERIMG" + file.getName().substring(file.getName().lastIndexOf(".")));
                 Files.copy(file.toPath(), dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
                 photo = dest.getName();
             }
@@ -184,7 +184,7 @@ public class BlogController {
 
         username.setText(GlobalVar.getUser().getUsername());
         String profilePic = GlobalVar.getUser().getPhoto();
-        Image img = new Image(new File("src/assets/profileuploads/" + profilePic).toURI().toString());
+        Image img = new Image(new File("webapp/src/gymplus/public/profileuploads/" + profilePic).toURI().toString());
         userPic.setImage(img);
         Circle clip1 = new Circle(userPic.getFitWidth() / 2, userPic.getFitHeight() / 2, userPic.getFitWidth() / 2);
         userPic.setClip(clip1);

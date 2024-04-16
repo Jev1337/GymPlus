@@ -1,0 +1,234 @@
+{% extends 'main/base.html.twig' %}
+{% block content %}
+	<div class="page-content bg-white">
+		
+		<!-- Banner  -->
+		<div class="dz-bnr-inr style-2" style="background-image: url('{{asset('main/images/banner/banner-2.png')}}')">
+			<div class="banner-gradient"></div>
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-8">
+						<div class="dz-bnr-inr-entry">
+							<h1>Profile</h1>
+							<!-- Breadcrumb Row -->
+							<nav aria-label="breadcrumb" class="breadcrumb-row">
+								<ul class="breadcrumb">
+									<li class="breadcrumb-item"><a href="index.html">Home</a></li>
+									<li class="breadcrumb-item active" aria-current="page">Profile</li>
+								</ul>
+							</nav>
+							<!-- Breadcrumb Row End -->
+						</div>
+					</div>
+				</div>	
+				<div class="banner-media">
+					<img src="{{asset('main/images/banner/pic4.png')}}" alt="/">
+				</div>
+			</div>	
+		</div>
+		<!-- Banner End -->
+		
+		<section class="content-inner">
+			<div class="container clearfix">
+				<div id="masonry" class="row" data-masonry='{"percentPosition": true}'>
+					
+					<div class="card-container col-lg-4 col-md-6">
+						<div class="widget bg-white p-a20">
+							<div class="widget-title">
+								<h4 class="title">About Me</h4>
+							</div>
+							<div class="widget-about">
+								<div class="dz-box">
+									<div class="dz-media" id="userphoto" style="cursor: pointer">
+										
+										<img src="{{asset('profileuploads/' ~ app.user.photo)}}"  alt="">
+									</div>
+									<div class="dz-info m-t15">
+										<h5 class="dz-title">About Me</h5>
+										<p class="m-b10 font-14">A Motivated GymPlus Fitness Member who is dedicated to make gym a better place for everyone.</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<div class="card-container col-lg-8 col-md-6">
+
+							{% for message in app.flashes('error') %}
+								<div class="alert alert-danger">
+									<i class="fa-solid fa-times"></i>
+									{{ message }}
+								</div>
+						{% endfor %}
+						<div class="widget widget-newslatter bg-white p-a20">
+							<div class="widget-title">
+								<h4 class="title">Account Information</h4>
+							</div>
+							<div class="news-box">
+							<form id="imageForm" action="/api/modifyImage" method="post" enctype="multipart/form-data" style="display: none;">
+								<input type="file" id="imageInput" name="image">
+								<input type="submit" id="submitBtn">
+							</form>
+								<p>Modify your account information</p>
+								{{ form_start(form, {'attr': {'class': 'row', 'id': 'form-0', 'novalidate':'novalidate'}}) }}
+								
+								<div class="col-md-4 col-lg-4 form-group">
+									{{ form_label(form.username, 'Username', {'label_attr': {'class': 'form-label'}}) }}
+									<div class="input-group input-line">
+										{{ form_widget(form.username, {'attr': {'class': 'form-control', 'placeholder': 'Username'}}) }}
+									</div>
+									<small class="text-danger">{{ form_errors(form.username) }}</small>
+								</div>
+
+								<div class="col-md-4 col-lg-4 form-group">
+									{{ form_label(form.firstname, 'First Name', {'label_attr': {'class': 'form-label'}}) }}
+									<div class="input-group input-line">
+										{{ form_widget(form.firstname, {'attr': {'class': 'form-control', 'placeholder': 'First Name'}}) }}
+									</div>
+									<small class="text-danger">{{ form_errors(form.firstname) }}</small>
+								</div>
+
+								<div class="col-md-4 col-lg-4 form-group">
+									{{ form_label(form.lastname, 'Last Name', {'label_attr': {'class': 'form-label'}}) }}
+									<div class="input-group input-line">
+										{{ form_widget(form.lastname, {'attr': {'class': 'form-control', 'placeholder': 'Last Name'}}) }}
+									</div>
+									<small class="text-danger">{{ form_errors(form.lastname) }}</small>
+								</div>
+
+								<div class="col-md-4 col-lg-4 form-group">
+									{{ form_label(form.dateNaiss, 'Date of Birth', {'label_attr': {'class': 'form-label'}}) }}
+									<div class="input-group input-line">
+										{{ form_widget(form.dateNaiss, {'attr': {'class': 'form-control', 'placeholder': 'Date of Birth'}}) }}
+									</div>
+									<small class="text-danger">{{ form_errors(form.dateNaiss) }}</small>
+								</div>
+
+								<div class="col-md-4 col-lg-4 form-group">
+									{{ form_label(form.numTel, 'Phone Number', {'label_attr': {'class': 'form-label'}}) }}
+									<div class="input-group input-line">
+										{{ form_widget(form.numTel, {'attr': {'class': 'form-control', 'placeholder': 'Phone Number'}}) }}
+									</div>
+									<small class="text-danger">{{ form_errors(form.numTel) }}</small>
+								</div>
+
+								<div class="col-md-4 col-lg-4 form-group">
+									{{ form_label(form.adresse, 'Address', {'label_attr': {'class': 'form-label'}}) }}
+									<div class="input-group input-line">
+										{{ form_widget(form.adresse, {'attr': {'class': 'form-control', 'placeholder': 'Address'}}) }}
+									</div>
+									<small class="text-danger">{{ form_errors(form.adresse) }}</small>
+								</div>
+
+								<!-- button submit from form and put it to the rightest side -->
+								<div class="col-md-12 text-right">
+										<span>To delete your account, please contact us or download our Desktop App.</span>
+										{{ form_widget(form.submit, {'attr': {'class': 'btn btn-primary btn-lg float-end'}}) }}
+								</div>
+								{{ form_end(form) }}
+							</div>
+						</div>
+					</div>
+					</div>
+				</div>
+			</div>
+		</section>
+	</div>
+	<!-- Content END-->
+
+	<!-- Call To Action -->
+		<section class="call-action style-2 bg-img-fix bg-primary">
+			<div class="container">
+				<div class="inner-content">
+					<div class="row justify-content-between align-items-center">
+						<div class="text-center text-lg-start col-xl-6 m-lg-b20 wow fadeInUp" data-wow-delay="0.2s" style="visibility: visible; animation-delay: 0.2s; animation-name: fadeInUp;">
+							<h2 class="title m-0"><span class="font-weight-400">Subscribe To Our </span>Newsletter</h2>
+						</div>
+						<div class="text-center text-lg-end col-xl-6 wow fadeInUp" data-wow-delay="0.4s" style="visibility: visible; animation-delay: 0.4s; animation-name: fadeInUp;">
+							<form class="dzSubscribe" action="{{asset('script/mailchamp.php')}}" method="post">
+								<div class="dzSubscribeMsg"></div>
+								<div class="form-group">
+									<div class="input-group mb-0"> 
+										<div class="input-skew">
+											<input name="dzEmail" required="required" type="email" class="form-control" placeholder="Your Email Address">
+										</div>
+										<div class="input-group-addon">
+											<button name="submit" value="Submit" type="submit" class="btn btn-secondary btn-lg btn-skew h-100"><span class="skew-inner"><span class="text">Subscribe Now</span></span></button>
+										</div>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		<!-- Call To Action -->
+					
+
+{% endblock %}
+
+{% block js %}
+	{{ parent() }}
+	<script>
+	
+		document.getElementById('form-0').addEventListener('submit', function(e) {
+				
+			if(document.getElementById('modify_user_numTel').value != {{ app.user.numTel }}) {
+				e.preventDefault();
+				const req = new XMLHttpRequest();
+				const num = document.getElementById('modify_user_numTel').value;
+				req.open('GET', '/api/sendSms?phone=' + document.getElementById('modify_user_numTel').value);
+				req.send();
+				Swal.fire({
+				title: "Please enter the confirmation code",
+				input: "text",
+				inputAttributes: {
+					autocapitalize: "off"
+				},
+				showCancelButton: true,
+				confirmButtonText: "Confirm",
+				showLoaderOnConfirm: true,
+				
+				preConfirm: async (code) => {
+					try {
+					const githubUrl = `
+						/api/verifyPhone?phone=${num}&code=${code}
+					`;
+					const response = await fetch(githubUrl);
+					if (!response.ok) {
+						return Swal.showValidationMessage(`
+						${JSON.stringify(await response.json())}
+						`);
+					}
+					return response.json();
+					} catch (error) {
+					Swal.showValidationMessage(`
+						Error validating code, please try again.
+					`);
+				}
+			},
+			allowOutsideClick: () => !Swal.isLoading()
+				}).then((result) => {
+				if (result.value.status === "success") {
+					console.log(result);
+					document.getElementById('form-0').submit();
+				}});
+			}
+
+			});
+
+			{% for message in app.flashes('success') %}
+			{% if loop.first %}
+				swal("{{ message }}", "", "success")
+			{% endif %}
+			
+			{% endfor %}
+		document.getElementById('userphoto').addEventListener('click', function() {
+			document.getElementById('imageInput').click();
+		});
+		document.getElementById('imageInput').addEventListener('change', function() {
+			document.getElementById('submitBtn').click();
+		});
+	</script>
+{% endblock %}

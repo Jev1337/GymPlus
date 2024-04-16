@@ -7,12 +7,16 @@
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.effect.Glow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
@@ -83,8 +87,8 @@
                   <TextField layoutX="61.0" prefHeight="25.0" prefWidth="227.0" />
                </children>
             </Pane>
-            <HBox fx:id="rechercheHbox" layoutX="1129.0" layoutY="74.0" prefHeight="25.0" prefWidth="37.0" />
-            <HBox fx:id="rechercheHbox2" layoutX="1141.0" layoutY="20.0" prefHeight="25.0" prefWidth="25.0" />
+            <HBox fx:id="rechercheHbox" layoutX="1129.0" layoutY="74.0" prefHeight="25.0" prefWidth="37.0" visible="false" />
+            <HBox fx:id="rechercheHbox2" layoutX="1141.0" layoutY="20.0" prefHeight="25.0" prefWidth="25.0" visible="false" />
             <Pane layoutX="29.0" layoutY="3.0" prefHeight="106.0" prefWidth="399.0" stylesheets="@../assets/images/style.css">
                <children>
                   <Text fill="#504df2" layoutX="7.0" layoutY="24.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Get you membership with us and enjoy our New Features">
@@ -250,7 +254,7 @@
             <DropShadow />
          </effect>
       </Pane>
-      <Pane layoutX="8.0" layoutY="123.0" prefHeight="45.0" prefWidth="1149.0" styleClass="degrade-diagonal2" stylesheets="@../assets/images/style.css">
+      <Pane layoutX="8.0" layoutY="131.0" prefHeight="45.0" prefWidth="1149.0" styleClass="degrade-diagonal2" stylesheets="@../assets/images/style.css">
          <effect>
             <DropShadow />
          </effect>
@@ -267,11 +271,11 @@
                   <Image url="@../assets/images/Barbeeell.png" />
                </image>
             </ImageView>
-            <Button fx:id="burnedCalsButton" layoutX="1014.0" layoutY="14.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="130.0" text="Wifi Real TimeTracker" />
+            <Button fx:id="PlansButton" layoutX="1014.0" layoutY="14.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="130.0" text="Plans" />
             <Button fx:id="GetMacros" layoutX="535.0" layoutY="14.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="94.0" text="Get Macros" />
          </children>
       </Pane>
-      <ImageView fitHeight="139.0" fitWidth="1157.0" layoutX="4.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="139.0" fitWidth="1157.0" layoutX="4.0" layoutY="7.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../assets/images/Capture (1).png" />
          </image>
@@ -296,5 +300,120 @@
          <effect>
             <DropShadow />
          </effect></Pane>
+      <Pane fx:id="PlanningOnglet" layoutX="31.0" layoutY="477.0" prefHeight="446.0" prefWidth="373.0" stylesheets="@../assets/images/style.css" visible="false">
+         <styleClass>
+            <String fx:value="border-table" />
+            <String fx:value="degrade-diagonal2" />
+         </styleClass>
+         <effect>
+            <DropShadow />
+         </effect>
+      </Pane>
+      <ScrollPane fx:id="PlanningScrolll" layoutX="500.0" layoutY="321.0" prefHeight="684.0" prefWidth="650.0" styleClass="degrade-diagonal" stylesheets="@../assets/images/style.css" visible="false">
+         <content>
+            <VBox fx:id="ListePlanning" prefHeight="680.0" prefWidth="651.0" />
+         </content>
+      </ScrollPane>
+      <Pane fx:id="PaneDone1" layoutX="30.0" layoutY="332.0" prefHeight="93.0" prefWidth="211.0" stylesheets="@../assets/images/style.css" visible="false">
+         <styleClass>
+            <String fx:value="border-table" />
+            <String fx:value="degrade-diagonal2" />
+         </styleClass>
+         <effect>
+            <DropShadow />
+         </effect>
+         <children>
+            <Text fill="#575757" layoutX="111.0" layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Plans done" wrappingWidth="80.0" />
+            <Circle layoutX="54.0" layoutY="46.0" radius="40.0" stroke="WHITE" strokeType="INSIDE">
+               <fill>
+                  <LinearGradient endX="1.0" endY="1.0" startX="0.23696682464454977">
+                     <stops>
+                        <Stop>
+                           <color>
+                              <Color red="0.23759999871253967" green="0.6719847321510315" blue="0.8799999952316284" />
+                           </color>
+                        </Stop>
+                        <Stop offset="0.006711409395973154">
+                           <color>
+                              <Color red="0.23759999871253967" green="0.6719847321510315" blue="0.8799999952316284" />
+                           </color>
+                        </Stop>
+                        <Stop offset="0.4847560975609756">
+                           <color>
+                              <Color red="0.10080000013113022" green="0.21252000331878662" blue="0.41999998688697815" />
+                           </color>
+                        </Stop>
+                        <Stop offset="1.0">
+                           <color>
+                              <Color red="0.250980406999588" green="0.4000000059604645" blue="0.658823549747467" />
+                           </color>
+                        </Stop>
+                     </stops>
+                  </LinearGradient>
+               </fill>
+            </Circle>
+            <ImageView fitHeight="40.0" fitWidth="40.0" layoutX="34.0" layoutY="24.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../assets/images/Done.png" />
+               </image>
+               <effect>
+                  <Glow />
+               </effect>
+            </ImageView>
+            <Text fx:id="PlansDoneText" fill="#362f2f" layoutX="125.0" layoutY="71.0" strokeType="OUTSIDE" strokeWidth="0.0" text="plans" wrappingWidth="48.0">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Text>
+         </children>
+      </Pane>
+      <Pane fx:id="Pane2Prog" layoutX="259.0" layoutY="332.0" prefHeight="93.0" prefWidth="211.0" stylesheets="@../assets/images/style.css" visible="false">
+         <styleClass>
+            <String fx:value="border-table" />
+            <String fx:value="degrade-diagonal2" />
+         </styleClass>
+         <effect>
+            <DropShadow />
+         </effect>
+         <children>
+            <Circle layoutX="49.0" layoutY="48.0" radius="40.0" stroke="WHITE" strokeType="INSIDE">
+               <fill>
+                  <LinearGradient endX="1.0" endY="1.0">
+                     <stops>
+                        <Stop>
+                           <color>
+                              <Color red="0.03533138334751129" green="0.1622888296842575" blue="0.3815789520740509" />
+                           </color>
+                        </Stop>
+                        <Stop offset="0.49390243902439024">
+                           <color>
+                              <Color red="0.250980406999588" green="0.4000000059604645" blue="0.658823549747467" />
+                           </color>
+                        </Stop>
+                        <Stop offset="1.0">
+                           <color>
+                              <Color red="0.1535087674856186" green="0.3143274784088135" blue="0.5921052694320679" />
+                           </color>
+                        </Stop>
+                     </stops>
+                  </LinearGradient>
+               </fill>
+            </Circle>
+            <Text fx:id="ProgressTerxt" fill="#362f2f" layoutX="131.0" layoutY="67.0" strokeType="OUTSIDE" strokeWidth="0.0" text="plans" wrappingWidth="48.0">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Text>
+            <Text fill="#575757" layoutX="96.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Plans in progress" wrappingWidth="105.240234375" />
+            <ImageView fitHeight="40.0" fitWidth="48.0" layoutX="30.0" layoutY="27.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../assets/images/Progress%20Indicator.png" />
+               </image>
+               <effect>
+                  <DropShadow />
+               </effect>
+            </ImageView>
+         </children>
+      </Pane>
    </children>
 </AnchorPane>

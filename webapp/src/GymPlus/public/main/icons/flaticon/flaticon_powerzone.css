@@ -1,0 +1,334 @@
+@font-face {
+  font-family: "flaticon_powerzone";
+  src: url("./flaticon_powerzone.ttf?176e0e412fd32da40f46712509c8acd6") format("truetype"), url("./flaticon_powerzone.woff?176e0e412fd32da40f46712509c8acd6") format("woff"), url("./flaticon_powerzone.woff2?176e0e412fd32da40f46712509c8acd6") format("woff2"), url("./flaticon_powerzone.eot?176e0e412fd32da40f46712509c8acd6#iefix") format("embedded-opentype"), url("./flaticon_powerzone.svg?176e0e412fd32da40f46712509c8acd6#flaticon_powerzone") format("svg");
+}
+i[class^=flaticon-]:before, i[class*=" flaticon-"]:before {
+  font-family: flaticon_powerzone !important;
+  font-style: normal;
+  font-weight: normal !important;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.flaticon-run:before {
+  content: "\f101";
+}
+
+.flaticon-premium:before {
+  content: "\f102";
+}
+
+.flaticon-magnifying-glass:before {
+  content: "\f103";
+}
+
+.flaticon-right-arrow:before {
+  content: "\f104";
+}
+
+.flaticon-fitness:before {
+  content: "\f105";
+}
+
+.flaticon-medal:before {
+  content: "\f106";
+}
+
+.flaticon-calendar:before {
+  content: "\f107";
+}
+
+.flaticon-running-shoes:before {
+  content: "\f108";
+}
+
+.flaticon-heart-beat:before {
+  content: "\f109";
+}
+
+.flaticon-smart-watch:before {
+  content: "\f10a";
+}
+
+.flaticon-body:before {
+  content: "\f10b";
+}
+
+.flaticon-body-1:before {
+  content: "\f10c";
+}
+
+.flaticon-shoulder:before {
+  content: "\f10d";
+}
+
+.flaticon-muscles:before {
+  content: "\f10e";
+}
+
+.flaticon-instagram:before {
+  content: "\f10f";
+}
+
+.flaticon-whatsapp:before {
+  content: "\f110";
+}
+
+.flaticon-right-arrow-1:before {
+  content: "\f111";
+}
+
+.flaticon-weightlifting:before {
+  content: "\f112";
+}
+
+.flaticon-workout:before {
+  content: "\f113";
+}
+
+.flaticon-dumbell:before {
+  content: "\f114";
+}
+
+.flaticon-rating:before {
+  content: "\f115";
+}
+
+.flaticon-quote:before {
+  content: "\f116";
+}
+
+.flaticon-close:before {
+  content: "\f117";
+}
+
+.flaticon-credit-card:before {
+  content: "\f118";
+}
+
+.flaticon-coupon:before {
+  content: "\f119";
+}
+
+.flaticon-shipped:before {
+  content: "\f11a";
+}
+
+.flaticon-edit:before {
+  content: "\f11b";
+}
+
+.flaticon-credit-card-1:before {
+  content: "\f11c";
+}
+
+.flaticon-cheque:before {
+  content: "\f11d";
+}
+
+.flaticon-withdrawal:before {
+  content: "\f11e";
+}
+
+.flaticon-money:before {
+  content: "\f11f";
+}
+
+.flaticon-verify:before {
+  content: "\f120";
+}
+
+.flaticon-play:before {
+  content: "\f121";
+}
+
+.flaticon-athletics:before {
+  content: "\f122";
+}
+
+.flaticon-check-mark:before {
+  content: "\f123";
+}
+
+.flaticon-paper-plane:before {
+  content: "\f124";
+}
+
+.flaticon-verify-1:before {
+  content: "\f125";
+}
+
+.flaticon-down-arrow:before {
+  content: "\f126";
+}
+
+.flaticon-share:before {
+  content: "\f127";
+}
+
+.flaticon-exercise:before {
+  content: "\f128";
+}
+
+.flaticon-man:before {
+  content: "\f129";
+}
+
+.flaticon-shoes:before {
+  content: "\f12a";
+}
+
+.flaticon-training:before {
+  content: "\f12b";
+}
+
+.flaticon-exercise-1:before {
+  content: "\f12c";
+}
+
+.flaticon-user:before {
+  content: "\f12d";
+}
+
+.flaticon-left-quotes-sign:before {
+  content: "\f12e";
+}
+
+.flaticon-phone-call:before {
+  content: "\f12f";
+}
+
+.flaticon-home:before {
+  content: "\f130";
+}
+
+.flaticon-page:before {
+  content: "\f131";
+}
+
+.flaticon-text-document:before {
+  content: "\f132";
+}
+
+.flaticon-heart:before {
+  content: "\f133";
+}
+
+.flaticon-headphones:before {
+  content: "\f134";
+}
+
+.flaticon-blogging:before {
+  content: "\f135";
+}
+
+.flaticon-blog:before {
+  content: "\f136";
+}
+
+.flaticon-contact-center:before {
+  content: "\f137";
+}
+
+.flaticon-email:before {
+  content: "\f138";
+}
+
+.flaticon-email-1:before {
+  content: "\f139";
+}
+
+.flaticon-envelope:before {
+  content: "\f13a";
+}
+
+.flaticon-dumbbell:before {
+  content: "\f13b";
+}
+
+.flaticon-kettlebell:before {
+  content: "\f13c";
+}
+
+.flaticon-gym-2:before {
+  content: "\f13d";
+}
+
+.flaticon-gym-3:before {
+  content: "\f13e";
+}
+
+.flaticon-stationary-bike:before {
+  content: "\f13f";
+}
+
+.flaticon-exercise-2:before {
+  content: "\f140";
+}
+
+.flaticon-skipping-rope:before {
+  content: "\f141";
+}
+
+.flaticon-dumbbells:before {
+  content: "\f142";
+}
+
+.flaticon-kettlebell-1:before {
+  content: "\f143";
+}
+
+.flaticon-supplement-bottle:before {
+  content: "\f144";
+}
+
+.flaticon-gym-machine:before {
+  content: "\f145";
+}
+
+.flaticon-gym-equipment:before {
+  content: "\f146";
+}
+
+.flaticon-settings:before {
+  content: "\f147";
+}
+
+.flaticon-menu:before {
+  content: "\f148";
+}
+
+.flaticon-menu-1:before {
+  content: "\f149";
+}
+
+.flaticon-loupe:before {
+  content: "\f14a";
+}
+
+.flaticon-notification-bell:before {
+  content: "\f14b";
+}
+
+.flaticon-settings-1:before {
+  content: "\f14c";
+}
+
+.flaticon-star:before {
+  content: "\f14d";
+}
+
+.flaticon-right-quote:before {
+  content: "\f14e";
+}
+
+.flaticon-calendar-1:before {
+  content: "\f14f";
+}
+
+.flaticon-chat:before {
+  content: "\f150";
+}/*# sourceMappingURL=flaticon_powerzone.css.map */

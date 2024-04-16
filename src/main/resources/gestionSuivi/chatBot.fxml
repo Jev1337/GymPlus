@@ -32,12 +32,12 @@
             <DropShadow height="35.66" radius="15.862499999999997" spread="0.07" width="29.79" />
          </effect>
          <children>
-            <ImageView fitHeight="415.0" fitWidth="486.0" layoutX="18.0" layoutY="17.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="415.0" fitWidth="486.0" layoutX="20.0" layoutY="17.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../assets/images/robot.jpg" />
+                  <Image url="@../assets/images/robot%20(2).jpg" />
                </image>
             </ImageView>
-            <ScrollPane layoutX="9.0" layoutY="16.0" prefHeight="415.0" prefWidth="357.0" stylesheets="@../assets/images/style.css">
+            <ScrollPane layoutX="12.0" layoutY="16.0" prefHeight="415.0" prefWidth="357.0" stylesheets="@../assets/images/style.css">
                <content>
                   <VBox fx:id="PromptingVbox" prefHeight="391.0" prefWidth="337.0" style="-fx-translate-x: 8; -fx-translate-y: 10;" styleClass="border-table" stylesheets="@../assets/images/style.css">
                      <children>

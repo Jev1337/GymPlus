@@ -1,0 +1,22 @@
+.dz-box{
+	position:relative;
+}
+
+.portfolio-slider{
+	.swiper-wrapper{
+		.swiper-slide {
+			transform: skewX(-8deg);
+		}
+	}
+}
+
+.portfolio-wrapper {
+	position: relative;
+	z-index: 2;
+	.portfolio-wrapper-inner{
+	    z-index: 1;
+	    position: relative;
+	    overflow: hidden;
+		padding-bottom:20px;
+	}
+} 

@@ -1,0 +1,96 @@
+.alert{
+	padding: 15px 20px;
+
+	svg{
+		margin-right: 8px;
+	}
+	&.alert-dismissible{
+		position:relative;
+		.close{
+			position: absolute;
+			top: 0;
+			right: 0;
+			padding: 0.75rem 1.25rem;
+			color: inherit;
+			background-color: transparent;
+			border: 0;
+			appearance: none;
+		}
+		
+		@include respond('phone'){
+			padding: 12px 45px 12px 15px;
+			font-size: 14px;
+		}	
+	}
+}
+.alert{
+	&.alert-primary{
+		color: var(--primary);
+		border: 1px solid var(--rgba-primary-3);
+		background-color: var(--rgba-primary-1);
+	}
+	&.alert-secondary{
+		color: var(--secondary);
+		border: 1px solid var(--rgba-secondary-3);
+		background-color: var(--rgba-secondary-1);
+	}
+	&.alert-danger{
+		color: $danger;
+		border: 1px solid lighten($danger, 42);
+		background-color: lighten($danger, 45);
+	}
+	&.alert-info{
+		color: $info;
+		border: 1px solid lighten($info, 39);
+		background-color: lighten($info, 45);
+	}
+	&.alert-success{
+		color: $success;
+		border: 1px solid lighten($success, 45);
+		background-color: lighten($success, 55);
+	}
+	&.alert-warning{
+		color: $warning;
+		border: 1px solid lighten($warning, 32);
+		background-color: lighten($warning, 38);
+	}
+	&.alert-dark{
+		color: $dark;
+		border: 1px solid lighten($dark, 70);
+		background-color: lighten($dark, 75);
+	}
+}
+.alert-alt{
+	padding-left: 25px;
+	@include respond('phone'){
+		padding-left: 15px;
+	}
+	&.alert-primary{
+		border-left: 4px solid var(--primary);
+	}
+	&.alert-secondary{
+		border-left: 4px solid var(--secondary);
+	}
+	&.alert-danger{
+		border-left: 4px solid $danger;
+	}
+	&.alert-info{
+		border-left: 4px solid $info;
+	}
+	&.alert-success{
+		border-left: 4px solid $success;
+	}
+	&.alert-warning{
+		border-left: 4px solid $warning;
+	}
+	&.alert-dark{
+		border-left: 4px solid $dark;
+	}
+}
+.alert-rounded{
+	border-radius: 30px;
+	padding-left: 25px;
+	@include respond('phone'){
+		padding-left: 15px;
+	}
+}

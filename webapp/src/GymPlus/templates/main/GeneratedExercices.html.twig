@@ -1,0 +1,146 @@
+{% extends "main/base.html.twig" %}
+
+{% block content %}
+	
+
+	
+	<div class="page-content bg-white">
+		
+	<!-- Banner  -->
+		<div class="dz-bnr-inr style-2" style="background-image: url('{{asset('main/images/banner/banner-2.png')}}')">
+			<div class="banner-gradient"></div>
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-6">
+						<div class="dz-bnr-inr-entry">
+							<h1>Get Your Exercices</h1>
+							<!-- Breadcrumb Row -->
+							<nav aria-label="breadcrumb" class="breadcrumb-row">
+								<ul class="breadcrumb">
+									<li class="breadcrumb-item"><a href="index.html">Home</a></li>
+									<li class="breadcrumb-item active" aria-current="page">Get Your Exercices</li>
+								</ul>
+							</nav>
+							<!-- Breadcrumb Row End -->
+						</div>
+					</div>
+					<div class="col-lg-6">
+						<div class="banner-media">
+							<img src="{{asset('main/images/banner/pic3.png')}}" alt="/">
+						</div>
+					</div>
+				</div>	
+			</div>	
+		</div>
+		<!-- Banner End -->
+
+{% for exerciseNode in responseArray %}
+					<div><br></br></div>
+				<div class="row justify-content-center">
+
+				<div class="col-lg-6 col-md-6 m-b30">
+
+								<div class="dz-card style-2 blog-half wow fadeInUp" data-wow-delay="0.4s">
+									<div class="dz-media">
+										<a href="javascript:void(0);"><img src="{{ asset('main/images/gallery/grid2/abs.png') }}" alt="/"></a>
+									</div>
+									<div class="dz-info">
+											<div class="dz-meta">
+												<ul>
+													<li class="dz-date">
+														<a href="javascript:void(0);"><i class="flaticon-workout"></i>Muscle: {{ exerciseNode.Muscles }}</a>
+													</li>
+													<li class="dz-time">
+														<a href="javascript:void(0);"><i class="flaticon-training"></i>Equipment: {{ exerciseNode.Equipment }}</a>
+													</li>
+
+												</ul>
+											</div> 
+										<h4 class="dz-title"><a>{{ exerciseNode.WorkOut }}</a></h4>
+										<p>{{ exerciseNode.Explaination }}</p>
+												<div class="read-btn">
+													<a class="btn btn-skew btn-secondary" href="{{ exerciseNode.Video }}"><span class="skew-inner"><span class="text">Watch Exercice</span></span></a>
+												</div>
+							        </div>
+						        </div>
+                          </div>
+
+					<div class="col-lg-4 col-md-4 m-b30 wow slideInLeft data-wow-duration="0.2s" data-wow-delay="0.2s" ">
+								<div class="accordion dz-accordion accordion-primary "  id="accordionFaq2">
+										<div class="accordion-item">
+											<h2 class="accordion-header" id="headingOne4">
+												<a href="#" class="accordion-button" data-bs-toggle="collapse" data-bs-target="#collapseOne4" aria-expanded="true" aria-controls="collapseOne4">
+													Get To Learn About The Exercices By Our Guidance!
+													<span class="toggle-close"></span>
+												</a>
+											</h2>
+										</div>
+
+										<div id="collapseOne4" class="accordion-collapse collapse show" aria-labelledby="headingOne4" data-bs-parent="#accordionFaq2" style="">
+												<div class="accordion-body">
+												<p class="m-b0">{{ exerciseNode['Long Explanation'] }}</p>
+												</div>
+										</div>
+								</div>									
+					</div>
+							
+              </div>
+{% endfor %}
+    			
+	
+							<div class="col-lg-12 m-t10 wow fadeInUp" data-wow-delay="1.6s">
+								<nav aria-label="Blog Pagination">
+									<ul class="pagination style-1 justify-content-center">
+										<li class="page-item"><a class="page-link prev" href="javascript:void(0);">Prev</a></li>
+										<li class="page-item"><a class="page-link active" href="javascript:void(0);">1</a></li>
+										<li class="page-item"><a class="page-link" href="javascript:void(0);">2</a></li>
+										<li class="page-item"><a class="page-link" href="javascript:void(0);">3</a></li>
+										<li class="page-item"><a class="page-link next" href="javascript:void(0);">Next</a></li>
+									</ul>
+								</nav>
+							</div>
+						</div>
+					</div>
+				
+				</div>
+			</div>
+		</section>
+		
+		<!--Blog-->
+		
+		<!-- Call To Action -->
+		<section class="call-action style-2 bg-img-fix bg-primary">
+			<div class="container">
+				<div class="inner-content">
+					<div class="row justify-content-between align-items-center">
+						<div class="text-center text-lg-start col-xl-6 m-lg-b20 wow fadeInUp" data-wow-delay="0.2s" style="visibility: visible; animation-delay: 0.2s; animation-name: fadeInUp;">
+							<h2 class="title m-0"><span class="font-weight-400">Subscribe To Our </span>Newsletter</h2>
+						</div>
+						<div class="text-center text-lg-end col-xl-6 wow fadeInUp" data-wow-delay="0.4s" style="visibility: visible; animation-delay: 0.4s; animation-name: fadeInUp;">
+							<form class="dzSubscribe" action="assets/script/mailchamp.php" method="post">
+								<div class="dzSubscribeMsg"></div>
+								<div class="form-group">
+									<div class="input-group mb-0"> 
+										<div class="input-skew">
+											<input name="dzEmail" required="required" type="email" class="form-control" placeholder="Your Email Address">
+										</div>
+										<div class="input-group-addon">
+											<button name="submit" value="Submit" type="submit" class="btn btn-secondary btn-lg btn-skew h-100"><span class="skew-inner"><span class="text">Subscribe Now</span></span></button>
+										</div>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		<!-- Call To Action -->
+	
+	</div>
+	
+	
+    
+    {% endblock %}
+
+

@@ -94,7 +94,7 @@ public class PlanningListController {
     private Separator Seperatorr;
 
     public void setData(Objectif objPlan) {
-        String coachPhotoPath = "src/assets/profileuploads/" + objPlan.getCoachPhoto();
+        String coachPhotoPath = "webapp/src/gymplus/public/profileuploads/" + objPlan.getCoachPhoto();
         ObservableList<Planning> objectifList = getPlanningItems(objPlan.getId_planning());
 
 
@@ -149,12 +149,59 @@ public class PlanningListController {
         }
     }
 
+    public ObservableList<Objectif> getObjectifList2FromObjectifController  () {
+        ObservableList<Objectif> objectifList = FXCollections.observableArrayList();
+        try {
+            int userId = GlobalVar.getUser().getId();
+            String query = "SELECT \n" +
+                    "  (SELECT COUNT(*) FROM objectif o \n" +
+                    "   JOIN user u ON o.userId = u.id AND u.role='client'\n" +
+                    "   WHERE o.userId = ? AND NOT EXISTS (SELECT 1 FROM planning p WHERE p.idObjectif = o.idObjectif)) AS count,\n" +
+                    "  o.idObjectif, o.poidsObj, o.dateD, o.dateF, o.PoidsAct, o.Taille, o.Alergie, o.TypeObj, u.firstname, u.photo, u.date_naiss\n" +
+                    "FROM objectif o\n" +
+                    "JOIN user u ON o.userId = u.id AND u.role='client'\n" +
+                    "WHERE o.userId = ? AND NOT EXISTS (SELECT 1 FROM planning p WHERE p.idObjectif = o.idObjectif);";
+
+            PreparedStatement ps = c.getConnection().prepareStatement(query);
+            ps.setInt(1, userId);
+            ps.setInt(2, userId);
+
+            ResultSet rs = ps.executeQuery();
+
+
+            while (rs.next()) {
+
+                Objectif objectifs = new Objectif();
+                objectifs.setNumberPlansInProgressive(rs.getInt("count"));
+                objectifs.setId_objectif(rs.getInt("idObjectif"));
+                objectifs.setPoids_Obj(rs.getFloat("poidsObj"));
+                objectifs.setDateD(rs.getDate("dateD"));
+                objectifs.setDateF(rs.getDate("dateF"));
+                objectifs.setPoids_Act(rs.getFloat("PoidsAct"));
+                objectifs.setTaille(rs.getFloat("Taille"));
+                objectifs.setAlergie(rs.getString("Alergie"));
+                objectifs.setTypeObj(rs.getString("TypeObj"));
+                objectifs.setFirstName(rs.getString("firstname"));
+                objectifs.setCoachPhoto(rs.getString("photo"));
+                objectifs.setDateNaissance(rs.getDate("date_naiss"));
+                objectifList.add(objectifs);
+            }
+
+            rs.close();
+            ps.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return objectifList;
+    }
 
 
 
 
 
-        public ObservableList<Objectif> getObjectifList  () {
+
+    public ObservableList<Objectif> getObjectifList  () {
             ObservableList<Objectif> objectifList = FXCollections.observableArrayList();
             try {
                 int userId = GlobalVar.getUser().getId();
@@ -200,6 +247,7 @@ public class PlanningListController {
             }
             return objectifList;
         }
+
 
 
 
@@ -311,6 +359,83 @@ public class PlanningListController {
         }
         return planningObservableList;
     }
+
+
+    public ObservableList<Objectif> getPlansList2 () {
+        System.out.println("wawaswaa");
+        ObservableList<Objectif> objectifList = FXCollections.observableArrayList();
+        int userId = GlobalVar.getUser().getId();
+        try {
+            String query = "SELECT \n" +
+                    "    (\n" +
+                    "        SELECT COUNT(*)\n" +
+                    "        FROM objectif o\n" +
+                    "        JOIN planning p ON p.idObjectif = o.idObjectif\n" +
+                    "        JOIN user u ON o.userId = u.id AND u.role = 'client'\n" +
+                    "        WHERE o.userId = ?\n" +
+                    "    ) AS count,\n" +
+                    "    o.idObjectif,\n" +
+                    "    o.poidsObj,\n" +
+                    "    o.dateD,\n" +
+                    "    o.dateF,\n" +
+                    "    o.PoidsAct,\n" +
+                    "    o.Taille,\n" +
+                    "    o.Alergie,\n" +
+                    "    o.TypeObj,\n" +
+                    "    u.firstname,\n" +
+                    "    u.photo,\n" +
+                    "    u.date_naiss,\n" +
+                    "    p.id_Planning\n" +
+                    "FROM \n" +
+                    "    objectif o\n" +
+                    "JOIN \n" +
+                    "    planning p ON p.idObjectif = o.idObjectif\n" +
+                    "JOIN \n" +
+                    "    user u ON o.userId = u.id AND u.role = 'client'\n" +
+                    "WHERE \n" +
+                    "    o.userId = ?;";
+
+
+
+            PreparedStatement ps = c.getConnection().prepareStatement(query);
+            ps.setInt(1, userId);
+            ps.setInt(2, userId);
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Objectif objectifs = new Objectif();
+
+                objectifs.setNumbersPlansDone(rs.getInt("count"));
+                objectifs.setId_objectif(rs.getInt("idObjectif"));
+                objectifs.setPoids_Obj(rs.getFloat("poidsObj"));
+                objectifs.setDateD(rs.getDate("dateD"));
+                objectifs.setDateF(rs.getDate("dateF"));
+                objectifs.setPoids_Act(rs.getFloat("PoidsAct"));
+                objectifs.setTaille(rs.getFloat("Taille"));
+                objectifs.setAlergie(rs.getString("Alergie"));
+                objectifs.setTypeObj(rs.getString("TypeObj"));
+                objectifs.setFirstName(rs.getString("firstname"));
+                objectifs.setCoachPhoto(rs.getString("photo"));
+                objectifs.setDateNaissance(rs.getDate("date_naiss"));
+                objectifs.setId_planning(rs.getInt("id_Planning"));
+
+                objectifList.add(objectifs);
+
+                //sending Planning Dataaaa
+
+
+
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return objectifList;
+
+    }
+
 
 
     }

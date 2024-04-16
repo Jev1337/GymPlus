@@ -1,0 +1,155 @@
+// site-header
+.site-header{
+	&.style-1{
+		.main-bar{
+			box-shadow: none;
+			background-color:transparent;
+			
+			.box-header{
+				position: relative;
+				
+				@include custommq($min: 1180px, $max: 1280px){
+					padding: 0 20px;
+				}
+				
+		    	&:after{
+					content: "";
+					box-shadow: 0px 14px 30px 0px rgba(225, 50, 0, 0.1);
+					background-color: #fff;
+					position: absolute;
+					left: 50%;
+					top: 0;
+					height: calc(100% - 1px);
+					z-index: -1;
+					width: calc(100% + 25px);
+					transform: translateX(-50%) skewX(-12deg);
+					
+					@include respond('tab-land'){
+						width: calc(100% + 20px);
+					}
+					@include custommq($min: 1200px, $max: 1240px){
+						width: calc(100% + -20px);
+					}
+					@include respond('tab-port'){
+						transform: translateX(-50%) skewX(0);
+					}
+				}
+			}
+		}
+		.container{
+			display: grid;
+		}
+		.extra-nav {
+			height: 80px;
+			padding-left: 60px;
+			
+			#quik-search-btn {
+			    font-size: 16px;
+			    transform: skewX(-12deg);
+			    border-radius: 0;
+			    margin-right: 5px;
+				
+			    i {
+				    transform: skewX(12deg);
+			    }
+				@include respond('tab-port'){
+					transform: skew(0);
+					margin-right: 0;
+					
+					i{
+						transform: skew(0);
+					}
+				}
+			}
+			.appointment-btn{
+				@include respond('tab-land'){
+					display: none;
+				}
+			}
+			@include respond('tab-land'){
+				padding-left: 30px;
+			}
+			@include respond('tab-port'){
+				height: 70px;
+			}
+		}
+		.logo-header{
+			height: 80px;
+			img{
+				max-width: 220px;
+			}
+			@include respond('tab-land'){
+				img{
+					max-width: 180px;
+				}
+			}
+			@include respond('tab-port'){
+				height: 70px;
+			}
+		}
+		
+		// Header Nav
+		.header-nav{
+			.nav {
+				&>li {
+					&>a {
+						@include custommq ($min:992px){
+							padding: 31px 15px;
+							&:before {
+								content: "";
+								background-color: var(--primary);
+								position: absolute;
+								left: 0;
+								bottom: 0;
+								transform: translateY(4px);
+								height: 4px;
+								z-index: 1;
+								width: 100%;
+								@include transitionMedium;
+								opacity: 0; 
+							}
+						}
+						@include respond('tab-port'){
+							padding: 8px 0px;
+							
+						}
+					}
+					&.active,
+					&:hover{
+						&>a {
+							@include custommq ($min:992px){
+								color: var(--primary);
+								&:before {
+									transform: translateY(0);
+									opacity: 1; 
+								}
+							}
+						}
+					}
+					
+				}
+			}
+		}
+		.top-bar{
+			background-color:transparent;
+			border-bottom:0;
+		}
+		.is-fixed {
+			.main-bar {
+			    box-shadow: 0px 14px 30px 0px rgba(225, 50, 0,0.1);
+			    background-color: white;
+			    .box-header:after {
+			    	box-shadow:none;
+			    }
+			}
+		}
+		@include respond('tab-port'){
+			.navbar-toggler {
+				margin: 14px 0 14px 15px;				
+			}
+			.main-bar{
+				margin-top: 10px;
+			}
+		}
+	}
+}

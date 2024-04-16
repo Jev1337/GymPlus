@@ -1,0 +1,73 @@
+// Under Construction 1 
+.under-construction-1{
+	overflow: hidden;
+    padding: 20px;
+    height: 100vh;
+	min-height:700px;
+    display: flex;
+    vertical-align: middle;
+    position: relative;
+    text-align: center;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+	background-repeat: no-repeat; 
+	background-size: cover;
+	&:after {
+		content: "";
+		position: absolute;
+		background-image: url(../images/background/bg9.png);
+		z-index: -2;
+		left: 0;
+		bottom: 0;
+		width: 100%;
+		height: 100%;
+		opacity: 0.9;
+	}
+	p{
+		font-size:24px;
+		font-weight: 400;
+		font-family: 'Poppins', sans-serif;
+		text-transform: capitalize;
+		color:#FFF;
+	}
+	.dz-head{
+		margin-bottom: 15px;
+		line-height:1.1;
+		font-size: 110px;
+		font-family: 'Kuunari', sans-serif;
+		font-weight: 700;
+		font-style: italic;
+		color:#fff;
+		@include respond('tab-land'){
+			font-size: 80px;
+		}
+		@include respond('tab-port'){
+			font-size: 70px;
+		}
+		@include respond('phone-land'){
+			font-size: 50px;
+		}
+		@include respond('phone'){
+			font-size: 35px;
+		}
+	}
+	.warning-img{
+		width: 185px;
+		margin-bottom: 15px;
+	}
+	@include respond('phone-land'){
+		min-height:500px;
+	}
+	@include respond('phone'){
+		padding: 30px;
+		.warning-img{
+			width: 120px;
+			margin-bottom: 20px;
+		}
+		p{
+			font-size: 16px;
+			letter-spacing: 2px;
+		}
+	}
+}

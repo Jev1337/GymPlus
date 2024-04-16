@@ -1,0 +1,932 @@
+// form-label
+.form-label{
+	font-size    : 14px;
+	font-weight  : 500;
+	color        : var(--title);
+	margin-bottom: 10px;
+	background   : transparent;
+	border-color : $border-color;
+}
+
+// form-control
+.form-control {
+    height    	 : 50px;
+    border       : 0px;
+    padding      : 10px 20px;
+    font-size    : 15px;
+    font-weight  : 400;
+    color        : $body-color;
+    transition   : all 0.5s ease-in-out;
+    background   : #F3F3F3;
+    border   	: 1px solid transparent;
+	border-radius: 0;
+	.select {
+        padding: 12px 0;
+    }
+
+    span {
+        margin-top: 0;
+    }
+
+    &::-webkit-input-placeholder {
+        color: $body-color;
+    }
+
+    &:-ms-input-placeholder {
+        color: $body-color;
+    }
+
+    &::placeholder {
+        color: $body-color;
+    }
+	&:focus,
+    &:active,
+    &.active {
+        border:1px solid var(--primary);
+    }
+	@include respond ('tab-port'){
+		height:50px;
+	}
+	&.form-control-light{
+		background: rgba(255,255,255,0.1);
+	}
+}
+
+.form-group{
+	margin-bottom: 20px;
+}
+
+.input-skew{
+    display: block;
+    transform: skewX(-12deg);
+    flex: 1 1 auto;
+    width: 1%;
+    background-color: #fff;
+    padding: 0 10px;
+    margin: 0 10px;
+	.form-control{
+		border: 0;
+		border-radius: 0;
+		height: 50px;
+		transform: skewX(12deg);
+		background: #fff;
+		&:focus,
+		&:active {
+		 background: transparent !important;
+		}
+	}
+}
+
+
+.input-area{
+	position: relative;
+	
+	label{
+		position: absolute;
+		font-size: 18px;
+		font-weight: 400;
+		top: 12px;
+		left: 0px;
+		z-index: 0;
+		color: #858585;
+		@include transitionMedium;
+		
+		@include respond('phone-land'){
+			font-size: 16px;
+		}
+	}
+	&.focused{
+		label{
+			top: -20px;
+			font-size: 16px;
+		}
+		@include respond('phone-land'){
+			label{
+				top: -20px;
+			}
+		}
+	}
+}
+.input-line{
+	.form-control{
+		padding: 0;
+		height: 50px;
+		line-height: 1.2;
+		font-size: 16px;
+		border: none;
+		border-radius: 0;
+		background: transparent;
+		border-bottom: 2px solid #D9D9D9;
+	}
+	.default-select .btn.dropdown-toggle{
+		border-bottom: 2px solid #D9D9D9;
+	}
+}
+
+textarea.form-control{
+    min-height: unset;
+	height: auto;
+}
+
+// Textarea
+textarea{
+	height: 120px;
+	resize: none;
+}
+
+input:-internal-autofill-selected {
+    background      : lighten($body-bg, 2%) !important;
+    background-image: none !important;
+    color           : -internal-light-dark-color(black, white) !important;
+}
+
+.input-group-text {
+    padding         : 5px 15px;
+    background      : $body-bg;
+    margin-bottom   : 0px !important;
+    color           : $body-color;
+    border-color    : transparent;
+}
+
+// toggle
+.toggle {
+    cursor          : pointer;
+    display         : block;
+}
+.toggle-switch {
+    display       : inline-block;
+    background    : darken($body-bg, 3%);
+    border-radius : 16px;
+    width         : 45px;
+    height        : 20px;
+    position      : relative;
+    vertical-align: middle;
+    transition    : background 0.25s;
+
+    &:before,
+    &:after {
+        content: "";
+    }
+
+    &:before {
+        display      : block;
+        background   : linear-gradient(to bottom, $white 0%, #eee 100%);
+        border-radius: 50%;
+        width        : 17px;
+        height       : 17px;
+        position     : absolute;
+        top          : 1px;
+        left         : 3px;
+        transition   : left 0.25s;
+    }
+
+    .toggle:hover &:before{
+        background   : linear-gradient(to bottom, $white 0%, $white 100%);
+    }
+
+    .toggle-checkbox:checked+&{
+        background: var(--primary);
+
+        &:before{
+            left: 26px;
+        }
+    }
+}
+.toggle-checkbox {
+    position  : absolute;
+    visibility: hidden;
+}
+.toggle-label {
+    margin-left: 15px;
+    position   : relative;
+    top        : 2px;
+    font-size  : 16px;
+    font-weight: 400;
+}
+
+// Upload btn
+.file-upload-wrapper {
+    position     : relative;
+    width        : 100%;
+    height       : calc(1.5em + 1rem + 2px);
+    border       : 1px solid $border-color;
+    border-radius: 5px;
+    color        : $text-muted;
+
+    &:before,
+    &:after{
+        position	  : absolute;
+        top     	  : 0;
+        font-weight   : 400;
+        pointer-events: none;
+	}
+    &:after {
+        content       : attr(data-text);
+        left          : 0;
+        background    : $body-bg;
+        padding       : 4px 15px;
+        display       : block;
+        width         : calc(100% - 40px);
+        z-index       : 20;
+        height        : calc(1.5em + 1rem + 2px);
+        line-height   : 50px - 20px;
+        border-radius : 5px 10px 10px 5px;
+        overflow      : hidden;
+    }
+
+    &:before {
+        content : 'Upload';
+        right   : 0;
+        display : inline-block;
+        height  : calc(1.5em + 1rem + 2px);
+        background    : var(--primary);
+        color         : $white;
+        z-index       : 25;
+        font-size     : 14px;
+        line-height   : 40px;
+        padding       : 0 15px;
+        text-transform: capitalize;
+        border-radius : 0 5px 5px 0;
+    }
+
+    &:hover {
+        &:before {
+            background: darken($primary, 10%);
+        }
+    }
+
+    input {
+        opacity : 0;
+        position: absolute;
+        top     : 0;
+        right   : 0;
+        bottom  : 0;
+        left    : 0;
+        z-index : 99;
+        height  : calc(1.5em + 1rem + 2px);
+        margin  : 0;
+        padding : 0;
+        display : block;
+        cursor  : pointer;
+        width   : 100%;
+	}
+}
+
+// Date picker
+#ui-datepicker-div {
+    display      : none;
+    background   : darken($body-bg, 2%);
+    box-shadow   : 0 0.125rem 0.5rem rgba(0, 0, 0, 0.1);
+    margin-top   : 0.25rem;
+    border-radius: 0.5rem;
+    padding      : 0.5rem;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing : 0;
+}
+
+.ui-datepicker-calendar {
+    thead th {
+        padding    : 0.25rem 0;
+        text-align : center;
+        font-size  : 0.75rem;
+        font-weight: 400;
+        color      : $body-color;
+    }
+
+    tbody td {
+        width     : 2.5rem;
+        text-align: center;
+        padding   : 0;
+
+        a {
+            display        : block;
+            border-radius  : 0.25rem;
+            line-height    : 2rem;
+            transition     : 0.3s all;
+            color          : $body-color;
+            font-size      : 0.875rem;
+            text-decoration: none;
+
+            &:hover {
+                background-color: var(--primary);
+                color           : white;
+            }
+
+            &.ui-state-active {
+                background-color: var(--primary);
+                color           : white;
+            }
+        }
+    }
+}
+
+.ui-datepicker-header a {
+    &.ui-corner-all {
+        cursor       : pointer;
+        position     : absolute;
+        top          : 0;
+        width        : 2rem;
+        height       : 2rem;
+        margin       : 0.5rem;
+        border-radius: 0.25rem;
+        transition   : 0.3s all;
+
+        &:hover {
+            background-color: lighten($primary, 30%);
+            color           : $white;
+        }
+    }
+
+    &.ui-datepicker-prev {
+        left               : 0;
+        background         : url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMyIgaGVpZ2h0PSIxMyIgdmlld0JveD0iMCAwIDEzIDEzIj48cGF0aCBmaWxsPSIjNDI0NzcwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik03LjI4OCA2LjI5NkwzLjIwMiAyLjIxYS43MS43MSAwIDAgMSAuMDA3LS45OTljLjI4LS4yOC43MjUtLjI4Ljk5OS0uMDA3TDguODAzIDUuOGEuNjk1LjY5NSAwIDAgMSAuMjAyLjQ5Ni42OTUuNjk1IDAgMCAxLS4yMDIuNDk3bC00LjU5NSA0LjU5NWEuNzA0LjcwNCAwIDAgMS0xLS4wMDcuNzEuNzEgMCAwIDEtLjAwNi0uOTk5bDQuMDg2LTQuMDg2eiIvPjwvc3ZnPg==");
+        background-repeat  : no-repeat;
+        background-size    : 0.5rem;
+        background-position: 50%;
+        transform          : rotate(180deg);
+    }
+
+    &.ui-datepicker-next {
+        right              : 0;
+        background         : url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMyIgaGVpZ2h0PSIxMyIgdmlld0JveD0iMCAwIDEzIDEzIj48cGF0aCBmaWxsPSIjNDI0NzcwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik03LjI4OCA2LjI5NkwzLjIwMiAyLjIxYS43MS43MSAwIDAgMSAuMDA3LS45OTljLjI4LS4yOC43MjUtLjI4Ljk5OS0uMDA3TDguODAzIDUuOGEuNjk1LjY5NSAwIDAgMSAuMjAyLjQ5Ni42OTUuNjk1IDAgMCAxLS4yMDIuNDk3bC00LjU5NSA0LjU5NWEuNzA0LjcwNCAwIDAgMS0xLS4wMDcuNzEuNzEgMCAwIDEtLjAwNi0uOTk5bDQuMDg2LTQuMDg2eiIvPjwvc3ZnPg==');
+        background-repeat  : no-repeat;
+        background-size    : 10px;
+        background-position: 50%;
+    }
+
+    >span {
+        display: none;
+    }
+}
+
+.ui-datepicker-title {
+    text-align    : center;
+    line-height   : 2rem;
+    margin-bottom : 0.25rem;
+    font-size     : 0.875rem;
+    font-weight  : 500;
+    padding-bottom: 0.25rem;
+}
+
+.ui-datepicker-week-col {
+    color      : $body-color;
+    font-weight: 400;
+    font-size  : 0.75rem;
+}
+
+// Validation Error
+label.error {
+    color        : $danger;
+    position     : absolute;
+    bottom       : 0;
+    margin-bottom: -22px;
+    font-size    : 12px;
+    font-weight  : 400;
+}
+
+// Nice Select
+.nice-select {
+    display                  : flex;
+    align-items              : center;
+    border-top-left-radius   : 3px !important;
+    border-bottom-left-radius: 3px !important;
+
+    ul {
+        width: 100% !important;
+    }
+}
+
+.nice-select .list {
+    background: $dark;
+}
+
+.nice-select .option:hover,
+.nice-select .option.focus,
+.nice-select .option.selected.focus {
+    background-color: $dark;
+    color           : var(--primary);
+}
+
+// Default Select
+.default-select{
+	width: 100% !important;
+	.btn.dropdown-toggle{
+	    height: 50px;
+		padding: 5px 15px;
+		font-size: 14px;
+		font-weight: 400;
+		color: #232;
+		font-family:var(--font-family-base);
+		transition: all 0.3s ease-in-out;
+		background-color: #F2F2F2;
+		border-radius: 0;
+		&:focus {
+			outline: 0 !important;
+			outline-offset: 0;
+		}
+		&:after{
+			content: "\f107";
+			font-family: "Font Awesome 6 free";
+			border: 0;
+			font-weight: 700;
+			margin-left: 18px;
+			font-size: 14px;
+			color: var(--title);
+		}
+		.filter-option{
+			height:auto;
+		}
+	}
+	.dropdown-menu {
+		border-radius: 0;
+		background-color: #fff;
+		border:0;
+		padding:0;
+		z-index:99999;
+		box-shadow: 0px 14px 30px 0px rgba(225,50,0,0.1);
+	
+		&.inner{
+			padding: 10px 0;
+			
+		}	
+		span{
+			@include transitionMedium;
+		}
+		.dropdown-item{
+			padding:5px 15px;
+			
+			&.active.selected{
+				background-color: var(--primary);
+				color: #fff !important;
+			}
+		}
+	}
+	
+	/* &.style-2{
+		left: auto;
+		select{
+			display: none!important;
+		}
+		.dropdown-toggle:after {
+			content: none;
+		}
+		.dropdown-toggle {
+			border-radius: 0;
+			height: 43px;
+			color: #fff !important;
+			border: none !important;
+			outline: none !important;
+			background-color: transparent;
+		    padding: 0;
+		    line-height: 2;
+		    padding-bottom: 0px;
+		    border-bottom: 2px solid #000 !important;
+            .filter-option{
+            	text-align: center;
+            	height: auto;
+            	color: var(--primary);
+            }
+            @include respond('phone'){
+                height: 32px;
+            }
+		}
+		.dropdown-menu {
+			border-radius: 0;
+			background-color: #fff;
+			border:0;
+			padding:0;
+			z-index:99999;
+		    box-shadow: 0px 14px 30px 0px rgba(225,50,0,0.1);
+			span {
+				@include transitionMedium;
+			}
+			.dropdown-item {
+				padding:0;
+				padding-left: 15px;
+			}
+			.dropdown-item.active.selected {
+				background-color: var(--primary);
+				color: #fff !important;
+			}
+		}
+	} */
+}
+// Select Opting
+.form-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn) {
+    width: 100%;
+}
+.form-select{
+	border: 1px solid transparent;
+	.dropdown-toggle {
+		border: 0 !important;
+		padding: 0;
+		font-weight: normal;
+		text-transform: unset;
+		outline:none;
+		&:focus {
+			outline: 0 !important;
+			outline-offset: 0;
+		}
+		&:after{
+			content:none;
+		}
+	}
+	&.show {
+		box-shadow: none !important;
+		outline: 0px !important;
+		.dropdown-toggle {
+			box-shadow: none !important;
+			outline: 0px !important;
+		}
+		&.btn-group .dropdown-menu.inner{
+			display:block;
+		}	
+	}
+	.dropdown-menu {
+		border: 0;
+		border-radius: 0;
+		box-shadow: none;
+		margin-top: -1px;
+		padding: 10px 0;
+		box-shadow:0 15px 30px 0 rgba(0,0,0,0.2);
+		font-size:14px;
+		ul li {
+			padding: 0;
+			a {
+				display: block;
+				padding: 8px 20px;
+				clear: both;
+				font-weight: 400;
+				color: #333;
+				white-space: nowrap;
+				
+				img {
+					border-radius: 100%;
+					-webkit-border-radius: 100%;
+					margin-right: 5px;
+				}
+				&:hover {
+					background-color:#f2f2f4;
+				}
+			}
+			&.selected{
+				a{
+					background-color: var(--primary);
+					color: $white;
+				}
+			}
+		}
+	}
+	&:focus,
+    &:active,
+    &.active {
+        border-color: var(--primary);
+    }
+}
+
+.form-select.btn-group{
+	padding: 10px 20px;
+	border-width: 1px;
+	&.show{
+		box-shadow: 0 0px 10px 4px rgba(31, 66, 135, 0.1)!important;
+		border-color: var(--primary);
+	}
+	.form-control{
+		.dropdown-toggle{
+			&.btn-default{
+				padding: 0;
+			}
+		}
+	}
+	.dropdown-toggle{
+		.caret{
+			font-size: 10px;
+			top: 50%;
+			right: 5px;
+			transform: translateY(-50%);
+			&:before{
+				content: "\f078";
+			}
+		}
+	}
+}
+.custom-file-label{
+	box-shadow: 0 0px 10px 4px rgba(31, 66, 135, 0.1);
+	height: 45px;
+	border-radius: 30px!important;
+	padding: 10px 20px;
+	font-size: 15px;
+	border-color: transparent;
+	&:after{
+		content: none!important;
+	}
+}
+
+.dz-form{
+	&.radius-no{
+		.form-control{
+			border-radius:0;
+		}
+	}
+	&.style-1{
+		padding-left: 20px;
+		
+        .input-line .form-control{
+            border-bottom: 3px solid #D9D9D9;
+            @include respond('laptop'){
+                border-bottom: 2px solid #D9D9D9;
+            }
+        }
+		.input-area{
+			label{
+				top: 5px;
+			}
+			&.focused label{
+				top: -15px;
+				color: var(--primary);
+			}
+		}
+        select{
+            border: none;
+            border-bottom: 3px solid #D9D9D9;
+            left: 0;
+        }
+		.form-control{
+		    font-weight: 500;
+			color: #000;
+		}
+        textarea {
+            height: 160px;
+			padding-top: 15px;
+        }
+        textarea::placeholder {
+            font-size: 18px;
+            color: #666666CC;
+        }
+        input::placeholder{
+            font-size: 18px;
+            color: #666666CC;
+        }
+        .input-group{
+            margin-bottom: 60px;
+            
+			&.m-b30{
+				margin-bottom: 30px;
+			}
+			@include respond('laptop'){
+                margin-bottom: 45px;
+            }
+        }
+		.input-recaptcha{
+			margin-bottom: 30px;
+		}
+        @include custommq ($max:1199px){
+            input {
+                font-size: 18px;
+            }
+            textarea {
+                height: 120px;
+            }
+            textarea::placeholder,
+            input::placeholder{
+                font-size: 16px;
+            }
+            .input-group {
+                margin-bottom: 40px;
+            }
+        }
+        @include respond('tab-port'){
+            input {
+                font-size: 16px;
+                padding-bottom:5px;
+            }
+            textarea {
+                height: 100px;
+            }
+            .input-group {
+                margin-bottom: 30px;
+            }
+        }
+		@include respond('phone-land'){
+			padding: 0;
+        }
+	}
+    &.style-2{
+        padding: 45px 50px;
+        padding-bottom: 60px;
+        z-index: 9;
+        
+		.input-area{
+			position: relative;
+            
+			label{
+                font-size: 14px;
+                font-weight: 500;
+                color: var(--primary);
+                z-index: -1;
+            }
+        }
+        textarea {
+            height: 100px !important;
+			padding: 10px 0;
+        }
+        textarea::placeholder{
+            font-size: 18px;
+            color: #666666CC;
+        }
+        input::placeholder{
+            font-size: 18px;
+            color: #666666CC;
+        }
+        .form-check {
+            align-items: center;
+            display: flex;
+            height: auto;
+            min-height: auto;
+            .form-check-input {
+                height: 24px;
+                width: 24px;
+                margin-top: 0;
+                border-radius: 0;
+                background-color: transparent;
+                border: 2px solid var(--primary);
+            }
+            .form-check-input:checked {
+                background-color: var(--secondary);
+            }
+        }
+		.form-control{
+			color: rgba(255,255,255,0.8);
+			border-bottom: 2px solid rgba(255,255,255,0.2)
+		}
+        .input-group{
+            margin-bottom: 60px;
+            z-index: 1;
+        }
+        @include respond('tab-land'){
+            padding: 45px 35px;
+        }
+        @include custommq ($max:1199px){
+            input {
+                font-size: 18px;
+            }
+            textarea {
+                height: 120px;
+            }
+            textarea::placeholder ,
+            input::placeholder{
+                font-size: 16px;
+            }
+            .input-group {
+                margin-bottom: 40px;
+            }
+        }
+        @include respond('tab-port'){
+            margin-bottom: 30px; 
+            input {
+                font-size: 16px;
+                padding-bottom:5px;
+            }
+            textarea {
+                height: 100px;
+            }
+            .input-group {
+                margin-bottom: 30px;
+            }
+        }
+        @include respond('phone-land'){
+            padding: 30px 25px;
+        }
+        @include respond('phone'){
+            .input-group {
+                 margin-bottom: 25px;
+                textarea,
+                select ,
+                input {
+                    line-height: 1;
+                    padding-bottom: 10px;
+                    font-size: 14px;
+                }
+                label {
+                    position: absolute;
+                    font-size: 14px;
+                    font-weight: 500;
+                    color: var(--primary);
+                    top: 4px;
+                    left: 0px;
+                    z-index: -1;
+                    transition: all 0.5s;
+                }
+                textarea {
+                    padding-top: 10px;
+                }
+            }
+        }
+    }
+
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+.dz-ajax-overlay{
+	position: relative;
+	&:after{
+		content: "Loading...";
+		height: 100%;
+		width: 100%;
+		background-color: #000;
+		position: absolute;
+		left: 0;
+		top: 0px;
+		z-index: 99;
+		border-radius: 0;
+		opacity: 0.8;
+		color: #fff;
+		text-transform: uppercase;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		letter-spacing: 2px;
+		font-weight: 500;
+		font-size: 14px;
+		font-style: italic;
+		transform: skewX(-12deg);
+	}
+    &.overlay-not-skew{
+        &:after{
+            transform: skewX(0deg);
+        }   
+    }
+}
+
+.calculator-form {
+	background:var(--secondary);
+	padding:35px;
+		@include respond('phone-land'){
+			padding:25px;
+		}
+		@include respond('phone'){
+			padding:20px;
+		}
+	.form-control{
+		background: rgba(255 ,255, 255, 0.1);
+		border: 0;
+		padding: 10px;
+		color:#fff;
+	}
+	form-label{
+		font-size: 15px;
+	}
+	.input-line {
+		.default-select {
+			.btn.dropdown-toggle {
+				border: 0;
+				background: rgba(255, 255, 255, 0.1);
+				color: #fff !important;
+				&:after{
+					color:#fff;
+				}
+			}
+		}
+	}
+	
+}
+
+.shop-form {
+	.form-group {
+		margin-bottom: 25px;
+		input {
+			padding: 17px 20px;
+			height: 50px;
+			font-size: 15px;
+			border: none;
+			color: rgb(102, 102, 102);
+			background: rgb(243, 243, 243);
+		}
+		.input-group-addon{
+			position: absolute;
+			right: 0px;
+			top: 50%;
+			z-index: 9;
+			transform: translateY(-50%);
+			.coupon {
+				color: rgb(36, 38, 43);
+				font-weight: 500;
+				padding: 10px 15px;
+				font-size: 15px;
+				position: relative;
+				z-index: 2;
+				border: 0px;
+			}
+		}
+	}
+	.btn-grey{
+		background: rgba(36, 38, 43, 0.5);
+		color: rgb(255, 255, 255);
+	}
+}

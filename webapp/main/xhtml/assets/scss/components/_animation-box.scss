@@ -1,0 +1,15 @@
+.animation-box{
+	text-align: center;
+    background-color: var(--primary);
+    padding: 50px;
+    min-height: 280px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--border-radius-base);
+	position:relative;
+	
+	@include respond('phone'){
+		min-height: 180px;
+	}
+}

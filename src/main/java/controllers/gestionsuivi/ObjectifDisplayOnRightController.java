@@ -63,6 +63,12 @@ public class ObjectifDisplayOnRightController implements Initializable {
     public void setPallningControler(PlanningController planningController) {
         ObjectifDisplayOnRightController.planningController = planningController;
     }
+    private  static  ObjectifController objectifController ;
+    public void setObjectifController(ObjectifController objectifController) {
+        ObjectifDisplayOnRightController.objectifController= objectifController;
+    }
+
+
 
     @FXML
     private Button AddPlanningButton;
@@ -85,10 +91,47 @@ public class ObjectifDisplayOnRightController implements Initializable {
         AddPlanningButton.setVisible(false);
     }
 
+    void makeModifButtonVisible2(){
+        UpdatePlan.setVisible(false);
+        DeletePlan.setVisible(false);
+        AddPlanningButton.setVisible(false);
+    }
 
+    void  dataInfos2(Objectif objPlan) throws IOException {
+        String coachPhotoPath = "webapp/src/gymplus/public/profileuploads/" + objPlan.getCoachPhoto();
+        if (coachPhotoPath != null && !coachPhotoPath.isEmpty()) {
+            File file = new File(coachPhotoPath);
+            if (file.exists()) {
+                try {
+                    String imageUrl = file.toURI().toURL().toString();
+                    System.out.println(imageUrl);
+                    ImageUser.setImage(null);
+                    Image coachImage = new Image(imageUrl, true);
+                    ImageUser.setImage(coachImage);
+
+                    //*** rendering into cercle
+                    Circle clip = new Circle(ImageUser.getFitWidth() / 2, ImageUser.getFitHeight() / 2, ImageUser.getFitWidth() / 2
+                    );
+                    ImageUser.setClip(clip);
+                    ImageUser.setPreserveRatio(false);
+
+
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        descriptionLbale.setText(objPlan.getAlergie());
+        NameLabel.setText(objPlan.getFirstName());
+        PoidsObjLabel.setText(Float.toString(objPlan.getPoids_Obj()));
+        PoidsActLabel.setText(Float.toString(objPlan.getPoids_Act()));
+        TailleLabel.setText(Float.toString(objPlan.getTaille()));
+        DateDLabel.setText(objPlan.getDateD().toString());
+        DateFinLabel.setText(objPlan.getDateF().toString());
+    }
 
   void  dataInfos(Objectif objPlan) throws IOException {
-      String coachPhotoPath = "src/assets/profileuploads/" + objPlan.getCoachPhoto();
+      String coachPhotoPath = "webapp/src/gymplus/public/profileuploads/" + objPlan.getCoachPhoto();
       if (coachPhotoPath != null && !coachPhotoPath.isEmpty()) {
           File file = new File(coachPhotoPath);
           if (file.exists()) {

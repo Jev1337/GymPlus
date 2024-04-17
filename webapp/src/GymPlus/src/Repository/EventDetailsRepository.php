@@ -26,7 +26,7 @@ class EventDetailsRepository extends ServiceEntityRepository
     $currentDate = new \DateTime();
 
     return $this->createQueryBuilder('e')
-        ->where('e.event_date > :currentDate')
+        ->where('e.eventDate > :currentDate')
         ->setParameter('currentDate', $currentDate)
         ->getQuery()
         ->getResult();

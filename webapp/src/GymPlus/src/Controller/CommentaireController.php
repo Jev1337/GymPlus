@@ -15,20 +15,20 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class CommentaireController extends AbstractController
 {
-    public ?int $idPost=0;
+    // public ?int $idPost=0;
 
     #[Route('/post/commentaire/{id}', name: 'getAll_commentaire')]
     public function getAllComments(CommentaireRepository $rep, PostRepository $prep,$id, Request $req, ManagerRegistry $manager, PostController $pc): Response
     {
-        $this->idPost = (int)$id;
+        // $this->idPost = (int)$id;
         $user = $this->getUser();
         $dateImmutable = date_create('now');
         $em = $manager->getManager();
         
         $commentaire = new Commentaire();
         $commentaire->setDate($dateImmutable);
-        $commentaire->setPostId($this->idPost);
-        $commentaire->setUserId($user->getId());
+        $commentaire->setPostId($id);
+        $commentaire->setUser($user);
         
         $post = $prep->find($id);
         $form = $this->createForm(CommentaireType::class, $commentaire); 
@@ -40,11 +40,10 @@ class CommentaireController extends AbstractController
             return $this->redirectToRoute('getAll_commentaire',['id' => $id]);
         }
         
-        $comments = $rep->findByPostId($this->idPost);
+        $comments = $rep->findByPostId($id);
         return $this->renderForm('main/commentaire/index.html.twig', [
             'comments' => $comments,
             'post' => $post,
-            'user' => $user,
             'form'=> $form
         ]);
     }

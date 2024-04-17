@@ -1,5 +1,11 @@
 {% extends 'main/base.html.twig' %}
-	
+
+{% block css %}
+	<link href="{{asset('main/vendor/ScheduleBootsrap/bootstrap.min.css')}}" rel="stylesheet">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+	<link href="{{asset('main/vendor/ScheduleBootsrap/main.min.css')}}" rel="stylesheet">
+	{{ parent() }}
+{% endblock %}
 {% block content %}
 	<div class="page-content bg-white">
 		
@@ -30,21 +36,452 @@
 			</div>	
 		</div>
 		<!-- Banner End -->
-		
-		<!-- Schedule Table -->
-		<div class="content-inner">
-			<div class="container">
-				<div class="schedule-table style-1 table-responsive ">
-					    <div class="schedule-table style-5">
-							<div id='calendar'></div>
+
+
+
+		<!-- numbers list START -->
+
+			<section class="content-inner p-b0 wow slideInLeft" data-wow-duration="0.2s" data-wow-delay="0.2s" style="margin-top: -40px;">
+				<div class="container">
+					<div class="row justify-content-center">
+								<div class="col-lg-3 col-10 m-b90">
+									<div class="counter-box style-3">
+										<div class="icon-bx">
+											<i class="flaticon flaticon-dumbell"></i>
+										</div>
+										<div class="counter-r">
+											<h2 class="title counter">{{ objectifs|length }}</h2>
+											<p>Objectives</p>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-3 col-10 m-b90">
+								<div class="counter-box style-3">
+									<div class="icon-bx">
+										<i class="flaticon flaticon-kettlebell"></i>
+									</div>
+									<div class="counter-r">
+										{% set maintainWeightCount = objectifs|filter(obj => obj.poidsobj == obj.poidsact)|length %}
+										<h2 class="title counter">{{ maintainWeightCount }}</h2>
+										<p>Maintaining Weight</p>
+									</div>
+								</div>
+								</div>
+								<div class="col-lg-3 col-10 m-b90">
+									<div class="counter-box style-3">
+										<div class="icon-bx">
+											<i class="flaticon flaticon-dumbbells"></i>
+										</div>
+										<div class="counter-r">
+											{% set gainWeightCount = objectifs|filter(obj => obj.poidsobj > obj.poidsact)|length %}
+											<h2 class="title counter">{{ gainWeightCount }}</h2>
+											<p>Gaining Weight </p>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-3 col-10 m-b90">
+									<div class="counter-box style-3">
+										<div class="icon-bx">
+											<i class="flaticon flaticon-kettlebell-1"></i>
+										</div>
+										<div class="counter-r">
+											{% set loseWeightCount = objectifs|filter(obj => obj.poidsobj < obj.poidsact)|length %}
+											<h2 class="title counter">{{ loseWeightCount }}</h2>
+											<p>Losing Weight </p>
+										</div>
+									</div>
+							</div>
+					</div>
+
+				</div>
+			</section>
+				
+				<!-- Number listEnd -->
+
+
+		<!--Blog-->
+		<section class="content-inner ">
+			<div class="container" style="margin-top: -90px;">
+				<div class="row ">
+					<div class="col-xl-4 col-lg-4 order-lg-1 order-2 m-b30 wow slideInRight data-wow-duration="0.2s" data-wow-delay="0.2s " >
+						<aside class="side-bar sticky-top left">
+							<div class="widget">
+								<div class="widget-title wow fadeInUp" data-wow-delay="0.4s">
+									<h4 class="title">Search</h4>
+								</div>
+                                <div class="search-bx wow fadeInUp" data-wow-delay="0.6s">
+									<form role="search" method="post">
+										<div class="input-group">
+											<div class="input-side">
+												<input name="text" class="form-control" placeholder="Search..." type="text">
+												<div class="input-group-btn">
+													<button type="submit" class="btn">
+														<i class="flaticon-magnifying-glass"></i>
+													</button>
+												</div>
+											</div>
+										</div>
+									</form>
+								</div>
+                            </div>
+							
+							<div class="widget widget_categories style-1">
+								<div class="widget-title wow fadeInUp" data-wow-delay="0.8s">
+									<h4 class="title">Category</h4>
+								</div>
+                                <ul CLASS="wow fadeInUp" data-wow-delay="1.0s">
+                                    <li class="cat-item cat-item-27"><a href="javascript:void(0);">Objectives ({{ objectifs|length }})</a></li>	
+									{% set maintainWeightCount = objectifs|filter(obj => obj.poidsobj == obj.poidsact)|length %}
+    									<li class="cat-item cat-item-26"><a href="javascript:void(0);">Maintain Weight ({{ maintainWeightCount }})</a></li>
+								
+									  {% set gainWeightCount = objectifs|filter(obj => obj.poidsobj > obj.poidsact)|length %}
+    									<li class="cat-item cat-item-36"><a href="javascript:void(0);">Gain Weight ({{ gainWeightCount }})</a></li>
+
+									  {% set loseWeightCount = objectifs|filter(obj => obj.poidsobj < obj.poidsact)|length %}
+    									<li class="cat-item cat-item-43"><a href="javascript:void(0);">Lose Weight ({{ loseWeightCount }})</a></li>
+
+										 {% set typeDefaultCount = objectifs|filter(obj => obj.typeobj == 'Par Defaut')|length %}
+    									<li class="cat-item cat-item-43"><a href="javascript:void(0);">Default Type ({{ typeDefaultCount }})</a></li>
+
+										 {% set typeDefaultCount = objectifs|filter(obj => obj.typeobj == 'Par Defaut')|length %}
+    									<li class="cat-item cat-item-43"><a href="javascript:void(0);">Default Type ({{ typeDefaultCount }})</a></li>
+								</ul>
+                            </div>
+							
+								<div class="widget recent-posts-entry style-2">
+								<div class="widget-title wow fadeInUp" data-wow-delay="1.2s">
+									<h4 class="title">Recent Objectives</h4>
+								</div>
+								      <div class="widget-post-bx">
+											{% for objectif in objectifs|sort((a, b) => b.dated <=> a.dated)|slice(0, 3) %}
+												<div class="widget-post clearfix wow fadeInUp" data-wow-delay="1.4s">
+													<div class="dz-media"> 
+														{% if objectif.poidsobj > objectif.poidsact %}
+															<img src="{{ asset('main/images/blog/recent-blog/gainweight.jpg') }}" alt="Gain Weight">
+														{% elseif objectif.poidsobj < objectif.poidsact %}
+															<img src="{{ asset('main/images/blog/recent-blog/loseweight.jpg') }}" alt="Lose Weight">
+														{% else %}
+															<img src="{{ asset('main/images/blog/recent-blog/maintainweight.jpg') }}" alt="Maintain Weight">
+														{% endif %}
+													</div>
+													<div class="dz-info">
+														<h6 class="title"><a href="blog-detail.html">{{ objectif.typeobj }}</a></h6>
+														<div class="dz-meta">
+															<ul>
+																<li>
+																	<a href="javascript:void(0);">
+																		<i class="flaticon-calendar-1"></i>
+																		{{ objectif.datef|date('d M Y') }}
+																	</a>
+																</li>
+																<li>
+																	<a href="javascript:void(0);">
+																		<i class="flaticon-user"></i>
+																		By {{ objectif.coachid.username }}
+																	</a>
+																</li>
+															</ul>
+														</div>
+													</div>
+												</div>
+											{% endfor %}
+										</div>
+									
+									
+									
+								
+                            </div>
+							
+							<div class="widget widget_tag_cloud">
+								<div class="widget-title wow fadeInUp" data-wow-delay="2.0s">
+									<h4 class="title">Popular Tags</h4>
+								</div>
+								<div class="tagcloud wow fadeInUp" data-wow-delay="2.2s"> 
+									<a href="javascript:void(0);">Equipment</a>
+									<a href="javascript:void(0);">Fitness</a>
+									<a href="javascript:void(0);">Gym</a>
+									<a href="javascript:void(0);">Workout</a>
+									<a href="javascript:void(0);">Powerlifting</a>
+									<a href="javascript:void(0);">Strength</a>
+									<a href="javascript:void(0);">Running</a>
+									<a href="javascript:void(0);">Yoga</a>
+								</div>
+							</div>
+						</aside>
+					</div>
+
+
+					<div class="col-lg-8 order-lg-2 order-1 m-b30 wow bounceInUp  data-wow-duration="0.2s" data-wow-delay="0.2s">
+					     	<div class="row">
+										{% for objectif in objectifs %}
+									 <div class="col-xl-12 col-lg-12 m-b30">
+										<div class="dz-card style-2 blog-half overlay-shine wow fadeInUp" data-wow-delay="0.4s">
+											<div class="dz-media">
+											{% if objectif.poidsobj > objectif.poidsact %}
+												<a href="javascript:void(0);"><img src="{{ asset('main/images/blog/blog-grid/gainWeightP.jpg') }}" alt="/"></a>
+											{% elseif objectif.poidsobj < objectif.poidsact %}
+												<a href="javascript:void(0);"><img src="{{ asset('main/images/blog/blog-grid/loseweightP.jpg') }}" alt="/"></a>
+                                              {% else %}
+                                             <a href="javascript:void(0);"><img  src="{{ asset('main/images/blog/blog-grid/maitainweightP.jpg') }}" alt="/"></a>
+                                        
+										   {% endif %}
+											</div>
+											<div class="dz-info">
+												<div class="dz-meta">
+													<ul>
+													<li class="dz-date">
+															<a href="javascript:void(0);"><i class="flaticon-calendar-1"></i> {{ objectif.dated|date('d F Y') }}</a>
+														</li>
+														<li class="dz-date">
+															<a href="javascript:void(0);"><i class="flaticon-calendar-1"></i> {{ objectif.datef|date('d F Y') }}</a>
+														</li>
+														<li class="dz-time">
+															<a href="javascript:void(0);"><i class="flaticon-user"></i>{{ objectif.coachid.username }}</a>
+														</li>
+														<li class="dz-time">
+															<a href="javascript:void(0);"><i class="flaticon-workout"></i>{{ objectif.typeobj }}</a>
+														</li>
+													</ul>
+												</div> 
+												    <div class="dz-title">
+														<h4 class="dz-title">
+															{% if objectif.poidsobj > objectif.poidsact %}
+																Gain Weight
+															{% elseif objectif.poidsobj < objectif.poidsact %}
+																Lose Weight
+															{% else %}
+																Maintain Weight
+															{% endif %}
+														</h4>
+													</div>
+												
+												<p>{{ objectif.alergie }}</p>
+												<div class="read-btn">
+													<a class="btn btn-skew btn-secondary" href="blog-detail.html"><span class="skew-inner"><span class="text">Read More</span></span></a>
+												</div>
+											</div>
+										</div>
+									</div>
+								{% endfor %}
+							
+							
 						</div>
+						<div class="text-center m-t10 wow fadeInUp" data-wow-delay="1.6s">
+							<a href="blog-list-left-sidebar.html" class="btn btn-primary btn-lg btn-skew"><span class="skew-inner"><span class="text">Load More</span></span></a>
+						</div>
+					</div>
 				</div>
 			</div>
+		</section>
+		<!--end list  -->
+
+<div class="dz-features-wrapper overflow-hidden bg-primary">
+			<ul class="dz-features text-wrapper">
+				<li class="item">
+					<h2 class="bg-data-text style-2">
+						<span>F</span>
+						<span>I</span>
+						<span>T</span>
+						<span>N</span>
+						<span>E</span>
+						<span>S</span>
+						<span>S</span>
+					</h2>
+				</li>
+				<li class="item">
+					<h2 class="bg-data-text style-2">
+						<span>Y</span>
+						<span>O</span>
+						<span>G</span>
+						<span>A</span>
+					</h2>
+				</li>
+				<li class="item">
+					<h2 class="title">
+						Meditation
+					</h2>
+				</li>
+				<li class="item">
+					<h2 class="bg-data-text style-2">
+						<span>C</span>
+						<span>L</span>
+						<span>U</span>
+						<span>B</span>
+					</h2>
+				</li>
+				<li class="item">
+					<h2 class="bg-data-text style-2">
+						<span>F</span>
+						<span>I</span>
+						<span>T</span>
+						<span>N</span>
+						<span>E</span>
+						<span>S</span>
+						<span>S</span>
+					</h2>
+				</li>
+				<li class="item">
+					<h2 class="bg-data-text style-2">
+						<span>Y</span>
+						<span>O</span>
+						<span>G</span>
+						<span>A</span>
+					</h2>
+				</li>
+				<li class="item">
+					<h2 class="title">
+						Meditation
+					</h2>
+				</li>
+				<li class="item">
+					<h2 class="bg-data-text style-2">
+						<span>C</span>
+						<span>L</span>
+						<span>U</span>
+						<span>B</span>
+					</h2>
+				</li>
+				<li class="item">
+					<h2 class="bg-data-text style-2">
+						<span>F</span>
+						<span>I</span>
+						<span>T</span>
+						<span>N</span>
+						<span>E</span>
+						<span>S</span>
+						<span>S</span>
+					</h2>
+				</li>
+				<li class="item">
+					<h2 class="bg-data-text style-2">
+						<span>Y</span>
+						<span>O</span>
+						<span>G</span>
+						<span>A</span>
+					</h2>
+				</li>
+				<li class="item">
+					<h2 class="title">
+						Meditation
+					</h2>
+				</li>
+				<li class="item">
+					<h2 class="bg-data-text style-2">
+						<span>C</span>
+						<span>L</span>
+						<span>U</span>
+						<span>B</span>
+					</h2>
+				</li>
+				<li class="item">
+					<h2 class="bg-data-text style-2">
+						<span>F</span>
+						<span>I</span>
+						<span>T</span>
+						<span>N</span>
+						<span>E</span>
+						<span>S</span>
+						<span>S</span>
+					</h2>
+				</li>
+				<li class="item">
+					<h2 class="bg-data-text style-2">
+						<span>Y</span>
+						<span>O</span>
+						<span>G</span>
+						<span>A</span>
+					</h2>
+				</li>
+				<li class="item">
+					<h2 class="title">
+						Meditation
+					</h2>
+				</li>
+				<li class="item">
+					<h2 class="bg-data-text style-2">
+						<span>C</span>
+						<span>L</span>
+						<span>U</span>
+						<span>B</span>
+					</h2>
+				</li>
+			</ul>
 		</div>
-		<!-- Schedule Table -->
 		
+		<!-- Schedule Table -->
+	<div class="content-inner section-wrapper2">
+    <div class="container">
+		<video autoplay loop muted id="video-background">
+                <source src="{{asset('main/images/background/bg1.mp4')}}" type="video/mp4">
+            </video>
+						<div class="container py-6" id="page-container">
+							<div class="row">
+								<div class="col-md-4 mt-5 wow fadeInUp" data-wow-delay="0.1s" id="notificationSection" style="display: none; visibility: visible; animation-delay: 0.1s; animation-name: fadeInUp;">
+									<div class="accordion dz-accordion vertical-border" id="accordionFaq4">
+										<div class="accordion-item">
+											<h2 class="accordion-header" id="headingTwo11">
+												<a href="#" class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#collapseTwo11" aria-expanded="false" aria-controls="collapseTwo11">
+													<span class="vertical-line"></span> 
+													<span class="accordion-header-text">Objective Content</span>
+													<span class="toggle-close"></span>
+												</a>
+											</h2>
+											<div id="collapseTwo11" class="accordion-collapse collapse">
+												<div class="accordion-body">
+													<p>Type Objective: <a id="notificationContent" class="m-b0 dz-title"></a></p>
+												</div>
+
+												<div class="accordion-body">
+													<p>Date End: <a id="notificationDateFin" class="m-b0 dz-title"></a></p>
+												</div>
+												<div class="accordion-body">
+													<p>Weight Objective: <a id="notificationDataPoidsObjectif" class="m-b0 dz-title"></a></p>
+												</div>
+												<div class="accordion-body">
+													<p>Actual Weight: <a id="notificationDataPoidsActuelle" class="m-b0 dz-title"></a></p>
+												</div>
+												<div class="accordion-body">
+													<p>Height Objective: <a id="notificationDataTaille" class="m-b0 dz-title"></a></p>
+												</div>
+												<div class="accordion-body">
+													<div class="row">
+														<div class="col-lg-12">
+															<div class="m-b30 shortcode-btn">
+																<ul class="list-inline d-lg-flex d-md-flex justify-content-center">
+																	<li>
+																		<div class="dropdown m-r10 m-b10">
+																			<button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+																				Dropdown button
+																			</button>
+																			<ul class="dropdown-menu" style="position: absolute;">
+					 															<li><a class="dropdown-item" id="idObjectifLinkEdit" href="">Edit</a></li>
+																				<li><a class="dropdown-item" id="idObjectifLink" href="">Delete</a></li>
+																			</ul>
+																		</div>
+																	</li>
+																</ul>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+									<div class="col-md-8">
+										<div id="calendar"></div>
+									</div>
+							</div>
+						</div>
+    </div>
+ </div>
+
+		<!-- Schedule Table -->
+	
 		<!-- Call To Action -->
 		<section class="call-action style-2 bg-img-fix bg-primary">
+	
 			<div class="container">
 				<div class="inner-content">
 					<div class="row justify-content-between align-items-center">
@@ -72,27 +509,92 @@
 		</section>
 		<!-- Call To Action -->
 	</div>
+
+
 {% endblock %}
 
 {% block js %}
-	{{ parent() }}
-	<script src='https://cdn.jsdelivr.net/npm/fullcalendar/index.global.min.js'></script>
-	<script>
-		document.addEventListener('DOMContentLoaded', function() {
-            const calendarEl = document.getElementById('calendar');
-            const calendar = new FullCalendar.Calendar(calendarEl, {
-              initialView: 'dayGridMonth',
-             events: [
-				{% for objectif in objectifs %}
-					{
-						title: 'Notification',
-						start: '{{ objectif.datef|date("Y-m-d") }}',
-						className: 'fc-event-notification'
-					},
-				{% endfor %}
-			]
+	<script src="{{asset('main/js/main.min.js')}}"></script><!-- -->
+    {{ parent() }}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,dayGridWeek,list' // Add list view
+                },
+                events: [
+                    {% for objectif in objectifs %}
+                        {
+                            title: 'Notification',
+                            start: '{{ objectif.datef|date("Y-m-d") }}',
+                            className: 'fc-event-notification',
+							notificationIdObjectif: '{{ objectif.idobjectif }}',
+                            notificationData: '{{ objectif.typeobj }}',
+                            notificationDateFin: '{{ objectif.datef|date("Y-m-d") }}',
+                            notificationDataPoidsObjectif: '{{ objectif.poidsobj }}',
+                            notificationDataPoidsActuelle: '{{ objectif.poidsact }}',
+                            notificationDataTaille: '{{ objectif.taille }}'
+                        },
+                    {% endfor %}
+                ],
+                eventContent: function (arg) {
+                    var event = arg.event;
+                    var containerEl = document.createElement('div');
+                    containerEl.innerHTML = '<b>' + event.title + '</b><br>';
+                    if (event.extendedProps.notificationData) {
+                        var notificationEl = document.createElement('i');
+                        notificationEl.innerText = event.extendedProps.notificationData;
+                        containerEl.appendChild(notificationEl);
+                        containerEl.innerHTML += '<br>';
+                    }
+                    return { domNodes: [containerEl] };
+                },
+                eventClick: function (info) {
+                    var event = info.event;
+                    console.log('Notification date clicked:', event.start);
+
+                    var notificationSection = document.getElementById('notificationSection');
+                    var wow = new WOW();
+                    wow.init();
+
+                    var notificationContent = document.getElementById('notificationContent');
+                    notificationContent.innerText = event.extendedProps.notificationData;
+
+                    var notificationDateFin = document.getElementById('notificationDateFin');
+                    notificationDateFin.innerText = event.extendedProps.notificationDateFin;
+
+                    var notificationDataPoidsObjectif = document.getElementById('notificationDataPoidsObjectif');
+                    notificationDataPoidsObjectif.innerText = event.extendedProps.notificationDataPoidsObjectif;
+
+                    var notificationDataPoidsActuelle = document.getElementById('notificationDataPoidsActuelle');
+                    notificationDataPoidsActuelle.innerText = event.extendedProps.notificationDataPoidsActuelle;
+
+                    var notificationDataTaille = document.getElementById('notificationDataTaille');
+                    notificationDataTaille.innerText = event.extendedProps.notificationDataTaille;
+
+
+                   var idObjectifLink = document.getElementById('idObjectifLink');
+                     var notificationIdObjectif = event.extendedProps.notificationIdObjectif;
+                    idObjectifLink.href = "/objectif/delete/" + notificationIdObjectif;
+				    idObjectifLinkEdit.href = "/objectif/edit/" + notificationIdObjectif;
+
+
+                    notificationSection.style.display = 'block';
+                    notificationSection.classList.add('wow', 'fadeInUp');
+                    wow.sync();
+                },
+                editable: true, // Enable dragging
+                eventDrop: function (info) {
+                    console.log('Notification dropped:', info.event.start);
+                }
             });
+
             calendar.render();
-          });
-	</script>
+        });
+    </script>
 {% endblock %}

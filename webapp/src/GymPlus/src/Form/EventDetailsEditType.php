@@ -12,6 +12,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 
 class EventDetailsEditType extends AbstractType
 {
@@ -36,7 +37,11 @@ class EventDetailsEditType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('eventDate')
+            ->add('eventDate', DateTimeType::class, [
+                'widget' => 'single_text',
+                'required' => true,
+            ]
+            )
             ->add('duree')
             ->add('Edit', SubmitType::class);
     }

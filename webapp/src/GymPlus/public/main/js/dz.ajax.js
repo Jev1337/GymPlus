@@ -26,9 +26,9 @@ function contactForm()
 	var msgDiv;
 	$(".dzForm").on('submit',function(e)
 	{
-		e.preventDefault();	//STOP default action
+		//e.preventDefault();	//STOP default action
 		$('.dzFormMsg').html('<div class="gen alert alert-success">Submitting..</div>');
-		var dzFormAction = $(this).attr('action');
+		/*var dzFormAction = $(this).attr('action');
 		var dzFormData = $(this).serialize();
 		
 		$.ajax({
@@ -54,7 +54,7 @@ function contactForm()
 				$('.dzForm')[0].reset();
                 grecaptcha.reset();
 			}
-		})
+		})*/
 	});
 	
 	

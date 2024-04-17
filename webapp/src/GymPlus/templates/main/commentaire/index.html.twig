@@ -59,10 +59,10 @@
                             <div class="card-body">
                                 <div class="d-flex justify-content-between">
                                     <div class="d-flex gap-3">
-                                        <img style="width:3rem; height:3rem; border-radius:50%" src="{{ asset('profileuploads/' ~ app.user.photo) }}" alt="image" />
+                                        <img style="width:3rem; height:3rem; border-radius:50%" src="{{ asset('profileuploads/' ~ post.user.photo) }}" alt="image" />
                                         <div>
                                             <h5 class="card-title">
-                                                {{ app.user.username }}
+                                                {{ post.user.username }}
                                             </h5>
                                             <div class="">
                                                 {{ post.date ? post.date|date('Y-m-d') : '' }}
@@ -130,17 +130,17 @@
                                 <div class="card rounded px-3 pt-3 ">
                                     <div class="d-flex justify-content-between">
                                         <div class="d-flex gap-3">
-                                            <img style="width:3rem; height:3rem; border-radius:50%" src="{{ asset('profileuploads/' ~ user.photo) }}" alt="image" />
+                                            <img style="width:3rem; height:3rem; border-radius:50%" src="{{ asset('profileuploads/' ~ comnt.user.photo) }}" alt="image" />
                                             <div>
                                                 <h5 class="card-title">
-                                                    {{ user.username }}
+                                                    {{ comnt.user.username }}
                                                 </h5>
                                                 <div class="">
                                                     {{ comnt.date ? comnt.date|date('Y-m-d') : '' }}
                                                 </div>
                                             </div>
                                         </div>
-                                        {% if comnt.userId == user.id %}
+                                        {% if comnt.userId == app.user.id %}
                                             <div class="d-flex gap-3">
                                                 <a class="" href="{{ path('update_commentaire', {'id': comnt.id}) }}" aria-expanded="false" data-toggle="modal" data-target="#edit">
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">

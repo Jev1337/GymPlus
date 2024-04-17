@@ -87,7 +87,7 @@ public class AdminDashboardController {
     private final ClientService clientService = new ClientService();
     private final AbonnementService abonnementService = new AbonnementService();
     private final AbonnementDetailsService abonnementDetailsService = new AbonnementDetailsService();
-    private final FadeIn[] fadeInAnimation = new FadeIn[9];
+    private final FadeIn[] fadeInAnimation = new FadeIn[8];
     private final FadeOutRight fadeOutRightAnimation = new FadeOutRight();
     private final FadeInRight fadeInRightAnimation = new FadeInRight();
 
@@ -656,9 +656,6 @@ public class AdminDashboardController {
             opencam_btn.setStyle("-color-button-bg: -color-success-4;");
 
         }
-
-
-
     }
     @FXML
     void bars_btn_clicked(MouseEvent event) {
@@ -669,9 +666,10 @@ public class AdminDashboardController {
             nullOpacityAll();
         } else {
             visibleAll();
-            for (FadeIn fadeIn : fadeInAnimation)
+            int i = 0;
+            for (FadeIn fadeIn : fadeInAnimation) {
                 fadeIn.play();
-
+            }
         }
         Duration cycleDuration = Duration.millis(250);
         Timeline timeline = new Timeline(

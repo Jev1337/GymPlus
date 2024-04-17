@@ -29,12 +29,12 @@ class Abonnement
         return $this->id;
     }
 
-    public function getDatefinab(): ?\DateTimeInterface
+    public function getDatefinab(): ?\DateTime
     {
         return $this->datefinab;
     }
 
-    public function setDatefinab(\DateTimeInterface $datefinab): static
+    public function setDatefinab(\DateTime $datefinab): static
     {
         $this->datefinab = $datefinab;
 

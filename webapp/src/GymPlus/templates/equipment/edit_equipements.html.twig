@@ -10,7 +10,7 @@
             </ol>
         </div>
         <!-- row -->
-        {% if 'etat' not in form.vars.value %}
+        {% if form.etat is not defined %}
             <div class="alert alert-warning solid alert-right-icon alert-dismissible fade show">
 					<span><i class="mdi mdi-alert"></i></span>
 						<button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span><i class="mdi mdi-close"></i></span>
@@ -26,7 +26,7 @@
                         <h4 class="card-title">Edit Equipement</h4>
                     </div>
                     <div class="card-body">
-                    {{ form_start(form, { 'class': 'centered-form'}) }}
+                    {{ form_start(form, { 'attr' :{'class': 'centered-form', 'novalidate': 'novalidate'}}) }}
                         <div class="form-row">
                             <div class="form-group col-md-4">
                                 {{ form_label(form.name) }}
@@ -44,7 +44,7 @@
                                 <small class="text-danger">{{ form_errors(form.dureeDeVie) }}</small>
                             </div>
                         </div>
-                        {% if 'etat' in form.vars.value %}
+                        {% if form.etat is defined %}
                             <div class="form-row">
                                 <div class="form-group col-md-4">
                                 

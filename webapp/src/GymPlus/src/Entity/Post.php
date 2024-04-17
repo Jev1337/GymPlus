@@ -25,7 +25,7 @@ class Post
     private ?string $mode = null;
 
     #[ORM\Column(name: "content", length: 255, nullable: true)]
-    #[Assert\NotBlank(message: 'Please enter your lastname.')]
+    // #[Assert\NotBlank(message: 'Please enter your lastname.')]
     private ?string $content = null;
 
     #[ORM\Column(name: "date", type: Types::DATE_MUTABLE, nullable: true)]
@@ -43,6 +43,9 @@ class Post
     #[Vich\UploadableField(mapping: 'img_post', fileNameProperty: 'photo')]
     private ?File $imageFile = null;
 
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'posts')]
+    private ?User $user = null;
+
     // #[ORM\Column(nullable: true)]
     // private ?string $imageName = null;
 
@@ -56,9 +59,9 @@ class Post
         return $this->idUser;
     }
 
-    public function setIdUser(?int $idUser): static
+    public function setIdUser(): static
     {
-        $this->idUser = $idUser;
+        $this->idUser = $this->user->getId();
 
         return $this;
     }
@@ -150,6 +153,18 @@ class Post
     public function setNbComnts(?int $nbComnts): static
     {
         $this->nbComnts = $nbComnts;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
 
         return $this;
     }

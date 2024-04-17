@@ -16,62 +16,55 @@ class EventDetails
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id;
-    /**
-     * @Assert\NotBlank(message="This field cannot be empty")
-     * @Assert\Length(
-     *      min = 4,
-     *      minMessage = "The name must be at least {{ limit }} characters long"
-     * )
-     */
-    #[ORM\Column]
+    
+    #[Assert\NotBlank(message: "This field cannot be empty")]
+    #[Assert\Length(
+        min: 4,
+        minMessage: "The name must be at least {{ limit }} characters long"
+    )]
+    #[ORM\Column(type: "string", length: 255)]
     private ?string $name;
 
-    /**
-     * @Assert\NotBlank(message="This field cannot be empty")
-     * @Assert\Length(
-     *      min = 4,
-     *      minMessage = "The type must be at least {{ limit }} characters long"
-     * )
-     * @Assert\Regex(
-     *     pattern="/^[a-zA-Z]*$/",
-     *     message="The type should contain only letters"
-     * )
-     */
+
+    #[Assert\NotBlank(message: "This field cannot be empty")]
+    #[Assert\Length(
+        min: 4,
+        minMessage: "The type must be at least {{ limit }} characters long"
+    )]
+    #[Assert\Regex(
+        pattern: "/^[a-zA-Z]*$/",
+        message: "The type should contain only letters"
+    )]
     #[ORM\Column(nullable: false)]
     private ?string $type;
 
-    /**
-     * @Assert\NotBlank(message="This field cannot be empty")
-     * @Assert\GreaterThan(
-     *     "now",
-     *     message="The event date should be at least 1 hour from now"
-     * )
-     */
-    #[ORM\Column(nullable: false)]
+    #[Assert\NotBlank(message: "This field cannot be empty")]
+    #[Assert\GreaterThan(
+        value: "now",
+        message: "The event date should be at least 1 hour from now"
+    )]
+    #[ORM\Column(nullable: false, type: "datetime")]
     private ?\DateTime $eventDate;
 
-    /**
-     * @Assert\NotBlank(message="This field cannot be empty")
-     * @Assert\Range(
-     *      min = 20,
-     *      max = 120,
-     *      notInRangeMessage = "The duration must be between {{ min }} and {{ max }}",
-     * )
-     */
-    #[ORM\Column(nullable: false)]
+    #[Assert\NotBlank(message: "This field cannot be empty")]
+    #[Assert\Range(
+        min: 20,
+        max: 120,
+        notInRangeMessage: "The duration must be between {{ min }} and {{ max }}"
+    )]
+    #[ORM\Column(nullable: false, type: "string")]
     private ?string $duree;
 
-    /**
-     * @Assert\NotBlank(message="This field cannot be empty")
-     * @Assert\Range(
-     *      min = 10,
-     *      max = 50,
-     *      notInRangeMessage = "The number of places must be between {{ min }} and {{ max }}",
-     * )
-     */
-    #[ORM\Column(nullable: false)]
+    #[Assert\NotBlank(message: "This field cannot be empty")]
+    #[Assert\Range(
+        min: 10,
+        max: 50,
+        notInRangeMessage: "The number of places must be between {{ min }} and {{ max }}"
+    )]
+    #[ORM\Column(nullable: false, type: "integer")]
     private ?int $nbPlaces;
 
+    
     #[ORM\Column(nullable: false)]
     private ?int $nbTotal;
 

@@ -20,6 +20,17 @@ class EventDetailsRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, EventDetails::class);
     }
+
+    public function findFutureEvents(): array
+{
+    $currentDate = new \DateTime();
+
+    return $this->createQueryBuilder('e')
+        ->where('e.eventDate > :currentDate')
+        ->setParameter('currentDate', $currentDate)
+        ->getQuery()
+        ->getResult();
+}
     
 
 //    /**

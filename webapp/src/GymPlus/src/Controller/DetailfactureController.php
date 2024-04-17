@@ -57,7 +57,7 @@ class DetailfactureController extends AbstractController
     #[Route('/new', name: 'app_detailfacture_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $detailfacture = new Detailfacture();
+        // $detailfacture = new Detailfacture();
 
         $detailfacture = new Detailfacture();
 

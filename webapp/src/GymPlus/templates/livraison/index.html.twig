@@ -59,7 +59,19 @@
                                         </td>
                                         <td>
                                             {# <a href="{{ path('app_livraison_show', {'idlivraison': livraison.idlivraison}) }}">show</a> #}
-                                            <a href="{{ path('app_livraison_edit', {'idlivraison': livraison.idlivraison}) }} " class="btn btn-primary">edit</a>
+                                            {# <a href="{{ path('app_livraison_edit', {'idlivraison': livraison.idlivraison}) }} " class="btn btn-primary">edit</a>
+                                            {{ include('livraison/_delete_form.html.twig') }} #}
+                                            <div class="dropdown ms-auto text-end c-pointer">
+                                            <div class="btn-link" data-toggle="dropdown">
+                                                <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><rect x="0" y="0" width="24" height="24"></rect><circle fill="#000000" cx="5" cy="12" r="2"></circle><circle fill="#000000" cx="12" cy="12" r="2"></circle><circle fill="#000000" cx="19" cy="12" r="2"></circle></g></svg>
+                                            </div>
+                                            <div class="dropdown-menu dropdown-menu-right">
+                                                <a href="{{ path('app_livraison_edit', {'idlivraison': livraison.idlivraison}) }}" class="dropdown-item text-center" >edit</a>
+                                                <div class="text-center">
+                                                    {{ include('livraison/_delete_form.html.twig') }} 
+                                                </div>                               
+                                            </div>
+                                        </div>
                                         </td>
                                     </tr>
                                     {% else %}

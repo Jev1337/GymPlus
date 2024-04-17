@@ -24,6 +24,7 @@
                         {# {{ include('produit/_delete_form.html.twig') }} #}
                             {# <div class="form-group col-md-4"> #}
                             <div class="text-center" >
+                                {{ form_start(form,{'attr': {'novalidate': 'novalidate'}} ) }} 
                                 {{ include('produit/_form.html.twig', {'button_label': 'Update'}) }}
                             </div>
                             <a href="{{ path('app_produit_indexAdmin') }}" class="btn btn-primary" >back to list</a>

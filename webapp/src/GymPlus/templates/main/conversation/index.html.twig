@@ -1,0 +1,83 @@
+{% extends "main/base.html.twig" %}
+{% block content %}
+<!-- Banner  -->
+<div class="dz-bnr-inr style-2" style="background-image: url('{{asset('main/images/banner/banner-2.png')}}')">
+<div class="banner-gradient"></div>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="dz-bnr-inr-entry">
+                <h1>Chat</h1>
+                <!-- Breadcrumb Row -->
+                <nav aria-label="breadcrumb" class="breadcrumb-row">
+                    <ul class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">CHAT</li>
+                    </ul>
+                </nav>
+                <!-- Breadcrumb Row End -->
+            </div>
+        </div>
+    </div>
+    <div class="banner-media">
+        <img src="{{asset('main/images/banner/pic4.png')}}" alt="/">
+    </div>
+</div>
+</div>
+<!-- Banner End -->
+<div class="page-content bg-white">
+    <section class="content-inner">
+        <div class="container">
+            <div class="row justify-content-center gap-5">
+                <div class="container d-grid shadow p-3 m-5 rounded align-items-center" style="width: 60rem ">
+                    <div class="d-flex flex-column gap-2" style="width: 25rem;">
+                        <div class="d-flex justify-content-between">
+                            <h4>Messages</h4>
+                            <div class="dropdown">
+                                <a class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
+                                    </svg>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    {% for u in users %}
+                                        <li>    
+                                            <div class="d-flex gap-3">
+                                                <a class="dropdown-item" href="{{ path('new_conversation', {'id': u.id}) }}" aria-expanded="false">
+                                                    <img style="width:3rem; height:3rem; border-radius:50%" src="{{ asset('profileuploads/' ~ u.photo) }}"/>
+                                                    {{ u.username }}
+                                                </a>
+                                            </div>
+                                        </li>
+                                    {% endfor %}
+
+                                </ul>
+                            </div>
+                        </div>
+                        {% for convo in conversations %}
+                        <a class="d-flex gap-3 align-items-center" href="{{ path('get_message', {'id': convo.id}) }}" aria-expanded="false">
+                            <img style="width:4rem; height:4rem; border-radius:50%" src="{{ asset('profileuploads/' ~ convo.lastMessage.user.photo) }}"/>
+                            <div class="text-dark align-items-center">
+                                <span class="fw-semibold">{{ convo.lastMessage.user.username }}</span> <br/>
+                                <span class="fw-bold">{{ convo.lastMessage.content }}</span>
+                            </div>
+                        </a>
+                        <div style="border: 1px solid #F5F7F8;"></div>
+                        {% endfor %}
+                        {# {% for u in users %}
+                            <div class="d-flex gap-3">
+                                <a href="{{ path('new_conversation', {'id': u.id}) }}" aria-expanded="false">
+                                    <img style="width:3rem; height:3rem; border-radius:50%" src="{{ asset('profileuploads/' ~ u.photo) }}"/>
+                                    {{ u.username }}
+                                </a>
+                            </div>
+                        {% endfor %} #}
+
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

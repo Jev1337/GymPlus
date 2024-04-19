@@ -68,7 +68,40 @@ CREATE TABLE `commentaire` (
   `date` date DEFAULT NULL,
   `likes` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+-- --------------------------------------------------------
 
+--
+-- Structure de la table `conversation`
+--
+
+CREATE TABLE `conversation` (
+  `id` int(11) NOT NULL,
+  `last_message_id` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `message`
+--
+
+CREATE TABLE `message` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `conversation_id` int(11) NOT NULL,
+  `content` text NOT NULL,
+  `createdAt` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `participantmessanger`
+--
+
+CREATE TABLE `participantmessanger` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `conversation_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 -- --------------------------------------------------------
 
 --
@@ -314,6 +347,41 @@ ALTER TABLE `commentaire`
   ADD KEY `commentaire_ibfk_2` (`id_post`);
 
 
+--
+-- Index pour la table `conversation`
+--
+ALTER TABLE `conversation`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `last_message_id_index` (`last_message_id`);
+--
+-- AUTO_INCREMENT pour la table `conversation`
+--
+ALTER TABLE `conversation`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+--
+-- Index pour la table `message`
+--
+ALTER TABLE `message`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `conversation_id` (`conversation_id`);
+--
+-- AUTO_INCREMENT pour la table `message`
+--
+ALTER TABLE `message`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+--
+-- Index pour la table `participantmessanger`
+--
+ALTER TABLE `participantmessanger`
+ADD PRIMARY KEY (`id`),
+ADD KEY `user_id` (`user_id`),
+ADD KEY `conversation_id` (`conversation_id`);
+--
+-- AUTO_INCREMENT pour la table `participantmessanger`
+--
+ALTER TABLE `participantmessanger`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
 --
 -- Indexes for table `detailfacture`

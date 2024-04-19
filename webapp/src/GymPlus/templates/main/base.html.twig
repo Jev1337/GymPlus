@@ -151,9 +151,14 @@
 
 							</ul>
 						</li>
-						<li><a href="{{ path('getAll_post') }}">Blog</a></li>
+						<li class="sub-menu-down"><a href="javascript:void(0);">Blog</a>
+							<ul class="sub-menu">
+								<li><a href="{{ path('getAll_post') }}">Blog</a></li>
+								<li><a href="{{ path('get_conversation') }}">Chat</a></li>
+							</ul>
+						</li>
 						<li><a href="{{ path('app_memequipments')}}">Equipments</a></li>
-						 
+
                     </ul>
                     <div class="dz-social-icon">
                         <ul>
@@ -410,7 +415,12 @@
 
 								</ul>
 								</li>
-								<li><a href="{{ path('getAll_post') }}">Blog</a></li>
+								<li class="sub-menu-down"><a href="javascript:void(0);">Blog</a>
+									<ul class="sub-menu">
+										<li><a href="{{ path('getAll_post') }}">Blog</a></li>
+										<li><a href="{{ path('get_conversation') }}">Chat</a></li>
+									</ul>
+								</li>
 								<li><a href="{{ path('app_memequipments')}}">Equipments</a></li>
 							</ul>
 							</div>	

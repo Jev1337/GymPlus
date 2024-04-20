@@ -70,13 +70,13 @@
                                 {% endfor %}           
                             </div>
 
-<style>
-    .dz-media img {
-        width: 100%;
-        height: 100%/*300px*/; /* Hauteur fixe pour toutes les images */
-        object-fit: cover; /* Pour couvrir toute la zone de l'image */
-    }
-</style>
+                            <style>
+                                .dz-media img {
+                                    width: 100%;
+                                    height: 100%/*300px*/; /* Hauteur fixe pour toutes les images */
+                                    object-fit: cover; /* Pour couvrir toute la zone de l'image */
+                                }
+                            </style>
 
                             <hr> <!-- Séparateur entre les deux tableaux -->
                             <h2>Our Products :</h2>
@@ -138,23 +138,17 @@
                             </div> #}
 
 
-                            <div class="row page wow fadeInUp" data-wow-delay="2.4s">
-                                <div class="col-sm-6 m-b15">
-                                    <p class="page-text"></p>
-                                </div>
-                                <div class="col-sm-6 m-b15">
-                                    <nav aria-label="Shop Pagination">
-                                        <ul class="pagination style-1">
-                                            <li class="page-item"><a class="page-link prev" href="javascript:void(0);">Prev</a></li>
-                                            <li class="page-item"><a class="page-link active" href="javascript:void(0);">1</a></li>
-                                            <li class="page-item"><a class="page-link" href="javascript:void(0);">2</a></li>
-                                            <li class="page-item"><a class="page-link" href="javascript:void(0);">3</a></li>
-                                            <li class="page-item"><a class="page-link next" href="javascript:void(0);">Next</a></li>
-                                        </ul>
-                                    </nav>
+
+                            <div class="row page wow fadeInUp" data-wow-delay="1s">
+                                <div class="d-flex justify-center">
+                                    {% do produits.setPageRange(2) %}
+                                    {{ knp_pagination_render(produits , 'produit/paginator.html.twig')}}
                                 </div>
                             </div>
+
+                            
                         </div>
+
                         <div class="col-xl-4 col-lg-12">
                             <div class="shop-filter side-bar sticky-top">
                                 <aside>

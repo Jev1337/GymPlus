@@ -13,6 +13,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Knp\Component\Pager\PaginatorInterface;
+
 
 
 #[Route('/produit')]
@@ -43,13 +45,23 @@ class ProduitController extends AbstractController
     //         'produits' => $produits,
     //     ]);
     // }
-    public function index(SessionInterface $session ,EntityManagerInterface $entityManager, ProduitRepository $productRepository): Response
+
+
+    public function index(SessionInterface $session ,EntityManagerInterface $entityManager, ProduitRepository $productRepository , PaginatorInterface $paginator , Request $request): Response
     {
         // Récupérer les trois derniers produits ajoutés
         $latestProducts = $productRepository->findLatestProducts();
 
         // Récupérer tous les produits
-        $produits = $entityManager->getRepository(Produit::class)->findAll();
+        // $produits = $entityManager->getRepository(Produit::class)->findAll();
+        // Récupérer tous les produits
+        $data = $productRepository->findAll();
+
+        $produits = $paginator->paginate(
+            $data,
+            $request->query->getInt('page' , 1),
+            6 //limit des nb produits dans la page
+        );
 
         //Panier
         $panier = $session->get('panier' , []);

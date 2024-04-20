@@ -18,6 +18,7 @@
         "endroid/qr-code-bundle": "^5.0",
         "guzzlehttp/guzzle": "^7.8",
         "karser/karser-recaptcha3-bundle": "^0.1.26",
+        "knplabs/knp-paginator-bundle": "^5.9",
         "mercuryseries/flashy-bundle": "^5.1",
         "mukadi/chartjs-bundle": "^3.0.0",
         "nyholm/psr7": "^1.8",

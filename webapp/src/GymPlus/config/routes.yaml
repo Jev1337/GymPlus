@@ -1,3 +1,7 @@
 #index:
 #    path: /
 #    controller: App\Controller\DefaultController::index
+generate_barcode:
+    path: /generate
+    controller: App\Controller\YourController::generateBarcode
+

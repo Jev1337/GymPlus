@@ -151,6 +151,9 @@
                                             <div class="dropdown-menu dropdown-menu-right">
                                                 <a href="{{ path('app_produit_edit', {'idproduit': produit.idproduit}) }}" class="dropdown-item text-center" >edit</a>
                                                 <div class="text-center">
+<a href="#" onclick="generateBarcode('{{ produit.idproduit ~ ',' ~ produit.prix ~ ',' ~ produit.promo }}')">Barcode</a>
+                                                </div>  
+                                                <div class="text-center">
                                                     {{ include('produit/_delete_form.html.twig') }} 
                                                 </div>                               
                                             </div>
@@ -178,5 +181,32 @@
         {{ include('@MercurySeriesFlashy/flashy.html.twig') }}
 
 
+<script>
+    function generateBarcode(text) {
+        // Faire une requête AJAX pour générer le code-barres et récupérer la réponse
+        $.ajax({
+            url: '{{ path('app_generate') }}?text=' + text,
+            type: 'GET',
+            success: function(response) {
+                // Créer une fenêtre modale et y placer le code-barres
+                var modalContent = '<div id="myModal" class="modal fade" role="dialog">' +
+                                        '<div class="modal-dialog modal-lg">' + // Adjusted modal-lg class for larger modal
+                                            '<div class="modal-content">' +
+                                                '<div class="modal-header">' +
+                                                    '<button type="button" class="close" data-dismiss="modal">&times;</button>' +
+                                                    '<h4 class="modal-title"></h4>' +
+                                                '</div>' +
+                                                '<div class="modal-body">' +
+                                                    '<div id="barcode">' + response + '</div>' +
+                                                '</div>' +
+                                            '</div>' +
+                                        '</div>' +
+                                    '</div>';
+                $('body').append(modalContent);
+                $('#myModal').modal('show');
+            }
+        });
+    }
+</script>
 
 {% endblock %}

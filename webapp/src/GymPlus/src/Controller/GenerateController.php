@@ -31,7 +31,7 @@ class GenerateController extends AbstractController
         $productPromo = $productInfo[2];
         
         // Calculer le prix du produit avec la promo
-        $productPriceWithPromo = $productPrice * $productPromo;
+        $productPriceWithPromo = $productPrice * (1 - $productPromo );
         
         // Créer une nouvelle chaîne avec l'ID du produit sur une ligne et le prix sur une autre ligne
         $barcodeText = $productId . "\n" . $productPriceWithPromo;

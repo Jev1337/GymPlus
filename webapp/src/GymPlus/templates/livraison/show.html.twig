@@ -1,0 +1,45 @@
+{% extends "dashboard/base.html.twig" %}
+
+{% block content %}
+<div class="content-body default-height" style="min-height: 878px;">
+    <div class="container-fluid">
+        <div class="page-titles">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
+                <li class="breadcrumb-item active"><a href="javascript:void(0)">Delivery</a></li>
+            </ol>
+        </div>
+        <!-- row -->
+    <h1>Livraison</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Idlivraison</th>
+                <td>{{ livraison.idlivraison }}</td>
+            </tr>
+            <tr>
+                <th>Idfacture</th>
+                <td>{{ livraison.idfacture }}</td>
+            </tr>
+            <tr>
+                <th>Idclient</th>
+                <td>{{ livraison.idclient }}</td>
+            </tr>
+            <tr>
+                <th>Lieu</th>
+                <td>{{ livraison.lieu }}</td>
+            </tr>
+            <tr>
+                <th>Etat</th>
+                <td>{{ livraison.etat }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_livraison_index') }}">back to list</a>
+
+    <a href="{{ path('app_livraison_edit', {'idlivraison': livraison.idlivraison}) }}">edit</a>
+
+    {{ include('livraison/_delete_form.html.twig') }}
+{% endblock %}

@@ -37,9 +37,19 @@
                 <p class="card-text">{{ user_points }}</p>
                
             </div>
+            <a href="{{ path('past_events') }}" class="text-decoration-none text-dark">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Past Events</h5>
+                        
+                       
+                    </div>
+                </div>
+            </a>
         </div>
     </a>
     <div id="countdown"></div>
+    
 </div>
 
 		<!-- Our Events -->
@@ -117,21 +127,30 @@
          });
      }
      {% endif %}
-     var countdown = new Date("{{ nextEventDate|date('Y/m/d H:i:s') }}").getTime();
-     var x = setInterval(function() {
-         var now = new Date().getTime();
-         var distance = countdown - now;
-         var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-         var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-         var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-         var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-         document.getElementById("countdown").innerHTML = "<h2>Your Next Event Is In :</h2><h3>" + days + "d " + hours + "h "
-             + minutes + "m " + seconds + "s </h3>";
-         if (distance < 0) {
-             clearInterval(x);
-             document.getElementById("countdown").innerHTML = "<h2>No Upcoming Events For You</h2>"; 
-         }
-     }, 1000);
+     {% if nextEventDate is null %}
+     document.getElementById("countdown").innerHTML = "<h2>No Upcoming Events For You</h2>";
+ {% else %}
      
- </script>
+         var countdown = new Date("{{ nextEventDate|date('Y/m/d H:i:s') }}").getTime();
+        
+         var x = setInterval(function() {
+             var now = new Date().getTime();
+             var distance = countdown - now;
+         
+             if (distance <= 0) {
+                 clearInterval(x);
+                 document.getElementById("countdown").innerHTML = "<h2>No Upcoming Events For You</h2>";
+                 return;
+             }
+         
+             var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+             var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+             var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+             var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+             document.getElementById("countdown").innerHTML = "<h2>Your Next Event Is In :</h2><h3>" + days + "d " + hours + "h "
+                 + minutes + "m " + seconds + "s </h3>";
+         }, 1000);
+ 
+ {% endif %}
+</script>
 {% endblock %}

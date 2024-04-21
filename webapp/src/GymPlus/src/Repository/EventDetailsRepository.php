@@ -26,11 +26,42 @@ class EventDetailsRepository extends ServiceEntityRepository
     $currentDate = new \DateTime();
 
     return $this->createQueryBuilder('e')
-        ->where('e.event_date > :currentDate')
+        ->where('e.eventDate > :currentDate')
         ->setParameter('currentDate', $currentDate)
         ->getQuery()
         ->getResult();
 }
+public function findAllPastEvents()
+{
+    $qb = $this->createQueryBuilder('e')
+        ->where('e.eventDate < :now')
+        ->setParameter('now', new \DateTime())
+        ->getQuery();
+
+    return $qb->execute();
+}
+
+
+
+
+public function getEventRate(int $id): ?float
+{
+    $conn = $this->getEntityManager()->getConnection();
+
+    $sql = '
+        SELECT AVG(rate) as avg_rate
+        FROM event_participants 
+        WHERE event_details_id = :id
+    ';
+
+    $stmt = $conn->executeQuery($sql, ['id' => $id]);
+    $rate= $stmt->fetchOne();
+    return $rate;
+
+}
+
+
+
     
 
 //    /**

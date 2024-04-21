@@ -1,4 +1,53 @@
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-    {# <button class="btn">{{ button_label|default('Save') }}</button> #}
-{{ form_end(form) }}
+{% extends "main/base.html.twig" %}
+{% block content %}
+<!-- Banner  -->
+<div class="dz-bnr-inr style-2" style="background-image: url('{{asset('main/images/banner/banner-2.png')}}')">
+<div class="banner-gradient"></div>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="dz-bnr-inr-entry">
+                <h1>Blog</h1>
+                <!-- Breadcrumb Row -->
+                <nav aria-label="breadcrumb" class="breadcrumb-row">
+                    <ul class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">BLOG</li>
+                    </ul>
+                </nav>
+                <!-- Breadcrumb Row End -->
+            </div>
+        </div>
+    </div>
+    <div class="banner-media">
+        <img src="{{asset('main/images/banner/pic4.png')}}" alt="/">
+    </div>
+</div>
+</div>
+<!-- Banner End -->
+    <div class="page-content bg-white">
+        <section class="content-inner">
+            <section class="container">
+                <div class="row justify-content-center gap-5">
+                <div class="container d-grid shadow p-3 m-5 rounded align-items-center" style="width: 60rem; height: 14rem; ">
+                {{ form_start(form) }}
+                    <div class="d-flex flex-column gap-3">
+                        <div class="d-flex gap-3 align-items-center">
+                            <img style="width:3rem; height:3rem; border-radius:50%" src="{{asset('profileuploads/' ~ comnt.user.photo)}}" alt="image" />
+                            <div>
+                                <h5 class="card-title">
+                                    {{ comnt.user.username }}
+                                </h5>
+                            </div>
+                        </div>
+                            {{ form_widget(form.content, {'attr': {'class': 'form-control rounded', 'placeholder': 'write your comnt' }}
+                            ) }}                         
+                            {{ form_widget(form.coment, {'attr': {'class': 'btn h-3 btn-outline-primary rounded mt-3' }}
+                            ) }}
+                {{ form_end(form) }}
+                </div>
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock %}

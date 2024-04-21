@@ -40,12 +40,17 @@
                                 </h5>
                             </div>
                         </div>
-                        {{ form_widget(form.content, {'attr': {'class': 'form-control rounded', 'placeholder': 'Express your thoughts' }}) }}
-
+                        {{ form_widget(form.content, {'attr': {'class': 'form-control rounded input-group', 'placeholder': 'Express your thoughts' }}) }}
+						
                         <div class="d-grid gap-3 d-md-flex justify-content-md-start" style="height: 2.5rem;">
-                            {{ form_widget(form.imageFile) }}
-                            {{ form_widget(form.post, {'attr': {'class': 'btn h-3 btn-outline-primary rounded'}}
-                            ) }}
+                            {{ form_widget(form.photo) }}
+                            {{ form_widget(form.post, {'attr': {'class': 'btn btn-outline-primary rounded'}}) }}
+                            <small>
+                                {{ form_errors(form.content) }}
+                            </small>
+                            <small>
+                                {{ form_errors(form.photo) }}
+                            </small>
                         </div>
                         
                     </div>
@@ -69,7 +74,7 @@
                                                 
                                             </div>
                                         </div>
-                                        {% if post.idUser == app.user.id %}
+                                        {% if post.idUser == app.user.id or app.user.role == "admin"%}
                                             <div class="d-flex gap-3">
                                             <a class="" href="{{ path('update_post', {'id': post.id}) }}" aria-expanded="false">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
@@ -89,7 +94,7 @@
                                         {{ post.content }}
                                     </p>
                                     {% if post.photo != "" %}
-                                        <img class="rounded card-img-top" style="height: 30rem; object-fit: contain;" src="{{ vich_uploader_asset(post, 'imageFile') }}" />
+                                        <img class="rounded card-img-top" style="height: 30rem; object-fit: contain;" src="{{asset('profileuploads/' ~ post.photo)}}" />
                                     {% endif %}
                                     <div class="d-flex justify-content-between py-3" style="border-bottom: 1px solid #F1EFEF;">
                                         <div >

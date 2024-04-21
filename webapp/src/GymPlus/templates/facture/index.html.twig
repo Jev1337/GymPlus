@@ -1,0 +1,72 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{# {% block title %}Facture index{% endblock %} #}
+
+{% block content %}
+
+<div class="content-body default-height" style="min-height: 878px;">
+    <div class="container-fluid">
+        <div class="page-titles">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
+                <li class="breadcrumb-item active"><a href="javascript:void(0)">Invoice</a></li>
+            </ol>
+        </div>
+
+        {# <table class="table"> #}
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Invoice</h4>
+                    </div>
+                    <div class="card-body">
+                        {# <div class="table-title">Facture</div> #}
+                        <div class="table-responsive">
+                            <table class="table table-responsive-md">
+                                <thead>
+                                    <tr>
+                                        <th> <strong class="text-black" style="font-weight: 600;"> Invoice ID </strong> </th>
+                                        <th> <strong class="text-black" style="font-weight: 600;"> Sale Date </strong> </th>
+                                        <th> <strong class="text-black" style="font-weight: 600;"> Total Paid Price </strong> </th>
+                                        <th> <strong class="text-black" style="font-weight: 600;"> Payment Method </strong> </th>
+                                        <th> <strong class="text-black" style="font-weight: 600;"> Actions </strong> </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {% for facture in factures %}
+                                    <tr>
+                                        <td> <strong class="text-black" style="font-weight: 600;"> {{ facture.idfacture }}</td>
+                                        <td>{{ facture.datevente ? facture.datevente|date('Y-m-d') : '' }}</td>
+                                        <td> $ {{ facture.prixtatalpaye }} </td>
+                                        <td>{{ facture.methodedepaiement }}</td>
+                                        <td>
+                                            <a href="{{ path('app_factureDetail_show', {'idfacture': facture.idfacture}) }}" class="btn btn-primary" >show</a>
+                                            {# <div class="dropdown ms-auto text-end c-pointer">
+                                                <div class="btn-link" data-toggle="dropdown">
+                                                    <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><rect x="0" y="0" width="24" height="24"></rect><circle fill="#000000" cx="5" cy="12" r="2"></circle><circle fill="#000000" cx="12" cy="12" r="2"></circle><circle fill="#000000" cx="19" cy="12" r="2"></circle></g></svg>
+                                                </div>
+                                                <div class="dropdown-menu dropdown-menu-right">
+                                                    <a href="{{ path('app_factureDetail_show', {'idfacture': facture.idfacture}) }}">show Facture and Detail</a>
+                                                </div>
+                                            </div> #}
+                                        </td>
+                                    </tr>
+                                {% else %}
+                                    <tr>
+                                        <td colspan="5">no records found</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                            {# <a href="{{ path('app_facture_new')}}" class="btn btn-primary" >Create new</a> #}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

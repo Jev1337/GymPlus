@@ -54,6 +54,29 @@ public function getNextEventDate($userId)
     return $result ? new \DateTime($result['date']) : null;
 }
 
+
+public function findPastEventsByUser($userId)
+{
+    $conn = $this->getEntityManager()->getConnection();
+
+    $sql = '
+        SELECT ed.* 
+        FROM event_participants ep
+        INNER JOIN event_details ed ON ep.event_details_id = ed.id
+        WHERE ep.user_id = :userId AND ed.event_date < :currentDate
+    ';
+
+    $stmt = $conn->executeQuery($sql, ['userId' => $userId, 'currentDate' => (new \DateTime())->format('Y-m-d H:i:s')]);
+
+    // Fetch the results as an associative array
+    $results = $stmt->fetchAllAssociative();
+
+    return $results;
+}
+
+
+
+
     
     
     

@@ -37,7 +37,7 @@ class AuthentificationSubscriber implements EventSubscriberInterface
         $protectedRoutes = ['app_subs', 'app_buy', 'app_profile', 'app_photo', 'app_logout', 'app_dashboard', 'app_objectif'
         , 'app_Schedule_objectif', 'app_events', 'eventb', 'event_delete', 'event_edit', 'app_eventsf', 'event_join', 'event_leave', 'getAll_post'
         , 'get_conversation', 'app_equipments', 'app_equipments_edit', 'app_equipments_delete', 'app_maintenances', 'app_maintenances_edit', 'app_maintenances_delete'
-        , 'app_usermgmt', 'app_user_delete', 'app_user_edit', 'app_photo_admin', 'app_submgmt', 'app_removesub', 'app_subuser'];
+        , 'app_usermgmt', 'app_user_delete', 'app_user_edit', 'app_photo_admin', 'app_submgmt', 'app_removesub', 'app_subuser', 'app_user_delete_current' , 'app_updatefaceid'];
 
         // Routes that require client role
         $clientRoutes = ['app_home', 'app_subs', 'app_buy', 'app_profile', 'app_objectif', 'app_Schedule_objectif', 'event_join', 'event_leave','app_eventsf','getAll_post','get_conversation','rewards','points','belt','bag','whey'];
@@ -49,7 +49,7 @@ class AuthentificationSubscriber implements EventSubscriberInterface
         // Routes that require admin role (inherits staff routes)
         $adminRoutes = $staffRoutes;
         $adminRoutes = array_merge($adminRoutes, 
-            ['app_usermgmt', 'app_user_delete', 'app_user_edit', 'app_photo_admin']
+            ['app_usermgmt', 'app_user_delete', 'app_user_edit', 'app_photo_admin', 'app_updatefaceidmg']
         );
         
         // Get the current user

@@ -45,13 +45,13 @@
 											<h4 class="text-muted mb-0">{{useredit.email}}</h4>
 											<p>Email</p>
 										</div>
+										<video id="video" width="1280" height="720" autoplay style="display: none;"></video>
+										<canvas id="canvas" style="display: none;" width="1280" height="720"></canvas>
 										<div class="dropdown ml-auto">
 											<a href="#" class="btn btn-primary light sharp" data-toggle="dropdown" aria-expanded="true"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="18px" height="18px" viewBox="0 0 24 24" version="1.1"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><rect x="0" y="0" width="24" height="24"></rect><circle fill="#000000" cx="5" cy="12" r="2"></circle><circle fill="#000000" cx="12" cy="12" r="2"></circle><circle fill="#000000" cx="19" cy="12" r="2"></circle></g></svg></a>
 											<ul class="dropdown-menu dropdown-menu-right">
-												<li class="dropdown-item"><i class="fa fa-user-circle text-primary mr-2"></i> View profile</li>
-												<li class="dropdown-item"><i class="fa fa-users text-primary mr-2"></i> Add to close friends</li>
-												<li class="dropdown-item"><i class="fa fa-plus text-primary mr-2"></i> Add to group</li>
-												<li class="dropdown-item"><i class="fa fa-ban text-primary mr-2"></i> Block</li>
+												<li class="dropdown-item" id="faceid" style="cursor:pointer"><i class="fa fa-user-circle text-primary mr-2"></i> Update FaceID</li>
+												<li class="dropdown-item" style="cursor:pointer"><i class="fa fa-times text-primary mr-2"></i> Delete Account</li>
 											</ul>
 										</div>
 									</div>
@@ -304,6 +304,112 @@
 
 {% block js %}
 	{{ parent() }}
+
+	<script src="{{ asset('main/js/face-api.min.js') }}"></script>
+	    <script>
+		let intervalId = null;
+		let sent = 0;
+        // Function to start the camera and perform face detection
+        async function startCamera() {
+            const video = document.getElementById('video');
+            const canvas = document.getElementById('canvas');
+            const context = canvas.getContext('2d');
+
+            // Load models
+            await faceapi.nets.tinyFaceDetector.loadFromUri('{{ asset('main/bins/')}}');
+            await faceapi.nets.faceLandmark68Net.loadFromUri('{{ asset('main/bins/')}}');
+            await faceapi.nets.faceRecognitionNet.loadFromUri('{{ asset('main/bins/')}}');
+
+            // Start video stream
+            navigator.mediaDevices.getUserMedia({ video: {} })
+                .then(function (stream) {
+                    video.srcObject = stream;
+                })
+                .catch(function (err) {
+                    console.error('Error accessing the camera: ', err);
+                });
+
+            sent = 0;
+            // Detect face in real-time
+            video.addEventListener('play', () => {
+                const displaySize = { width: video.width, height: video.height };
+                intervalId = setInterval(async () => {
+                    const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceDescriptors();
+                    if (detections.length > 0 && sent == 0) {
+						console.log('Face detected');
+                        sent = 1;
+                        // Face detected, capture image
+                        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+						const imgData = canvas.toDataURL('image/jpeg');
+
+						//write the image to a new element
+						var img = document.createElement('img');
+						img.src = imgData;
+						document.body.appendChild(img);
+
+                        // Stop video stream
+                        video.srcObject.getTracks().forEach(track => track.stop());
+                        // Send AJAX request
+                        $.ajax({
+							{% if app.user.role == 'staff' %}
+                            	url: '{{ path('app_updatefaceid') }}',
+							{% else %}
+								url: '{{ path('app_updatefaceidmg', {'id': useredit.id}) }}',
+							{% endif %}
+                            type: 'POST',
+                            data: { image: imgData },
+                            success: function (response) {
+                                if (response.status == 'success') {
+									swal("Success!", "FaceID updated successfully!", "success");
+								} else {
+									swal("Oops...", "Face not recognized! Please try again.", "error")
+								}
+                            },
+                            error: function (err) {
+                                swal("Oops...", "Something went wrong! Please try again.", "error")
+                            }
+                        });
+
+						// remove clicked class
+						document.getElementById('faceid').classList.remove('clicked');
+                        // Stop the interval
+                        clearInterval(this);
+                    }else if (sent == 1){
+						if (video.srcObject) {
+							video.srcObject.getTracks().forEach(track => track.stop());
+						}
+						if (intervalId) {
+							clearInterval(intervalId);
+						}
+					}
+					
+                }, 1000); // Adjust the interval as needed
+            });
+        }
+
+        // Start camera when the button is clicked
+        document.getElementById('faceid').addEventListener('click', function () {
+			if(document.getElementById('faceid').classList.contains('clicked')) return;	
+				startCamera();
+				document.getElementById('faceid').classList.add('clicked');
+				swal({
+					title: "Scanning your face...",
+					text: "Hang tight! We are scanning your face for verification.",
+					imageUrl: "{{asset('main/images/face.gif')}}",	
+					showCancelButton: true,
+					showConfirmButton: false,
+				}).then((result) => {
+					if (result.dismiss === swal.DismissReason.cancel || result.dismiss === swal.DismissReason.backdrop || result.dismiss === swal.DismissReason.esc) {
+						if (sent == 0){
+							sent = 1;
+							swal("Cancelled", "FaceID verification cancelled.", "error");
+						}else{
+							swal("Oops...", "Cannot cancel because request has already been sent!", "error")
+						}
+					}
+				});
+        });
+    </script>
 	<script>
 
 		{% if app.user.role == 'staff' %}

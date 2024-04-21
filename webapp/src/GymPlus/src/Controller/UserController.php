@@ -478,7 +478,7 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/dashboard/deleteuser/{id}', name: 'app_user_delete')]
+    #[Route('/api/deleteuser/{id}', name: 'app_user_delete')]
     public function deleteUser(UserRepository $repo, $id, ManagerRegistry $reg): Response
     {
         $userdel = $repo->findUserById($id);
@@ -493,6 +493,20 @@ class UserController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
         return $this->redirectToRoute('app_usermgmt');
+    }
+
+    #[Route('/api/deletecurrentuser/', name: 'app_user_delete_current')]
+    public function deleteCurrentUser(UserRepository $repo, ManagerRegistry $reg): Response
+    {
+        $userdel = $this->getUser();
+        if (!$userdel) {
+            return $this->redirectToRoute('app_usermgmt');
+        }
+        $reg->getManager()->remove($userdel);
+        $reg->getManager()->flush();
+        $this->get('security.token_storage')->setToken(null);
+        $this->get('session')->invalidate();
+        return $this->redirectToRoute('app_login');
     }
 
     #[Route('/dashboard/subscriptions', name: 'app_submgmt')]
@@ -746,6 +760,8 @@ class UserController extends AbstractController
         return new JsonResponse(['exists' => false], 200);
     }
 
+
+
     #[Route('/api/getfacetoken', name: 'app_getfacetoken')]
     public function getFaceToken(Request $request, UserRepository $repo): Response
     {
@@ -780,6 +796,86 @@ class UserController extends AbstractController
             return new JsonResponse(['status' => 'error', 'details'=> $content], 400);
         }
     }
-   
 
+    #[Route('/api/updateface', name: 'app_updatefaceid')]
+    public function updateFaceId(Request $request, UserRepository $repo, ManagerRegistry $reg): Response
+    {
+        $image = $request->get('image');
+        try{
+            $guzzle = new GuzzleClient();
+            $resp = $guzzle->request('POST', 'https://api-us.faceplusplus.com/facepp/v3/detect', [
+                'multipart' => [
+                    [
+                        'name' => 'api_key',
+                        'contents' => 'oVAqEDbCYmaILayXJdKAsuYbFcJ0LBP6'
+                    ],
+                    [
+                        'name' => 'api_secret',
+                        'contents' => 'e76obC1xsr-zSMynWZoQCt62vWDgtZ6O'
+                    ],
+                    [
+                        'name' => 'image_base64',
+                        'contents' => $image,
+                    ],
+                    [
+                        'name' => 'return_attributes',
+                        'contents' => 'emotion'
+                    ]
+                ]
+            ]);
+            $faceidcmp = json_decode((string) $resp->getBody(), true)['faces'][0]['face_token'];
+            dump("Request 1 Sent...");
+            $user = $this->getUser();
+            $user->setFaceid($faceidcmp);
+            $user->setFaceidTs(new \DateTime());
+            $reg->getManager()->persist($user);
+            $reg->getManager()->flush();
+            return new JsonResponse(['status' => 'success', 'facetoken' => $faceidcmp], 200);
+        } catch (\GuzzleHttp\Exception\RequestException $e) {
+            $content = json_decode($e->getResponse()->getBody()->getContents(), true);
+            return new JsonResponse(['status' => 'error', 'details'=> $content], 400);
+        }
+
+    }
+
+    #[Route('/api/updateface/{id}', name: 'app_updatefaceidmg')]
+    public function updateFaceIdmg(Request $request, UserRepository $repo, $id, ManagerRegistry $reg): Response
+    {
+        $image = $request->get('image');
+        try{
+            $guzzle = new GuzzleClient();
+            $resp = $guzzle->request('POST', 'https://api-us.faceplusplus.com/facepp/v3/detect', [
+                'multipart' => [
+                    [
+                        'name' => 'api_key',
+                        'contents' => 'oVAqEDbCYmaILayXJdKAsuYbFcJ0LBP6'
+                    ],
+                    [
+                        'name' => 'api_secret',
+                        'contents' => 'e76obC1xsr-zSMynWZoQCt62vWDgtZ6O'
+                    ],
+                    [
+                        'name' => 'image_base64',
+                        'contents' => $image,
+                    ],
+                    [
+                        'name' => 'return_attributes',
+                        'contents' => 'emotion'
+                    ]
+                ]
+            ]);
+            $faceidcmp = json_decode((string) $resp->getBody(), true)['faces'][0]['face_token'];
+            dump("Request 1 Sent...");
+            $user = $repo->findUserById($id);
+            $user->setFaceid($faceidcmp);
+            $user->setFaceidTs(new \DateTime());
+            $reg->getManager()->persist($user);
+            $reg->getManager()->flush();
+            return new JsonResponse(['status' => 'success', 'facetoken' => $faceidcmp], 200);
+        } catch (\GuzzleHttp\Exception\RequestException $e) {
+            $content = json_decode($e->getResponse()->getBody()->getContents(), true);
+            return new JsonResponse(['status' => 'error', 'details'=> $content], 400);
+        }
+    }
+    
 }

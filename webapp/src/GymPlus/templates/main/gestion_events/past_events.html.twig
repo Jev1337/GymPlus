@@ -1,0 +1,92 @@
+{% extends "main/base.html.twig" %}
+
+{% block content %}
+
+<div class="page-content bg-white">
+		
+		<!-- Banner  -->
+		<div class="dz-bnr-inr style-2" style="background-image: url('{{asset('main/images/banner/banner-2.png')}}')">
+			<div class="banner-gradient"></div>
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-8">
+						<div class="dz-bnr-inr-entry">
+							<h1>Events</h1>
+							<!-- Breadcrumb Row -->
+							<nav aria-label="breadcrumb" class="breadcrumb-row">
+								<ul class="breadcrumb">
+									<li class="breadcrumb-item"><a href="index.html">Home</a></li>
+									
+									<li class="breadcrumb-item active" aria-current="page">Events</li>
+								</ul>
+							</nav>
+							<!-- Breadcrumb Row End -->
+						</div>
+					</div>
+				</div>	
+				<div class="banner-media">
+					<img src="{{asset('main/images/banner/pic4.png')}}" alt="/">
+				</div>
+			</div>	
+		</div>
+		<!-- Banner End -->
+
+    
+
+
+
+
+        <!-- Our Events -->
+        <section class="content-inner">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="row justify-content-center">
+                            {% for event in pastEvents %}
+                                <div class="col-xl-6 col-lg-8">
+                                    <div class="dz-card style-1 blog-half m-b30 overlay-shine wow fadeInUp" data-wow-delay="0.2s">
+                                        <div class="dz-media">
+                                            <a href="javascript:void(0);"><img src="{{ asset('main/images/event/' ~ event.type ~ '.jpg') }}" alt="/"></a>
+                                        </div>
+                                        <div class="dz-info">
+                                            <div class="dz-meta">
+                                                <ul>
+                                                    <li class="dz-date">
+                                                        <span>{{ event.event_date|date('d') }}</span> {{ event.event_date|date('M') }}
+                                                    </li>
+                                                    <li class="dz-time">
+                                                        <a href="javascript:void(0);">{{ event.event_date|date('g:i a') }}</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <h4 class="dz-title"><a href="event-detail.html">{{ event.name }}</a></h4>
+                                            <p>Type: {{ event.type }}</p>
+                                            <p>Duration: {{ event.duree }} Minutes</p>
+                                            <p>Remaining Spots: {{ event.nb_places }}</p>
+                                            <!-- Rate Event Form -->
+                                            <form action="{{ path('event_vote', {'id': event.id}) }}" method="post">
+                                                <select name="rating" class="form-control">
+                                                    <option value="">Select rating</option>
+                                                    {% for i in 1..5 %}
+                                                        <option value="{{ i }}">{{ i }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                                <button type="submit" class="btn btn-primary">Submit Rating</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+        </section>
+        <!-- Our Events -->
+
+</div>
+
+
+
+
+
+{% endblock %}

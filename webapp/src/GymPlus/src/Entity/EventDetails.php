@@ -17,24 +17,41 @@ class EventDetails
     #[ORM\Column]
     private ?int $id;
     
-    #[Assert\NotBlank(message: "This field cannot be empty")]
+    /*#[Assert\NotBlank(message: "This field cannot be empty")]
     #[Assert\Length(
         min: 4,
         minMessage: "The name must be at least {{ limit }} characters long"
     )]
-    #[ORM\Column(type: "string", length: 255)]
-    private ?string $name;
-
-
+    #[Assert\Regex(
+        pattern: "/^[a-zA-Z]*$/",
+        message: "The name can only contain letters"
+    )]*/
+    
     #[Assert\NotBlank(message: "This field cannot be empty")]
     #[Assert\Length(
         min: 4,
-        minMessage: "The type must be at least {{ limit }} characters long"
+        minMessage: "The name must be at least 4 characters long"
+    )]
+    #[Assert\Regex(
+        pattern: "/^(?=.*[a-zA-Z])[a-zA-Z0-9]*$/",
+        message: "The name must contain at least one letter and numbers optionally"
+    )]
+    #[ORM\Column(type: "string", length: 255)]
+    private ?string $name;
+
+ 
+
+/*
+    #[Assert\NotBlank(message: "This field cannot be empty")]
+    #[Assert\Length(
+        min: 4,
+        minMessage: "The type must be at least 4 characters long"
     )]
     #[Assert\Regex(
         pattern: "/^[a-zA-Z]*$/",
         message: "The type should contain only letters"
-    )]
+    )] */
+    
     #[ORM\Column(nullable: false)]
     private ?string $type;
 
@@ -45,7 +62,7 @@ class EventDetails
     )]
     #[ORM\Column(nullable: false, type: "datetime")]
     private ?\DateTime $eventDate;
-
+    
     #[Assert\NotBlank(message: "This field cannot be empty")]
     #[Assert\Range(
         min: 20,

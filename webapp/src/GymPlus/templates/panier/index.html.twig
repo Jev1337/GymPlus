@@ -1,0 +1,385 @@
+{% extends "main/base.html.twig" %}
+
+{# {% block title %}Panier index{% endblock %} #}
+
+{# {% block body %} #}
+
+{% block content %}
+
+<div class="page-content bg-white">
+		
+		<!-- Banner  -->
+		<div class="dz-bnr-inr style-2" style="background-image: url('{{asset('main/images/banner/banner-2.png')}}')">
+			<div class="banner-gradient"></div>
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-8">
+						<div class="dz-bnr-inr-entry">
+							<h1>shopping cart</h1>
+							<!-- Breadcrumb Row -->
+							<nav aria-label="breadcrumb" class="breadcrumb-row">
+								<ul class="breadcrumb">
+									<li class="breadcrumb-item"><a href="index.html">Home</a></li>
+									
+									<li class="breadcrumb-item active" aria-current="page">shopping cart</li>
+								</ul>
+							</nav>
+							<!-- Breadcrumb Row End -->
+						</div>
+					</div>
+				</div>	
+				<div class="banner-media">
+					<img src="{{asset('main/images/banner/pic4.png')}}" alt="/">
+				</div>
+			</div>	
+		</div>
+
+    <br>
+    <a href="{{ path('app_produit_index') }}" class="btn btn-primary btn-skew appointment-btn"><span class="skew-inner"><span class="text">back to list</span></span></a>
+    {# <a href="{{ path('app_produit_index') }}">Retour à la liste des produits</a> #}
+    <br>
+    <style>
+            h5 {
+                font-family: Arial, sans-serif; /* Choisir la police de caractères */
+                font-size: 20px; /* Choisir la taille de la police */
+                color: #333; /* Choisir la couleur du texte */
+                font-weight: bold; /* Choisir l'épaisseur du texte */
+                /*text-align: center;  Aligner le texte au centre */
+                margin-top: 20px; /* Définir la marge en haut */
+            }
+        </style>
+    
+    {% if items | length > 0 %}
+        <section class="content-inner">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-8">
+						<div class="table-responsive">
+							<table class="table check-tbl wow fadeInUp" data-wow-delay="0.4s" style="visibility: visible; animation-delay: 0.4s; animation-name: fadeInUp;">
+								<thead>
+									<tr>
+                                        <th>id Product</th>
+										<th>Photo Product</th>
+										<th>Name</th>
+										<th>Price</th>
+                                        <th>Promo</th>
+										<th>Quantity</th>
+										<th>total</th>
+										<th> Delete</th>
+									</tr>
+								</thead>
+                                <tbody>
+                                    {% for item in items %}
+                                        <tr>
+                                            <td id="idprod" >{{ item.produit.Idproduit }} </td>
+                                            <td>                        
+                                                <img src="{{ asset('images/img_product/' ~ item.produit.Photo) }}" alt="" style="width: 150px;">
+                                            </td>
+                                            <td> {{item.produit.Name}} </td>
+                                            <td id="prixunitaire" >{{item.produit.Prix}}</td>
+                                            {# <td>{{item.produit.Description}}</td> #}               
+                                            <td id="promo" >{{item.produit.Promo}}</td>
+                                            <td id="Qte" >
+                                                <input type="number" class="quantity-input" data-id="{{ item.produit.Idproduit }}" value="{{ item.quantite }}" style="width: 50px;">
+                                            </td>
+                                            {# <td id="prixToatalArticle">{{ item.produit.Prix * item.quantite }}</td> #}
+                                            {# <td class="total-item" id="totalUnArticle" >{{ item.produit.Prix * item.quantite }}</td> #}
+                                            <td class="total-item" id="totalUnArticle" >{{ item.produit.Prix * item.quantite * (1 - item.produit.promo ) }} </td>
+                                            <td>
+                                                <a href="{{ path('panier_remove', {'idproduit': item.produit.Idproduit}) }}">Delete</a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>  
+							</table>
+						</div>
+						
+					</div>
+					<div class="col-lg-4">
+						<div class="cart-sidebar side-bar sticky-top wow fadeInUp" data-wow-delay="0.4s" style="visibility: visible; animation-delay: 0.4s; animation-name: fadeInUp;">
+							<h6 class="title">Cart Details</h6>
+							<div class="cart-detail m-b20">
+								<table>
+									<tbody>
+										
+										<tr>
+											
+											<td>
+												Unlock exclusive discounts by playing our game 
+                                                <a href="{{ path('app_MemmoryGame_index') }}" class="btn btn-primary btn-skew appointment-btn"><span class="skew-inner"><span class="text">MemmoryGame</span></span></a>      
+											</td>
+										</tr>
+										<tr>
+											<td>
+												Use the map to pick your delivery location
+											</td>
+										</tr>
+										 <tr>
+											<td>
+												{# <h6 class="mb-0">Total</h6>
+											</td>
+											<td class="price">
+												$506.00 #}
+											</td>
+										</tr> 
+									</tbody>
+                                        <tfoot>
+                                            <tr>
+                                                {# <td><h4>Total :</h4></td>
+                                                <td id="total">{{ total }}</td>
+                                                <td></td> #}
+                                                {% if gagnant %}
+                                                    <!-- Si l'utilisateur a gagné, appliquer une réduction de 50% sur le total -->
+                                                    <td><h4>Total (50% de réduction) :</h4></td>
+                                                    <td id="total">{{ total * 0.5 }} </td>
+                                                    <td></td>
+                                                {% else %}
+                                                    <!-- Sinon, afficher le total normal -->
+                                                    <td><h4>Total :</h4></td>
+                                                    <td id="total">{{ total }} </td>
+                                                    <td></td>
+                                                {% endif %}
+                                            </tr>
+                                        </tfoot>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+    {% else %}
+        <h5 class="text-center" >The cart is empty!</h5>
+    {% endif %}
+
+    {# <a href="{{ path('valider_panier') }}">Valider le panier</a> #}
+    {# <a href="{{ path('valider_panier') }}" onclick="validerPanier()">Valider le panier</a> #}
+    {# <a href="{{ path('Apres_validation_panier') }}" id="valider-panier" data-url="{{ path('valider_panier') }}">Valider le panier</a> #}
+    {# <br> #}
+
+
+    <script>
+
+            // *****Partie Spiner Quantite
+                // JavaScript code for handling quantity update
+                document.addEventListener('DOMContentLoaded', function() {
+                    const quantityInputs = document.querySelectorAll('.quantity-input');
+
+                    quantityInputs.forEach(function(input) {
+                        input.addEventListener('change', function(event) {
+                            const productId = event.target.getAttribute('data-id');
+                            const newQuantity = event.target.value;
+
+                            updateQuantity(productId, newQuantity);
+                        });
+                    });
+
+                    function updateQuantity(productId, newQuantity) {
+                        fetch(`/panier/update/${productId}?quantity=${newQuantity}`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            // Mettez à jour le total et d'autres parties de la page si nécessaire
+                            document.getElementById('total').textContent = data.total;
+
+                            // Mettre à jour le total de chaque article
+                            const totalItemElements = document.querySelectorAll('.total-item');
+                            totalItemElements.forEach(function(element, index) {
+                                element.textContent = data.totalItems[index];
+                            });
+                        })
+
+                        .catch(error => console.error('Erreur lors de la mise à jour de la quantité :', error));
+                    }
+                });
+
+                
+        //*****Partie Validation du Panier 
+
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const validerPanierButton = document.querySelector('#valider-panier');
+
+            validerPanierButton.addEventListener('click', function() {
+                // Récupérer les données nécessaires depuis le front-end
+                //methodeDePaiement = prompt("Veuillez choisir la méthode de paiement :");
+                //methodeDePaiement = document.getElementById('methodepayment').textContent; //"en ligne";
+                const methodeDePaiement = document.querySelector('input[name="methodepayment"]:checked').value;
+
+                console.log(methodeDePaiement);
+
+                //lieu = prompt("Veuillez choisir lieu :");
+                lieu = document.getElementById('place-name').textContent; 
+                //lieu = "tunisie";
+                console.log(lieu);
+
+
+                total = document.getElementById('total').textContent;
+
+                // Récupérer les détails de chaque produit dans le panier
+
+                const items = document.querySelectorAll("tbody tr");
+                //console.log("tbody tr" ,document.querySelectorAll("tbody tr"));
+
+
+                // Créer un tableau pour stocker les détails de chaque produit dans le panier
+                const panierDetails = [];
+
+            items.forEach(item => {
+                const idprodElement = item.querySelector('#idprod');
+                if (idprodElement !== null) {
+                    const idproduit = idprodElement.textContent.trim();
+                    console.log("produit", idproduit);
+
+                    const quantite = item.querySelector('.quantity-input').value;
+                    console.log("Qte", quantite);
+
+                    const prixunitaire = item.querySelector('#prixunitaire').textContent.trim();
+                    console.log("prix uni", prixunitaire);
+
+                    const promo = item.querySelector('#promo').textContent.trim();
+                    console.log("promo", promo);
+
+                    const totalUnArticle = item.querySelector('.total-item').textContent.trim();
+                    console.log("total article", totalUnArticle);
+
+
+                    panierDetails.push({
+                        idproduit: idproduit,
+                        quantite: quantite,
+                        prixunitaire: prixunitaire,
+                        promo: promo,
+                        totalUnArticle: totalUnArticle
+                    });
+                } else {
+                    console.log("L'élément idprod n'a pas été trouvé dans cette ligne du panier.");
+                }
+            });
+
+
+        
+                // Créer un objet contenant les données à envoyer
+                data = {
+                    methodeDePaiement: methodeDePaiement,
+                    total: total,
+                    lieu: lieu,
+                    panierDetails: panierDetails
+                            
+                };
+
+                console.log("data" ,data);
+                console.log("Json" , JSON.stringify(data));
+
+                // Envoyer les données au back-end via une requête POST
+                fetch('/valider-panier', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+
+                })
+                .then(response => response.json())
+                .then(result => {
+                    // Traiter la réponse du back-end si nécessaire
+                    console.log("resultat" , result);
+                })
+                .catch(error => {
+                    console.error('Erreur', error);
+            });
+            });
+        });   
+
+        
+    </script>
+
+
+
+    {# ****************Map #}
+    {% block stylesheets %}
+        <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    {% endblock %}
+
+    {% block javascripts %}
+        <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    {% endblock %}
+
+    
+    <h5 class="text-center" > Choose your delivery location :</h5>
+    <div id="place-name" class="text-center"></div>
+    {# <div id="map-container" class="text-center">
+        <div id="map" style="flex: 1; height: 400px; width: 500px;"></div>
+    </div> #}
+    <div id="map-container" class="text-center">
+    <div id="map" style="height: 400px; width: 1000px; margin: 0 auto;"></div>
+</div>
+
+
+    <input type="hidden" id="publication_lieu" name="publication_lieu" />
+
+    <script>
+        var map = L.map('map').setView([51.505, -0.09], 13);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        var marker;
+       map.on('click', function(e) {
+            if (marker) {
+                map.removeLayer(marker);
+            }
+            marker = L.marker(e.latlng).addTo(map);
+
+            fetch('https://nominatim.openstreetmap.org/reverse?lat=' + e.latlng.lat + '&lon=' + e.latlng.lng + '&format=json')
+                .then(response => response.json())
+                .then(data => {
+                    var country = data.address.country;
+                    var city = data.address.city || data.address.town || data.address.village || data.address.hamlet;
+                    var placeName = city + ', ' + country;
+
+                    // Afficher le nom de la place dans l'élément HTML
+                    document.getElementById('place-name').textContent = placeName;
+                })
+                .catch(error => console.error('Error:', error));
+        });
+
+    </script>
+<style>
+.text-center label {
+    margin-right: 33px; /* ou toute autre valeur que vous souhaitez */
+}
+</style>
+
+
+    <br>
+        <h5 class="text-center" > Choose your payment method :</h5>
+        <div class="text-center">
+            <input type="radio" id="methodepayment" name="methodepayment" value="bank_cheque">
+            <label for="bank_cheque">bank cheque</label>
+            
+            <input type="radio" id="methodepayment" name="methodepayment" value="Card">
+            <label for="Card">Card</label>
+
+            <input type="radio" id="methodepayment" name="methodepayment" value="Cash">
+            <label for="Cash">Cash</label>
+        </div>
+
+    <br>
+        <div class="text-center" >
+            <a href="{{ path('Apres_validation_panier') }}" id="valider-panier" data-url="{{ path('valider_panier') }}" class="btn btn-primary btn-skew appointment-btn"><span class="skew-inner"><span class="text"> Validate </span></span></a>
+        </div>
+    <br>
+
+
+
+
+
+
+
+
+{% endblock %}

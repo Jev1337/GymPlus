@@ -1,0 +1,167 @@
+{% extends "dashboard/base.html.twig" %}
+
+{% block content %}
+<div class="content-body default-height" style="min-height: 878px;">
+    <div class="container-fluid">
+        <div class="page-titles">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
+                <li class="breadcrumb-item active"><a href="javascript:void(0)">Delivery</a></li>
+            </ol>
+        </div>
+        <!-- row -->
+
+        {% block stylesheetscolor %}
+            <style>
+                .etat-delivered {
+                    color: #28a745; /* texte vert */
+                }
+
+                .etat-en-cours {
+                    color: #ff0000; /* texte rouge */
+                }
+            </style>
+        {% endblock %}
+
+        {# <table class="table"> #}
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Delivery</h4>
+                    </div>
+                    <div class="card-body">
+                        {# <div class="table-title">Facture</div> #}
+                        <div class="table-responsive">
+                            <table class="table table-responsive-md" id="complete-products-table">
+                                <thead>
+                                    <tr>
+                                        <th> <strong class="text-black" style="font-weight: 600;"> Delivery ID </strong> </th>
+                                        <th> <strong class="text-black" style="font-weight: 600;"> Invoice ID </strong> </th>
+                                        <th> <strong class="text-black" style="font-weight: 600;"> Client ID </strong> </th>
+                                        <th> <strong class="text-black" style="font-weight: 600;"> Location </strong> </th>
+                                        <th> <strong class="text-black" style="font-weight: 600;"> Status </strong> </th>
+                                        <th> <strong class="text-black" style="font-weight: 600;"> Actions </strong> </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {% for livraison in livraisons %}
+                                    <tr>
+                                        <td> <strong class="text-black" style="font-weight: 600;"> {{ livraison.idlivraison }} </strong></td>
+                                        <td>{{ livraison.idfacture }}</td>
+                                        <td>{{ livraison.idclient }}</td>
+                                        {# <td>{{ livraison.lieu }}</td> #}
+
+                                                            <td class="place-column" data-lieu="{{ livraison.lieu }}">{{ livraison.lieu }}</td>
+
+                                        <td class="{% if livraison.etat == 'Delivered' %}etat-delivered{% elseif livraison.etat == 'In progress' %}etat-en-cours{% endif %}">
+                                            {{ livraison.etat }}
+                                        </td>
+                                        <td>
+                                            {# <a href="{{ path('app_livraison_show', {'idlivraison': livraison.idlivraison}) }}">show</a> #}
+                                            {# <a href="{{ path('app_livraison_edit', {'idlivraison': livraison.idlivraison}) }} " class="btn btn-primary">edit</a>
+                                            {{ include('livraison/_delete_form.html.twig') }} #}
+                                            <div class="dropdown ms-auto text-end c-pointer">
+                                            <div class="btn-link" data-toggle="dropdown">
+                                                <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><rect x="0" y="0" width="24" height="24"></rect><circle fill="#000000" cx="5" cy="12" r="2"></circle><circle fill="#000000" cx="12" cy="12" r="2"></circle><circle fill="#000000" cx="19" cy="12" r="2"></circle></g></svg>
+                                            </div>
+                                            <div class="dropdown-menu dropdown-menu-right">
+                                                <a href="{{ path('app_livraison_edit', {'idlivraison': livraison.idlivraison}) }}" class="dropdown-item text-center" >edit</a>
+                                                <div class="text-center">
+                                                    {{ include('livraison/_delete_form.html.twig') }} 
+                                                </div>                               
+                                            </div>
+                                        </div>
+                                        </td>
+                                    </tr>
+                                    {% else %}
+                                    <tr>
+                                        <td colspan="6">no records found</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+
+                            {# ****************Map #}
+                            {% block stylesheets %}
+                            <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+                            {% endblock %}
+
+                            {% block javascripts %}
+                                <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+                            {% endblock %}
+
+                            <div id="place-name"></div>
+
+
+                            <div id="map-container">
+                                <div id="map" style="flex: 1; height: 400px; width: 900px;"></div>
+                            </div>
+
+                            <input type="hidden" id="publication_lieu" name="publication_lieu" />
+
+                            <script>
+                                var map = L.map('map').setView([51.505, -0.09], 13);
+                                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                                }).addTo(map);
+
+                                var marker;
+                            map.on('click', function(e) {
+                                if (marker) {
+                                    map.removeLayer(marker);
+                                }
+                                marker = L.marker(e.latlng).addTo(map);
+
+                                fetch('https://nominatim.openstreetmap.org/reverse?lat=' + e.latlng.lat + '&lon=' + e.latlng.lng + '&format=json')
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        var country = data.address.country;
+                                        var city = data.address.city || data.address.town || data.address.village || data.address.hamlet;
+                                        var placeName = city + ', ' + country;
+
+                                        // Afficher le nom de la place dans l'élément HTML
+                                        document.getElementById('place-name').textContent = placeName;
+                                    })
+                                    .catch(error => console.error('Error:', error));
+                                });
+
+
+                                // Écouteur de clic sur la colonne Lieu
+                                    document.querySelectorAll('.place-column').forEach(item => {
+                                        item.addEventListener('click', event => {
+                                            var placeName = item.dataset.lieu;
+
+                                            // Utilisation des données pour centrer la carte et placer un marqueur
+                                            fetch('https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(placeName))
+                                                .then(response => response.json())
+                                                .then(data => {
+                                                    if (data.length > 0) {
+                                                        var lat = data[0].lat;
+                                                        var lon = data[0].lon;
+                                                        map.setView([lat, lon], 13);
+                                                        if (marker) {
+                                                            map.removeLayer(marker);
+                                                        }
+                                                        marker = L.marker([lat, lon]).addTo(map);
+                                                        document.getElementById('place-name').textContent = placeName;
+                                                    } else {
+                                                        console.error('Location not found');
+                                                    }
+                                                })
+                                                .catch(error => console.error('Error:', error));
+                                        });
+                                    });
+
+                            </script>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+       
+{% endblock %}

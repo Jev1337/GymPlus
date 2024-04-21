@@ -277,7 +277,6 @@ CREATE TABLE `produit` (
 
 -- --------------------------------------------------------
 
---
 -- Table structure for table `user`
 --
 
@@ -295,7 +294,7 @@ CREATE TABLE `user` (
   `photo` text DEFAULT NULL,
   `event_points` int(11) DEFAULT NULL,
   `faceid` varchar(255) DEFAULT NULL,
-  `faceid_ts` date NOT NULL DEFAULT current_timestamp()
+  `faceid_ts` date DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -457,7 +456,10 @@ ALTER TABLE `produit`
 -- Indexes for table `user`
 --
 ALTER TABLE `user`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `num_tel` (`num_tel`),
+  ADD UNIQUE KEY `username` (`username`),
+  ADD UNIQUE KEY `email` (`email`);
 
 --
 -- AUTO_INCREMENT for dumped tables

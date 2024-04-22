@@ -29,9 +29,7 @@ class PostController extends AbstractController
         $form->handleRequest($req); //bch te5ou request eli tbaathet mel form
         if ($form->isSubmitted()) {
             if (!$form->isValid()) {
-                // echo('<script TYPE="TEXT/JAVASCRIPT">
-                // WINDOW.ONLOAD = FUNCTION () {ALERT("There was an error with the form, please check the fields and try again!");}
-                // </script>');
+                    $this->addFlash('error', 'You can not add an empty post!');
             }else{
                 $post->setDate($dateImmutable);
                 $post->setUser($user);
@@ -45,12 +43,6 @@ class PostController extends AbstractController
                 }else{
                     $post->setPhoto('');
                 }
-                $formContent = $form['content']->getData();
-                // if (!$formContent) {
-                //     echo('<script TYPE="TEXT/JAVASCRIPT">
-                //     ALERT("There was an error with the form, please check the fields and try again!");
-                //     </script>');
-                // }
                 $post->setNbComnts(0);
                 $post->setLikes(0);
                 $em->persist($post);
@@ -85,6 +77,7 @@ class PostController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $em->persist($post);
             $em->flush();
+
             return $this->redirectToRoute('getAll_post');
         }
 
@@ -103,8 +96,11 @@ class PostController extends AbstractController
         $comntController->deleteByIdPost($repc, $id, $manager);
         $em->remove($post);
         $em->flush();
-
-        return $this->redirectToRoute('getAll_post');
+        if ($this->getUser()->getRoles() === "admin") {
+            return $this->redirectToRoute('show_complaints');
+        }else{
+            return $this->redirectToRoute('getAll_post');
+        }
     }
 
     public function updateNbComnt(CommentaireRepository $crep, $post, PostRepository $rep, ManagerRegistry $manager)
@@ -115,4 +111,7 @@ class PostController extends AbstractController
         $em->persist($post);
         $em->flush();
     }
+
+    
+
 }

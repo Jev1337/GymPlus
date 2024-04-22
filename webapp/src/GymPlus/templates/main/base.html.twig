@@ -16,7 +16,7 @@
 	<meta name="twitter:description" content="Embark on a transformative fitness journey with the PowerZone HTML Template. Elevate your workouts and gym routines with this dynamic and versatile template designed to unleash the power of sleek aesthetics and intuitive features. Discover a world of possibilities for fitness and wellness, as PowerZone becomes your gateway to a healthier, stronger version of yourself. With its modern design and comprehensive features, this template is set to redefine and enhance your fitness experience like never before">
 	<meta name="twitter:image" content="https://powerzone.dexignzone.com/xhtml/social-image.png">
 	<meta name="twitter:card" content="summary_large_image">
-	
+	<link rel="stylesheet" href="{{ asset('css/chat.css')}}"/>
 	<!-- Mobile Specific -->
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -152,6 +152,8 @@
 
 							</ul>
 						</li>
+
+
 						<li class="sub-menu-down"><a href="javascript:void(0);">Shop</a>
 							<ul class="sub-menu">
 								<li><a href="{{ path('app_produit_index') }}">Shop</a></li>
@@ -296,7 +298,7 @@
 										<li><a href="{{ path('get_conversation') }}">Chat</a></li>
 									</ul>
 								</li>
-						
+
 
 						<li class="sub-menu-down"><a href="javascript:void(0);">Shop</a>
 							<ul class="sub-menu">
@@ -649,5 +651,9 @@
 <script src="{{asset('main/js/dz.carousel.js')}}"></script><!-- OWL-CAROUSEL -->
 <script src="{{asset('main/js/dz.ajax.js')}}"></script><!-- AJAX -->
 <script src="{{asset('main/js/custom.js')}}"></script><!-- CUSTOM JS -->
+{% endblock %}
+
+{% block javascripts %}
+
 {% endblock %}
 </body>

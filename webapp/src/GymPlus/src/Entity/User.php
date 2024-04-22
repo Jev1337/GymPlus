@@ -94,6 +94,9 @@ class User Implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Message::class, cascade:["remove", "persist", "merge"], orphanRemoval: true)]
     private Collection $messages;
 
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Complains::class)]
+    private Collection $complains;
+
     
     public function __construct()
     {
@@ -102,6 +105,7 @@ class User Implements UserInterface, PasswordAuthenticatedUserInterface
         $this->comments = new ArrayCollection();
         $this->participants = new ArrayCollection();
         $this->messages = new ArrayCollection();
+        $this->complains = new ArrayCollection();
     }
 
     public function getUserIdentifier(): string
@@ -432,6 +436,36 @@ class User Implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($message->getUser() === $this) {
                 $message->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Complains>
+     */
+    public function getComplains(): Collection
+    {
+        return $this->complains;
+    }
+
+    public function addComplain(Complains $complain): static
+    {
+        if (!$this->complains->contains($complain)) {
+            $this->complains->add($complain);
+            $complain->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComplain(Complains $complain): static
+    {
+        if ($this->complains->removeElement($complain)) {
+            // set the owning side to null (unless already changed)
+            if ($complain->getUser() === $this) {
+                $complain->setUser(null);
             }
         }
 

@@ -133,6 +133,7 @@
 							<ul class="sub-menu">
 								<li><a href="{{path('app_subs')}}">My Subscriptions</a></li>
 								<li><a href="{{path('app_profile')}}">My Profile</a></li>
+								<li><a href="{{ path('app_memequipments')}}">Equipments</a></li>
 							</ul>
 						</li>
 						<li class="sub-menu-down"><a href="javascript:void(0);">Events</a>
@@ -151,9 +152,6 @@
 
 							</ul>
 						</li>
-						<li><a href="{{ path('getAll_post') }}">Blog</a></li>
-						<li><a href="{{ path('app_memequipments')}}">Equipments</a></li>/
-
 						<li class="sub-menu-down"><a href="javascript:void(0);">Shop</a>
 							<ul class="sub-menu">
 								<li><a href="{{ path('app_produit_index') }}">Shop</a></li>
@@ -167,7 +165,6 @@
 								<li><a href="{{ path('get_conversation') }}">Chat</a></li>
 							</ul>
 						</li>
-						<li><a href="{{ path('app_memequipments')}}">Equipments</a></li>
 
                     </ul>
                     <div class="dz-social-icon">
@@ -274,8 +271,7 @@
 							<ul class="sub-menu">
 								<li><a href="{{path('app_subs')}}">My Subscriptions</a></li>
 								<li><a href="{{path('app_profile')}}">My Profile</a></li>
-								
-								
+								<li><a href="{{ path('app_memequipments')}}">Equipments</a></li>
 							</ul>
 						</li>
 						<li class="sub-menu-down"><a href="javascript:void(0);">Events</a>
@@ -294,8 +290,13 @@
 
 							</ul>
 						</li>
-						<li><a href="{{ path('getAll_post') }}">Blog</a></li>
-						<li><a href="{{ path('app_memequipments')}}">Equipments</a></li>
+						<li class="sub-menu-down"><a href="javascript:void(0);">Blog</a>
+									<ul class="sub-menu">
+										<li><a href="{{ path('getAll_post') }}">Blog</a></li>
+										<li><a href="{{ path('get_conversation') }}">Chat</a></li>
+									</ul>
+								</li>
+						
 
 						<li class="sub-menu-down"><a href="javascript:void(0);">Shop</a>
 							<ul class="sub-menu">
@@ -415,7 +416,7 @@
 									<ul class="sub-menu">
 										<li><a href="{{path('app_subs')}}">My Subscriptions</a></li>
 										<li><a href="{{path('app_profile')}}">My Profile</a></li>
-										
+										<li><a href="{{ path('app_memequipments')}}">Equipments</a></li>
 									</ul>
 								</li>
 								<li class="sub-menu-down"><a href="javascript:void(0);">Events</a>
@@ -440,7 +441,6 @@
 										<li><a href="{{ path('get_conversation') }}">Chat</a></li>
 									</ul>
 								</li>
-								<li><a href="{{ path('app_memequipments')}}">Equipments</a></li>
 
 								<li class="sub-menu-down"><a href="javascript:void(0);">Shop</a>
 								<ul class="sub-menu">

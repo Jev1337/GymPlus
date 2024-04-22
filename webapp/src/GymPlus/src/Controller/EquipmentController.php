@@ -12,6 +12,8 @@ use Doctrine\Persistence\ManagerRegistry;
 use App\Repository\MaintenancesRepository;
 use App\Form\MaintenanceType;
 use App\Form\ModifyMaintenanceType;
+use Symfony\Component\Validator\Constraints\Json;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class EquipmentController extends AbstractController
 {
@@ -133,7 +135,16 @@ class EquipmentController extends AbstractController
         ]);
     }
 
-    
-    
+    #[Route('/api/sendmail/', name: 'app_sendmail')]
+    public function sendMail(): Response
+    {
+        return new JsonResponse(['status' => 'Mail Sent']);
+    }
+
+    #[Route('/api/generatePDF/', name: 'app_generatePDF')]
+    public function generatePDF(): Response
+    {
+        return new JsonResponse(['status' => 'PDF Generated']);
+    }
 
 }

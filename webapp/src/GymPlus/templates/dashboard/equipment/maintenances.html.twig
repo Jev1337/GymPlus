@@ -101,6 +101,7 @@
 														<div class="dropdown-menu dropdown-menu-right">
 															<a class="dropdown-item" onmouseover="this.classList.add('bg-warning'); this.classList.add('text-white')" onmouseout="this.classList.remove('bg-warning');  this.classList.remove('text-white')" href="{{ path('app_maintenances_edit', {'id': e.id}) }}"><i class="fa fa-pencil me-2"></i> Modify Maintenance</a>
 															<a class="dropdown-item" onmouseover="this.classList.add('bg-danger'); this.classList.add('text-white')" onmouseout="this.classList.remove('bg-danger');  this.classList.remove('text-white')" href="{{ path('app_maintenances_delete', {'id': e.id}) }}"><i class="fa fa-trash me-2"></i> Delete Maintenance</a>
+															<a class="dropdown-item" onmouseover="this.classList.add('bg-success'); this.classList.add('text-white')" onmouseout="this.classList.remove('bg-success');  this.classList.remove('text-white')" href="{{ path('app_generatePDF', {'idm': e.id}) }}"><i class="fa fa-eye me-2"></i> Generate PDF</a>
 														</div>
 													</div>
 												</td>										

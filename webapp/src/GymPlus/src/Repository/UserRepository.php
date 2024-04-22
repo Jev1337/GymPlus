@@ -74,6 +74,15 @@ class UserRepository extends ServiceEntityRepository
             ->getResult();
     
     }
+    public function getAdminList(){
+        return $this->createQueryBuilder('u')
+            ->where('u.role LIKE :role')
+            ->setParameter('role', 'admin')
+            ->getQuery()
+            ->getResult();
+    
+    
+    }
 
 //    /**
 //     * @return User[] Returns an array of User objects

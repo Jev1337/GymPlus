@@ -12,6 +12,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\WebLink\Link;
+use Symfony\Component\Mercure\HubInterface;
+use Symfony\Component\Mercure\Update;
 
 class ConversationController extends AbstractController
 {
@@ -39,7 +41,8 @@ class ConversationController extends AbstractController
         $conversation = $this->rep->findConversationByParticipants($otherUser->getId(), $user->getId());
         // dd($conversation);
         if (count($conversation)) {
-            throw new \Exception("convo already exists");
+            // throw new \Exception("convo already exists");
+            return $this->redirectToRoute('get_message', ['id'=> $conversation->getId()]);
         }
         $conversation = new Conversation();
         //create participants
@@ -85,4 +88,17 @@ class ConversationController extends AbstractController
             "users" => $users
         ]);
     } 
+    #[Route('/blog/publish', name: 'publish')]
+    public function publish(HubInterface $hub): Response
+    {
+        $update = new Update(
+            'https://example.com/books/1',
+            json_encode(['status' => 'message recu']),
+            true 
+        );
+
+        $hub->publish($update);
+
+        return new Response('published!');
+    }
 }

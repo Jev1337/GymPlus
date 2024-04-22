@@ -567,7 +567,39 @@ ALTER TABLE `objectif`
 ALTER TABLE `planning`
   ADD CONSTRAINT `planning_ibfk_1` FOREIGN KEY (`idObjectif`) REFERENCES `objectif` (`idObjectif`);
 
+--
+-- Structure de la table `complains`
+--
 
+CREATE TABLE `complains` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `post_id` int(11) NOT NULL,
+  `feedback` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Index pour les tables déchargées
+--
+
+--
+-- Index pour la table `complains`
+--
+ALTER TABLE `complains`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `post_id` (`post_id`);
+
+--
+-- AUTO_INCREMENT pour les tables déchargées
+--
+
+--
+-- AUTO_INCREMENT pour la table `complains`
+--
+ALTER TABLE `complains`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

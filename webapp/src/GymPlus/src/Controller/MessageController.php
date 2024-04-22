@@ -51,9 +51,12 @@ class MessageController extends AbstractController
                 $message->getUser()->getId()===$this->getUser()->getId()? true : false
             );
         }, $messages);
-        dd($messages);
-        return $this->json($messages, Response::HTTP_OK, [], [
-            'attrbutes' => self::ATTRIBUTE
+        // dd($messages);
+        // return $this->json($messages, Response::HTTP_OK, [], [
+        //     'attrbutes' => self::ATTRIBUTE
+        // ]);
+        return $this->renderForm('message/index.html.twig', [
+            'messages' => $messages,
         ]);
     }
 

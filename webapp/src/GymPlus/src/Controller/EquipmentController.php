@@ -30,7 +30,7 @@ class EquipmentController extends AbstractController
 
         $equipements = $repo->getEquipementsDetails();
 
-        return $this->render('equipment/equipements.html.twig', [
+        return $this->render('dashboard/equipment/equipements.html.twig', [
             'controller_name' => 'EquipmentController',
             'equipments' => $equipements,
             'form' => $form->createView(),
@@ -52,7 +52,7 @@ class EquipmentController extends AbstractController
             return $this->redirectToRoute('app_equipments');
         }
 
-        return $this->render('equipment/edit_equipements.html.twig', [
+        return $this->render('dashboard/equipment/edit_equipements.html.twig', [
             'controller_name' => 'EquipmentController',
             'form' => $form->createView(),
         ]);
@@ -85,7 +85,7 @@ class EquipmentController extends AbstractController
         }
         $maintenances = $repo->getMaintenances();
 
-        return $this->render('equipment/maintenances.html.twig', [
+        return $this->render('dashboard/equipment/maintenances.html.twig', [
             'controller_name' => 'EquipmentController',
             'maintenances' => $maintenances,
             'form' => $form->createView(),
@@ -105,7 +105,7 @@ class EquipmentController extends AbstractController
             return $this->redirectToRoute('app_maintenances');
         }
 
-        return $this->render('equipment/edit_maintenances.html.twig', [
+        return $this->render('dashboard/equipment/edit_maintenances.html.twig', [
             'controller_name' => 'EquipmentController',
             'form' => $form->createView(),
         ]);

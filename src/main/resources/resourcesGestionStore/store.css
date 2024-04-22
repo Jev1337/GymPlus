@@ -7,10 +7,6 @@
     -fx-background-color: #DFE9F5;
 }
 
-.white-Background{
-    -fx-background-color: #fff;
-}
-
 .table-view {
     -fx-background-color: #DFE9F5;
     -fx-table-cell-border-color: transparent;

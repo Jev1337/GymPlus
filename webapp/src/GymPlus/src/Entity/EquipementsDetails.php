@@ -32,7 +32,7 @@ class EquipementsDetails
     #[Assert\NotBlank(message: 'Please enter the equipment duree de vie.')]
     #[Assert\Length(min: 1, max: 255, minMessage: 'Duree de vie must be at least 1 character long.', maxMessage: 'Duree de vie must be at most 255 characters long.')]
     #[Assert\Type(type: "string", message: 'Duree de vie must be a string.')]
-    #[Assert\Regex(pattern: "/[0-9]*/", message: 'Duree de vie must contain only numbers.')]
+    #[Assert\Regex(pattern: "/^[1-9][0-9]*$/", message: 'Duree de vie must contain only positive numbers.')]
     private ?string $dureeDeVie;
 
     #[ORM\Column]

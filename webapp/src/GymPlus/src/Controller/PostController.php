@@ -24,17 +24,40 @@ class PostController extends AbstractController
         $user = $this->getUser();
         $post = new Post();
         $form = $this->createForm(PostType::class, $post); //bch thot les info mte3i ml formulaire lel $author
+        // $showError = false;
         
         $form->handleRequest($req); //bch te5ou request eli tbaathet mel form
-        if ($form->isSubmitted() && $form->isValid()) {
-            $post->setDate($dateImmutable);
-            $post->setUser($user);
-            
-            $post->setNbComnts(0);
-            $post->setLikes(0);
-            $em->persist($post);
-            $em->flush();
-            return $this->redirectToRoute('getAll_post');
+        if ($form->isSubmitted()) {
+            if (!$form->isValid()) {
+                // echo('<script TYPE="TEXT/JAVASCRIPT">
+                // WINDOW.ONLOAD = FUNCTION () {ALERT("There was an error with the form, please check the fields and try again!");}
+                // </script>');
+            }else{
+                $post->setDate($dateImmutable);
+                $post->setUser($user);
+
+                $photo = $form['photo']->getData();
+                if ($photo) {
+                    $filename = 'USERIMG' . $user->getId() . '.' . $photo->guessExtension();
+                    $targetdir = $this->getParameter('kernel.project_dir') . '/public/profileuploads/';
+                    $photo->move($targetdir, $filename);
+                    $post->setPhoto($filename);
+                }else{
+                    $post->setPhoto('');
+                }
+                $formContent = $form['content']->getData();
+                // if (!$formContent) {
+                //     echo('<script TYPE="TEXT/JAVASCRIPT">
+                //     ALERT("There was an error with the form, please check the fields and try again!");
+                //     </script>');
+                // }
+                $post->setNbComnts(0);
+                $post->setLikes(0);
+                $em->persist($post);
+                $em->flush();
+                return $this->redirectToRoute('getAll_post');
+            }
+           
         }
         //affichage 
 
@@ -47,7 +70,7 @@ class PostController extends AbstractController
         
         return $this->renderForm('main/post/index.html.twig', [
             'posts' => $posts,
-            'form' => $form,
+            'form' => $form
         ]);
     }
     
@@ -67,7 +90,7 @@ class PostController extends AbstractController
 
         return $this->renderForm('main/post/addNewPost.html.twig', [
             "form" => $form,
-            // "user" => $user
+            "post" => $post
         ]);
     }
     #[Route('/post/delete/{id}', name: 'delete_post')]

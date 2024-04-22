@@ -18,19 +18,13 @@
                                 <li class="breadcrumb-item">
                                     <a href="index.html">
                                         Home
-                                                                                                            
-                                                                            
-                                    </a>
+                                     </a>
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page">
                                     Blog
-                                                                                                
-                                                                    
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page">
                                     Commentaire
-                                                                                                
-                                                                    
                                 </li>
                             </ul>
                         </nav>
@@ -89,20 +83,16 @@
                                     {{ post.content }}
                                 </p>
                                 {% if post.photo != "" %}
-                                    <img class="rounded card-img-top" style="height: 30rem; object-fit: contain;" src="{{ vich_uploader_asset(post, 'imageFile') }}" />
+                                    <img class="rounded card-img-top" style="height: 30rem; object-fit: contain;" src="{{ asset('profileuploads/' ~ post.photo) }}" />
                                 {% endif %}
                                 <div class="d-flex justify-content-between py-3" style="border-bottom: 1px solid #F1EFEF;">
                                     <div>
                                         {{ post.likes }}
                                         likes                                                 
-                                                                                                            
-                                                                            
                                     </div>
                                     <div>
                                         {{ post.nbComnts }}
                                         comnts                                                
-                                                                                                            
-                                                                            
                                     </div>
                                 </div>
                                 <div class="container px-4 mt-2 text-center">
@@ -110,15 +100,11 @@
                                         <div class="col  pt-2" style="border-right: 1px solid #F1EFEF;">
                                             <a class="" href="">
                                                 like
-                                                                                                                                    
-                                                                                            
                                             </a>
                                         </div>
                                         <div class="col  pt-2" style="border-left: 1px solid #F1EFEF;">
                                             <a class="" href="">
                                                 comnts
-                                                                                                                                    
-                                                                                            
                                             </a>
                                         </div>
                                     </div>
@@ -165,21 +151,15 @@
                             {% else %}
                                 <a colspan="8">
                                     no records found                             
-                                                                                                                                
-                                                                                                
-                                                                    
                                 </a>
                             {% endfor %}
                             <div class="card-footer">
                                 {{ form_start(form) }}
-                                {{ form_widget(form.content, {'attr': {'class': 'form-control rounded', 'placeholder': 'write your comnt' }}
-                                ) }}                         
-                                                                                        
-                                                                
-                                {{ form_widget(form.coment, {'attr': {'class': 'btn h-3 btn-outline-primary rounded mt-3' }}
-                                ) }}
-                                                                                    
-                                                                
+                                {{ form_widget(form.content, {'attr': {'class': 'form-control rounded', 'placeholder': 'write your comnt' }}) }}                         
+                                <div class="d-flex align-items-center gap-3">
+                                    {{ form_widget(form.coment, {'attr': {'class': 'btn h-3 btn-outline-primary rounded mt-3' }}) }}
+                                    {{ form_errors(form.content) }}
+                                </div>
                                 {{ form_end(form) }}
                             </div>
                         </div>

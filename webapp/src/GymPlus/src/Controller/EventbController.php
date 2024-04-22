@@ -76,7 +76,7 @@ class EventbController extends AbstractController
     {      /** @var User $user */
         $user = $this->getUser();
         
-        $events = $registry->getRepository(EventDetails::class)->findAll();
+        $events = $registry->getRepository(EventDetails::class)->findFutureEvents();
     
         return $this->render('dashboard\gestion_events/eventsback.html.twig', [
             'controller_name' => 'EventbController',
@@ -193,7 +193,7 @@ public function join($id, ManagerRegistry $registry, BuilderInterface $qrCodeBui
     $eventParticipant->setEventDetailsId($id);
     $entityManager->persist($eventParticipant);
     $entityManager->flush();
-/*
+
     // Create the iCalendar event
     $event = (new \Eluceo\iCal\Domain\Entity\Event())
         ->setSummary($eventDetails->getName())
@@ -230,7 +230,7 @@ public function join($id, ManagerRegistry $registry, BuilderInterface $qrCodeBui
 
     $response = new QrCodeResponse($result);
 
-    return $response;*/
+    return $response;
     return $this->redirectToRoute( 'app_eventsf');
     
 }
@@ -375,9 +375,11 @@ public function claimBelt(Request $request, EntityManagerInterface $entityManage
         $entityManager->persist($user);
         $entityManager->flush();
 
-        $this->addFlash('success', 'Claim successful');
+        $this->addFlash('claimStatus', 'Claim successful');
+        error_log($this->get('session')->getFlashBag()->get('claimStatus'));
     } else {
-        $this->addFlash('error', 'Not enough points');
+        $this->addFlash('claimStatus', 'Not enough points');
+        error_log($this->get('session')->getFlashBag()->get('claimStatus'));
     }
 
     return $this->redirectToRoute('rewards'); // Redirect back to the rewards page
@@ -449,12 +451,72 @@ public function claimBag(Request $request, EntityManagerInterface $entityManager
         $entityManager->flush();
         return $this->redirectToRoute('blacklised');
     }
-    
-    
-  
-   
-   
+    #[Route('/past-events', name: 'past_events')]
+public function pastEvents(ManagerRegistry $registry)
+{
+    $user = $this->getUser();
 
+    $pastEvents = $registry->getRepository(EventParticipants::class)->findPastEventsByUser($user->getId());
+
+    //show user past events the events user joined in the past
+    return $this->render('main\gestion_events/past_events.html.twig', [
+        'controller_name' => 'EventbController',
+        'pastEvents' => $pastEvents,
+        'user' => $user,
+    ]);
+
+}
+
+#[Route('/event_vote/{id}', name: 'event_vote')]
+public function rateEvent($id, Request $request, EventParticipantsRepository $eventParticipantsRepository)
+{
+    $user = $this->getUser();
+    $event = $this->eventdetailsRepository->find($id);
+
+    // Find the EventParticipants record for the current user and the specified event
+    $eventParticipant = $eventParticipantsRepository->findOneBy([
+        'user_id' => $user->getId(),
+        'event_details_id' => $event->getId(),
+    ]);
+
+    // If the user is a participant of the event
+    if ($eventParticipant) {
+        // Get the rating from the request
+        $rating = $request->request->get('rating');
+
+        // Set the rating
+        $eventParticipant->setRate($rating);
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($eventParticipant);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Rating submitted. Thank you for rating ' . $event->getName());
+    } else {
+        $this->addFlash('error', 'No event selected. Please select an event to rate');
+    }
+
+    return $this->redirectToRoute('app_eventsf');
+}
+
+#[Route('/past-events-history', name: 'past_events_history')]
+public function pastEventsHistory(ManagerRegistry $registry)
+{
+    $user = $this->getUser();
+
+    $pastEvents = $registry->getRepository(EventDetails::class)->findAllPastEvents();
+    $rates = [];
+    foreach ($pastEvents as $event) {
+        $rate[$event->getId()] = $registry->getRepository(EventDetails::class)->getEventRate($event->getId());
+    }
+
+    return $this->render('dashboard\gestion_events/past_events.html.twig', [
+        'controller_name' => 'EventbController',
+        'pastEvents' => $pastEvents,
+        'user' => $user,
+        'rate' => $rate,
+    ]);
+}
 
 
 }

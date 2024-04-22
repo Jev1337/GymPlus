@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Game</title>
+    <link rel="stylesheet" href="images/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
+    {# <script defer src="images/script.js"></script> #}
+    <style>
+        #congratulations p {
+            color: green;
+        }
+
+        #failure p {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="head">
+        <h2>Memory Game</h2>
+        <div class="score">Score: <span>0</span></div>
+        <div class="timer">Time: <span id="timer">30</span> seconds</div>
+
+        {# <div id="congratulations" style="display: none;">
+            <p>Congratulations! Your discount code is 0000.</p>
+        </div>
+
+        <div id="failure" style="display: none;">
+            <p>Unfortunately, you didn't win with us.</p>
+        </div> #}
+        {# <a id="congratulations" href="/panier" style="display: none;">
+            <p>Congratulations! Your discount code is 0000.</p>
+        </a>
+
+        <a id="failure" href="/panier" style="display: none;">
+            <p>Unfortunately, you didn't win with us.</p>
+        </a> #}
+
+        <a id="congratulations" href="{{ path('play_game', {'aGagne': 1}) }}" style="display: none;">
+            <p>Congratulations! You win</p>
+        </a>
+
+        <a id="failure" href="{{ path('play_game', {'aGagne': 0}) }}" style="display: none;">
+            <p>Unfortunately, you didn't win with us.</p>
+        </a>
+
+    </div>
+
+    <div class="container">
+        <div class="cell">
+            <div class="front" data-index="1"><img src="{{ asset('images/css/img/1.png') }}" alt=""></div>
+            <div class="back"></div>
+        </div>
+        <div class="cell">
+            <div class="front" data-index="1"><img src="{{ asset('images/css/img/2.png') }}" alt=""></div>
+            <div class="back"></div>
+        </div>
+        <div class="cell">
+            <div class="front" data-index="2"><img src="{{ asset('images/css/img/3.png') }}" alt=""></div>
+            <div class="back"></div>
+        </div>
+        <div class="cell">
+            <div class="front" data-index="2"><img src="{{ asset('images/css/img/4.png') }}" alt=""></div>
+            <div class="back"></div>
+        </div>
+        <div class="cell">
+            <div class="front" data-index="3"><img src="{{ asset('images/css/img/5.png') }}" alt=""></div>
+            <div class="back"></div>
+        </div>
+        <div class="cell">
+            <div class="front" data-index="3"><img src="{{ asset('images/css/img/6.png') }}" alt=""></div>
+            <div class="back"></div>
+        </div>
+        <div class="cell">
+            <div class="front" data-index="4"><img src="{{ asset('images/css/img/7.png') }}" alt=""></div>
+            <div class="back"></div>
+        </div>
+        <div class="cell">
+            <div class="front" data-index="4"><img src="{{ asset('images/css/img/8.png') }}" alt=""></div>
+            <div class="back"></div>
+        </div>
+        <div class="cell">
+            <div class="front" data-index="5"><img src="{{ asset('images/css/img/9.png') }}" alt=""></div>
+            <div class="back"></div>
+        </div>
+        <div class="cell">
+            <div class="front" data-index="5"><img src="{{ asset('images/css/img/10.png') }}" alt=""></div>
+            <div class="back"></div>
+        </div>
+        <div class="cell">
+            <div class="front" data-index="6"><img src="{{ asset('images/css/img/11.png') }}" alt=""></div>
+            <div class="back"></div>
+        </div>
+        <div class="cell">
+            <div class="front" data-index="6"><img src="{{ asset('images/css/img/12.png') }}" alt=""></div>
+            <div class="back"></div>
+        </div>
+    </div>
+
+    <script>
+        let gameActive = true;
+
+        const card = document.querySelectorAll('.cell');
+        const front = document.querySelectorAll('.front');
+        const container = document.querySelector('.container');
+        const scoreDisplay = document.querySelector('.score span');
+        const timerDisplay = document.getElementById('timer');
+        let timeLeft = 30;
+
+        const countdown = setInterval(() => {
+            timeLeft--;
+            timerDisplay.textContent = timeLeft;
+            if (timeLeft <= 0 || parseInt(scoreDisplay.textContent) >= 6) {
+                clearInterval(countdown);
+                gameActive = false; // Game is over
+                if (parseInt(scoreDisplay.textContent) < 6) {
+                    document.getElementById('failure').style.display = 'block';
+                }
+            }
+        }, 1000);
+
+        suffleImage();
+        clicking();
+
+        function suffleImage() {
+            card.forEach(c => {
+                const num = [...Array(card.length).keys()];
+                const random = Math.floor(Math.random() * card.length);
+                c.style.order = num[random];
+            });
+        }
+
+        function clicking() {
+            for (let i = 0; i < card.length; i++) {
+                front[i].classList.add('show');
+                setInterval(() => {
+                    front[i].classList.remove('show');
+                }, 2000);
+
+                card[i].addEventListener('click', () => {
+                    if (!gameActive) return; // Don't execute if game is over
+                    front[i].classList.add('flip');
+                    const flippedCard = document.querySelectorAll('.flip');
+
+                    if (flippedCard.length == 2) {
+                        container.style.pointerEvents = 'none';
+                        setTimeout(() => {
+                            container.style.pointerEvents = 'all';
+                        }, 1000);
+
+                        match(flippedCard[0], flippedCard[1]);
+                    }
+                });
+            }
+        }
+
+        function match(cardOne, cardTwo) {
+            if (cardOne.dataset.index == cardTwo.dataset.index) {
+                scoreDisplay.textContent = parseInt(scoreDisplay.textContent) + 1;
+                cardOne.classList.remove('flip');
+                cardTwo.classList.remove('flip');
+                cardOne.classList.add('match');
+                cardTwo.classList.add('match');
+
+                if (parseInt(scoreDisplay.textContent) == 6) {
+                    document.getElementById('congratulations').style.display = 'block';
+                }
+            } else {
+                setTimeout(() => {
+                    cardOne.classList.remove('flip');
+                    cardTwo.classList.remove('flip');
+                }, 1000);
+            }
+        }
+    </script>
+</body>
+</html>

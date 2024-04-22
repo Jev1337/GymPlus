@@ -1,0 +1,9 @@
+knp_snappy:
+    pdf:
+        enabled:    true
+        binary:     '%kernel.project_dir%/wkhtmltopdf/bin/wkhtmltopdf.exe'
+        options:    []
+    image:
+        enabled:    true
+        binary:     '%kernel.project_dir%/wkhtmltopdf/bin/wkhtmltoimage.exe'
+        options:    []

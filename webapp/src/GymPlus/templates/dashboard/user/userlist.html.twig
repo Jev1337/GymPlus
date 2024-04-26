@@ -214,7 +214,7 @@
 								'</div>' +
 								'<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">' +
 								'<a class="dropdown-item" onmouseover="this.classList.add(\'bg-warning\'); this.classList.add(\'text-white\')" onmouseout="this.classList.remove(\'bg-warning\');  this.classList.remove(\'text-white\')" href="/dashboard/manageuser/' + data + '"><i class="fa fa-pencil me-2"></i> Edit</a>' +
-								'<a class="dropdown-item" onmouseover="this.classList.add(\'bg-danger\'); this.classList.add(\'text-white\')" onmouseout="this.classList.remove(\'bg-danger\');  this.classList.remove(\'text-white\')" href="javascript:$.ajax({url: \'/api/deleteuser/' + data + '\', success: function(result){$(\'#example5\').DataTable().ajax.reload();}})"><i class="fa fa-trash me-2"></i> Delete</a>' +
+								'<a class="dropdown-item" onmouseover="this.classList.add(\'bg-danger\'); this.classList.add(\'text-white\')" onmouseout="this.classList.remove(\'bg-danger\');  this.classList.remove(\'text-white\')" href="javascript:$.ajax({url: \'/api/deleteuser/' + data + '\', success: function(result){$(\'#example5\').DataTable().ajax.reload();swal(\'Success\',\'User has been successfully deleted!\',\'success\')}})"><i class="fa fa-trash me-2"></i> Delete</a>' +
 								'</div>' +
 								'</div>';
 						}

@@ -103,6 +103,19 @@ class UserRepository extends ServiceEntityRepository
         }
         return $qb->getQuery()->getResult();
     }
+    public function getClientListFiltered($filter){
+        $qb = $this->createQueryBuilder('u');
+        $qb->where('u.role LIKE :role')
+            ->setParameter('role', 'client');
+        if ($filter != null) {
+            $qb->andWhere('u.username LIKE :filter')
+                ->orWhere('u.email LIKE :filter')
+                ->orWhere('u.numTel LIKE :filter')
+                ->orWhere('u.id LIKE :filter')
+                ->setParameter('filter', '%'.$filter.'%');
+        }
+        return $qb->getQuery()->getResult();
+    }
 
 
 

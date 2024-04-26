@@ -98,7 +98,7 @@ class UserController extends AbstractController
         $twilio = new Client($sid, $token);
         $verification = $twilio->verify->v2->services("VA1a9fc1403057f6ddc645002f416c50bc")
                                    ->verifications
-                                   ->create("whatsapp:+216". $phone, "whatsapp");
+                                   ->create("sms:+216". $phone, "sms");
         return new Response($verification->status, 200);
     }
 
@@ -115,7 +115,7 @@ class UserController extends AbstractController
         $twilio = new Client($sid, $token);
         $verificationCheck = $twilio->verify->v2->services("VA1a9fc1403057f6ddc645002f416c50bc")
                                    ->verificationChecks
-                                   ->create(["to"=> "whatsapp:+216. " . $phone, "code" => $code]);
+                                   ->create(["to"=> "sms:+216. " . $phone, "code" => $code]);
         if ($verificationCheck->status == 'approved') {
             return new JsonResponse(['status' => 'success'], 200);
         }
@@ -876,6 +876,34 @@ class UserController extends AbstractController
             $content = json_decode($e->getResponse()->getBody()->getContents(), true);
             return new JsonResponse(['status' => 'error', 'details'=> $content], 400);
         }
+    }
+
+    #[Route('/api/numberexist', name: 'app_numbercheck')]
+    public function checkNumber(Request $request, UserRepository $repo): Response
+    {
+        $num = $request->get('phone');
+        $user = $repo->findUserByPhone($num);
+        if ($user) {
+            return new JsonResponse(['exists' => true], 200);
+        }
+        return new JsonResponse(['exists' => false], 200);
+    }
+
+    #[Route('/api/resetpw', name: 'app_resetpw')]
+    public function resetPassword(Request $request, UserRepository $repo, ManagerRegistry $reg): Response
+    {
+        $num = $request->get('phone');
+        $user = $repo->findUserByPhone($num);
+        if ($user) {
+            $pw = $request->get('password');
+            $user->setPassword(password_hash($pw, PASSWORD_BCRYPT));
+            $reg->getManager()->persist($user);
+            $reg->getManager()->flush();
+            $this->addFlash('success', 'Password reset successfully!');
+            return $this->redirectToRoute('app_login');
+        }
+        $this->addFlash('error', 'Error occured!');
+        return $this->redirectToRoute('app_login');
     }
     
 }

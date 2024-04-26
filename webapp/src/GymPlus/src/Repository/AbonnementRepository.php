@@ -53,6 +53,60 @@ class AbonnementRepository extends ServiceEntityRepository
         return $qb->getQuery()->getOneOrNullResult();
     }
 
+    public function getActiveMembershipCount(){
+        $qb = $this->createQueryBuilder('a');
+        $qb->select('COUNT(a.id)');
+        $qb->andWhere('a.datefinab > :now');
+        $qb->setParameter('now', new \DateTime());
+        return $qb->getQuery()->getSingleScalarResult();
+    }
+
+    public function getActiveMembershipPercent(){
+        $qb = $this->createQueryBuilder('a');
+        $qb->select('COUNT(a.id)');
+        $qb->andWhere('a.datefinab > :now');
+        $qb->setParameter('now', new \DateTime());
+        $active = $qb->getQuery()->getSingleScalarResult();
+
+        $qb = $this->createQueryBuilder('a');
+        $qb->select('COUNT(a.id)');
+        $total = $qb->getQuery()->getSingleScalarResult();
+        if ($total == 0) {
+            return 0;
+        }
+        return $active / $total * 100;
+    
+    }
+
+    public function getArrayGPCount(){
+ 
+        
+        $qb = $this->createQueryBuilder('a');
+        $qb->select('t.name, COUNT(a.id) as count') // Assuming that the related entity has a field named 'name'
+           ->join('a.type', 't') // Join the related entity
+           ->andWhere('a.datefinab > :now')
+           ->setParameter('now', new \DateTime())
+           ->andWhere('t.name IN (:types)') // Use the joined entity in the WHERE clause
+           ->setParameter('types', ['GP 1', 'GP 2', 'GP 3'])
+           ->groupBy('t.name'); // Group by a field of the joined entity
+        
+        $results = $qb->getQuery()->getResult();
+        
+        $arr = [
+            'GP 1' => 0,
+            'GP 2' => 0,
+            'GP 3' => 0,
+        ];
+        
+        foreach ($results as $result) {
+            $arr[$result['name']] = $result['count']; // Use the correct field name here
+        }
+        
+        return $arr;
+        
+
+    }
+
 
 //    /**
 //     * @return Abonnement[] Returns an array of Abonnement objects

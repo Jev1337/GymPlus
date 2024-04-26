@@ -27,16 +27,40 @@ use Symfony\Component\Mime\Part\Multipart\FormDataPart;
 use GuzzleHttp\Client as GuzzleClient;
 use App\Entity\AbonnementDetails;
 use App\Form\GPPricesType;
+use App\Repository\MaintenancesRepository;
 
 
 class UserController extends AbstractController
 {
     #[Route('/dashboard/home', name: 'app_dashboard')]
-    public function dashboard(): Response
+    public function dashboard(UserRepository $repoUser, AbonnementRepository $repoAbon, MaintenancesRepository $repoMaint ): Response
     {
-    
+        $stats = [
+            ['title' => 'User Count', 'content' => $repoUser->getUserCount(), 'percent' => '100'],
+            ['title' => 'Active Membership Count', 'content' => $repoAbon->getActiveMembershipCount(),'percent' => '100'],
+            ['title' => 'Active Membership Percent', 'content' => $repoAbon->getActiveMembershipPercent(), 'percent' => $repoAbon->getActiveMembershipPercent()],
+            ['title' => 'Event Count', 'content' => '', 'percent' => '100'] // Replace with actual event count
+        ];
+
+        $barchart1 = $repoMaint->getEachMonthMaintenancesCount();
+        // $barchart2 = eventchart
+
+        $start = microtime(true);
+        $res = $repoUser->findUserById($this->getUser()->getId());
+        $end = microtime(true);
+        $dblatency = $end - $start;
+        // trunc to 3 decimal places
+        $dblatency = round($dblatency*1000, 2);
+        
+        $gpc = $repoAbon->getArrayGPCount();
+
         return $this->render('dashboard/index.html.twig', [
             'controller_name' => 'UserController',
+            'stats' => $stats,
+            'barchart1' => $barchart1,
+            'barchart2' => [],
+            'dblatency' => $dblatency,
+            'gpc' => $gpc
         ]);
     }
 
@@ -906,4 +930,9 @@ class UserController extends AbstractController
         return $this->redirectToRoute('app_login');
     }
     
+    #[Route('/api/ping', name: 'app_ping')]
+    public function ping(): Response
+    {
+        return new JsonResponse(['status' => 'success'], 200);
+    }
 }

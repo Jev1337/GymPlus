@@ -91,6 +91,19 @@ class UserRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
+    public function getUserList($filter){
+        $qb = $this->createQueryBuilder('u');
+        if ($filter != null) {
+            $qb->where('u.username LIKE :filter')
+                ->orWhere('u.email LIKE :filter')
+                ->orWhere('u.numTel LIKE :filter')
+                ->orWhere('u.role LIKE :filter')
+                ->orWhere('u.id LIKE :filter')
+                ->setParameter('filter', '%'.$filter.'%');
+        }
+        return $qb->getQuery()->getResult();
+    }
+
 
 
 //    /**

@@ -507,16 +507,16 @@ class UserController extends AbstractController
     {
         $userdel = $repo->findUserById($id);
         if (!$userdel) {
-            return $this->redirectToRoute('app_usermgmt');
+            return new JsonResponse(['status' => 'error'], 400);
         }
         $reg->getManager()->remove($userdel);
         $reg->getManager()->flush();
         if ($this->getUser()->getId() == $userdel->getId()) {
             $this->get('security.token_storage')->setToken(null);
             $this->get('session')->invalidate();
-            return $this->redirectToRoute('app_login');
+            return new JsonResponse(['status' => 'success'], 200);
         }
-        return $this->redirectToRoute('app_usermgmt');
+        return new JsonResponse(['status' => 'success'], 200);
     }
 
     #[Route('/api/deletecurrentuser/', name: 'app_user_delete_current')]
@@ -934,5 +934,35 @@ class UserController extends AbstractController
     public function ping(): Response
     {
         return new JsonResponse(['status' => 'success'], 200);
+    }
+
+    #[Route('/api/userlist', name: 'app_userlist')]
+    public function userList(UserRepository $repo, Request $req): Response
+    {
+       //datatable returns for ajax
+        $users = [];
+        $filter = $req->query->get('customSearch');
+        if ($filter == null) 
+            $users = $repo->findAll();
+        else
+            $users = $repo->getUserList($filter);
+        $data = [];
+        foreach ($users as $user) {
+            $data[] = [
+                $user->getPhoto(),
+                $user->getId(),
+                $user->getFirstname(),
+                //$user->getUsername(),
+                //$user->getDateNaiss()->format('Y-m-d'),
+                $user->getLastname(),
+                $user->getNumTel(),
+                $user->getEmail(),
+                $user->getAdresse(),
+                $user->getRole(),
+                
+            ];
+        }
+        return new JsonResponse(['data' => $data], 200);
+       
     }
 }

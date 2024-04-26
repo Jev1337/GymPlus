@@ -27,16 +27,40 @@ use Symfony\Component\Mime\Part\Multipart\FormDataPart;
 use GuzzleHttp\Client as GuzzleClient;
 use App\Entity\AbonnementDetails;
 use App\Form\GPPricesType;
+use App\Repository\MaintenancesRepository;
 
 
 class UserController extends AbstractController
 {
     #[Route('/dashboard/home', name: 'app_dashboard')]
-    public function dashboard(): Response
+    public function dashboard(UserRepository $repoUser, AbonnementRepository $repoAbon, MaintenancesRepository $repoMaint ): Response
     {
-    
+        $stats = [
+            ['title' => 'User Count', 'content' => $repoUser->getUserCount(), 'percent' => '100'],
+            ['title' => 'Active Membership Count', 'content' => $repoAbon->getActiveMembershipCount(),'percent' => '100'],
+            ['title' => 'Active Membership Percent', 'content' => $repoAbon->getActiveMembershipPercent(), 'percent' => $repoAbon->getActiveMembershipPercent()],
+            ['title' => 'Event Count', 'content' => '', 'percent' => '100'] // Replace with actual event count
+        ];
+
+        $barchart1 = $repoMaint->getEachMonthMaintenancesCount();
+        // $barchart2 = eventchart
+
+        $start = microtime(true);
+        $res = $repoUser->findUserById($this->getUser()->getId());
+        $end = microtime(true);
+        $dblatency = $end - $start;
+        // trunc to 3 decimal places
+        $dblatency = round($dblatency*1000, 2);
+        
+        $gpc = $repoAbon->getArrayGPCount();
+
         return $this->render('dashboard/index.html.twig', [
             'controller_name' => 'UserController',
+            'stats' => $stats,
+            'barchart1' => $barchart1,
+            'barchart2' => [],
+            'dblatency' => $dblatency,
+            'gpc' => $gpc
         ]);
     }
 
@@ -483,16 +507,16 @@ class UserController extends AbstractController
     {
         $userdel = $repo->findUserById($id);
         if (!$userdel) {
-            return $this->redirectToRoute('app_usermgmt');
+            return new JsonResponse(['status' => 'error'], 400);
         }
         $reg->getManager()->remove($userdel);
         $reg->getManager()->flush();
         if ($this->getUser()->getId() == $userdel->getId()) {
             $this->get('security.token_storage')->setToken(null);
             $this->get('session')->invalidate();
-            return $this->redirectToRoute('app_login');
+            return new JsonResponse(['status' => 'success'], 200);
         }
-        return $this->redirectToRoute('app_usermgmt');
+        return new JsonResponse(['status' => 'success'], 200);
     }
 
     #[Route('/api/deletecurrentuser/', name: 'app_user_delete_current')]
@@ -512,24 +536,7 @@ class UserController extends AbstractController
     #[Route('/dashboard/subscriptions', name: 'app_submgmt')]
     public function subscriptionManagement(AbonnementRepository $repo0, AbonnementDetailsRepository $repo2, UserRepository $repo1, ManagerRegistry $reg, Request $request): Response
     {
-        $subs = $repo0->findAll();
-        $users = $repo1->getClientList();
-
-        $nonsubbedusers = [];
-        foreach ($users as $user) {
-            if (!$repo0->isUserSubscribed($user->getId())) {
-                array_push($nonsubbedusers, $user);
-            }
-        }
-
-        $subbedusers = array_map(function($user) use ($repo0) {
-            return [
-                'user' => $user,
-                'sub' => $repo0->getCurrentSubByUserId($user->getId())
-            ];
-        }, array_filter($users, function($user) use ($repo0) {
-            return $repo0->isUserSubscribed($user->getId());
-        }));
+       
         
         if ($this->getUser()->getRole() == "admin"){
 
@@ -563,23 +570,17 @@ class UserController extends AbstractController
             }
             return $this->render('dashboard/user/subscriptions.html.twig', [
                 'controller_name' => 'UserController',
-                'subs' => $subs,
-                'nusers' => $nonsubbedusers,
-                'susers' => $subbedusers,
                 'form' => $form->createView()
-                
             ]);
         }
         return $this->render('dashboard/user/subscriptions.html.twig', [
             'controller_name' => 'UserController',
-            'subs' => $subs,
-            'nusers' => $nonsubbedusers,
-            'susers' => $subbedusers
         ]);
 
     }
+    
 
-    #[Route('/dashboard/subscribe/{id}/{sub}', name: 'app_subuser')]
+    #[Route('/api/subscribe/{id}/{sub}', name: 'app_subuser')]
     public function subscribeUser(UserRepository $repo, AbonnementRepository $repo1, AbonnementDetailsRepository $repo0, $id,$sub, ManagerRegistry $reg): Response
     {
         $user = $repo->findUserById($id);
@@ -600,16 +601,16 @@ class UserController extends AbstractController
         $abonnement->setType($type);
         $reg->getManager()->persist($abonnement);
         $reg->getManager()->flush();
-        return $this->redirectToRoute('app_submgmt');
+        return new JsonResponse(['status' => 'success'], 200);
     }
 
-    #[Route('/dashboard/unsubscribe/{id}', name: 'app_removesub')]
+    #[Route('/api/unsubscribe/{id}', name: 'app_removesub')]
     public function unsubscribeUser(AbonnementRepository $repo, $id, ManagerRegistry $reg): Response
     {
         $sub = $repo->getCurrentSubByUserId($id);
         $reg->getManager()->remove($sub);
         $reg->getManager()->flush();
-        return $this->redirectToRoute('app_submgmt');
+        return new JsonResponse(['status' => 'success'], 200);
     }
 
     #[Route('/api/getUserSubDetails/{id}', name: 'app_getsubdetails')]
@@ -906,4 +907,97 @@ class UserController extends AbstractController
         return $this->redirectToRoute('app_login');
     }
     
+    #[Route('/api/ping', name: 'app_ping')]
+    public function ping(): Response
+    {
+        return new JsonResponse(['status' => 'success'], 200);
+    }
+
+    #[Route('/api/userlist', name: 'app_userlist')]
+    public function userList(UserRepository $repo, Request $req): Response
+    {
+       //datatable returns for ajax
+        $users = [];
+        $filter = $req->query->get('customSearch');
+        if ($filter == null) 
+            $users = $repo->findAll();
+        else
+            $users = $repo->getUserList($filter);
+        $data = [];
+        foreach ($users as $user) {
+            $data[] = [
+                $user->getPhoto(),
+                $user->getId(),
+                $user->getFirstname(),
+                //$user->getUsername(),
+                //$user->getDateNaiss()->format('Y-m-d'),
+                $user->getLastname(),
+                $user->getNumTel(),
+                $user->getEmail(),
+                $user->getAdresse(),
+                $user->getRole(),
+                
+            ];
+        }
+        return new JsonResponse(['data' => $data], 200);
+       
+    }
+
+    #[Route('/api/nonsubbedusers', name: 'app_nonsubbedusers')]
+    public function nonSubbedUsers(AbonnementRepository $repo0, AbonnementDetailsRepository $repo2, UserRepository $repo1, ManagerRegistry $reg, Request $req): Response
+    {
+        $subs = $repo0->findAll();
+        $filter = $req->query->get('customSearch');
+        if ($filter == null) 
+            $users = $repo1->getClientList();
+        else
+            $users = $repo1->getClientListFiltered($filter);
+        $nonsubbedusers = [];
+        $data = [];
+        foreach ($users as $user) {
+            if (!$repo0->isUserSubscribed($user->getId())) {
+                array_push($nonsubbedusers, $user);
+                $data[] = [
+                    $user->getPhoto(),
+                    $user->getId(),
+                    $user->getFirstname() . ' ' . $user->getLastname(),
+                    $user->getNumTel(),
+                ];
+            }
+        }
+        return new JsonResponse(['data' => $data], 200);
+    }
+
+    #[Route('/api/subbedusers', name: 'app_subbedusers')]
+    public function subbedUsers(AbonnementRepository $repo0, AbonnementDetailsRepository $repo2, UserRepository $repo1, ManagerRegistry $reg, Request $req): Response
+    {
+        $subs = $repo0->findAll();
+        $filter = $req->query->get('customSearch');
+        if ($filter == null) 
+            $users = $repo1->getClientList();
+        else
+            $users = $repo1->getClientListFiltered($filter);
+
+        $subbedusers = array_map(function($user) use ($repo0) {
+            return [
+                'user' => $user,
+                'sub' => $repo0->getCurrentSubByUserId($user->getId())
+            ];
+        }, array_filter($users, function($user) use ($repo0) {
+            return $repo0->isUserSubscribed($user->getId());
+        }));
+        
+        $data = [];
+        foreach ($subbedusers as $user) {
+            $data[] = [
+                $user['user']->getPhoto(),
+                $user['user']->getId(),
+                $user['user']->getFirstname() . ' ' . $user['user']->getLastname(),
+                $user['user']->getNumTel(),
+                $user['sub']->getType()->getName(),
+                $user['sub']->getDatefinab()->format('Y-m-d'),
+            ];
+        }
+        return new JsonResponse(['data' => $data], 200);
+    }
 }

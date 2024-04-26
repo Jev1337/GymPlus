@@ -122,7 +122,18 @@
                                 <h4 class="card-title">Users</h4>
                             </div>
                             <div class="card-body">
-                                <div class="table-responsive">
+								<!-- custom search bar with bootstrap  -->
+								<div class="col-4 float-right">
+									<div class="input-group mb-3">
+										<input type="text" class="form-control" id="customSearch" placeholder="Search users">
+										<div class="input-group-append">
+											<button class="btn btn-outline-primary" type="button" id="searchButton"><i class="fa fa-search"></i>
+											</button>
+										</div>
+									</div>
+								</div>
+
+                                <div class="table-responsive" style="overflow-x: hidden;">
                                     <table id="example5" class="display min-w850">
                                         <thead>
                                             <tr>
@@ -138,44 +149,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-											{% for u in users %}
-
-                                            <tr>
-												<td><img src="{{asset('profileuploads/'~u.photo)}}" class="rounded-circle" width="35" alt=""></td>
-												<td>{{ u.id }}</td>
-												<td>{{ u.firstname }}</td>
-												<td>{{ u.lastname }}</td>
-												<td>{{ u.numtel }}</td>
-												<td>{{ u.email }}</td>
-												<td>{{ u.adresse }}</td>
-												<td>
-													{% if u.role == 'client' %}
-													<span class="badge light badge-success">
-														<i class="fa fa-circle text-success mr-1"></i>
-													{% elseif u.role == 'admin' %}
-													<span class="badge light badge-danger">
-														<i class="fa fa-circle text-danger mr-1"></i>
-													{% else %}
-													<span class="badge light badge-warning">
-														<i class="fa fa-circle text-warning mr-1"></i>
-													{% endif %}
-														{{ u.role | capitalize}}
-													</span>
-												</td>
-												<td>
-													<div class="dropdown ms-auto text-end c-pointer">
-														<div class="btn-link" data-toggle="dropdown">
-															<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><rect x="0" y="0" width="24" height="24"></rect><circle fill="#000000" cx="5" cy="12" r="2"></circle><circle fill="#000000" cx="12" cy="12" r="2"></circle><circle fill="#000000" cx="19" cy="12" r="2"></circle></g></svg>
-														</div>
-														<div class="dropdown-menu dropdown-menu-right">
-															<a class="dropdown-item" onmouseover="this.classList.add('bg-warning'); this.classList.add('text-white')" onmouseout="this.classList.remove('bg-warning');  this.classList.remove('text-white')" href="{{ path('app_user_edit', {'id': u.id}) }}"><i class="fa fa-pencil me-2"></i> Modify User</a>
-															<a class="dropdown-item" onmouseover="this.classList.add('bg-danger'); this.classList.add('text-white')" onmouseout="this.classList.remove('bg-danger');  this.classList.remove('text-white')" href="{{ path('app_user_delete', {'id': u.id}) }}"><i class="fa fa-trash me-2"></i> Delete User</a>
-														</div>
-													</div>
-												</td>										
-                                            </tr>
-											{% endfor %}
-                                            
+										
                                         </tbody>
                                     </table>
                                 </div>
@@ -195,5 +169,69 @@
 	{{ parent() }}
 	<!-- Datatable -->
 	<script src="{{asset('dashboard/vendor/datatables/js/jquery.dataTables.min.js')}}"></script>
-	<script src="{{asset('dashboard/js/plugins-init/datatables.init.js')}}"></script>
+	<script>
+		$('#example5').DataTable({
+				//"ordering": false,
+				"searching": false,
+				"ajax": {
+					"url": "{{ path('app_userlist') }}",
+					"data": function (d) {
+						d.customSearch = $('#customSearch').val(); // Get the value of your custom search input
+					}
+				},
+				"columns": [
+					{
+						"data": 0,
+						"render": function ( data, type, row ) {
+							return '<img src="/profileuploads/' + data + '" class="rounded-circle" width="35" alt="">';
+						}
+					},
+					{ "data": 1},
+					{ "data": 2},
+					{ "data": 3},
+					{ "data": 4},
+					{ "data": 5},
+					{ "data": 6},
+					{ 
+						"data": 7,
+						"render": function ( data, type, row ) {
+							if (data == 'client') {
+								return '<span class="badge light badge-success"><i class="fa fa-circle text-success mr-1"></i>' + data.charAt(0).toUpperCase() + data.slice(1) + '</span>';
+							} else if (data == 'admin') {
+								return '<span class="badge light badge-danger"><i class="fa fa-circle text-danger mr-1"></i>' + data.charAt(0).toUpperCase() + data.slice(1) + '</span>';
+							} else {
+								return '<span class="badge light badge-warning"><i class="fa fa-circle text-warning mr-1"></i>' + data.charAt(0).toUpperCase() + data.slice(1) + '</span>';
+							}
+						}
+					},
+					//this last column is for the action buttons we need to make it custom
+					{
+						"data": 1,
+						"render": function ( data, type, row ) {
+							return '<div class="dropdown ms-auto text-end c-pointer">' +
+								'<div class="btn-link" data-toggle="dropdown">' +
+								'<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><rect x="0" y="0" width="24" height="24"></rect><circle fill="#000000" cx="5" cy="12" r="2"></circle><circle fill="#000000" cx="12" cy="12" r="2"></circle><circle fill="#000000" cx="19" cy="12" r="2"></circle></g></svg>' +
+								'</div>' +
+								'<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">' +
+								'<a class="dropdown-item" onmouseover="this.classList.add(\'bg-warning\'); this.classList.add(\'text-white\')" onmouseout="this.classList.remove(\'bg-warning\');  this.classList.remove(\'text-white\')" href="/dashboard/manageuser/' + data + '"><i class="fa fa-pencil me-2"></i> Edit</a>' +
+								'<a class="dropdown-item" onmouseover="this.classList.add(\'bg-danger\'); this.classList.add(\'text-white\')" onmouseout="this.classList.remove(\'bg-danger\');  this.classList.remove(\'text-white\')" href="javascript:$.ajax({url: \'/api/deleteuser/' + data + '\', success: function(result){$(\'#example5\').DataTable().ajax.reload();swal(\'Success\',\'User has been successfully deleted!\',\'success\')}})"><i class="fa fa-trash me-2"></i> Delete</a>' +
+								'</div>' +
+								'</div>';
+						}
+					}
+				]
+		});
+
+
+
+		$('#searchButton').on('click', function () {
+			$('#example5').DataTable().ajax.reload();
+			
+		});
+		$('#customSearch').on('keyup', function (e) {
+			if (e.key === 'Enter' || e.keyCode === 13) {
+				$('#example5').DataTable().ajax.reload();
+			}
+		});
+	</script>
 {% endblock %}

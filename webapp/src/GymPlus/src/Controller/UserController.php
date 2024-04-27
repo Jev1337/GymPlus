@@ -28,10 +28,16 @@ use GuzzleHttp\Client as GuzzleClient;
 use App\Entity\AbonnementDetails;
 use App\Form\GPPricesType;
 use App\Repository\MaintenancesRepository;
-
+use Google_Service_Oauth2;
+use Google_Client;
 
 class UserController extends AbstractController
 {
+    #[Route('/', name: 'app_indexred')]
+    public function indexred(): Response
+    {
+        return $this->redirectToRoute('app_home');
+    }
     #[Route('/dashboard/home', name: 'app_dashboard')]
     public function dashboard(UserRepository $repoUser, AbonnementRepository $repoAbon, MaintenancesRepository $repoMaint ): Response
     {
@@ -999,5 +1005,52 @@ class UserController extends AbstractController
             ];
         }
         return new JsonResponse(['data' => $data], 200);
+    }
+
+    #[Route('/api/googleauthcallback', name: 'app_googleauthcallback')]
+    public function googleAuthCallback(Request $request, UserRepository $repo, ManagerRegistry $reg): Response
+    {
+        if (!$request->get('credential')) {
+            return $this->redirectToRoute('app_login');
+        }
+        $client = new Google_Client(['client_id' => '767861281457-q8k0trd5fdj0jvgcf63lnclkqllkdt1e.apps.googleusercontent.com']);
+        $payload = $client->verifyIdToken($request->get('credential'));
+        if ($payload) {
+            $userid = $payload['sub'];
+            $user = $repo->findUserByEmail($payload['email']);
+            if ($user) {
+                $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
+                $this->get('security.token_storage')->setToken($token);
+                $this->get('session')->set('_security_main', serialize($token));
+            }else{
+                $lasteight = substr($userid, -8);
+                $user = new User();
+                $user->setId(intval($lasteight));
+                $user->setEmail($payload['email']);
+                $user->setFirstname($payload['given_name']);
+                $user->setLastname($payload['family_name']);
+                $user->setUsername($lasteight);
+                $user->setNumTel($lasteight);
+                $user->setPassword(password_hash($lasteight, PASSWORD_BCRYPT));
+                $user->setAdresse('NA');
+                $user->setDateNaiss(new \DateTime());
+                $photo = file_get_contents($payload['picture']);
+                $filename = 'USERIMG' . $user->getId() . '.jpg';
+                $targetdir = $this->getParameter('kernel.project_dir') . '/public/profileuploads/';
+                file_put_contents($targetdir . $filename, $photo);
+                $user->setPhoto($filename);
+                $user->setRole('client');
+                $reg->getManager()->persist($user);
+                $reg->getManager()->flush();
+                $user = $repo->findUserByEmail($payload['email']);
+                if ($user) {
+                    $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
+                    $this->get('security.token_storage')->setToken($token);
+                    $this->get('session')->set('_security_main', serialize($token));
+                }
+            }
+        }
+        return $this->redirectToRoute('app_home');
+
     }
 }

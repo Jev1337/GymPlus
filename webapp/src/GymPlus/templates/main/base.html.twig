@@ -104,9 +104,10 @@
                 <!-- Extra Nav -->
                 <div class="extra-nav">
                     <div class="extra-cell">
-                        <button id="quik-search-btn" type="button" class="header-search-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
+                        
 						{% if not app.user %}
-                        <a href="{{path('app_signup')}}" class="btn btn-primary btn-skew appointment-btn"><span class="skew-inner"><span class="text">Sign Up</span></span></a>
+                    <button id="quik-search-btn" type="button" class="header-search-btn"><i class="fa-solid fa-sign-in"></i></button>
+					    <a href="{{path('app_signup')}}" class="btn btn-primary btn-skew appointment-btn"><span class="skew-inner"><span class="text">Sign Up</span></span></a>
 						{% else %}
 						<a href="{{path('app_logout')}}" class="btn btn-primary btn-skew appointment-btn"><span class="skew-inner"><span class="text">Logout</span></span></a>
 						{% endif %}
@@ -244,9 +245,10 @@
 					<!-- Extra Nav -->
 					<div class="extra-nav">
 						<div class="extra-cell">
-							<button id="quik-search-btn" type="button" class="header-search-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
+							
 							{% if not app.user %}
-                        <a href="{{path('app_signup')}}" class="btn btn-primary btn-skew appointment-btn"><span class="skew-inner"><span class="text">Sign Up</span></span></a>
+                        <button id="quik-search-btn" type="button" class="header-search-btn"><i class="fa-solid fa-sign-in"></i></button>
+						<a href="{{path('app_signup')}}" class="btn btn-primary btn-skew appointment-btn"><span class="skew-inner"><span class="text">Sign Up</span></span></a>
 						{% else %}
 						<a href="{{path('app_logout')}}" class="btn btn-primary btn-skew appointment-btn"><span class="skew-inner"><span class="text">Logout</span></span></a>
 						{% endif %}
@@ -388,9 +390,10 @@
 						<!-- Extra Nav -->
 						<div class="extra-nav">
 							<div class="extra-cell">
-								<button id="quik-search-btn" type="button" class="header-search-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
+								
 								{% if not app.user %}
-                        <a href="{{path('app_signup')}}" class="btn btn-primary btn-skew appointment-btn"><span class="skew-inner"><span class="text">Sign Up</span></span></a>
+                        <button id="quik-search-btn" type="button" class="header-search-btn"><i class="fa-solid fa-sign-in"></i></button><a h
+						ref="{{path('app_signup')}}" class="btn btn-primary btn-skew appointment-btn"><span class="skew-inner"><span class="text">Sign Up</span></span></a>
 						{% else %}
 						<a href="{{path('app_logout')}}" class="btn btn-primary btn-skew appointment-btn"><span class="skew-inner"><span class="text">Logout</span></span></a>
 						{% endif %}

@@ -24,6 +24,8 @@ var PowerZone = function(){
 		var quikSearchRemove = jQuery("#quik-search-remove");
 		
 		quikSearch.on('click',function() {
+			location.href = "/auth/login";
+			return;
 			jQuery('.dz-quik-search').fadeIn(500);
 			jQuery('.dz-quik-search').addClass('On');
 		});

@@ -1,8 +1,17 @@
 
 {% extends "main/base.html.twig" %}
+{% block  css %}
+{{ parent() }}
+<style>
+.grecaptcha-badge {
+	z-index:999;
+}
+</style>
+{% endblock %}
+
 {% block content%}
 	<div class="page-content bg-white">
-
+ 	
 		<section class="p-0 overflow-hidden">
 			<div class="row">
 				<div class="col-xxl-6 col-xl-6 col-lg-6 col-md-12 p-a0">
@@ -86,15 +95,41 @@
 									<label class="form-check-label" for="basic_checkbox_1">Remember Me</label>
 								</div>
 							</div>
+							
 							<div class="text-center">
 
 								{{ form_widget(form.submit, {'attr': {'class': 'btn btn-primary m-b15 w-100', 'value': 'Login'} } ) }}
-								<!-- button with a face icon -->
+								<div class="row mt-3">
+									<div class="col-md-4">
+										<hr>
+									</div>
+									<div class="col-md-4">
+										<h5 class="text-center text-white">OR</h5>
+									</div>
+									<div class="col-md-4">
+										<hr>
+									</div>
+								</div>
+								<script src="https://accounts.google.com/gsi/client" async defer></script>
+								<div id="g_id_onload" 
+									data-client_id="767861281457-q8k0trd5fdj0jvgcf63lnclkqllkdt1e.apps.googleusercontent.com"
+									data-login_uri="/api/googleauthcallback"
+									data-auto_prompt="false">
+								</div>
+								<div class="g_id_signin"
+									data-width="362"
+									data-type="standard"
+									data-size="large"
+									data-theme="outline"
+									data-text="sign_in_with"
+									data-shape="rectangular"
+									data-logo_alignment="left">
+								</div>
 								<a href="#" class="btn" id="faceid"><img src="{{asset('main/images/Face_ID_logo.svg.png')}}" alt="Face ID" style="width: 40px; height: 40px;"></a>
 								<br>
 								<video id="video" width="1280" height="720" autoplay style="display: none;"></video>
 								<canvas id="canvas" style="display: none;" width="1280" height="720"></canvas>
-								<a href="javascript:void(0);" class="btn-link">Don’t have account?<span> Sign Up</span></a> 
+								<a href="{{path('app_signup')}}" class="btn-link">Don’t have account?<span> Sign Up</span></a> 
 							</div>
 							
         					

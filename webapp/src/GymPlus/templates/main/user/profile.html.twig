@@ -347,11 +347,14 @@
 			confirmButtonColor: "#DD6B55",
 			confirmButtonText: "Yes, delete it!",
 			cancelButtonText: "No, cancel it!",
-			closeOnConfirm: !1,
-			closeOnCancel: !1
-		}, function(e) {
-			e ? location.href = "{{ path('app_user_delete_current') }}" : swal("Cancelled!", "Hey, your account is safe!", "error")
-		})
+		}).then((result) => {
+			if (result.value) {
+				swal("Deleted!", "Your account has been deleted.", "success");
+				window.location.href = "{{ path('app_user_delete_current') }}";
+			}else{
+				swal("Cancelled", "Your account is safe :)", "error");
+			}
 		});	
+		});
 	</script>
 {% endblock %}

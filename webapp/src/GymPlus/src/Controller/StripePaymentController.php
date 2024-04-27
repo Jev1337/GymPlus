@@ -6,6 +6,7 @@ use App\Repository\FactureRepository;
 use Stripe\Checkout\Session;
 use Stripe\Stripe;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -66,7 +67,6 @@ class StripePaymentController extends AbstractController
     {
         return $this->render('stripe_payment/success.html.twig', []);
     }
-
 
     #[Route('/cancel-url', name: 'cancel_url')]
     public function cancelUrl(): Response

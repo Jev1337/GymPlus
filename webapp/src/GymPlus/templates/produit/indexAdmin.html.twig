@@ -151,7 +151,7 @@
                                             <div class="dropdown-menu dropdown-menu-right">
                                                 <a href="{{ path('app_produit_edit', {'idproduit': produit.idproduit}) }}" class="dropdown-item text-center" >edit</a>
                                                 <div class="text-center">
-<a href="#" onclick="generateBarcode('{{ produit.idproduit ~ ',' ~ produit.prix ~ ',' ~ produit.promo }}')">Barcode</a>
+                                                    <a href="#" onclick="generateBarcode('{{ produit.idproduit ~ ',' ~ produit.prix ~ ',' ~ produit.promo }}')">Barcode</a>
                                                 </div>  
                                                 <div class="text-center">
                                                     {{ include('produit/_delete_form.html.twig') }} 

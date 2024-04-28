@@ -70,6 +70,32 @@
                                 {% endfor %}           
                             </div>
 
+                            <!-- Affichage des produits les plus vendus -->
+                            <h2>Most Sold Products :</h2> 
+                            <div class="row">
+                                {% for mostSoldProduct in mostSoldProducts %}  {# |slice(0, 2) %} #}
+                                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12">
+                                        <div class="shop-card style-1 hover-aware wow fadeInUp" data-wow-delay="0.6s">
+                                            <div class="dz-media">
+                                                <img src="{{ asset('images/img_product/' ~ mostSoldProduct.photo) }}" alt="">
+                                                <div class="shop-meta">
+                                                    <ul>
+                                                        <li><a href="{{ path('app_produit_show', {'idproduit': mostSoldProduct.idproduit}) }}">Quick View</a></li>
+                                                        <li><a href="{{ path('wishList_add', {'idproduit': mostSoldProduct.idproduit}) }}"><i class="yith-wcwl-icon fa fa-heart"></i></a></li>  
+                                                        <li><a href="{{ path('panier_add', {'idproduit': mostSoldProduct.idproduit}) }}"><i class="fa-solid fa-cart-shopping"></i></a></li>
+                                                    </ul>
+                                                </div> 
+                                                <div class="effect"></div>
+                                            </div>
+                                            <div class="dz-content">
+                                                <h4 class="title"><a href="product-detail.html">{{ mostSoldProduct.name }}</a></h4>
+                                                <p><span class="font-weight-600">$ {{ mostSoldProduct.prix }}</span></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+
                             <style>
                                 .dz-media img {
                                     width: 100%;

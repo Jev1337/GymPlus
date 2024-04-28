@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Produit;
 use App\Form\ProduitType;
+use App\Repository\DetailfactureRepository;
 use App\Repository\ProduitRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use MercurySeries\FlashyBundle\FlashyNotifier;
@@ -47,10 +48,14 @@ class ProduitController extends AbstractController
     // }
 
 
-    public function index(SessionInterface $session ,EntityManagerInterface $entityManager, ProduitRepository $productRepository , PaginatorInterface $paginator , Request $request): Response
+    public function index(SessionInterface $session ,EntityManagerInterface $entityManager, ProduitRepository $productRepository ,DetailfactureRepository $detailfactureRepository, PaginatorInterface $paginator , Request $request): Response
     {
         // Récupérer les trois derniers produits ajoutés
         $latestProducts = $productRepository->findLatestProducts();
+
+        // Récupérer les trois produits les plus vendus
+        $mostSoldProducts = $detailfactureRepository->findMostSoldProducts(3);
+
 
         // Récupérer tous les produits
         // $produits = $entityManager->getRepository(Produit::class)->findAll();
@@ -82,6 +87,7 @@ class ProduitController extends AbstractController
 
         return $this->render('produit/index.html.twig', [
             'latestProducts' => $latestProducts,
+            'mostSoldProducts' => $mostSoldProducts,
             'produits' => $produits,
 
             'items' => $panierWithData,

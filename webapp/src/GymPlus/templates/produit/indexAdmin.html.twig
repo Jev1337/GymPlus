@@ -119,11 +119,11 @@
                                 <tr>
                                     <th> <strong class="text-black" style="font-weight: 600;"> IdProduct</strong> </th>
                                     <th> <strong class="text-black" style="font-weight: 600;"> Name</strong> </th>
+                                    <th> <strong class="text-black" style="font-weight: 600;"> Photo</strong> </th>
                                     <th> <strong class="text-black" style="font-weight: 600;"> Price</strong> </th>
                                     <th> <strong class="text-black" style="font-weight: 600;"> Stock</strong> </th>
                                     <th> <strong class="text-black" style="font-weight: 600;"> Description</strong> </th>
                                     <th> <strong class="text-black" style="font-weight: 600;"> category</strong> </th>
-                                    <th> <strong class="text-black" style="font-weight: 600;"> Photo</strong> </th>
                                     <th> <strong class="text-black" style="font-weight: 600;"> Limit</strong> </th>
                                     <th> <strong class="text-black" style="font-weight: 600;"> Discount</strong> </th>
                                     <th> <strong class="text-black" style="font-weight: 600;"> Actions</strong> </th>
@@ -134,13 +134,13 @@
                                 <tr>
                                     <td> <strong class="text-black" style="font-weight: 600;"> {{ produit.idproduit }} </strong> </td>
                                     <td>{{ produit.name }}</td>
+                                    <td> 
+                                        <img src="{{ asset('images/img_product/' ~ produit.photo) }}" alt="" width="100">
+                                    </td>
                                     <td>{{ produit.prix }}</td>
                                     <td>{{ produit.stock }}</td>
                                     <td>{{ produit.description }}</td>
                                     <td>{{ produit.categorie }}</td>
-                                    <td> 
-                                        <img src="{{ asset('images/img_product/' ~ produit.photo) }}" alt="" width="100">
-                                    </td>
                                     <td>{{ produit.seuil }}</td>
                                     <td>{{ produit.promo }}</td>
                                     <td>

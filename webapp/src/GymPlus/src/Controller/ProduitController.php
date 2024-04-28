@@ -2,10 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Notif;
 use App\Entity\Produit;
 use App\Form\ProduitType;
 use App\Repository\DetailfactureRepository;
 use App\Repository\ProduitRepository;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use MercurySeries\FlashyBundle\FlashyNotifier;
 use SebastianBergmann\Environment\Console;
@@ -118,11 +120,37 @@ class ProduitController extends AbstractController
             $messageFinal = '';
             if (!empty($messageAvertissement)) {
                 $messageFinal .= "Insufficient stock : $messageAvertissement";
+
+                //*****Partie Notif */
+                $notif = new Notif();
+                $notif->setIdProduit($idProduit);
+                $notif->setDescription($messageFinal);
+                $notif->setEtat("Unread");
+                $notif->setTitre("Insufficient stock");
+                $dateAujourdhui = new DateTime();
+                $notif->setDatevente($dateAujourdhui);
+
+                // Enregistrer la livr$notif dans la base de données
+                $entityManager->persist($notif);
+                $entityManager->flush();
+
             }
             $flashy->error($messageFinal);
 
         } else {
             $flashy->success("All products have sufficient stock.");
+            
+            //*****Partie Notif */
+            $notif = new Notif();
+            $notif->setDescription("All products have sufficient stock.");
+            $notif->setEtat("Unread");
+            $notif->setTitre("sufficient stock");
+            $dateAujourdhui = new DateTime();
+            $notif->setDatevente($dateAujourdhui);
+
+            // Enregistrer la livr$notif dans la base de données
+            $entityManager->persist($notif);
+            $entityManager->flush();
         }
     
         return $this->render('produit/indexAdmin.html.twig', [

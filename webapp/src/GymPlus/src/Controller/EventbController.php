@@ -33,6 +33,9 @@ use Endroid\QrCode\Label\Font\NotoSans;
 use Endroid\QrCode\RoundBlockSizeMode;
 use Endroid\QrCode\Writer\PngWriter;
 
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
+
 
 class EventbController extends AbstractController
 {   private $eventParticipantsRepository;
@@ -123,32 +126,31 @@ public function delete($id, ManagerRegistry $registry): Response
     }
     
 #[Route('/eventf', name: 'app_eventsf')]
+
 public function eventf(ManagerRegistry $registry): Response
 {
-    
     /** @var User $user */
     $user = $this->getUser();
 
-    
     $eventParticipantsRepository = $registry->getRepository(EventParticipants::class);
 
-    
     $userId = $user->getId();
     $nextEventDate = $this->eventParticipantsRepository->getNextEventDate($userId);
     
     $blacklist = $registry->getRepository(BlackListed::class)->findOneBy(['idUser' => $user]);
 
     if ($blacklist) {
-        
-        return $this->redirectToRoute('app_home');
+     
+        $this->addFlash('warning', [
+            'message' => 'You are banned until ' . $blacklist->getEndBan()->format('Y-m-d') . '. You cannot access this page.',
+            'redirectUrl' => $this->generateUrl('app_home')
+        ]);
+
     }
 
     $userPoints = $user->getEventPoints();
-  
 
     $events = $registry->getRepository(EventDetails::class)->findFutureEvents();
-    
-   //$events=$eventdetailsRepository->findFutureEvents();
     
     $eventsWithUserStatus = [];
     foreach ($events as $event) {
@@ -209,33 +211,41 @@ public function join($id, ManagerRegistry $registry, BuilderInterface $qrCodeBui
             )
         );
       
-
-    // Create the iCalendar file
     $calendar = new \Eluceo\iCal\Domain\Entity\Calendar([$event]);
     $componentFactory = new \Eluceo\iCal\Presentation\Factory\CalendarFactory();
     $iCalendarComponent = $componentFactory->createCalendar($calendar);
       
-    // Create the QR code
-    $result = Builder::create()
+    
+        $result = Builder::create()
         ->writer(new PngWriter())
         ->writerOptions([])
         ->data((string)$iCalendarComponent)
         ->encoding(new Encoding('UTF-8'))
         ->errorCorrectionLevel(ErrorCorrectionLevel::High)
-        ->size(300)
-        ->margin(10)
+        ->size(300) 
+        ->margin(10)  
         ->roundBlockSizeMode(RoundBlockSizeMode::Margin)
         ->validateResult(false)
         ->build();
 
-    $response = new QrCodeResponse($result);
+    // Save the QR code as an image
+$qrCodePath = $this->getParameter('kernel.project_dir').'/public/main/images/qrcodes/qrcode.png';
 
-    return $response;
-    return $this->redirectToRoute( 'app_eventsf');
-    
+// Check if the directory is writable
+if (!is_writable(dirname($qrCodePath))) {
+    throw new \Exception('The directory is not writable: ' . dirname($qrCodePath));
 }
 
-   
+// Try to save the QR code and catch any errors
+try {
+    $result->saveToFile($qrCodePath);
+} catch (\Exception $e) {
+    throw new \Exception('Failed to save QR code: ' . $e->getMessage());
+}
+    
+        return new JsonResponse(['qrCodePath' => '/main/images/qrcodes/qrcode.png']);
+}
+
 #[Route('/eventf/leave/{id}', name: 'event_leave')]
 public function leaveEvent($id, ManagerRegistry $registry)
 {   /** @var User $user */
@@ -323,50 +333,97 @@ public function rewards(ManagerRegistry $registry, SessionInterface $session): R
 {
     /** @var User $user */
     $user = $this->getUser();
-
+    $userPoints = $user->getEventPoints();
     // Check if the user is in the blacklist
     $blacklist = $registry->getRepository(BlackListed::class)->findOneBy(['idUser' => $user]);
     if ($blacklist) {
         
-       //$this->addFlash('warning', 'You are banned until ' . $blacklist->getEndBan()->format('Y-m-d') . '. You cannot access this page.');
+        $this->addFlash('warning', [
+            'message' => 'You are banned until ' . $blacklist->getEndBan()->format('Y-m-d') . '. You cannot access this page.',
+            'redirectUrl' => $this->generateUrl('app_home')
+        ]);
+        
        
-        // Redirect to a different route (replace 'banned_route' with the actual route name)
-        return $this->redirectToRoute('app_home');
     }
     return $this->render('main\gestion_events\event_hub.html.twig', [
         'controller_name' => 'EventbController',
         'user' => $user,
+        'user_points' => $userPoints,
     ]);
 }
 
 #rewards hub
+
 #[Route('/rewards/whey', name: 'whey')]
-public function claimWhey(Request $request, EntityManagerInterface $entityManager): Response
+public function claimWhey(Request $request, EntityManagerInterface $entityManager,MailerInterface $mailer): Response
 {
     /** @var User $user */
     $user = $this->getUser();
+    $emailu = $user->getEmail();
     
     if ($user->getEventPoints() >= 3500) {
         $user->setEventPoints($user->getEventPoints() - 3500);
-
-       
         $entityManager->persist($user);
         $entityManager->flush();
+        $this->addFlash('success', 'Successfully claimed GymPluswhey!');
 
-        $this->addFlash('claimStatus', 'success');
+
+
+       
+$userInfo = 'ID: ' . $user->getId() . ', First Name: ' . $user->getFirstName() . ', Last Name: ' . $user->getLastName() . ', Username: ' . $user->getUsername();
+
+$result = Builder::create()
+    ->writer(new PngWriter())
+    ->writerOptions([])
+    ->data($userInfo)
+    ->encoding(new Encoding('UTF-8'))
+    ->errorCorrectionLevel(ErrorCorrectionLevel::High)
+    ->size(300) 
+    ->margin(10)  
+    ->roundBlockSizeMode(RoundBlockSizeMode::Margin)
+    ->validateResult(false)
+    ->build();
+
+
+    // Save the QR code as an image
+$qrCodePath = $this->getParameter('kernel.project_dir').'/public/main/images/qrcodes/qrcode1.png';
+
+// Check if the directory is writable
+if (!is_writable(dirname($qrCodePath))) {
+    throw new \Exception('The directory is not writable: ' . dirname($qrCodePath));
+}
+
+// Try to save the QR code and catch any errors
+try {
+    $result->saveToFile($qrCodePath);
+} catch (\Exception $e) {
+    throw new \Exception('Failed to save QR code: ' . $e->getMessage());
+}
+    
+
+
+        $email = (new Email())
+            ->from('gymplus-noreply@grandelation.com')
+            ->to($emailu)
+            ->subject('GymPlus Whey')
+            ->text('Thank you for claiming GymPlus Whey!')
+            ->attachFromPath($qrCodePath); // Attach the QR code
+        $mailer->send($email);
+
     } else {
-        $this->addFlash('claimStatus', 'error');
+        $this->addFlash('error', 'Not enough points');
     }
 
     return $this->redirectToRoute('rewards'); 
 }
 
+
 #[Route('/rewards/belt', name: 'belt')]
-public function claimBelt(Request $request, EntityManagerInterface $entityManager): Response
+public function claimBelt(Request $request, EntityManagerInterface $entityManager,MailerInterface $mailer): Response
 {
     /** @var User $user */
     $user = $this->getUser();
-    
+    $emailu = $user->getEmail();
 
     if ($user->getEventPoints() >= 2500) {
         $user->setEventPoints($user->getEventPoints() - 2500);
@@ -374,23 +431,59 @@ public function claimBelt(Request $request, EntityManagerInterface $entityManage
         // Update user points in the database
         $entityManager->persist($user);
         $entityManager->flush();
+        $this->addFlash('success', 'Successfully claimed GymPlus Belt!');
+        $userInfo = 'ID: ' . $user->getId() . ', First Name: ' . $user->getFirstName() . ', Last Name: ' . $user->getLastName() . ', Username: ' . $user->getUsername();
 
-        $this->addFlash('claimStatus', 'Claim successful');
-        error_log($this->get('session')->getFlashBag()->get('claimStatus'));
+$result = Builder::create()
+    ->writer(new PngWriter())
+    ->writerOptions([])
+    ->data($userInfo)
+    ->encoding(new Encoding('UTF-8'))
+    ->errorCorrectionLevel(ErrorCorrectionLevel::High)
+    ->size(300) 
+    ->margin(10)  
+    ->roundBlockSizeMode(RoundBlockSizeMode::Margin)
+    ->validateResult(false)
+    ->build();
+
+
+    // Save the QR code as an image
+$qrCodePath = $this->getParameter('kernel.project_dir').'/public/main/images/qrcodes/qrcode1.png';
+
+// Check if the directory is writable
+if (!is_writable(dirname($qrCodePath))) {
+    throw new \Exception('The directory is not writable: ' . dirname($qrCodePath));
+}
+
+// Try to save the QR code and catch any errors
+try {
+    $result->saveToFile($qrCodePath);
+} catch (\Exception $e) {
+    throw new \Exception('Failed to save QR code: ' . $e->getMessage());
+}
+    
+
+
+        $email = (new Email())
+            ->from('gymplus-noreply@grandelation.com')
+            ->to($emailu)
+            ->subject('GymPlus Whey')
+            ->text('Thank you for claiming GymPlus Whey!')
+            ->attachFromPath($qrCodePath); // Attach the QR code
+        $mailer->send($email);
     } else {
-        $this->addFlash('claimStatus', 'Not enough points');
-        error_log($this->get('session')->getFlashBag()->get('claimStatus'));
+        $this->addFlash('error', 'Not enough points');
     }
 
     return $this->redirectToRoute('rewards'); // Redirect back to the rewards page
 }
 
 #[Route('/rewards/bag', name: 'bag')]
-public function claimBag(Request $request, EntityManagerInterface $entityManager): Response
+public function claimBag(Request $request, EntityManagerInterface $entityManager,MailerInterface $mailer): Response
 {
     /** @var User $user */
     $user = $this->getUser();
-   
+    $emailu=$user->getEmail();
 
     if ($user->getEventPoints() >= 3000) {
         $user->setEventPoints($user->getEventPoints() - 3000);
@@ -398,11 +491,50 @@ public function claimBag(Request $request, EntityManagerInterface $entityManager
         // Update user points in the database
         $entityManager->persist($user);
         $entityManager->flush();
+        $this->addFlash('success', 'Successfully claimed GymPlus Bag!');
 
-        $this->addFlash('success', 'Claim successful');
-    } else {
-        $this->addFlash('error', 'Not enough points');
-    }
+        $userInfo = 'ID: ' . $user->getId() . ', First Name: ' . $user->getFirstName() . ', Last Name: ' . $user->getLastName() . ', Username: ' . $user->getUsername();
+
+$result = Builder::create()
+    ->writer(new PngWriter())
+    ->writerOptions([])
+    ->data($userInfo)
+    ->encoding(new Encoding('UTF-8'))
+    ->errorCorrectionLevel(ErrorCorrectionLevel::High)
+    ->size(300) 
+    ->margin(10)  
+    ->roundBlockSizeMode(RoundBlockSizeMode::Margin)
+    ->validateResult(false)
+    ->build();
+
+
+    // Save the QR code as an image
+$qrCodePath = $this->getParameter('kernel.project_dir').'/public/main/images/qrcodes/qrcode1.png';
+
+// Check if the directory is writable
+if (!is_writable(dirname($qrCodePath))) {
+    throw new \Exception('The directory is not writable: ' . dirname($qrCodePath));
+}
+
+// Try to save the QR code and catch any errors
+try {
+    $result->saveToFile($qrCodePath);
+} catch (\Exception $e) {
+    throw new \Exception('Failed to save QR code: ' . $e->getMessage());
+}
+    
+
+
+        $email = (new Email())
+            ->from('gymplus-noreply@grandelation.com')
+            ->to($emailu)
+            ->subject('GymPlus Whey')
+            ->text('Thank you for claiming GymPlus Whey!')
+            ->attachFromPath($qrCodePath); // Attach the QR code
+        $mailer->send($email);
+            } else {
+                $this->addFlash('error', 'Not enough points');
+            }
 
     return $this->redirectToRoute('rewards'); // Redirect back to the rewards page
  }
@@ -496,7 +628,7 @@ public function rateEvent($id, Request $request, EventParticipantsRepository $ev
         $this->addFlash('error', 'No event selected. Please select an event to rate');
     }
 
-    return $this->redirectToRoute('app_eventsf');
+    return $this->redirectToRoute('past_events');
 }
 
 #[Route('/past-events-history', name: 'past_events_history')]

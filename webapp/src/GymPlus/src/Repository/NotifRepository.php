@@ -21,6 +21,15 @@ class NotifRepository extends ServiceEntityRepository
         parent::__construct($registry, Notif::class);
     }
 
+    public function findDetailsWithCondition(): array
+    {
+        return $this->createQueryBuilder('n')
+            ->andWhere('n.etatCommentaire = :etatCommentaire')
+            ->setParameter('etatCommentaire', 'yes')
+            ->getQuery()
+            ->getResult();
+    }
+
 //    /**
 //     * @return Notif[] Returns an array of Notif objects
 //     */

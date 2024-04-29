@@ -190,5 +190,9 @@ class EventDetails
 
         return $this;
     }
+    public function getEventEndDate(): ?\DateTime
+    {
+        return $this->eventDate->modify('+'.$this->duree.' minutes');
+    }
 
 }

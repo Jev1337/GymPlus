@@ -616,19 +616,17 @@ public function rateEvent($id, Request $request, EventParticipantsRepository $ev
         // Get the rating from the request
         $rating = $request->request->get('rating');
 
-        // Set the rating
-        $eventParticipant->setRate($rating);
+        // Convert the rating to an integer
+        $rating = filter_var($rating, FILTER_VALIDATE_INT);
 
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->persist($eventParticipant);
-        $entityManager->flush();
-
-        $this->addFlash('success', 'Rating submitted. Thank you for rating ' . $event->getName());
-    } else {
-        $this->addFlash('error', 'No event selected. Please select an event to rate');
-    }
+        // If the conversion failed, add a flash message and redirect
+        if ($rating === false) {
+            $this->addFlash('error', 'Invalid rating. Please enter a valid number.');
+            return $this->redirectToRoute('past_events');
+        }
 
     return $this->redirectToRoute('past_events');
+}
 }
 
 #[Route('/past-events-history', name: 'past_events_history')]

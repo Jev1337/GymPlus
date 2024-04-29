@@ -41,12 +41,15 @@ public function getNextEventDate($userId)
         SELECT ed.event_date as date 
         FROM event_participants ep
         INNER JOIN event_details ed ON ep.event_details_id = ed.id
-        WHERE ep.user_id = :userId
+        WHERE ep.user_id = :userId AND ed.event_date >= :current_Date
         ORDER BY ed.event_date ASC
         LIMIT 1
     ';
 
-    $stmt = $conn->executeQuery($sql, ['userId' => $userId]);
+    $stmt = $conn->executeQuery($sql, [
+        'userId' => $userId,
+        'current_Date' => (new \DateTime())->format('Y-m-d H:i:s'),
+    ]);
 
     // Fetch the result as an associative array
     $result = $stmt->fetchAssociative();

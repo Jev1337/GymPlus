@@ -1,0 +1,113 @@
+{% extends "main/base.html.twig" %}
+{% block content %}
+    <!-- Banner  -->
+    <div class="dz-bnr-inr style-2" style="background-image: url('{{ asset('main/images/banner/banner-2.png') }}')">
+        <div class="banner-gradient"></div>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="dz-bnr-inr-entry">
+                        <h1>
+                            Chat
+                        </h1>
+                        <!-- Breadcrumb Row -->
+                        <nav aria-label="breadcrumb" class="breadcrumb-row">
+                            <ul class="breadcrumb">
+                                <li class="breadcrumb-item">
+                                    <a href="index.html">
+                                        Home
+                                    </a>
+                                </li>
+                                <li class="breadcrumb-item active" aria-current="page">
+                                    CHAT
+                                </li>
+                            </ul>
+                        </nav>
+                    <!-- Breadcrumb Row End -->
+                    </div>
+                </div>
+            </div>
+            <div class="banner-media">
+                <img src="{{ asset('main/images/banner/pic4.png') }}" alt="/"></div>
+            </div>
+        </div>
+        <!-- Banner End -->
+        <div class="page-content bg-white">
+            <section class="content-inner">
+                <div class="container align-items-center" style="width: 60rem;">
+                    <!-- For demo purpose-->
+                    <div class="row rounded-lg overflow-hidden shadow d-flex">
+                        <!-- Users box-->
+                        <div class="bg-white px-4 py-2 bg-light">
+                            <p class="h5 mb-0 py-1">
+                                Recent
+                            </p>
+                        </div>
+                        <div style="width: 25rem">
+                            <div class="bg-white d-flex flex-column">
+                                <div class="border-top pt-2 d-flex flex-column gap-3" style="height: 510px; overflow-y: scroll;">
+                                    {% for conversation in conversations %}                    
+                                        <a href="{{ path('get_message', {'id': conversation.id}) }}" class="list-group-item list-group-item-action border-bottom pb-2">
+                                            <div class="d-flex flex-column">
+                                                <div class="d-flex align-items-center justify-content-between pl-3">
+                                                    <div class="d-flex align-items-center gap-3">
+                                                        {% if conversation.lastMessage.user.photo != null %}
+                                                            <img src="{{asset('profileuploads/' ~ conversation.lastMessage.user.photo )}}" alt="user" width="50" class="rounded-circle">
+                                                        {% else %}
+                                                            <img src="https://bootstrapious.com/i/snippets/sn-chat/avatar.svg" alt="user" width="50" class="rounded-circle">
+                                                        {% endif %}
+                                                        <h6 class="mb-0">
+                                                            {{ conversation.lastMessage.user.username}}
+                                                        </h6>
+                                                    </div>
+                                                        <small class="small font-weight-bold">
+                                                        {{ conversation.lastMessage.createdAt | date}}
+                                                        </small>
+                                                </div>
+                                                <p class="font-italic mb-0 text-small">
+                                                {{ conversation.lastMessage.content}}
+                                                </p>
+                                            </div>
+                                        </a>         
+                                    {% endfor %} 
+                                </div>
+                            </div>
+                        </div>
+                                <!-- Chat Box-->
+                                <div style="width: 35rem">
+                                    <div class="border-top pt-3 d-flex flex-column gap-3" style="height: 510px; overflow-y: scroll;">
+                                        <!-- Sender Message-->
+                                        
+                                    </div>
+                                    <form action="#">
+                                        <div class="input-group align-items-center">
+                                            <input type="text" placeholder="Type a message" class="form-control rounded input-group">
+                                                <div class="input-group-append">
+                                                    <button id="button-addon2" type="submit" class="btn btn-link">
+                                                        <i class="fa fa-paper-plane"></i>
+                                                    </button>
+                                                </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                              
+                                
+                            
+                                    <!-- Typing area -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+                            </div>
+    
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    const eventSource = new EventSource("{{ mercure('https://localhost/books/1')|escape('js') }}");
+    eventSource.onmessage = event => {
+        // Will be called every time an update is published by the server
+        console.log(JSON.parse(event.data));
+    }
+</script>
+{% endblock %}

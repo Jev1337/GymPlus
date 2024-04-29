@@ -9,9 +9,12 @@ use App\Repository\FactureRepository;
 #[ORM\Entity(repositoryClass: FactureRepository::class)]
 class Facture
 {
+    // #[ORM\Id]
+    // #[ORM\GeneratedValue]
+    // #[ORM\Column]
     #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(name: 'idFacture', type: 'integer')]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private ?int $idfacture;
 
     #[ORM\Column]
@@ -23,8 +26,13 @@ class Facture
     #[ORM\Column]
     private ?string $methodedepaiement;
 
-   #[ORM\ManyToOne(targetEntity: User::class)]
-    private $id;
+  
+//    #[ORM\ManyToOne(targetEntity: User::class)]
+//    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')]
+   #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'factures')]
+   #[ORM\JoinColumn(name: 'id', referencedColumnName: 'id', nullable: false)]
+
+    private $user;//id;
 
     public function getIdfacture(): ?int
     {
@@ -69,15 +77,28 @@ class Facture
 
     public function getId(): ?User
     {
-        return $this->id;
+        return $this->user;//id;
     }
 
-    public function setId(?User $id): static
+    public function setId(?User $user): static
     {
-        $this->id = $id;
+        $this->user = $user;
 
         return $this;
     }
 
+    public function __construct()
+    {
+        $this->datevente = new \DateTime();
+
+        //$this->ListeDetails = new ArrayCollection();
+
+        
+    }
+
+    public function __toString(): string
+    {
+        return $this->getIdfacture();
+    }
 
 }

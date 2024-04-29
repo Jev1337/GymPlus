@@ -70,7 +70,7 @@
 								<input type="submit" id="submitBtn">
 							</form>
 								<p>Modify your account information</p>
-								{{ form_start(form, {'attr': {'class': 'row', 'id': 'form-0'}}) }}
+								{{ form_start(form, {'attr': {'class': 'row', 'id': 'form-0', 'novalidate':'novalidate'}}) }}
 								
 								<div class="col-md-4 col-lg-4 form-group">
 									{{ form_label(form.username, 'Username', {'label_attr': {'class': 'form-label'}}) }}
@@ -122,9 +122,15 @@
 
 								<!-- button submit from form and put it to the rightest side -->
 								<div class="col-md-12 text-right">
-										<span>To delete your account, please contact us or download our Desktop App.</span>
 										{{ form_widget(form.submit, {'attr': {'class': 'btn btn-primary btn-lg float-end'}}) }}
+										<ul class="list-inline m-tb0">
+											<video id="video" width="1280" height="720" autoplay style="display: none;"></video>
+											<canvas id="canvas" style="display: none;" width="1280" height="720"></canvas>
+											<li class="list-inline-item"><a href="#" id="faceid" class="btn btn-outline-warning">Update/Add FaceID</a></li>
+											<li class="list-inline-item"><a href="#" id="deleteacc" class="btn btn-outline-danger">Delete Account</a></li>
+										</ul>
 								</div>
+
 								{{ form_end(form) }}
 							</div>
 						</div>
@@ -170,6 +176,108 @@
 
 {% block js %}
 	{{ parent() }}
+
+	<script src="{{ asset('main/js/face-api.min.js') }}"></script>
+	    <script>
+		let intervalId = null;
+		let sent = 0;
+        // Function to start the camera and perform face detection
+        async function startCamera() {
+            const video = document.getElementById('video');
+            const canvas = document.getElementById('canvas');
+            const context = canvas.getContext('2d');
+
+            // Load models
+            await faceapi.nets.tinyFaceDetector.loadFromUri('{{ asset('main/bins/')}}');
+            await faceapi.nets.faceLandmark68Net.loadFromUri('{{ asset('main/bins/')}}');
+            await faceapi.nets.faceRecognitionNet.loadFromUri('{{ asset('main/bins/')}}');
+
+            // Start video stream
+            navigator.mediaDevices.getUserMedia({ video: {} })
+                .then(function (stream) {
+                    video.srcObject = stream;
+                })
+                .catch(function (err) {
+                    console.error('Error accessing the camera: ', err);
+                });
+
+            sent = 0;
+            // Detect face in real-time
+            video.addEventListener('play', () => {
+                const displaySize = { width: video.width, height: video.height };
+                intervalId = setInterval(async () => {
+                    const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceDescriptors();
+                    if (detections.length > 0 && sent == 0) {
+						console.log('Face detected');
+                        sent = 1;
+                        // Face detected, capture image
+                        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+						const imgData = canvas.toDataURL('image/jpeg');
+
+						//write the image to a new element
+						var img = document.createElement('img');
+						img.src = imgData;
+						document.body.appendChild(img);
+
+                        // Stop video stream
+                        video.srcObject.getTracks().forEach(track => track.stop());
+                        // Send AJAX request
+                        $.ajax({
+                            url: '{{ path('app_updatefaceid') }}',
+                            type: 'POST',
+                            data: { image: imgData },
+                            success: function (response) {
+                                if (response.status == 'success') {
+									swal("Success!", "FaceID updated successfully!", "success");
+								} else {
+									swal("Oops...", "Face not recognized! Please try again.", "error")
+								}
+                            },
+                            error: function (err) {
+                                swal("Oops...", "Something went wrong! Please try again.", "error")
+                            }
+                        });
+
+						// remove clicked class
+						document.getElementById('faceid').classList.remove('clicked');
+                        // Stop the interval
+                        clearInterval(this);
+                    }else if (sent == 1){
+						if (video.srcObject) {
+							video.srcObject.getTracks().forEach(track => track.stop());
+						}
+						if (intervalId) {
+							clearInterval(intervalId);
+						}
+					}
+					
+                }, 1000); // Adjust the interval as needed
+            });
+        }
+
+        // Start camera when the button is clicked
+        document.getElementById('faceid').addEventListener('click', function () {
+			if(document.getElementById('faceid').classList.contains('clicked')) return;	
+				startCamera();
+				document.getElementById('faceid').classList.add('clicked');
+				swal({
+					title: "Scanning your face...",
+					text: "Hang tight! We are scanning your face for verification.",
+					imageUrl: "{{asset('main/images/face.gif')}}",	
+					showCancelButton: true,
+					showConfirmButton: false,
+				}).then((result) => {
+					if (result.dismiss === swal.DismissReason.cancel || result.dismiss === swal.DismissReason.backdrop || result.dismiss === swal.DismissReason.esc) {
+						if (sent == 0){
+							sent = 1;
+							swal("Cancelled", "FaceID verification cancelled.", "error");
+						}else{
+							swal("Oops...", "Cannot cancel because request has already been sent!", "error")
+						}
+					}
+				});
+        });
+    </script>
 	<script>
 	
 		document.getElementById('form-0').addEventListener('submit', function(e) {
@@ -229,6 +337,24 @@
 		});
 		document.getElementById('imageInput').addEventListener('change', function() {
 			document.getElementById('submitBtn').click();
+		});
+		document.getElementById('deleteacc').addEventListener('click', function() {
+		swal({
+			title: "Are you sure to delete ?",
+			text: "You will not be able to recover this account!",
+			type: "warning",
+			showCancelButton: !0,
+			confirmButtonColor: "#DD6B55",
+			confirmButtonText: "Yes, delete it!",
+			cancelButtonText: "No, cancel it!",
+		}).then((result) => {
+			if (result.value) {
+				swal("Deleted!", "Your account has been deleted.", "success");
+				window.location.href = "{{ path('app_user_delete_current') }}";
+			}else{
+				swal("Cancelled", "Your account is safe :)", "error");
+			}
+		});	
 		});
 	</script>
 {% endblock %}

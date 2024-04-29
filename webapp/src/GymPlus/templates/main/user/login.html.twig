@@ -1,8 +1,17 @@
 
 {% extends "main/base.html.twig" %}
+{% block  css %}
+{{ parent() }}
+<style>
+.grecaptcha-badge {
+	z-index:999;
+}
+</style>
+{% endblock %}
+
 {% block content%}
 	<div class="page-content bg-white">
-
+ 	
 		<section class="p-0 overflow-hidden">
 			<div class="row">
 				<div class="col-xxl-6 col-xl-6 col-lg-6 col-md-12 p-a0">
@@ -62,7 +71,7 @@
 						{% endfor %}
 						<div class="tab-content nav">
 							
-							{{ form_start(form, {'attr': {'class': 'tab-pane active col-12', 'id': 'login'} }) }}
+							{{ form_start(form, {'attr': {'class': 'tab-pane active col-12', 'id': 'login', 'novalidate':'novalidate'} }) }}
 							<div class="m-b30">
 								<label class="label-title">Email Address</label>
 								{{ form_widget(form.email, {'attr': {'class': 'form-control', 'placeholder': 'Email Address'}}) }}
@@ -86,29 +95,59 @@
 									<label class="form-check-label" for="basic_checkbox_1">Remember Me</label>
 								</div>
 							</div>
+							
 							<div class="text-center">
 
 								{{ form_widget(form.submit, {'attr': {'class': 'btn btn-primary m-b15 w-100', 'value': 'Login'} } ) }}
-								<!-- button with a face icon -->
+								<div class="row mt-3">
+									<div class="col-md-4">
+										<hr>
+									</div>
+									<div class="col-md-4">
+										<h5 class="text-center text-white">OR</h5>
+									</div>
+									<div class="col-md-4">
+										<hr>
+									</div>
+								</div>
+								<script src="https://accounts.google.com/gsi/client" async defer></script>
+								<div id="g_id_onload" 
+									data-client_id="767861281457-q8k0trd5fdj0jvgcf63lnclkqllkdt1e.apps.googleusercontent.com"
+									data-login_uri="/api/googleauthcallback"
+									data-auto_prompt="false">
+								</div>
+								<div class="g_id_signin"
+									data-width="362"
+									data-type="standard"
+									data-size="large"
+									data-theme="outline"
+									data-text="sign_in_with"
+									data-shape="rectangular"
+									data-logo_alignment="left">
+								</div>
 								<a href="#" class="btn" id="faceid"><img src="{{asset('main/images/Face_ID_logo.svg.png')}}" alt="Face ID" style="width: 40px; height: 40px;"></a>
 								<br>
 								<video id="video" width="1280" height="720" autoplay style="display: none;"></video>
 								<canvas id="canvas" style="display: none;" width="1280" height="720"></canvas>
-								<a href="javascript:void(0);" class="btn-link">Don’t have account?<span> Sign Up</span></a> 
+								<a href="{{path('app_signup')}}" class="btn-link">Don’t have account?<span> Sign Up</span></a> 
 							</div>
 							
         					
 							{{ form_end(form) }}
-							<form id="forgot-password" class="tab-pane fade  col-12 text-center">
+							<form id="forgot-password" class="tab-pane fade col-12 text-center" action="{{path('app_resetpw')}}" method="POST">
 								<h4 class="m-b5 text-white">Forget Password ?</h4>
-								<small class="font-weight-600 m-b20 d-block text-white">We will send you an email to reset your password. </small>
+								<small class="font-weight-600 m-b20 d-block text-white">We will send you a code to apply your new password. </small>
 								<div class="mb-3">
-									<label class="label-title">E-MAIL *</label>
-									<input name="dzName" required="" class="form-control" placeholder="Your Email Id" type="email">
+									<label class="label-title">Phone Number *</label>
+									<input id="phone" name="phone" required="" class="form-control" placeholder="+216" type="number">
+									<br>
+									<input id="pw" name="password" required="" class="form-control" placeholder="New Password" type="password" pattern = "(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters">
+									<br>
+									<input id="confpw" name="confpassword" required="" class="form-control" placeholder="New Password Confirmation" type="password">
 								</div>
 								<div class="text-center"> 
 									<a class="btn btn-light m-r10 rounded-0" data-bs-toggle="tab" href="#login">Back</a>
-									<button class="btn btn-primary rounded-0">Submit</button>
+									<button type="button" id="btnreset" class="btn btn-primary rounded-0">Submit</button>
 								</div>
 							</form>
 						</div>
@@ -241,5 +280,68 @@
 			});
         });
     </script>
+
+	<script>
+		document.getElementById('btnreset').addEventListener('click', function (e) {
+			if (document.getElementById('pw').value != document.getElementById('confpw').value) {
+				swal("Oops...", "Passwords do not match!", "error")
+				return;
+			}
+			xhr = new XMLHttpRequest();
+			xhr.open('POST', '/api/numberexist?phone=' + document.getElementById('phone').value, false);
+			xhr.send();
+			if (xhr.status == 200) {
+				var jsonResponse = JSON.parse(xhr.responseText);
+				if (jsonResponse["exists"] == false) {
+					swal("Oops...", "Phone number does not exist!", "error");
+					return;
+				}
+			}
+
+			const phoneNumber = document.getElementById('phone').value;
+			$.ajax({
+				url: '/api/sendSms?phone=' + phoneNumber,
+				type: 'GET',
+				success: function (response) {
+					 Swal.fire({
+						title: "Please enter the code sent to your phone number",
+						input: "text",
+						inputAttributes: {
+							autocapitalize: "off"
+						},
+						showCancelButton: true,
+						confirmButtonText: "Confirm Password Change",
+						showLoaderOnConfirm: true,
+						preConfirm: async (code) => {
+							try {
+							const url = `
+								/api/verifyPhone?phone=${phoneNumber}&code=${code}
+							`;
+							const response = await fetch(url);
+							if (!response.ok) {
+								return Swal.showValidationMessage(`
+								${JSON.stringify(await response.json())}
+								`);
+							}
+							return response.json();
+							} catch (error) {
+							Swal.showValidationMessage(`
+								Request failed: ${error}
+							`);
+							}
+						},
+						allowOutsideClick: () => !Swal.isLoading()
+						}).then((result) => {
+							if (result.value.status == "success") {
+								document.getElementById('forgot-password').submit();
+							}
+						});
+				},
+				error: function (err) {
+					swal("Oops...", "Something went wrong! Please try again.", "error")
+				}
+			});
+		});
+	</script>
 
 {% endblock %}

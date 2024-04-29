@@ -29,6 +29,17 @@
         <section class="content-inner">
             <div class="container">
                 <div class="row justify-content-center gap-5">
+                {% for message in app.flashes('success') %}
+                    <div class="alert alert-success">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+                {% for message in app.flashes('error') %}
+                    <div class="alert alert-danger">
+                        {{ message }}
+                    </div>
+                {% endfor %} 
+                
                 <div class="container d-grid shadow p-3 m-5 rounded align-items-center" style="width: 60rem; height: 14rem; ">
                 {{ form_start(form) }}
                     <div class="d-flex flex-column gap-3">
@@ -40,12 +51,12 @@
                                 </h5>
                             </div>
                         </div>
-                        {{ form_widget(form.content, {'attr': {'class': 'form-control rounded', 'placeholder': 'Express your thoughts' }}) }}
-
+                        {{ form_widget(form.content, {'attr': {'class': 'form-control rounded input-group', 'placeholder': 'Express your thoughts' }}) }}
+						
                         <div class="d-grid gap-3 d-md-flex justify-content-md-start" style="height: 2.5rem;">
-                            {{ form_widget(form.imageFile) }}
-                            {{ form_widget(form.post, {'attr': {'class': 'btn h-3 btn-outline-primary rounded'}}
-                            ) }}
+                            {{ form_widget(form.photo) }}
+                            {{ form_widget(form.post, {'attr': {'class': 'btn btn-outline-primary rounded'}}) }}
+                            
                         </div>
                         
                     </div>
@@ -69,7 +80,7 @@
                                                 
                                             </div>
                                         </div>
-                                        {% if post.idUser == app.user.id %}
+                                        {% if post.idUser == app.user.id or app.user.role == "admin" %}
                                             <div class="d-flex gap-3">
                                             <a class="" href="{{ path('update_post', {'id': post.id}) }}" aria-expanded="false">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
@@ -82,14 +93,21 @@
                                                     <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
                                                 </svg>
                                             </a>
-                                            </div>
+                                        </div>
+                                        {% else %}
+                                        <a class="" href="{{ path('add_complaints', {'id': post.id}) }}" aria-expanded="false">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-circle" viewBox="0 0 16 16">
+                                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                            <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
+                                          </svg>
+                                        </a>
                                         {% endif %}
                                     </div>
                                     <p class="card-text mt-3">
                                         {{ post.content }}
                                     </p>
                                     {% if post.photo != "" %}
-                                        <img class="rounded card-img-top" style="height: 30rem; object-fit: contain;" src="{{ vich_uploader_asset(post, 'imageFile') }}" />
+                                        <img class="rounded card-img-top" style="height: 30rem; object-fit: contain;" src="{{asset('profileuploads/' ~ post.photo)}}" />
                                     {% endif %}
                                     <div class="d-flex justify-content-between py-3" style="border-bottom: 1px solid #F1EFEF;">
                                         <div >

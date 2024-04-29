@@ -24,17 +24,32 @@ class PostController extends AbstractController
         $user = $this->getUser();
         $post = new Post();
         $form = $this->createForm(PostType::class, $post); //bch thot les info mte3i ml formulaire lel $author
+        // $showError = false;
         
         $form->handleRequest($req); //bch te5ou request eli tbaathet mel form
-        if ($form->isSubmitted() && $form->isValid()) {
-            $post->setDate($dateImmutable);
-            $post->setUser($user);
-            
-            $post->setNbComnts(0);
-            $post->setLikes(0);
-            $em->persist($post);
-            $em->flush();
-            return $this->redirectToRoute('getAll_post');
+        if ($form->isSubmitted()) {
+            if (!$form->isValid()) {
+                    $this->addFlash('error', 'You can not add an empty post!');
+            }else{
+                $post->setDate($dateImmutable);
+                $post->setUser($user);
+
+                $photo = $form['photo']->getData();
+                if ($photo) {
+                    $filename = 'USERIMG' . $user->getId() . '.' . $photo->guessExtension();
+                    $targetdir = $this->getParameter('kernel.project_dir') . '/public/profileuploads/';
+                    $photo->move($targetdir, $filename);
+                    $post->setPhoto($filename);
+                }else{
+                    $post->setPhoto('');
+                }
+                $post->setNbComnts(0);
+                $post->setLikes(0);
+                $em->persist($post);
+                $em->flush();
+                return $this->redirectToRoute('getAll_post');
+            }
+           
         }
         //affichage 
 
@@ -47,7 +62,7 @@ class PostController extends AbstractController
         
         return $this->renderForm('main/post/index.html.twig', [
             'posts' => $posts,
-            'form' => $form,
+            'form' => $form
         ]);
     }
     
@@ -62,12 +77,13 @@ class PostController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $em->persist($post);
             $em->flush();
+
             return $this->redirectToRoute('getAll_post');
         }
 
         return $this->renderForm('main/post/addNewPost.html.twig', [
             "form" => $form,
-            // "user" => $user
+            "post" => $post
         ]);
     }
     #[Route('/post/delete/{id}', name: 'delete_post')]
@@ -80,8 +96,11 @@ class PostController extends AbstractController
         $comntController->deleteByIdPost($repc, $id, $manager);
         $em->remove($post);
         $em->flush();
-
-        return $this->redirectToRoute('getAll_post');
+        if ($this->getUser()->getRoles() === "admin") {
+            return $this->redirectToRoute('show_complaints');
+        }else{
+            return $this->redirectToRoute('getAll_post');
+        }
     }
 
     public function updateNbComnt(CommentaireRepository $crep, $post, PostRepository $rep, ManagerRegistry $manager)
@@ -92,4 +111,7 @@ class PostController extends AbstractController
         $em->persist($post);
         $em->flush();
     }
+
+    
+
 }

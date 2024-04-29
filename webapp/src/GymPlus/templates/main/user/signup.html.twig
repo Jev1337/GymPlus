@@ -30,7 +30,50 @@
 		
 		<section class="appointment-page-1 content-inner-1">
 			<div class="container">
-				<a href="{{path('app_login')}}" class="btn btn-primary btn-lg btn-block">Have an account? Click here to Login</a>
+
+				<div class = "row">
+					<div class="col-md-12">
+						<h2 class="m-b10">Create Your Account</h2>
+						<p class="m-b30">Please fill in the form below to create your account. <a href="{{path('app_login')}}" >Have an account? Click here to Login</a></p> 
+					</div>
+				</div>
+				<!-- align center the following div using row and cols -->
+				<div class="row">
+					<div class="col-md-4">
+						
+					</div>
+					<div class="col-md-8 mb-3">
+										<script src="https://accounts.google.com/gsi/client" async defer></script>
+				<div id="g_id_onload" 
+					data-client_id="767861281457-q8k0trd5fdj0jvgcf63lnclkqllkdt1e.apps.googleusercontent.com"
+					data-login_uri="/api/googleauthcallback"
+					data-auto_prompt="false">
+				</div>
+				<div class="g_id_signin"
+					
+					data-width="362"
+					data-type="standard"
+					data-size="large"
+					data-theme="outline"
+					data-text="continue_with"
+					data-shape="rectangular"
+					data-logo_alignment="left">
+				</div>
+					</div>
+				</div>
+				<!-- OR divider -->
+				<div class="row">
+					<div class="col-md-4">
+						<hr>
+					</div>
+					<div class="col-md-4">
+						<h5 class="text-center">OR</h5>
+					</div>
+					<div class="col-md-4">
+						<hr>
+					</div>
+				</div>
+				
 				<br>
 					<div class="alert alert-danger" style="display: none;" id="error">
 						<i class="fa-solid fa-exclamation-circle"></i> <span id="error-message">test</span>
@@ -91,7 +134,7 @@
 							<p class="m-b30">Please provide your details in the form below to proceed with your signup. You will confirm your phone number in the next step.</p>
 							
 							
-								{{ form_start(form, {'attr': { 'id': 'form-0', 'class' : 'row'}}) }}
+								{{ form_start(form, {'attr': { 'id': 'form-0', 'class' : 'row', 'novalidate': 'novalidate'}}) }}
 								<div class="col-md-2 col-lg-2 form-group">
 									{{ form_label(form.id, 'CIN', {'label_attr': {'class': 'form-label'}}) }}
 									<div class="input-group input-line">

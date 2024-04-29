@@ -25,16 +25,48 @@ use Karser\Recaptcha3Bundle\Validator\Constraints\Recaptcha3Validator;
 use Symfony\Component\Mime\Part\DataPart;
 use Symfony\Component\Mime\Part\Multipart\FormDataPart;
 use GuzzleHttp\Client as GuzzleClient;
-
+use App\Entity\AbonnementDetails;
+use App\Form\GPPricesType;
+use App\Repository\MaintenancesRepository;
+use Google_Service_Oauth2;
+use Google_Client;
 
 class UserController extends AbstractController
 {
-    #[Route('/dashboard/home', name: 'app_dashboard')]
-    public function dashboard(): Response
+    #[Route('/', name: 'app_indexred')]
+    public function indexred(): Response
     {
-    
+        return $this->redirectToRoute('app_home');
+    }
+    #[Route('/dashboard/home', name: 'app_dashboard')]
+    public function dashboard(UserRepository $repoUser, AbonnementRepository $repoAbon, MaintenancesRepository $repoMaint ): Response
+    {
+        $stats = [
+            ['title' => 'User Count', 'content' => $repoUser->getUserCount(), 'percent' => '100'],
+            ['title' => 'Active Membership Count', 'content' => $repoAbon->getActiveMembershipCount(),'percent' => '100'],
+            ['title' => 'Active Membership Percent', 'content' => $repoAbon->getActiveMembershipPercent(), 'percent' => $repoAbon->getActiveMembershipPercent()],
+            ['title' => 'Event Count', 'content' => '', 'percent' => '100'] // Replace with actual event count
+        ];
+
+        $barchart1 = $repoMaint->getEachMonthMaintenancesCount();
+        // $barchart2 = eventchart
+
+        $start = microtime(true);
+        $res = $repoUser->findUserById($this->getUser()->getId());
+        $end = microtime(true);
+        $dblatency = $end - $start;
+        // trunc to 3 decimal places
+        $dblatency = round($dblatency*1000, 2);
+        
+        $gpc = $repoAbon->getArrayGPCount();
+
         return $this->render('dashboard/index.html.twig', [
             'controller_name' => 'UserController',
+            'stats' => $stats,
+            'barchart1' => $barchart1,
+            'barchart2' => [],
+            'dblatency' => $dblatency,
+            'gpc' => $gpc
         ]);
     }
 
@@ -91,12 +123,12 @@ class UserController extends AbstractController
         if (!$phone) {
             return new Response('Invalid Phone Number', 400);
         }
-        $sid = "ACa0a9c02e124f285821fe62b736260421";
-        $token = "e8cd361a90ce0dbcd5485d5719f935fb";
+        $sid = "AC6dc66bc270d75e383b6b6faedf1a7805";
+        $token = "8ef079e198d30e29784c3f5c3840dbc8";
         $twilio = new Client($sid, $token);
-        $verification = $twilio->verify->v2->services("VA10dd8bfd053741ce7361fd967c83a1e6")
+        $verification = $twilio->verify->v2->services("VA1a9fc1403057f6ddc645002f416c50bc")
                                    ->verifications
-                                   ->create("whatsapp:+216". $phone, "whatsapp");
+                                   ->create("sms:+216". $phone, "sms");
         return new Response($verification->status, 200);
     }
 
@@ -108,12 +140,12 @@ class UserController extends AbstractController
         if (!$phone || !$code) {
             return new Response('Invalid Phone Number or Code', 400);
         }
-        $sid = "ACa0a9c02e124f285821fe62b736260421";
-        $token = "e8cd361a90ce0dbcd5485d5719f935fb";
+        $sid = "AC6dc66bc270d75e383b6b6faedf1a7805";
+        $token = "8ef079e198d30e29784c3f5c3840dbc8";
         $twilio = new Client($sid, $token);
-        $verificationCheck = $twilio->verify->v2->services("VA10dd8bfd053741ce7361fd967c83a1e6")
+        $verificationCheck = $twilio->verify->v2->services("VA1a9fc1403057f6ddc645002f416c50bc")
                                    ->verificationChecks
-                                   ->create(["to"=> "whatsapp:+216. " . $phone, "code" => $code]);
+                                   ->create(["to"=> "sms:+216. " . $phone, "code" => $code]);
         if ($verificationCheck->status == 'approved') {
             return new JsonResponse(['status' => 'success'], 200);
         }
@@ -174,13 +206,9 @@ class UserController extends AbstractController
             if(!$form->isValid()){
                 $this->addFlash('error', 'There was an error with the form, please check the fields and try again!');
             }else{
-                
-                    
                 $usersig = $form->getData();
                 $usersig->setPassword(password_hash($usersig->getPassword(), PASSWORD_BCRYPT));
                 $usersig->setRole('client');
-
-                
                 if ($request->get('faceid') != null && $request->get('faceid') != '' && $request->get('faceid') != 'undefined'){
                     $usersig->setFaceid($request->get('faceid'));
                     $usersig->setFaceidTs(new \DateTime());
@@ -281,7 +309,7 @@ class UserController extends AbstractController
 
 
     #[Route('/member/subscriptions', name: 'app_subs')]
-    public function subscriptions(AbonnementRepository $repo): Response
+    public function subscriptions(AbonnementRepository $repo, AbonnementDetailsRepository $repo0): Response
     {
 
         if ($repo->isUserSubscribed($this->getUser()->getId())) {
@@ -295,7 +323,9 @@ class UserController extends AbstractController
         
         return $this->render('main/user/subscriptions.html.twig', [
             'controller_name' => 'UserController',
-
+            'gp1price' => $repo0->getAbonnementPriceByName('GP 1'),
+            'gp2price' => $repo0->getAbonnementPriceByName('GP 2'),
+            'gp3price' => $repo0->getAbonnementPriceByName('GP 3')
         ]);
     }
 
@@ -478,56 +508,85 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/dashboard/deleteuser/{id}', name: 'app_user_delete')]
+    #[Route('/api/deleteuser/{id}', name: 'app_user_delete')]
     public function deleteUser(UserRepository $repo, $id, ManagerRegistry $reg): Response
     {
         $userdel = $repo->findUserById($id);
         if (!$userdel) {
-            return $this->redirectToRoute('app_usermgmt');
+            return new JsonResponse(['status' => 'error'], 400);
         }
         $reg->getManager()->remove($userdel);
         $reg->getManager()->flush();
         if ($this->getUser()->getId() == $userdel->getId()) {
             $this->get('security.token_storage')->setToken(null);
             $this->get('session')->invalidate();
-            return $this->redirectToRoute('app_login');
+            return new JsonResponse(['status' => 'success'], 200);
         }
-        return $this->redirectToRoute('app_usermgmt');
+        return new JsonResponse(['status' => 'success'], 200);
+    }
+
+    #[Route('/api/deletecurrentuser/', name: 'app_user_delete_current')]
+    public function deleteCurrentUser(UserRepository $repo, ManagerRegistry $reg): Response
+    {
+        $userdel = $this->getUser();
+        if (!$userdel) {
+            return $this->redirectToRoute('app_usermgmt');
+        }
+        $reg->getManager()->remove($userdel);
+        $reg->getManager()->flush();
+        $this->get('security.token_storage')->setToken(null);
+        $this->get('session')->invalidate();
+        return $this->redirectToRoute('app_login');
     }
 
     #[Route('/dashboard/subscriptions', name: 'app_submgmt')]
-    public function subscriptionManagement(AbonnementRepository $repo0, UserRepository $repo1): Response
+    public function subscriptionManagement(AbonnementRepository $repo0, AbonnementDetailsRepository $repo2, UserRepository $repo1, ManagerRegistry $reg, Request $request): Response
     {
-        $subs = $repo0->findAll();
-        $users = $repo1->getClientList();
-
-        $nonsubbedusers = [];
-        foreach ($users as $user) {
-            if (!$repo0->isUserSubscribed($user->getId())) {
-                array_push($nonsubbedusers, $user);
-            }
-        }
-
-        $subbedusers = array_map(function($user) use ($repo0) {
-            return [
-                'user' => $user,
-                'sub' => $repo0->getCurrentSubByUserId($user->getId())
-            ];
-        }, array_filter($users, function($user) use ($repo0) {
-            return $repo0->isUserSubscribed($user->getId());
-        }));
+       
         
+        if ($this->getUser()->getRole() == "admin"){
 
+            $form = $this->createForm(GPPricesType::class);
+            //init form values with 3 number fields
+            $form->get('gpprice1')->setData($repo2->getAbonnementPriceByName('GP 1'));
+            $form->get('gpprice2')->setData($repo2->getAbonnementPriceByName('GP 2'));
+            $form->get('gpprice3')->setData($repo2->getAbonnementPriceByName('GP 3'));
+
+            $form->handleRequest($request);
+
+            if ($form->isSubmitted() && $form->isValid()) {
+                $data = $form->getData();
+                if ($data['gpprice1'] == null || $data['gpprice2'] == null || $data['gpprice3'] == null) {
+                    $this->addFlash('error', 'Prices cannot be null!');
+                    return $this->redirectToRoute('app_submgmt');
+                }
+                //check nan
+                if (is_nan($data['gpprice1']) || is_nan($data['gpprice2']) || is_nan($data['gpprice3'])) {
+                    $this->addFlash('error', 'Prices must be numbers!');
+                    return $this->redirectToRoute('app_submgmt');
+                }
+                if ($data['gpprice1'] < 0 || $data['gpprice2'] < 0 || $data['gpprice3'] < 0) {
+                    $this->addFlash('error', 'Prices cannot be negative!');
+                    return $this->redirectToRoute('app_submgmt');
+                }
+                $repo2->getAbonnementDetailsByName('GP 1')->setPrix($data['gpprice1']);
+                $repo2->getAbonnementDetailsByName('GP 2')->setPrix($data['gpprice2']);
+                $repo2->getAbonnementDetailsByName('GP 3')->setPrix($data['gpprice3']);
+                $reg->getManager()->flush();
+            }
+            return $this->render('dashboard/user/subscriptions.html.twig', [
+                'controller_name' => 'UserController',
+                'form' => $form->createView()
+            ]);
+        }
         return $this->render('dashboard/user/subscriptions.html.twig', [
             'controller_name' => 'UserController',
-            'subs' => $subs,
-            'nusers' => $nonsubbedusers,
-            'susers' => $subbedusers
-            
         ]);
-    }
 
-    #[Route('/dashboard/subscribe/{id}/{sub}', name: 'app_subuser')]
+    }
+    
+
+    #[Route('/api/subscribe/{id}/{sub}', name: 'app_subuser')]
     public function subscribeUser(UserRepository $repo, AbonnementRepository $repo1, AbonnementDetailsRepository $repo0, $id,$sub, ManagerRegistry $reg): Response
     {
         $user = $repo->findUserById($id);
@@ -548,16 +607,16 @@ class UserController extends AbstractController
         $abonnement->setType($type);
         $reg->getManager()->persist($abonnement);
         $reg->getManager()->flush();
-        return $this->redirectToRoute('app_submgmt');
+        return new JsonResponse(['status' => 'success'], 200);
     }
 
-    #[Route('/dashboard/unsubscribe/{id}', name: 'app_removesub')]
+    #[Route('/api/unsubscribe/{id}', name: 'app_removesub')]
     public function unsubscribeUser(AbonnementRepository $repo, $id, ManagerRegistry $reg): Response
     {
         $sub = $repo->getCurrentSubByUserId($id);
         $reg->getManager()->remove($sub);
         $reg->getManager()->flush();
-        return $this->redirectToRoute('app_submgmt');
+        return new JsonResponse(['status' => 'success'], 200);
     }
 
     #[Route('/api/getUserSubDetails/{id}', name: 'app_getsubdetails')]
@@ -708,6 +767,8 @@ class UserController extends AbstractController
         return new JsonResponse(['exists' => false], 200);
     }
 
+
+
     #[Route('/api/getfacetoken', name: 'app_getfacetoken')]
     public function getFaceToken(Request $request, UserRepository $repo): Response
     {
@@ -742,6 +803,254 @@ class UserController extends AbstractController
             return new JsonResponse(['status' => 'error', 'details'=> $content], 400);
         }
     }
-   
 
+    #[Route('/api/updateface', name: 'app_updatefaceid')]
+    public function updateFaceId(Request $request, UserRepository $repo, ManagerRegistry $reg): Response
+    {
+        $image = $request->get('image');
+        try{
+            $guzzle = new GuzzleClient();
+            $resp = $guzzle->request('POST', 'https://api-us.faceplusplus.com/facepp/v3/detect', [
+                'multipart' => [
+                    [
+                        'name' => 'api_key',
+                        'contents' => 'oVAqEDbCYmaILayXJdKAsuYbFcJ0LBP6'
+                    ],
+                    [
+                        'name' => 'api_secret',
+                        'contents' => 'e76obC1xsr-zSMynWZoQCt62vWDgtZ6O'
+                    ],
+                    [
+                        'name' => 'image_base64',
+                        'contents' => $image,
+                    ],
+                    [
+                        'name' => 'return_attributes',
+                        'contents' => 'emotion'
+                    ]
+                ]
+            ]);
+            $faceidcmp = json_decode((string) $resp->getBody(), true)['faces'][0]['face_token'];
+            dump("Request 1 Sent...");
+            $user = $this->getUser();
+            $user->setFaceid($faceidcmp);
+            $user->setFaceidTs(new \DateTime());
+            $reg->getManager()->persist($user);
+            $reg->getManager()->flush();
+            return new JsonResponse(['status' => 'success', 'facetoken' => $faceidcmp], 200);
+        } catch (\GuzzleHttp\Exception\RequestException $e) {
+            $content = json_decode($e->getResponse()->getBody()->getContents(), true);
+            return new JsonResponse(['status' => 'error', 'details'=> $content], 400);
+        }
+
+    }
+
+    #[Route('/api/updateface/{id}', name: 'app_updatefaceidmg')]
+    public function updateFaceIdmg(Request $request, UserRepository $repo, $id, ManagerRegistry $reg): Response
+    {
+        $image = $request->get('image');
+        try{
+            $guzzle = new GuzzleClient();
+            $resp = $guzzle->request('POST', 'https://api-us.faceplusplus.com/facepp/v3/detect', [
+                'multipart' => [
+                    [
+                        'name' => 'api_key',
+                        'contents' => 'oVAqEDbCYmaILayXJdKAsuYbFcJ0LBP6'
+                    ],
+                    [
+                        'name' => 'api_secret',
+                        'contents' => 'e76obC1xsr-zSMynWZoQCt62vWDgtZ6O'
+                    ],
+                    [
+                        'name' => 'image_base64',
+                        'contents' => $image,
+                    ],
+                    [
+                        'name' => 'return_attributes',
+                        'contents' => 'emotion'
+                    ]
+                ]
+            ]);
+            $faceidcmp = json_decode((string) $resp->getBody(), true)['faces'][0]['face_token'];
+            dump("Request 1 Sent...");
+            $user = $repo->findUserById($id);
+            $user->setFaceid($faceidcmp);
+            $user->setFaceidTs(new \DateTime());
+            $reg->getManager()->persist($user);
+            $reg->getManager()->flush();
+            return new JsonResponse(['status' => 'success', 'facetoken' => $faceidcmp], 200);
+        } catch (\GuzzleHttp\Exception\RequestException $e) {
+            $content = json_decode($e->getResponse()->getBody()->getContents(), true);
+            return new JsonResponse(['status' => 'error', 'details'=> $content], 400);
+        }
+    }
+
+    #[Route('/api/numberexist', name: 'app_numbercheck')]
+    public function checkNumber(Request $request, UserRepository $repo): Response
+    {
+        $num = $request->get('phone');
+        $user = $repo->findUserByPhone($num);
+        if ($user) {
+            return new JsonResponse(['exists' => true], 200);
+        }
+        return new JsonResponse(['exists' => false], 200);
+    }
+
+    #[Route('/api/resetpw', name: 'app_resetpw')]
+    public function resetPassword(Request $request, UserRepository $repo, ManagerRegistry $reg): Response
+    {
+        $num = $request->get('phone');
+        $user = $repo->findUserByPhone($num);
+        if ($user) {
+            $pw = $request->get('password');
+            $user->setPassword(password_hash($pw, PASSWORD_BCRYPT));
+            $reg->getManager()->persist($user);
+            $reg->getManager()->flush();
+            $this->addFlash('success', 'Password reset successfully!');
+            return $this->redirectToRoute('app_login');
+        }
+        $this->addFlash('error', 'Error occured!');
+        return $this->redirectToRoute('app_login');
+    }
+    
+    #[Route('/api/ping', name: 'app_ping')]
+    public function ping(): Response
+    {
+        return new JsonResponse(['status' => 'success'], 200);
+    }
+
+    #[Route('/api/userlist', name: 'app_userlist')]
+    public function userList(UserRepository $repo, Request $req): Response
+    {
+       //datatable returns for ajax
+        $users = [];
+        $filter = $req->query->get('customSearch');
+        if ($filter == null) 
+            $users = $repo->findAll();
+        else
+            $users = $repo->getUserList($filter);
+        $data = [];
+        foreach ($users as $user) {
+            $data[] = [
+                $user->getPhoto(),
+                $user->getId(),
+                $user->getFirstname(),
+                //$user->getUsername(),
+                //$user->getDateNaiss()->format('Y-m-d'),
+                $user->getLastname(),
+                $user->getNumTel(),
+                $user->getEmail(),
+                $user->getAdresse(),
+                $user->getRole(),
+                
+            ];
+        }
+        return new JsonResponse(['data' => $data], 200);
+       
+    }
+
+    #[Route('/api/nonsubbedusers', name: 'app_nonsubbedusers')]
+    public function nonSubbedUsers(AbonnementRepository $repo0, AbonnementDetailsRepository $repo2, UserRepository $repo1, ManagerRegistry $reg, Request $req): Response
+    {
+        $subs = $repo0->findAll();
+        $filter = $req->query->get('customSearch');
+        if ($filter == null) 
+            $users = $repo1->getClientList();
+        else
+            $users = $repo1->getClientListFiltered($filter);
+        $nonsubbedusers = [];
+        $data = [];
+        foreach ($users as $user) {
+            if (!$repo0->isUserSubscribed($user->getId())) {
+                array_push($nonsubbedusers, $user);
+                $data[] = [
+                    $user->getPhoto(),
+                    $user->getId(),
+                    $user->getFirstname() . ' ' . $user->getLastname(),
+                    $user->getNumTel(),
+                ];
+            }
+        }
+        return new JsonResponse(['data' => $data], 200);
+    }
+
+    #[Route('/api/subbedusers', name: 'app_subbedusers')]
+    public function subbedUsers(AbonnementRepository $repo0, AbonnementDetailsRepository $repo2, UserRepository $repo1, ManagerRegistry $reg, Request $req): Response
+    {
+        $subs = $repo0->findAll();
+        $filter = $req->query->get('customSearch');
+        if ($filter == null) 
+            $users = $repo1->getClientList();
+        else
+            $users = $repo1->getClientListFiltered($filter);
+
+        $subbedusers = array_map(function($user) use ($repo0) {
+            return [
+                'user' => $user,
+                'sub' => $repo0->getCurrentSubByUserId($user->getId())
+            ];
+        }, array_filter($users, function($user) use ($repo0) {
+            return $repo0->isUserSubscribed($user->getId());
+        }));
+        
+        $data = [];
+        foreach ($subbedusers as $user) {
+            $data[] = [
+                $user['user']->getPhoto(),
+                $user['user']->getId(),
+                $user['user']->getFirstname() . ' ' . $user['user']->getLastname(),
+                $user['user']->getNumTel(),
+                $user['sub']->getType()->getName(),
+                $user['sub']->getDatefinab()->format('Y-m-d'),
+            ];
+        }
+        return new JsonResponse(['data' => $data], 200);
+    }
+
+    #[Route('/api/googleauthcallback', name: 'app_googleauthcallback')]
+    public function googleAuthCallback(Request $request, UserRepository $repo, ManagerRegistry $reg): Response
+    {
+        if (!$request->get('credential')) {
+            return $this->redirectToRoute('app_login');
+        }
+        $client = new Google_Client(['client_id' => '767861281457-q8k0trd5fdj0jvgcf63lnclkqllkdt1e.apps.googleusercontent.com']);
+        $payload = $client->verifyIdToken($request->get('credential'));
+        if ($payload) {
+            $userid = $payload['sub'];
+            $user = $repo->findUserByEmail($payload['email']);
+            if ($user) {
+                $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
+                $this->get('security.token_storage')->setToken($token);
+                $this->get('session')->set('_security_main', serialize($token));
+            }else{
+                $lasteight = substr($userid, -8);
+                $user = new User();
+                $user->setId(intval($lasteight));
+                $user->setEmail($payload['email']);
+                $user->setFirstname($payload['given_name']);
+                $user->setLastname($payload['family_name']);
+                $user->setUsername($lasteight);
+                $user->setNumTel($lasteight);
+                $user->setPassword(password_hash($lasteight, PASSWORD_BCRYPT));
+                $user->setAdresse('NA');
+                $user->setDateNaiss(new \DateTime());
+                $photo = file_get_contents($payload['picture']);
+                $filename = 'USERIMG' . $user->getId() . '.jpg';
+                $targetdir = $this->getParameter('kernel.project_dir') . '/public/profileuploads/';
+                file_put_contents($targetdir . $filename, $photo);
+                $user->setPhoto($filename);
+                $user->setRole('client');
+                $reg->getManager()->persist($user);
+                $reg->getManager()->flush();
+                $user = $repo->findUserByEmail($payload['email']);
+                if ($user) {
+                    $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
+                    $this->get('security.token_storage')->setToken($token);
+                    $this->get('session')->set('_security_main', serialize($token));
+                }
+            }
+        }
+        return $this->redirectToRoute('app_home');
+
+    }
 }

@@ -33,8 +33,17 @@
 								<h4 class="card-title">Non Subscribed User List</h4>
 							</div>
 							<div class="card-body">
-								<div class="table-responsive">
-                                    <table id="example5" class="display min-w350">
+							<div class="col-4 float-right">
+									<div class="input-group mb-3">
+										<input type="text" class="form-control" id="customSearch4" placeholder="Search users">
+										<div class="input-group-append">
+											<button class="btn btn-outline-primary" type="button" id="searchButton4"><i class="fa fa-search"></i>
+											</button>
+										</div>
+									</div>
+								</div>
+								<div class="table-responsive" style="overflow-x: hidden;">
+                                    <table id="example4" class="display min-w350">
                                         <thead>
                                             <tr>
 												<th></th>
@@ -45,28 +54,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-											{% for u in nusers %}
-
-                                            <tr>
-												<td><img src="{{asset('profileuploads/'~u.photo)}}" class="rounded-circle" width="35" alt=""></td>
-												<td>{{ u.id }}</td>
-												<td>{{ u.firstname }} {{ u.lastname }}</td>
-												<td>{{ u.numtel }}</td>
-												
-												<td>
-													<div class="dropdown ms-auto text-end c-pointer">
-														<div class="btn-link" data-toggle="dropdown">
-															<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><rect x="0" y="0" width="24" height="24"></rect><circle fill="#000000" cx="5" cy="12" r="2"></circle><circle fill="#000000" cx="12" cy="12" r="2"></circle><circle fill="#000000" cx="19" cy="12" r="2"></circle></g></svg>
-														</div>
-														<div class="dropdown-menu dropdown-menu-right">
-															<a class="dropdown-item" onmouseover="this.classList.add('bg-warning'); this.classList.add('text-white')" onmouseout="this.classList.remove('bg-warning');  this.classList.remove('text-white')" href="{{ path('app_subuser', {'id': u.id, 'sub': 1}) }}"><i class="fa fa-exchange me-2"></i> Transfer User to GP1</a>
-															<a class="dropdown-item" onmouseover="this.classList.add('bg-warning'); this.classList.add('text-white')" onmouseout="this.classList.remove('bg-warning');  this.classList.remove('text-white')" href="{{ path('app_subuser', {'id': u.id, 'sub': 2}) }}"><i class="fa fa-exchange me-2"></i> Transfer User to GP2</a>
-															<a class="dropdown-item" onmouseover="this.classList.add('bg-warning'); this.classList.add('text-white')" onmouseout="this.classList.remove('bg-warning');  this.classList.remove('text-white')" href="{{ path('app_subuser', {'id': u.id, 'sub': 3}) }}"><i class="fa fa-exchange me-2"></i> Transfer User to GP3</a>
-														</div>
-													</div>
-												</td>										
-                                            </tr>
-											{% endfor %}
+											
                                         </tbody>
                                     </table>
                                 </div>
@@ -79,7 +67,16 @@
 								<h4 class="card-title">Subscribed User List</h4>
 							</div>
 							<div class="card-body">
-							<div class="table-responsive">
+							<div class="col-4 float-right">
+									<div class="input-group mb-3">
+										<input type="text" class="form-control" id="customSearch5" placeholder="Search users">
+										<div class="input-group-append">
+											<button class="btn btn-outline-primary" type="button" id="searchButton5"><i class="fa fa-search"></i>
+											</button>
+										</div>
+									</div>
+								</div>
+							<div class="table-responsive" style="overflow-x: hidden;">
                                     <table id="example5" class="display min-w350">
                                         <thead>
                                             <tr>
@@ -93,31 +90,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-											{% for u in susers %}
-
-                                            <tr>
-												<td><img src="{{asset('profileuploads/'~u.user.photo)}}" class="rounded-circle" width="35" alt=""></td>
-												<td>{{ u.user.id }}</td>
-												<td>{{ u.user.firstname }} {{ u.user.lastname }}</td>
-												<td>{{ u.user.numtel }}</td>
-												<td>{{ u.sub.type.name }}</td>
-												<td>{{ u.sub.dateFinAb|date }}</td>
-												
-												<td>
-													<div class="dropdown ms-auto text-end c-pointer">
-														<div class="btn-link" data-toggle="dropdown">
-															<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><rect x="0" y="0" width="24" height="24"></rect><circle fill="#000000" cx="5" cy="12" r="2"></circle><circle fill="#000000" cx="12" cy="12" r="2"></circle><circle fill="#000000" cx="19" cy="12" r="2"></circle></g></svg>
-														</div>
-														<div class="dropdown-menu dropdown-menu-right">
-															<a class="dropdown-item" onmouseover="this.classList.add('bg-warning'); this.classList.add('text-white')" onmouseout="this.classList.remove('bg-warning');  this.classList.remove('text-white')" href="{{ path('app_subuser', {'id': u.user.id, 'sub': 1}) }}"><i class="fa fa-exchange me-2"></i> Transfer/Refill User to GP1</a>
-															<a class="dropdown-item" onmouseover="this.classList.add('bg-warning'); this.classList.add('text-white')" onmouseout="this.classList.remove('bg-warning');  this.classList.remove('text-white')" href="{{ path('app_subuser', {'id': u.user.id, 'sub': 2}) }}"><i class="fa fa-exchange me-2"></i> Transfer/Refill User to GP2</a>
-															<a class="dropdown-item" onmouseover="this.classList.add('bg-warning'); this.classList.add('text-white')" onmouseout="this.classList.remove('bg-warning');  this.classList.remove('text-white')" href="{{ path('app_subuser', {'id': u.user.id, 'sub': 3}) }}"><i class="fa fa-exchange me-2"></i> Transfer/Refill User to GP3</a>
-															<a class="dropdown-item" onmouseover="this.classList.add('bg-danger'); this.classList.add('text-white')" onmouseout="this.classList.remove('bg-danger');  this.classList.remove('text-white')" href="{{ path('app_removesub', {'id': u.user.id}) }}"><i class="fa fa-ban me-2"></i> Cancel </a>
-														</div>
-													</div>
-												</td>										
-                                            </tr>
-											{% endfor %}
+											
                                         </tbody>
                                     </table>
                                 </div>
@@ -182,12 +155,55 @@
 												<i id="icon" class="fa fa-check-circle" style="font-size: 100px; color: green;"></i>
 											</div>
 										</div>
+										<!-- end center row -->
+										
 									</div>	
 								</div>
                             </div>
                         </div>
                     </div>
 				</div>
+				{% if form is defined %}
+				<div class="row">
+					<div class="col-sm-6 mx-auto">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">GP Prices</h4>
+                            </div>
+                            <div class="card-body">
+							{{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+								
+								<div class="input-group mb-3 input-primary">
+                                            {{ form_widget(form.gpprice1, {'attr': {'class': 'form-control'}}) }}
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">GP 1 Price</span>
+                                            </div>
+                                        </div>
+										<div class="input-group mb-3 input-primary">
+											{{ form_widget(form.gpprice2, {'attr': {'class': 'form-control'}}) }}
+											<div class="input-group-append">
+												<span class="input-group-text">GP 2 Price</span>
+											</div>
+											</div>
+											<div class="input-group mb-3 input-primary">
+												{{ form_widget(form.gpprice3, {'attr': {'class': 'form-control'}}) }}
+												<div class="input-group-append">
+													<span class="input-group-text">GP 3 Price</span>
+												</div>
+													</div>
+
+													<button type="submit" class="btn btn-primary">Update Prices</button>
+
+
+								
+								</div>
+
+								{{ form_end(form) }}
+							</div>
+						</div>
+					</div>
+				</div>
+				{% endif %}
                     
 			</div>
         </div>
@@ -200,10 +216,103 @@
 	{{ parent() }}
 	<!-- Datatable -->
 	<script src="{{asset('dashboard/vendor/datatables/js/jquery.dataTables.min.js')}}"></script>
-	<script src="{{asset('dashboard/js/plugins-init/datatables.init.js')}}"></script>
-<<<<<<< HEAD
 	<script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 	<script src="{{asset('dashboard/js/plugins-init/html5-qrcode.init.js')}}"></script>
-=======
->>>>>>> main
+	<script>
+		$('#example4').DataTable({
+				//"ordering": false,
+				"searching": false,
+				"ajax": {
+					"url": "{{ path('app_nonsubbedusers') }}",
+					"data": function (d) {
+						d.customSearch = $('#customSearch4').val(); // Get the value of your custom search input
+					}
+				},
+				"columns": [
+					{
+						"data": 0,
+						"render": function ( data, type, row ) {
+							return '<img src="/profileuploads/' + data + '" class="rounded-circle" width="35" alt="">';
+						}
+					},
+					{ "data": 1},
+					{ "data": 2},
+					{ "data": 3},
+					{
+						"data": 1,
+						"render": function ( data, type, row ) {
+							return '<div class="dropdown ms-auto text-end c-pointer">' +
+								'<div class="btn-link" data-toggle="dropdown">' +
+								'<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><rect x="0" y="0" width="24" height="24"></rect><circle fill="#000000" cx="5" cy="12" r="2"></circle><circle fill="#000000" cx="12" cy="12" r="2"></circle><circle fill="#000000" cx="19" cy="12" r="2"></circle></g></svg>' +
+								'</div>' +
+								'<div class="dropdown-menu dropdown-menu-right">' +
+								'<a class="dropdown-item" onmouseover="this.classList.add(\'bg-warning\'); this.classList.add(\'text-white\')" onmouseout="this.classList.remove(\'bg-warning\');  this.classList.remove(\'text-white\')" href="javascript:$.ajax({url: \'/api/subscribe/'+data+'/1\', success: function(result){$(\'#example4\').DataTable().ajax.reload();$(\'#example5\').DataTable().ajax.reload();swal(\'Success\', \'User has been transferred to GP1\',\'success\');}})"><i class="fa fa-exchange me-2"></i> Transfer User to GP1</a>' +
+								'<a class="dropdown-item" onmouseover="this.classList.add(\'bg-warning\'); this.classList.add(\'text-white\')" onmouseout="this.classList.remove(\'bg-warning\');  this.classList.remove(\'text-white\')" href="javascript:$.ajax({url: \'/api/subscribe/'+data+'/2\', success: function(result){$(\'#example4\').DataTable().ajax.reload();$(\'#example5\').DataTable().ajax.reload();swal(\'Success\', \'User has been transferred to GP2\',\'success\');}})"><i class="fa fa-exchange me-2"></i> Transfer User to GP2</a>' +
+								'<a class="dropdown-item" onmouseover="this.classList.add(\'bg-warning\'); this.classList.add(\'text-white\')" onmouseout="this.classList.remove(\'bg-warning\');  this.classList.remove(\'text-white\')" href="javascript:$.ajax({url: \'/api/subscribe/'+data+'/3\', success: function(result){$(\'#example4\').DataTable().ajax.reload();$(\'#example5\').DataTable().ajax.reload();swal(\'Success\', \'User has been transferred to GP3\',\'success\');}})"><i class="fa fa-exchange me-2"></i> Transfer User to GP3</a>' +
+							'</div>';
+						}
+					}
+				]
+			});	
+
+		$('#example5').DataTable({
+				//"ordering": false,
+				"searching": false,
+				"ajax": {
+					"url": "{{ path('app_subbedusers') }}",
+					"data": function (d) {
+						d.customSearch = $('#customSearch5').val(); // Get the value of your custom search input
+					}
+				},
+				"columns": [
+					{
+						"data": 0,
+						"render": function ( data, type, row ) {
+							return '<img src="/profileuploads/' + data + '" class="rounded-circle" width="35" alt="">';
+						}
+					},
+					{ "data": 1},
+					{ "data": 2},
+					{ "data": 3},
+					{ "data": 4},
+					{ "data": 5},
+					{
+						"data": 1,
+						"render": function ( data, type, row ) {
+							return '<div class="dropdown ms-auto text-end c-pointer">' +
+								'<div class="btn-link" data-toggle="dropdown">' +
+								'<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><rect x="0" y="0" width="24" height="24"></rect><circle fill="#000000" cx="5" cy="12" r="2"></circle><circle fill="#000000" cx="12" cy="12" r="2"></circle><circle fill="#000000" cx="19" cy="12" r="2"></circle></g></svg>' +
+								'</div>' +
+								'<div class="dropdown-menu dropdown-menu-right">' +
+								'<a class="dropdown-item" onmouseover="this.classList.add(\'bg-warning\'); this.classList.add(\'text-white\')" onmouseout="this.classList.remove(\'bg-warning\');  this.classList.remove(\'text-white\')" href="javascript:$.ajax({url: \'/api/subscribe/'+data+'/1\', success: function(result){$(\'#example5\').DataTable().ajax.reload();$(\'#example4\').DataTable().ajax.reload();swal(\'Success\', \'User has been transferred to GP1!\', \'success\');}})"><i class="fa fa-exchange me-2"></i> Transfer User to GP1</a>' +
+								'<a class="dropdown-item" onmouseover="this.classList.add(\'bg-warning\'); this.classList.add(\'text-white\')" onmouseout="this.classList.remove(\'bg-warning\');  this.classList.remove(\'text-white\')" href="javascript:$.ajax({url: \'/api/subscribe/'+data+'/2\', success: function(result){$(\'#example5\').DataTable().ajax.reload();$(\'#example4\').DataTable().ajax.reload();swal(\'Success\', \'User has been transferred to GP2!\', \'success\');}})"><i class="fa fa-exchange me-2"></i> Transfer User to GP2</a>' +
+								'<a class="dropdown-item" onmouseover="this.classList.add(\'bg-warning\'); this.classList.add(\'text-white\')" onmouseout="this.classList.remove(\'bg-warning\');  this.classList.remove(\'text-white\')" href="javascript:$.ajax({url: \'/api/subscribe/'+data+'/3\', success: function(result){$(\'#example5\').DataTable().ajax.reload();$(\'#example4\').DataTable().ajax.reload();swal(\'Success\', \'User has been transferred to GP3!\', \'success\');}})"><i class="fa fa-exchange me-2"></i> Transfer User to GP3</a>' +
+								'<a class="dropdown-item" onmouseover="this.classList.add(\'bg-danger\'); this.classList.add(\'text-white\')" onmouseout="this.classList.remove(\'bg-danger\');  this.classList.remove(\'text-white\')" href="javascript:$.ajax({url: \'/api/unsubscribe/'+data+'\', success: function(result){$(\'#example5\').DataTable().ajax.reload();$(\'#example4\').DataTable().ajax.reload();swal(\'Success\', \'User Subscribtion has been cancelled successfully!\', \'success\');}})"><i class="fa fa-ban me-2"></i> Cancel </a>' +
+							'</div>';
+						}
+					}
+				]
+			});
+
+		$('#searchButton4').on('click', function () {
+			$('#example4').DataTable().ajax.reload();
+			
+		});
+		$('#customSearch4').on('keyup', function (e) {
+			if (e.key === 'Enter' || e.keyCode === 13) {
+				$('#example4').DataTable().ajax.reload();
+			}
+		});
+
+		
+		$('#searchButton5').on('click', function () {
+			$('#example5').DataTable().ajax.reload();
+			
+		});
+		$('#customSearch5').on('keyup', function (e) {
+			if (e.key === 'Enter' || e.keyCode === 13) {
+				$('#example5').DataTable().ajax.reload();
+			}
+		});
+	</script>
 {% endblock %}

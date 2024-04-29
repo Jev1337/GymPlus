@@ -1,0 +1,40 @@
+{% extends 'dashboard/base.html.twig' %}
+
+
+{% block content %}
+
+<div class="content-body default-height" style="min-height: 878px;">
+    <div class="container-fluid">
+        <div class="page-titles">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
+                <li class="breadcrumb-item active"><a href="javascript:void(0)">Products</a></li>
+            </ol>
+        </div>
+        <!-- row -->
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Edit Product</h4>
+                    </div>
+                    <div class="card-body">
+
+                        {# {{ include('produit/_delete_form.html.twig') }} #}
+                            {# <div class="form-group col-md-4"> #}
+                            <div class="text-center" >
+                                {{ form_start(form,{'attr': {'novalidate': 'novalidate'}} ) }} 
+                                {{ include('produit/_form.html.twig', {'button_label': 'Update'}) }}
+                            </div>
+                            <a href="{{ path('app_produit_indexAdmin') }}" class="btn btn-primary" >back to list</a>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    
+{% endblock %}
+

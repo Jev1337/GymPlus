@@ -345,6 +345,9 @@ public class InterfaceStoreController implements Initializable {
         {
             String photo = p.getPhoto();
             ImageView imageView = new ImageView(new Image((new File("src/assets/imageProduit/" +p.getPhoto()).toURI().toString())));
+            imageView.setFitWidth(150); // Définir la largeur souhaitée de l'image
+            imageView.setFitHeight(150); // Définir la hauteur souhaitée de l'image
+
             //ImageView imageView = new ImageView();
             //imageView.setImage(new Image(new File("src/assets/imageProduit/" +p.getPhoto()).toURI().toString()));
 
@@ -474,6 +477,9 @@ public class InterfaceStoreController implements Initializable {
 
 
             ImageView imageView = new ImageView(imageP);
+            imageView.setFitWidth(200); // Définir la largeur souhaitée de l'image
+            imageView.setFitHeight(200); // Définir la hauteur souhaitée de l'image
+
             Label labelPhoto = new Label();
             labelPhoto.setGraphic(imageView);
 
@@ -1120,6 +1126,8 @@ public class InterfaceStoreController implements Initializable {
 
 
                 ImageView imageView = new ImageView(imageP);
+                imageView.setFitWidth(200); // Définir la largeur souhaitée de l'image
+                imageView.setFitHeight(200); // Définir la hauteur souhaitée de l'image
 
                 Label labelPhoto = new Label();
                 labelPhoto.setGraphic(imageView);

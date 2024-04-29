@@ -804,6 +804,7 @@
 						<ul aria-expanded="false">
 							<li><a href="{{ path('eventb') }}">Manage Events</a></li>
 							<li><a href="{{ path('blacklised') }}">BlackList</a></li>
+							<li><a href="{{ path('past_events_history') }}">History</a></li>
 						</ul>
 					</li>
 					
@@ -830,12 +831,22 @@
                         </ul>
                     </li>
 					<li>
-						<a  href="{{ path('getAll_post') }}" aria-expanded="false">
+						<a  href="{{ path('show_complaints') }}" aria-expanded="false">
 							<i class="fa fa-wifi"></i>
 							
 							<span class="nav-text">Blog</span>
 						</a>
 					</li>
+					<li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
+						   <i class="fa fa-shop"></i>
+							<span class="nav-text">Shop Management</span>
+							</a>
+						<ul aria-expanded="false">
+							<li><a href="{{ path('app_produit_indexAdmin') }}">Manage Products</a></li>
+							<li><a href="{{ path('app_facture_index') }}">Manage Invoice</a></li>
+							<li><a href="{{ path('app_livraison_index') }}">Manage Delivery</a></li>
+						</ul>
+					</li>					
 
 				<li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
 						   <i class="fa fa-calendar"></i>

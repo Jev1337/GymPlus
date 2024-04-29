@@ -1,34 +1,53 @@
 {% extends "main/base.html.twig" %}
 
 {% block content %}
+
+	
+
+
+
+
 <div class="page-content bg-white">
 
-		<!-- Banner  -->
-		<div class="dz-bnr-inr style-2" style="background-image: url('assets/images/banner/banner-2.png')">
-			<div class="banner-gradient"></div>
-			<div class="container">
-				<div class="row">
-					<div class="col-lg-8">
-						<div class="dz-bnr-inr-entry">
-							<h1>Rewards Hub</h1>
-							<!-- Breadcrumb Row -->
-							<nav aria-label="breadcrumb" class="breadcrumb-row">
-								<ul class="breadcrumb">
-									<li class="breadcrumb-item"><a href="index.html">Home</a></li>
-									<li class="breadcrumb-item active" aria-current="page">Rewards Hub</li>
-								</ul>
-							</nav>
-							<!-- Breadcrumb Row End -->
-						</div>
+	<!-- Banner  -->
+	<div class="dz-bnr-inr style-2" style="background-image: url('{{asset('main/images/banner/banner-2.png')}}')">
+		<div class="banner-gradient"></div>
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8">
+					<div class="dz-bnr-inr-entry">
+						<h1>Events</h1>
+						<!-- Breadcrumb Row -->
+						<nav aria-label="breadcrumb" class="breadcrumb-row">
+							<ul class="breadcrumb">
+								<li class="breadcrumb-item"><a href="index.html">Home</a></li>
+								
+								<li class="breadcrumb-item active" aria-current="page">Events</li>
+							</ul>
+						</nav>
+						<!-- Breadcrumb Row End -->
 					</div>
-				</div>	
-				<div class="banner-media">
-					<img src="assets/images/banner/pic1.png" alt="/">
 				</div>
 			</div>	
-		</div>
-		<!-- Banner End -->
+			<div class="banner-media">
+				<img src="{{asset('main/images/banner/pic4.png')}}" alt="/">
+			</div>
+		</div>	
+	</div>
+	<!-- Banner End -->
+	<div class="container text-center my-4">
+		<a href="{{ path('rewards') }}" class="text-decoration-none text-dark">
+			<div class="card">
+				<div class="card-body">
+					<h5 class="card-title">Event Points</h5>
+					<p class="card-text">{{ user_points }}</p>
+				   
+				</div>
+				
+			</div>
+		</a>
 		
+	</div>
 		<!-- Our Team -->
 		<section class="content-inner">
         <div class="container-sm">
@@ -48,6 +67,8 @@
 					<div class="col-lg-4 col-md-6 m-b30">
 						<div class="pricingtable-wrapper style-3 wow fadeInUp" data-wow-delay="0.4s" style="visibility: visible; animation-delay: 0.4s; animation-name: fadeInUp;">
 							<div class="pricingtable-inner">
+								<img src="{{ asset('main/images/event/wheycar.png') }}" alt="Reward Image">
+
 								<div class="pricingtable-price">
 									<div class="pricingtable-title">GymPlus Whey Protein</div>
 									<div class="pricingtable-title premium">Popular Reward</div>
@@ -64,9 +85,10 @@
 					<div class="col-lg-4 col-md-6 m-b30">
 						<div class="pricingtable-wrapper style-3 wow fadeInUp" data-wow-delay="0.4s" style="visibility: visible; animation-delay: 0.4s; animation-name: fadeInUp;">
 							<div class="pricingtable-inner">
+								<img src="{{ asset('main/images/event/gymbeltt.png') }}" alt="Reward Image">
 								<div class="pricingtable-price">
 									<div class="pricingtable-title">GymPlus Lifting Belt</div>
-									<div class="pricingtable-title premium">Popular Reward</div>
+									
 									<h2 class="pricingtable-bx">2500 Points</h2>
 									<div class="pricingtable-button">
 										<a href="{{path('belt')}}" class="btn btn-dark rounded-0 d-block m-b10"><span>Claim</span></a>
@@ -80,9 +102,10 @@
 					<div class="col-lg-4 col-md-6 m-b30">
 						<div class="pricingtable-wrapper style-3 wow fadeInUp" data-wow-delay="0.4s" style="visibility: visible; animation-delay: 0.4s; animation-name: fadeInUp;">
 							<div class="pricingtable-inner">
+								<img src="{{ asset('main/images/event/gymbag.png') }}" alt="Reward Image">
 								<div class="pricingtable-price">
 									<div class="pricingtable-title">GymPlus Bag</div>
-									<div class="pricingtable-title premium">Popular Reward</div>
+									
 									<h2 class="pricingtable-bx">3000 Points</h2>
 									<div class="pricingtable-button">
 										<a href="{{path('bag')}}" class="btn btn-dark rounded-0 d-block m-b10"><span>Claim</span></a>
@@ -129,25 +152,43 @@
 		
 	</div>
 {% endblock %}
-{% block js %}
-{{parent()}}
+
+{% block javascripts %}
+
 <script>
-    {% if app.flashes('claimStatus')|length > 0 %}
-        {% set status = app.flashes('claimStatus')[0] %}
-        if ('{{ status }}' === 'success') {
-            Swal.fire({
-                title: "Good job!",
-                text: "You clicked the button!",
-                icon: "success"
-            });
-        } else if ('{{ status }}' === 'error') {
-            Swal.fire({
-                icon: "error",
-                title: "Oops...",
-                text: "Something went wrong!",
-                footer: '<a href="#">Why do I have this issue?</a>'
-            });
-        }
-    {% endif %}
+window.onload = function() {
+    {% for message in app.flashes('success') %}
+    swal({
+      title: "Good job! You have successfully claimed your reward!",
+      text: "{{ message }} ",
+	  text: "You Will Receive an Email Shortly!",
+      icon: "success",
+      button: "Yessss!",
+    });
+    {% endfor %}
+
+    {% for message in app.flashes('error') %}
+    swal({
+      title: "Oops!",
+      text: "{{ message }}",
+	  text: "You Need More Points!",
+      icon: "error",
+      button: "Back!",
+    });
+    {% endfor %}
+	
+	
+}
+{% for flash in app.flashes('warning') %}
+    Swal.fire({
+    title: "Oops!",
+    text: "{{ flash.message }}",
+    icon: "error",
+    confirmButtonText: "Back!",
+    }).then(function() {
+    window.location.href = "{{ flash.redirectUrl }}";
+    });
+    {% endfor %}
+
 </script>
 {% endblock %}

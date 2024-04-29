@@ -68,7 +68,40 @@ CREATE TABLE `commentaire` (
   `date` date DEFAULT NULL,
   `likes` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+-- --------------------------------------------------------
 
+--
+-- Structure de la table `conversation`
+--
+
+CREATE TABLE `conversation` (
+  `id` int(11) NOT NULL,
+  `last_message_id` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `message`
+--
+
+CREATE TABLE `message` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `conversation_id` int(11) NOT NULL,
+  `content` text NOT NULL,
+  `createdAt` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `participantmessanger`
+--
+
+CREATE TABLE `participantmessanger` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `conversation_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 -- --------------------------------------------------------
 
 --
@@ -244,7 +277,6 @@ CREATE TABLE `produit` (
 
 -- --------------------------------------------------------
 
---
 -- Table structure for table `user`
 --
 
@@ -262,7 +294,7 @@ CREATE TABLE `user` (
   `photo` text DEFAULT NULL,
   `event_points` int(11) DEFAULT NULL,
   `faceid` varchar(255) DEFAULT NULL,
-  `faceid_ts` date NOT NULL DEFAULT current_timestamp()
+  `faceid_ts` date DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -314,6 +346,41 @@ ALTER TABLE `commentaire`
   ADD KEY `commentaire_ibfk_2` (`id_post`);
 
 
+--
+-- Index pour la table `conversation`
+--
+ALTER TABLE `conversation`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `last_message_id_index` (`last_message_id`);
+--
+-- AUTO_INCREMENT pour la table `conversation`
+--
+ALTER TABLE `conversation`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+--
+-- Index pour la table `message`
+--
+ALTER TABLE `message`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `conversation_id` (`conversation_id`);
+--
+-- AUTO_INCREMENT pour la table `message`
+--
+ALTER TABLE `message`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+--
+-- Index pour la table `participantmessanger`
+--
+ALTER TABLE `participantmessanger`
+ADD PRIMARY KEY (`id`),
+ADD KEY `user_id` (`user_id`),
+ADD KEY `conversation_id` (`conversation_id`);
+--
+-- AUTO_INCREMENT pour la table `participantmessanger`
+--
+ALTER TABLE `participantmessanger`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
 --
 -- Indexes for table `detailfacture`
@@ -389,7 +456,10 @@ ALTER TABLE `produit`
 -- Indexes for table `user`
 --
 ALTER TABLE `user`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `num_tel` (`num_tel`),
+  ADD UNIQUE KEY `username` (`username`),
+  ADD UNIQUE KEY `email` (`email`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -499,7 +569,39 @@ ALTER TABLE `objectif`
 ALTER TABLE `planning`
   ADD CONSTRAINT `planning_ibfk_1` FOREIGN KEY (`idObjectif`) REFERENCES `objectif` (`idObjectif`);
 
+--
+-- Structure de la table `complains`
+--
 
+CREATE TABLE `complains` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `post_id` int(11) NOT NULL,
+  `feedback` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Index pour les tables déchargées
+--
+
+--
+-- Index pour la table `complains`
+--
+ALTER TABLE `complains`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `post_id` (`post_id`);
+
+--
+-- AUTO_INCREMENT pour les tables déchargées
+--
+
+--
+-- AUTO_INCREMENT pour la table `complains`
+--
+ALTER TABLE `complains`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

@@ -1,6 +1,16 @@
 {% extends "main/base.html.twig" %}
 {% block content %}
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">
+            {{ message }}
+        </div>
+    {% endfor %}
 
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-danger">
+            {{ message }}
+        </div>
+    {% endfor %}
 <div class="page-content bg-white">
 		
 		<!-- Banner  -->
@@ -37,9 +47,21 @@
                 <p class="card-text">{{ user_points }}</p>
                
             </div>
+            <a href="{{ path('past_events') }}" class="text-decoration-none text-dark">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Past Events</h5>
+                        
+                       
+                    </div>
+                </div>
+            </a>
         </div>
     </a>
+    <div id="countdown"></div>
+    
 </div>
+
 		<!-- Our Events -->
 		<section class="content-inner">
 		
@@ -97,23 +119,84 @@
 {% block js %}
 {{parent()}}
 <script>
-   {% set claimStatusFlashes = app.flashes('claimStatus') %}
-   {% if claimStatusFlashes is not empty %}
-    {% set status = claimStatusFlashes[0] %}
-    if ('{{ status }}' === 'success') {
+     {% if nextEventDate is null %}
+     document.getElementById("countdown").innerHTML = "<h2>No Upcoming Events For You</h2>";
+ {% else %}
+     
+         var countdown = new Date("{{ nextEventDate|date('Y/m/d H:i:s') }}").getTime();
+        
+         var x = setInterval(function() {
+             var now = new Date().getTime();
+             var distance = countdown - now;
+         
+             if (distance <= 0) {
+                 clearInterval(x);
+                 document.getElementById("countdown").innerHTML = "<h2>No Upcoming Events For You</h2>";
+                 return;
+             }
+         
+             var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+             var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+             var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+             var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+             document.getElementById("countdown").innerHTML = "<h2>Your Next Event Is In :</h2><h3>" + days + "d " + hours + "h "
+                 + minutes + "m " + seconds + "s </h3>";
+         }, 1000);
+ 
+ {% endif %}
+</script>
+<script>
+    $('form').on('submit', function(e) {
+        e.preventDefault();
+    
+        var form = $(this);
+        var button = form.find('button');
+        var buttonText = button.find('.text').text();
+    
+        if (buttonText === 'Join') {
+            $.post(form.attr('action'), form.serialize(), function(data) {
+                var imageUrl = data.qrCodePath + '?' + new Date().getTime();
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'You have joined the event.',
+                    imageUrl: imageUrl,
+                    imageWidth: 400,
+                    imageHeight: 200,
+                    imageAlt: 'QR code',
+                }).then(function() {
+                    // Update the button text and form action
+                    form.attr('action', form.attr('action').replace('event_join', 'event_leave'));
+                    button.removeClass('btn-primary').addClass('btn-danger');
+                    button.find('.text').text('Leave');
+                    // Reload the page to update the information
+                    location.reload();
+                });
+            });
+        } else if (buttonText === 'Leave') {
+            $.post(form.attr('action'), form.serialize(), function(data) {
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'You have left the event.',
+                }).then(function() {
+                    // Update the button text and form action
+                    form.attr('action', form.attr('action').replace('event_leave', 'event_join'));
+                    button.removeClass('btn-danger').addClass('btn-primary');
+                    button.find('.text').text('Join');
+                    // Reload the page to update the information
+                    location.reload();
+                });
+            });
+        }
+    });
+        {% for flash in app.flashes('warning') %}
         Swal.fire({
-            title: "Good job!",
-            text: "You clicked the button!",
-            icon: "success"
+        title: "Oops!",
+        text: "{{ flash.message }}",
+        icon: "error",
+        confirmButtonText: "Back!",
+        }).then(function() {
+        window.location.href = "{{ flash.redirectUrl }}";
         });
-    } else if ('{{ status }}' === 'error') {
-        Swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text: "Something went wrong!",
-            footer: '<a href="#">Why do I have this issue?</a>'
-        });
-    }
-{% endif %}
+        {% endfor %}
 </script>
 {% endblock %}

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+
+{% block body %}
+    {% for message in messages %}
+        <div class="d-flex flex-column gap-2">
+            {% if message.user.photo != null %}
+                <img
+                src="{{ asset('profileuploads/' ~ message.user.photo ) }}" alt="user" width="50" class="rounded-circle">
+                    {% else %}
+                    <div class="d-flex gap-1">
+                        <img src="https://bootstrapious.com/i/snippets/sn-chat/avatar.svg" alt="user" width="50" class="rounded-circle">
+                        {% endif %}
+                        <div class="bg-light rounded py-2 px-3 mb-2">
+                            <p class="text-small mb-0 text-muted">
+                                {{ message.content }}
+                            </p>
+                        </div>
+                    </div>
+                    <p class="small text-muted">
+                        {{ message.createdAt | date }}
+                    </p>
+                </div>
+            {% endfor %}
+        {% endblock %}
+        

@@ -1,0 +1,35 @@
+{% extends 'dashboard/base.html.twig' %}
+
+
+{% block content %}
+
+<div class="content-body default-height" style="min-height: 878px;">
+    <div class="container-fluid">
+        <div class="page-titles">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
+                <li class="breadcrumb-item active"><a href="javascript:void(0)">Delivery</a></li>
+            </ol>
+        </div>
+        <!-- row -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Edit Product</h4>
+                    </div>
+                    <div class="card-body">
+                        {# <div class="form-group col-md-4"> #}
+                        <div class="text-center" >
+                            {{ include('livraison/_form.html.twig', {'button_label': 'Update'}) }}
+                        </div>
+                        <a href="{{ path('app_livraison_index') }}" class="btn btn-primary">back to list</a>
+
+                        {# {{ include('livraison/_delete_form.html.twig') }} #}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

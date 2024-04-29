@@ -18,33 +18,37 @@ class CommentaireController extends AbstractController
     // public ?int $idPost=0;
 
     #[Route('/post/commentaire/{id}', name: 'getAll_commentaire')]
-    public function getAllComments(CommentaireRepository $rep, PostRepository $prep,$id, Request $req, ManagerRegistry $manager, PostController $pc): Response
+    public function getAllComments(CommentaireRepository $rep, PostRepository $prep, $id, Request $req, ManagerRegistry $manager, PostController $pc): Response
     {
         // $this->idPost = (int)$id;
         $user = $this->getUser();
         $dateImmutable = date_create('now');
         $em = $manager->getManager();
-        
+
         $commentaire = new Commentaire();
         $commentaire->setDate($dateImmutable);
         $commentaire->setPostId($id);
         $commentaire->setUser($user);
-        
+
         $post = $prep->find($id);
-        $form = $this->createForm(CommentaireType::class, $commentaire); 
-        $form->handleRequest($req); 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em->persist($commentaire);
-            $em->flush();
-            $pc->updateNbComnt($rep,$post,$prep,$manager);
-            return $this->redirectToRoute('getAll_commentaire',['id' => $id]);
+        $form = $this->createForm(CommentaireType::class, $commentaire);
+        $form->handleRequest($req);
+        if ($form->isSubmitted()) {
+            if (!$form->isValid()) {
+                $this->addFlash('error', 'You can not add an empty comment!');
+            } else {
+                $em->persist($commentaire);
+                $em->flush();
+                $pc->updateNbComnt($rep, $post, $prep, $manager);
+                return $this->redirectToRoute('getAll_commentaire', ['id' => $id]);
+            }
         }
-        
+
         $comments = $rep->findByPostId($id);
         return $this->renderForm('main/commentaire/index.html.twig', [
             'comments' => $comments,
             'post' => $post,
-            'form'=> $form
+            'form' => $form
         ]);
     }
     // #[Route('/post/commentaire/{{$idPost}}/add', name: 'add_commentaire')]
@@ -52,11 +56,11 @@ class CommentaireController extends AbstractController
     // {
     //     $dateImmutable = date_create('now');
     //     $em = $manager->getManager();
-        
+
     //     $commentaire = new Commentaire();
     //     $commentaire->setDate($dateImmutable);
     //     $commentaire->setPostId($this->idPost);
-        
+
     //     $form = $this->createForm(CommentaireType::class, $commentaire); 
     //     $form->handleRequest($req); 
     //     if ($form->isSubmitted()) {
@@ -74,18 +78,18 @@ class CommentaireController extends AbstractController
     {
         $em = $manager->getManager();
         $commentaire = $rep->find($id);
-        $form = $this->createForm(CommentaireType::class, $commentaire); 
-        $form->handleRequest($req); 
+        $form = $this->createForm(CommentaireType::class, $commentaire);
+        $form->handleRequest($req);
         if ($form->isSubmitted()) {
 
             $em->persist($commentaire);
             $em->flush();
-            return $this->redirectToRoute('getAll_commentaire',['id' => $commentaire->getPostId()]);
+            return $this->redirectToRoute('getAll_commentaire', ['id' => $commentaire->getPostId()]);
         }
 
-        return $this->renderForm('main/commentaire/addNewComment.html.twig', [ 
+        return $this->renderForm('main/commentaire/addNewComment.html.twig', [
             "form" => $form,
-            "comnt"=>$commentaire
+            "comnt" => $commentaire
         ]);
     }
     #[Route('/post/commentaire/delete/{id}', name: 'delete_commentaire')]
@@ -96,18 +100,20 @@ class CommentaireController extends AbstractController
         $post = $prep->find($commentaire->getPostId());
         $em->remove($commentaire);
         $em->flush();
-        $pc->updateNbComnt($rep,$post,$prep,$manager);
-
-        return $this->redirectToRoute('getAll_commentaire',['id' => $commentaire->getPostId()]);
+        $pc->updateNbComnt($rep, $post, $prep, $manager);
+        if ($this->getUser()->getRoles() === "admin") {
+            return $this->redirectToRoute('show_complaints');
+        }else{
+            return $this->redirectToRoute('getAll_commentaire', ['id' => $commentaire->getPostId()]);
+        }
     }
     public function deleteByIdPost(CommentaireRepository $rep, $id, ManagerRegistry $manager)
     {
         $em = $manager->getManager();
         $commentaire = $rep->findByPostId($id);
-        for ($i=0; $i < sizeof($commentaire); $i++) { 
+        for ($i = 0; $i < sizeof($commentaire); $i++) {
             $em->remove($commentaire[$i]);
         }
         $em->flush();
-
     }
 }

@@ -18,19 +18,13 @@
                                 <li class="breadcrumb-item">
                                     <a href="index.html">
                                         Home
-                                                                                                            
-                                                                            
-                                    </a>
+                                     </a>
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page">
                                     Blog
-                                                                                                
-                                                                    
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page">
                                     Commentaire
-                                                                                                
-                                                                    
                                 </li>
                             </ul>
                         </nav>
@@ -47,6 +41,21 @@
             <section class="content-inner">
                 <div class="container">
                     <div class="row justify-content-center gap-5">
+                    {% for message in app.flashes('error') %}
+                        <div class="alert alert-danger">
+                            {{ message }}
+                        </div>
+                    {% endfor %} 
+                        {% if app.user.role == "admin" %}
+                        <div >
+                            <a class="d-flex align-items-center" style="width: 7rem;" href="{{ path('show_complaints') }}" aria-expanded="false">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-caret-left" viewBox="0 0 16 16">
+                                    <path d="M10 12.796V3.204L4.519 8zm-.659.753-5.48-4.796a1 1 0 0 1 0-1.506l5.48-4.796A1 1 0 0 1 11 3.204v9.592a1 1 0 0 1-1.659.753" />
+                                </svg>
+                                Go Back
+                            </a>
+                        </div>
+                        {% else %}
                         <div >
                             <a class="d-flex align-items-center" style="width: 7rem;" href="{{ path('getAll_post') }}" aria-expanded="false">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-caret-left" viewBox="0 0 16 16">
@@ -55,6 +64,7 @@
                                 Go Back
                             </a>
                         </div>
+                        {% endif %}
                         <div class="card shadow p-3 rounded" style="width: 50rem;">
                             <div class="card-body">
                                 <div class="d-flex justify-content-between">
@@ -69,7 +79,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    {% if post.idUser == app.user.id %}
+                                    {% if post.idUser == app.user.id or app.user.role == "admin" %}
                                         <div class="d-flex gap-3">
                                             <a href="{{ path('update_post', {'id': post.id}) }}" aria-expanded="false">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
@@ -89,20 +99,16 @@
                                     {{ post.content }}
                                 </p>
                                 {% if post.photo != "" %}
-                                    <img class="rounded card-img-top" style="height: 30rem; object-fit: contain;" src="{{ vich_uploader_asset(post, 'imageFile') }}" />
+                                    <img class="rounded card-img-top" style="height: 30rem; object-fit: contain;" src="{{ asset('profileuploads/' ~ post.photo) }}" />
                                 {% endif %}
                                 <div class="d-flex justify-content-between py-3" style="border-bottom: 1px solid #F1EFEF;">
                                     <div>
                                         {{ post.likes }}
                                         likes                                                 
-                                                                                                            
-                                                                            
                                     </div>
                                     <div>
                                         {{ post.nbComnts }}
                                         comnts                                                
-                                                                                                            
-                                                                            
                                     </div>
                                 </div>
                                 <div class="container px-4 mt-2 text-center">
@@ -110,15 +116,11 @@
                                         <div class="col  pt-2" style="border-right: 1px solid #F1EFEF;">
                                             <a class="" href="">
                                                 like
-                                                                                                                                    
-                                                                                            
                                             </a>
                                         </div>
                                         <div class="col  pt-2" style="border-left: 1px solid #F1EFEF;">
                                             <a class="" href="">
                                                 comnts
-                                                                                                                                    
-                                                                                            
                                             </a>
                                         </div>
                                     </div>
@@ -140,7 +142,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        {% if comnt.userId == app.user.id %}
+                                        {% if comnt.userId == app.user.id or app.user.role == "admin" %}
                                             <div class="d-flex gap-3">
                                                 <a class="" href="{{ path('update_commentaire', {'id': comnt.id}) }}" aria-expanded="false" data-toggle="modal" data-target="#edit">
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
@@ -165,21 +167,15 @@
                             {% else %}
                                 <a colspan="8">
                                     no records found                             
-                                                                                                                                
-                                                                                                
-                                                                    
                                 </a>
                             {% endfor %}
                             <div class="card-footer">
                                 {{ form_start(form) }}
-                                {{ form_widget(form.content, {'attr': {'class': 'form-control rounded', 'placeholder': 'write your comnt' }}
-                                ) }}                         
-                                                                                        
-                                                                
-                                {{ form_widget(form.coment, {'attr': {'class': 'btn h-3 btn-outline-primary rounded mt-3' }}
-                                ) }}
-                                                                                    
-                                                                
+                                {{ form_widget(form.content, {'attr': {'class': 'form-control rounded', 'placeholder': 'write your comnt' }}) }}                         
+                                <div class="d-flex align-items-center gap-3">
+                                    {{ form_widget(form.coment, {'attr': {'class': 'btn h-3 btn-outline-primary rounded mt-3' }}) }}
+                                    {{ form_errors(form.content) }}
+                                </div>
                                 {{ form_end(form) }}
                             </div>
                         </div>

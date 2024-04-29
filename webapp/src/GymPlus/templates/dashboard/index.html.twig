@@ -27,13 +27,13 @@
 												</svg>
 											</span>
 											<div class="media-body">
-												<p class="fs-14 mb-2">Weekly Progress</p>
-												<span class="title text-black font-w600">42%</span>
+												<p class="fs-14 mb-2">{{stats[0].title}}</p>
+												<span class="title text-black font-w600">{{stats[0].content}}</span>
 											</div>
 										</div>
 										<div class="progress" style="height:5px;">
-											<div class="progress-bar bg-success" style="width: 42%; height:5px;" role="progressbar">
-												<span class="sr-only">42% Complete</span>
+											<div class="progress-bar bg-success" style="width: {{stats[0].percent}}%; height:5px;" role="progressbar">
+												<span class="sr-only">{{stats[0].percent}}% Complete</span>
 											</div>
 										</div>
 									</div>
@@ -52,13 +52,13 @@
 												</svg>
 											</span>
 											<div class="media-body">
-												<p class="fs-14 mb-2">Weekly Progress</p>
-												<span class="title text-black font-w600">42km</span>
+												<p class="fs-14 mb-2">{{stats[1].title}}</p>
+												<span class="title text-black font-w600">{{stats[1].content}}</span>
 											</div>
 										</div>
 										<div class="progress" style="height:5px;">
-											<div class="progress-bar bg-secondary" style="width: 82%; height:5px;" role="progressbar">
-												<span class="sr-only">42% Complete</span>
+											<div class="progress-bar bg-secondary" style="width: {{stats[1].percent}}%; height:5px;" role="progressbar">
+												<span class="sr-only">{{stats[1].percent}}% Complete</span>
 											</div>
 										</div>
 									</div>
@@ -78,13 +78,13 @@
 												</svg>
 											</span>
 											<div class="media-body">
-												<p class="fs-14 mb-2">Daily Cycling</p>
-												<span class="title text-black font-w600">230 Km</span>
+												<p class="fs-14 mb-2">{{stats[2].title}}</p>
+												<span class="title text-black font-w600">{{stats[2].content}}</span>
 											</div>
 										</div>
 										<div class="progress" style="height:5px;">
-											<div class="progress-bar bg-danger" style="width: 90%; height:5px;" role="progressbar">
-												<span class="sr-only">42% Complete</span>
+											<div class="progress-bar bg-danger" style="width: {{stats[2].percent}}%; height:5px;" role="progressbar">
+												<span class="sr-only">{{stats[2].percent}}% Complete</span>
 											</div>
 										</div>
 									</div>
@@ -105,13 +105,13 @@
 												</svg>
 											</span>
 											<div class="media-body">
-												<p class="fs-14 mb-2">Morning Yoga</p>
-												<span class="title text-black font-w600">18:34:21”</span>
+												<p class="fs-14 mb-2">{{stats[3].title}}</p>
+												<span class="title text-black font-w600">{{stats[3].content}}</span>
 											</div>
 										</div>
 										<div class="progress" style="height:5px;">
-											<div class="progress-bar bg-warning" style="width: 42%; height:5px;" role="progressbar">
-												<span class="sr-only">42% Complete</span>
+											<div class="progress-bar bg-warning" style="width: {{stats[3].percent}}%; height:5px;" role="progressbar">
+												<span class="sr-only">{{stats[3].percent}}% Complete</span>
 											</div>
 										</div>
 									</div>
@@ -124,8 +124,9 @@
 						<div class="card">
 							<div class="card-header d-sm-flex d-block pb-0 border-0">
 								<div class="mr-auto pr-3 mb-sm-0 mb-3">
-									<h4 class="text-black fs-20">Plan List</h4>
-									<p class="fs-13 mb-0 text-black">Lorem ipsum dolor sit amet, consectetur</p>
+									<h4 class="text-black fs-20"><i class="fa fa-bar-chart"></i>
+									Bar Chart Statistics</h4>
+									<p class="fs-13 mb-0 text-black">This is a simple bar chart</p>
 								</div>
 								<div class="dropdown mb-3 show">
 									<button type="button" class="btn rounded btn-light" data-toggle="dropdown" aria-expanded="true">
@@ -141,96 +142,120 @@
 											</clipPath>
 											</defs>
 										</svg>
-										Running
+										Maintenances
 										<svg class="ml-2" width="14" height="8" viewBox="0 0 14 8" fill="none" xmlns="http://www.w3.org/2000/svg">
 											<path d="M1 0.999999L7 7L13 1" stroke="#0B2A97" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 										</svg>
 									</button>
 									<div class="dropdown-menu dropdown-menu-right">
-										<a class="dropdown-item" href="javascript:void(0);">Edit</a>
-										<a class="dropdown-item" href="javascript:void(0);">Delete</a>
+										<a class="dropdown-item" href="javascript:void(0);">Events</a>
 									</div>
 								</div>
 							</div>
 							<div class="card-body pt-0 pb-0">
-								<div id="chartBar"></div>
+								<canvas id="chartmt" class="chartjs-render-monitor" style="height: 230px; display: block; width: 100%;"></canvas>
 							</div>
 						</div>
 					</div>
-					<div class="col-xl-9 col-xxl-8">
+					<div class="col-12">
 						<div class="row">
-							<div class="col-xl-12">	
+							<div class="col-xl-6">	
 								<div class="card">
 									<div class="card-header d-sm-flex d-block pb-0 border-0">
 										<div class="mr-auto pr-3">
-											<h4 class="text-black font-w600 fs-20">Recomended Trainer for You</h4>
-											<p class="fs-13 mb-0 text-black">Lorem ipsum dolor sit amet, consectetur</p>
+											<h4 class="text-black font-w600 fs-20"><i class="fa fa-line-chart"></i>
+											Performance Report</h4>
+											<p class="fs-13 mb-0 text-black">This is a simple performance report</p>
 										</div>
-										<a href="food-menu.html" class="btn btn-primary rounded d-none d-md-block">View More</a>
 									</div>
 									<div class="card-body pt-2">
-										<div class="testimonial-one owl-carousel">
-											<div class="items">
-												<div class="card text-center">
-													<div class="card-body">
-														<img src="{{asset('dashboard/images/testimonial/1.jpg')}}" alt="">
-														<h5 class="fs-16 font-w500 mb-1"><a href="app-profile.html" class="text-black">Roberto Carloz</a></h5>
-														<p class="fs-14">Body Building Trainer</p>
-														<div class="d-flex align-items-center justify-content-center">
-															<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-																<path d="M5.09569 20C4.80437 19.9988 4.51677 19.9344 4.25273 19.8113C3.98868 19.6881 3.75447 19.5091 3.56624 19.2866C3.37801 19.0641 3.24024 18.8034 3.16243 18.5225C3.08462 18.2415 3.06862 17.9471 3.11554 17.6593L3.88905 12.8902L0.569441 9.45986C0.312024 9.19466 0.132451 8.86374 0.0503661 8.50328C-0.0317185 8.14282 -0.0131526 7.76671 0.104033 7.4161C0.221219 7.06549 0.43251 6.75388 0.714792 6.51537C0.997074 6.27685 1.33947 6.12062 1.70453 6.06376L6.20048 5.37325L8.18158 1.13817C8.34755 0.796915 8.60606 0.509234 8.92762 0.307978C9.24917 0.106721 9.6208 0 10.0001 0C10.3793 0 10.751 0.106721 11.0725 0.307978C11.3941 0.509234 11.6526 0.796915 11.8186 1.13817L13.7931 5.36719L18.2955 6.06376C18.6606 6.12062 19.003 6.27685 19.2852 6.51537C19.5675 6.75388 19.7788 7.06549 19.896 7.4161C20.0132 7.76671 20.0318 8.14282 19.9497 8.50328C19.8676 8.86374 19.688 9.19466 19.4306 9.45986L16.1144 12.8765L16.885 17.66C16.9463 18.0327 16.9014 18.4152 16.7556 18.7635C16.6097 19.1119 16.3687 19.4121 16.0602 19.6297C15.7517 19.8473 15.3882 19.9735 15.0113 19.994C14.6344 20.0144 14.2593 19.9281 13.9292 19.7451L10.0026 17.5635L6.07117 19.7451C5.77302 19.9118 5.43724 19.9996 5.09569 20Z" fill="#FFAA29"/>
-															</svg>
-															<span class="fs-14 d-block ml-2 pr-2 mr-2 border-right text-black font-w500">4.4</span>
-															<a href="app-profile.html" class="btn-link fs-14">Send Request</a>
-														</div>
+										<!-- basically multiple rows each having an icon and a text, for example Database Latency, Server Latency, etc -->
+										<div class="row">
+											<div class="col-6">
+												<div class="media align-items-center">
+													<span class="activity-icon bgl-primary mr-md-4 mr-3">
+														<i class="fa fa-database"></i>
+													</span>
+													<div class="media-body mb-0">
+														<p class="fs-14 mb-2">Internal Database Latency</p>
+														<span class="title text-black font-w600">{{dblatency}}ms</span>
 													</div>
 												</div>
 											</div>
-											<div class="items">
-												<div class="card text-center">
-													<div class="card-body">
-														<img src="{{asset('dashboard/images/testimonial/2.jpg')}}" alt="">
-														<h5 class="fs-16 font-w500 mb-1"><a href="app-profile.html" class="text-black">Cindy Moss</a></h5>
-														<p class="fs-14">Fat Belly Trainer</p>
-														<div class="d-flex align-items-center justify-content-center">
-															<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-																<path d="M5.09569 20C4.80437 19.9988 4.51677 19.9344 4.25273 19.8113C3.98868 19.6881 3.75447 19.5091 3.56624 19.2866C3.37801 19.0641 3.24024 18.8034 3.16243 18.5225C3.08462 18.2415 3.06862 17.9471 3.11554 17.6593L3.88905 12.8902L0.569441 9.45986C0.312024 9.19466 0.132451 8.86374 0.0503661 8.50328C-0.0317185 8.14282 -0.0131526 7.76671 0.104033 7.4161C0.221219 7.06549 0.43251 6.75388 0.714792 6.51537C0.997074 6.27685 1.33947 6.12062 1.70453 6.06376L6.20048 5.37325L8.18158 1.13817C8.34755 0.796915 8.60606 0.509234 8.92762 0.307978C9.24917 0.106721 9.6208 0 10.0001 0C10.3793 0 10.751 0.106721 11.0725 0.307978C11.3941 0.509234 11.6526 0.796915 11.8186 1.13817L13.7931 5.36719L18.2955 6.06376C18.6606 6.12062 19.003 6.27685 19.2852 6.51537C19.5675 6.75388 19.7788 7.06549 19.896 7.4161C20.0132 7.76671 20.0318 8.14282 19.9497 8.50328C19.8676 8.86374 19.688 9.19466 19.4306 9.45986L16.1144 12.8765L16.885 17.66C16.9463 18.0327 16.9014 18.4152 16.7556 18.7635C16.6097 19.1119 16.3687 19.4121 16.0602 19.6297C15.7517 19.8473 15.3882 19.9735 15.0113 19.994C14.6344 20.0144 14.2593 19.9281 13.9292 19.7451L10.0026 17.5635L6.07117 19.7451C5.77302 19.9118 5.43724 19.9996 5.09569 20Z" fill="#FFAA29"/>
-															</svg>
-															<span class="fs-14 d-block ml-2 pr-2 mr-2 border-right text-black font-w500">4.4</span>
-															<a href="app-profile.html" class="btn-link fs-14">Send Request</a>
+											<div class="col-6">
+												<div class="media align-items-center">
+													<span class="activity-icon bgl-warning mr-md-4 mr-3">
+														<i class="fa fa-server"></i>
+													</span>
+													<div class="media-body mb-0">
+														<p class="fs-14 mb-2">Server Latency</p>
+														<!-- warning icon -->
+														
+														<span class="title text-black font-w600" id="svlat">
+														
+														<div class="spinner-border text-warning" role="status">
 														</div>
+														</span>
+														<a href="javascript:void(0);" id="svlatref" class="ml-2">
+															<i class="fa fa-refresh"></i>
+														</a>
 													</div>
 												</div>
 											</div>
-											<div class="items">
-												<div class="card text-center">
-													<div class="card-body">
-														<img src="{{asset('dashboard/images/testimonial/3.jpg')}}" alt="">
-														<h5 class="fs-16 font-w500 mb-1"><a href="app-profile.html" class="text-black">Ivankov Smurz</a></h5>
-														<p class="fs-14">Sixpack Builder</p>
-														<div class="d-flex align-items-center justify-content-center">
-															<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-																<path d="M5.09569 20C4.80437 19.9988 4.51677 19.9344 4.25273 19.8113C3.98868 19.6881 3.75447 19.5091 3.56624 19.2866C3.37801 19.0641 3.24024 18.8034 3.16243 18.5225C3.08462 18.2415 3.06862 17.9471 3.11554 17.6593L3.88905 12.8902L0.569441 9.45986C0.312024 9.19466 0.132451 8.86374 0.0503661 8.50328C-0.0317185 8.14282 -0.0131526 7.76671 0.104033 7.4161C0.221219 7.06549 0.43251 6.75388 0.714792 6.51537C0.997074 6.27685 1.33947 6.12062 1.70453 6.06376L6.20048 5.37325L8.18158 1.13817C8.34755 0.796915 8.60606 0.509234 8.92762 0.307978C9.24917 0.106721 9.6208 0 10.0001 0C10.3793 0 10.751 0.106721 11.0725 0.307978C11.3941 0.509234 11.6526 0.796915 11.8186 1.13817L13.7931 5.36719L18.2955 6.06376C18.6606 6.12062 19.003 6.27685 19.2852 6.51537C19.5675 6.75388 19.7788 7.06549 19.896 7.4161C20.0132 7.76671 20.0318 8.14282 19.9497 8.50328C19.8676 8.86374 19.688 9.19466 19.4306 9.45986L16.1144 12.8765L16.885 17.66C16.9463 18.0327 16.9014 18.4152 16.7556 18.7635C16.6097 19.1119 16.3687 19.4121 16.0602 19.6297C15.7517 19.8473 15.3882 19.9735 15.0113 19.994C14.6344 20.0144 14.2593 19.9281 13.9292 19.7451L10.0026 17.5635L6.07117 19.7451C5.77302 19.9118 5.43724 19.9996 5.09569 20Z" fill="#FFAA29"/>
-															</svg>
-															<span class="fs-14 d-block ml-2 pr-2 mr-2 border-right text-black font-w500">4.4</span>
-															<a href="javascript:void(0)" class="btn-link fs-14">Send Request</a>
+											
+											
+										</div>
+										<div class="row mt-3">
+											<div class="col-6">
+												<div class="media align-items-center">
+													<span class="activity-icon bgl-danger mr-md-4 mr-3">
+														<i class="fa fa-bolt"></i>
+													</span>
+													<div class="media-body mb-0">
+														<p class="fs-14 mb-2">OpenAI Latency</p>
+														<span class="title text-black font-w600" id="oplat">
+														<div class="spinner-border text-danger" role="status">
 														</div>
+														</span>
+														<a href="javascript:void(0);" id="oplatref" class="ml-2">
+															<i class="fa fa-refresh"></i>
+														</a>
 													</div>
 												</div>
 											</div>
-											<div class="items">
-												<div class="card text-center">
-													<div class="card-body">
-														<img src="{{asset('dashboard/images/testimonial/4.jpg')}}" alt="">
-														<h5 class="fs-16 font-w500 mb-1"><a href="app-profile.html" class="text-black">Louis Simatupang</a></h5>
-														<p class="fs-14">Body Building Trainer</p>
-														<div class="d-flex align-items-center justify-content-center">
-															<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-																<path d="M5.09569 20C4.80437 19.9988 4.51677 19.9344 4.25273 19.8113C3.98868 19.6881 3.75447 19.5091 3.56624 19.2866C3.37801 19.0641 3.24024 18.8034 3.16243 18.5225C3.08462 18.2415 3.06862 17.9471 3.11554 17.6593L3.88905 12.8902L0.569441 9.45986C0.312024 9.19466 0.132451 8.86374 0.0503661 8.50328C-0.0317185 8.14282 -0.0131526 7.76671 0.104033 7.4161C0.221219 7.06549 0.43251 6.75388 0.714792 6.51537C0.997074 6.27685 1.33947 6.12062 1.70453 6.06376L6.20048 5.37325L8.18158 1.13817C8.34755 0.796915 8.60606 0.509234 8.92762 0.307978C9.24917 0.106721 9.6208 0 10.0001 0C10.3793 0 10.751 0.106721 11.0725 0.307978C11.3941 0.509234 11.6526 0.796915 11.8186 1.13817L13.7931 5.36719L18.2955 6.06376C18.6606 6.12062 19.003 6.27685 19.2852 6.51537C19.5675 6.75388 19.7788 7.06549 19.896 7.4161C20.0132 7.76671 20.0318 8.14282 19.9497 8.50328C19.8676 8.86374 19.688 9.19466 19.4306 9.45986L16.1144 12.8765L16.885 17.66C16.9463 18.0327 16.9014 18.4152 16.7556 18.7635C16.6097 19.1119 16.3687 19.4121 16.0602 19.6297C15.7517 19.8473 15.3882 19.9735 15.0113 19.994C14.6344 20.0144 14.2593 19.9281 13.9292 19.7451L10.0026 17.5635L6.07117 19.7451C5.77302 19.9118 5.43724 19.9996 5.09569 20Z" fill="#FFAA29"/>
-															</svg>
-															<span class="fs-14 d-block ml-2 pr-2 mr-2 border-right text-black font-w500">4.4</span>
-															<a href="app-profile.html" class="btn-link fs-14">Send Request</a>
+											<div class="col-6">
+												<div class="media align-items-center">
+													<span class="activity-icon bgl-success mr-md-4 mr-3">
+														<i class="fa fa-cloud"></i>
+													</span>
+													<div class="media-body mb-0">
+														<p class="fs-14 mb-2">Azure Latency</p>
+														<span class="title text-black font-w600" id="azlat">
+														<div class="spinner-border text-success" role="status">
 														</div>
+														</span>
+														<a href="javascript:void(0);" id="azlatref" class="ml-2">
+															<i class="fa fa-refresh"></i>
+														</a>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="row mt-3">
+											<div class="col-6">
+												<div class="media align-items-center">
+													<span class="activity-icon bgl-secondary mr-md-4 mr-3">
+														<i class="fa fa-camera"></i>
+													</span>
+													<div class="media-body mb-0">
+														<p class="fs-14 mb-2">Face++ Latency</p>
+														<span class="title text-black font-w600" id="fplat">
+														<div class="spinner-border text-secondary" role="status">
+														</div>
+														</span>
+														<a href="javascript:void(0);" id="fplatref" class="ml-2">
+															<i class="fa fa-refresh"></i>
+														</a>
 													</div>
 												</div>
 											</div>
@@ -238,92 +263,24 @@
 									</div>
 								</div>
 							</div>
-							<div class="col-xl-12">	
+							<div class="col-xl-6">
 								<div class="card">
 									<div class="card-header d-sm-flex d-block pb-0 border-0">
 										<div class="mr-auto pr-3">
-											<h4 class="text-black fs-20 font-w600">Calories Chart</h4>
-											<p class="fs-13 mb-0 text-black">Lorem ipsum dolor sit amet, consectetur</p>
-										</div>
-										<div class="dropdown mt-sm-0 mt-3">
-											<button type="button" class="btn rounded btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-												Weekly
-											</button>
-											<div class="dropdown-menu dropdown-menu-right">
-												<a class="dropdown-item" href="javascript:void(0);">Link 1</a>
-												<a class="dropdown-item" href="javascript:void(0);">Link 2</a>
-												<a class="dropdown-item" href="javascript:void(0);">Link 3</a>
-											</div>
+											<h4 class="text-black font-w600 fs-20"> <i class="fa fa-pie-chart"></i>
+											Subscription Pie Chart</h4>
+											<p class="fs-13 mb-0 text-black">This is a simple pie chart</p>
 										</div>
 									</div>
-									<div class="card-body">
-										<div id="chartTimeline"></div>
+									<div class="card-body pt-2">
+										<canvas id="piechartjs" class="chartjs-render-monitor" style="height: 1px !important; width: 1px !important"></canvas>
 									</div>
 								</div>
 							</div>
+							
 						</div>
 					</div>
-					<div class="col-xl-3 col-xxl-4">
-						<div class="row">
-							<div class="col-xl-12">
-								<div class="card featuredMenu">
-									<div class="card-header border-0">
-										<h4 class="text-black font-w600 fs-20 mb-0">Featured Diet Menu</h4>
-									</div>
-									<div class="card-body loadmore-content height750 dz-scroll pt-0" id="FeaturedMenusContent">
-										<div class="media mb-4">
-											<img src="{{asset('dashboard/images/menus/1.png')}}" width="85" alt="" class="rounded mr-3">
-											<div class="media-body">
-												<h5><a href="food-menu.html" class="text-black fs-16">Chinese Orange Fruit With Avocado Salad</a></h5>
-												<span class="fs-14 text-primary font-w500">Kevin Ignis</span>
-											</div>
-										</div>
-										<ul class="d-flex flex-wrap pb-2 border-bottom mb-3 justify-content-between">
-											<li class="mr-3 mb-2"><i class="las la-clock scale5 mr-3"></i><span class="fs-14 text-black">4-6 mins </span></li>
-											<li class="mb-2"><i class="fa fa-star-o mr-3 scale5 text-warning" aria-hidden="true"></i><span class="fs-14 text-black font-w500">176 Reviews</span></li>
-										</ul>
-										<div class="media mb-4">
-											<img src="{{asset('dashboard/images/menus/2.png')}}" width="85" alt="" class="rounded mr-3">
-											<div class="media-body">
-												<h5><a href="food-menu.html" class="text-black fs-16">Fresh or Frozen (No Sugar Added) Fruits</a></h5>
-												<span class="fs-14 text-primary font-w500">Olivia Johanson</span>
-											</div>
-										</div>
-										<ul class="d-flex flex-wrap pb-2 border-bottom mb-3 justify-content-between">
-											<li class="mr-3 mb-2"><i class="las la-clock scale5 mr-3"></i><span class="fs-14 text-black">4-6 mins </span></li>
-											<li class="mb-2"><i class="fa fa-star-o mr-3 scale5 text-warning" aria-hidden="true"></i><span class="fs-14 text-black font-w500">176 Reviews</span></li>
-										</ul>
-										<div class="media mb-4">
-											<img src="{{asset('dashboard/images/menus/3.png')}}" width="85" alt="" class="rounded mr-3">
-											<div class="media-body">
-												<h5><a href="food-menu.html" class="text-black fs-16">Fresh or Frozen (No Sugar Added) Fruits</a></h5>
-												<span class="fs-14 text-primary font-w500">Stefanny Raharjo</span>
-											</div>
-										</div>
-										<ul class="d-flex flex-wrap pb-2 border-bottom mb-3 justify-content-between">
-											<li class="mr-3 mb-2"><i class="las la-clock scale5 mr-3"></i><span class="fs-14 text-black">4-6 mins </span></li>
-											<li class="mb-2"><i class="fa fa-star-o mr-3 scale5 text-warning" aria-hidden="true"></i><span class="fs-14 text-black font-w500">176 Reviews</span></li>
-										</ul>
-										<div class="media mb-4">
-											<img src="{{asset('dashboard/images/menus/4.png')}}" width="85" alt="" class="rounded mr-3">
-											<div class="media-body">
-												<h5><a href="food-menu.html" class="text-black fs-16">Original Boiled Egg with Himalaya Salt</a></h5>
-												<span class="fs-14 text-primary font-w500">Peter Parkur</span>
-											</div>
-										</div>
-										<ul class="d-flex flex-wrap pb-2 border-bottom mb-3 justify-content-between">
-											<li class="mr-3 mb-2"><i class="las la-clock scale5 mr-3"></i><span class="fs-14 text-black">4-6 mins </span></li>
-											<li class="mb-2"><i class="fa fa-star-o mr-3 scale5 text-warning" aria-hidden="true"></i><span class="fs-14 text-black font-w500">176 Reviews</span></li>
-										</ul>
-									</div>
-									<div class="card-footer style-1 text-center border-0 pt-0 pb-4">
-										<a class="text-primary dz-load-more fa fa-chevron-down" id="FeaturedMenus" href="javascript:void(0);" rel="ajax/featured-menu-list.html">
-										</a>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
+					
 				</div>
             </div>
         </div>
@@ -338,6 +295,315 @@
 	<script src="{{asset('dashboard/vendor/apexchart/apexchart.js')}}"></script>
 	<!-- Chart piety plugin files -->
     <script src="{{asset('dashboard/vendor/peity/jquery.peity.min.js')}}"></script>
+	<!-- chartjs -->
+	<script src="{{asset('dashboard/vendor/chart.js/Chart.bundle.min.js')}}"></script>
 	<!-- Dashboard 1 -->
-	<script src="{{asset('dashboard/js/dashboard/dashboard-1.js')}}"></script>
+	<script>
+	//optionsArea = {
+    //  series: [{
+    //    name: "Active Maintenance Count",
+    //    data: [{{barchart1['Jan']}}, {{barchart1['Feb']}}, {{barchart1['Mar']}}, {{barchart1['Apr']}}, {{barchart1['May']}}, {{barchart1['Jun']}}, {{barchart1['Jul']}}, {{barchart1['Aug']}}, {{barchart1['Sep']}}, {{barchart1['Oct']}}, {{barchart1['Nov']}}, {{barchart1['Dec']}}]
+    //  }
+    //],
+    //  chart: {
+    //  height: 200,
+    //  type: 'area',
+	//  group: 'social',
+	//  toolbar: {
+    //    show: false
+    //  },
+    //  zoom: {
+    //    enabled: false
+    //  },
+    //},
+    //dataLabels: {
+    //  enabled: false
+    //},
+    //stroke: {
+    //  width: [10],
+	//  colors:['#0B2A97'],
+	//  curve: 'smooth'
+    //},
+    //legend: {
+	//	show:false,
+    //  tooltipHoverFormatter: function(val, opts) {
+    //    return val + ' - ' + opts.w.globals.series[opts.seriesIndex][opts.dataPointIndex] + ''
+    //  },
+	//  
+    //},
+    //markers: {
+	//  strokeWidth: [8],
+	//  strokeColors: ['#0B2A97'],
+	//  border:0,
+	//  colors:['#fff'],
+    //  hover: {
+    //    size: 13,
+    //  }
+    //},
+    //xaxis: {
+    //  categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+	//  labels: {
+	//   style: {
+	//	  colors: '#3E4954',
+	//	  fontSize: '14px',
+	//	   fontFamily: 'Poppins',
+	//	  fontWeight: 100,
+	//	  
+	//	},
+	//  },
+    //},
+	//yaxis: {
+	//	labels: {
+	//	offsetX:-16,
+	//   style: {
+	//	  colors: '#3E4954',
+	//	  fontSize: '14px',
+	//	   fontFamily: 'Poppins',
+	//	  fontWeight: 100,
+	//	  
+	//	},
+	//  },
+	//},
+	//fill: {
+	//	colors:['#0B2A97'],
+	//	type:'solid',
+	//	opacity: 0
+	//},
+	//colors:['#0B2A97'],
+    //grid: {
+    //  borderColor: '#f1f1f1',
+	//  xaxis: {
+    //    lines: {
+    //      show: true
+    //    }
+    //  }
+    //},
+	// responsive: [
+	// {
+	//	breakpoint:1601,
+	//	options:{
+	//		chart: {
+	//			height:400
+	//		},
+	//	},
+	// }
+	//	,{
+	//	breakpoint: 768,
+	//	options: {
+	//		chart: {
+	//			height:250
+	//		},
+	//		markers: {
+	//		  strokeWidth: [4],
+	//		  strokeColors: ['#0B2A97'],
+	//		  border:0,
+	//		  colors:['#fff'],
+	//		  hover: {
+	//			size: 6,
+	//		  }
+	//		},
+	//		stroke: {
+	//		  width: [6],
+	//		  colors:['#0B2A97'],
+	//		  curve: 'smooth'
+	//		},
+	//	}
+	// }
+	// ] 
+    //};
+	//var chartArea = new ApexCharts(document.querySelector("#chartmt"), optionsArea);
+    //chartArea.render();
+		//barchart with chartjs
+
+		var ctx = document.getElementById('chartmt').getContext('2d');
+		var myChart = new Chart(ctx, {
+			type: 'bar',
+			data: {
+				labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+				datasets: [{
+					label: 'Active Maintenance Count',
+					data: [{{barchart1['Jan']}}, {{barchart1['Feb']}}, {{barchart1['Mar']}}, {{barchart1['Apr']}}, {{barchart1['May']}}, {{barchart1['Jun']}}, {{barchart1['Jul']}}, {{barchart1['Aug']}}, {{barchart1['Sep']}}, {{barchart1['Oct']}}, {{barchart1['Nov']}}, {{barchart1['Dec']}}],
+					backgroundColor: [
+						'rgba(11, 42, 151, .9)',
+						'rgba(11, 42, 151, .7)',
+						'rgba(11, 42, 151, .5)',
+						'rgba(11, 42, 151, .3)',
+						'rgba(11, 42, 151, .1)',
+						'rgba(11, 42, 151, .9)',
+						'rgba(11, 42, 151, .7)',
+						'rgba(11, 42, 151, .5)',
+						'rgba(11, 42, 151, .3)',
+						'rgba(11, 42, 151, .1)',
+						'rgba(11, 42, 151, .9)',
+						'rgba(11, 42, 151, .7)'
+					],
+					borderColor: [
+						'rgba(11, 42, 151, .9)',
+						'rgba(11, 42, 151, .7)',
+						'rgba(11, 42, 151, .5)',
+						'rgba(11, 42, 151, .3)',
+						'rgba(11, 42, 151, .1)',
+						'rgba(11, 42, 151, .9)',
+						'rgba(11, 42, 151, .7)',
+						'rgba(11, 42, 151, .5)',
+						'rgba(11, 42, 151, .3)',
+						'rgba(11, 42, 151, .1)',
+						'rgba(11, 42, 151, .9)',
+						'rgba(11, 42, 151, .7)'
+					],
+					borderWidth: 1
+				}]
+			},
+			options: {
+				responsive: true,
+				scales: {
+								xAxes: [{
+						gridLines: {
+							display: false
+						}
+					}],
+					yAxes: [{
+						gridLines: {
+							display: false
+						}
+					}]
+				},
+				legend: {
+					position: 'top',
+					labels: {
+						fontColor: '#3E4954',
+						fontFamily: 'Poppins',
+						fontSize: 14,
+						usePointStyle: true
+					}
+				},
+				title: {
+					display: false,
+					text: 'Active Maintenance Count',
+					fontColor: '#3E4954',
+					fontFamily: 'Poppins',
+					fontSize: 20
+				}
+			}
+		});
+		
+						
+
+		function ping(host, DOMe){
+			//timer start
+			start = new Date().getTime();
+			xhr = new XMLHttpRequest();
+			xhr.open("GET", host, true);
+			xhr.onreadystatechange = function(){
+				if(xhr.readyState == 4 && xhr.status == 200){
+					//timer end
+					end = new Date().getTime();
+					//calculate latency
+					latency = end - start;
+					//update the latency
+					if (latency > 300)
+						DOMe.innerHTML = '<i class="fa fa-exclamation-triangle text-danger"></i> ' + latency + 'ms';
+					else
+						DOMe.innerHTML = latency + 'ms';
+				}
+			}
+			xhr.send();
+		}
+		function pingAll(){
+			//ping to /api/ping and get latency
+			
+			
+			//ping to /api/ping
+			ping('/api/ping', document.getElementById('svlat'));
+			//ping azure microsoft
+			ping('https://dynamodb.us-west-2.amazonaws.com', document.getElementById('azlat'));
+			//ping faceplusplus
+			ping('https://dynamodb.us-west-1.amazonaws.com', document.getElementById('fplat'));
+			//ping openai
+			ping('https://dynamodb.us-east-1.amazonaws.com', document.getElementById('oplat'));
+		}
+		pingAll();
+
+		//refresh the latencies
+		document.getElementById('svlatref').addEventListener('click', function(){
+			document.getElementById('svlat').innerHTML = '<div class="spinner-border text-warning" role="status"></div>';
+			ping('/api/ping', document.getElementById('svlat'));
+		});
+		document.getElementById('azlatref').addEventListener('click', function(){
+			document.getElementById('azlat').innerHTML = '<div class="spinner-border text-success" role="status"></div>';
+			ping('https://dynamodb.us-west-2.amazonaws.com', document.getElementById('azlat'));
+		});
+		document.getElementById('fplatref').addEventListener('click', function(){
+			document.getElementById('fplat').innerHTML = '<div class="spinner-border text-secondary" role="status"></div>';
+			ping('https://dynamodb.us-west-1.amazonaws.com', document.getElementById('fplat'));
+		});
+		document.getElementById('oplatref').addEventListener('click', function(){
+			document.getElementById('oplat').innerHTML = '<div class="spinner-border text-danger" role="status"></div>';
+			ping('https://dynamodb.us-east-1.amazonaws.com', document.getElementById('oplat'));
+		});
+
+	</script>
+
+	
+	<script>
+	//init pie chart
+	{% if gpc['GP 1'] != 0 or gpc['GP 2'] != 0 or gpc['GP 3'] != 0 %}
+	var ctx = document.getElementById('piechartjs').getContext('2d');
+	var myChart = new Chart(ctx, {
+		type: 'pie',
+		data: {
+			labels: ['GP 1', 'GP 2', 'GP 3'],
+			datasets: [{
+				label: '# of Subscriptions',
+				data: [{{gpc['GP 1']}}, {{gpc['GP 2']}}, {{gpc['GP 3']}}], //data
+				backgroundColor: [
+							"rgba(11, 42, 151, .9)",
+							"rgba(11, 42, 151, .7)",
+							"rgba(11, 42, 151, .5)",
+							"rgba(0,0,0,0.07)"
+						],
+				hoverBackgroundColor: [
+					"rgba(11, 42, 151, .9)",
+					"rgba(11, 42, 151, .7)",
+					"rgba(11, 42, 151, .5)",
+					"rgba(0,0,0,0.07)"
+				],
+				borderColor: [
+					"rgba(11, 42, 151, .9)",
+					"rgba(11, 42, 151, .7)",
+					"rgba(11, 42, 151, .5)",
+					"rgba(0,0,0,0.07)"
+				],
+				borderWidth: 1
+			}]
+		},
+		options: {
+			responsive: true,
+			legend: {
+				position: 'left',
+				labels: {
+					fontColor: '#3E4954',
+					fontFamily: 'Poppins',
+					fontSize: 14,
+					usePointStyle: true
+				}
+			},
+			title: {
+				display: false,
+				text: 'Subscription Pie Chart',
+				fontColor: '#3E4954',
+				fontFamily: 'Poppins',
+				fontSize: 20
+			}
+		}
+	});
+	{% else %}
+		//hide canva and say that there is no data
+		document.getElementById('piechartjs').style.display = 'none';
+		document.getElementById('piechartjs').insertAdjacentHTML('afterend', '<p class="text-center">No data available</p>');
+		
+	{% endif %}
+	
+	</script>
+	
 {% endblock %}

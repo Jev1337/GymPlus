@@ -53,8 +53,9 @@
                         </div>
                         {{ form_widget(form.content, {'attr': {'class': 'form-control rounded input-group', 'placeholder': 'Express your thoughts' }}) }}
 						
-                        <div class="d-grid gap-3 d-md-flex justify-content-md-start" style="height: 2.5rem;">
-                            {{ form_widget(form.photo) }}
+                        <div class="d-flex gap-3 justify-content-start" style="height: 2.5rem; margin-top:-20px">
+                            {{ form_label(form.photo) }}
+                            {{ form_widget(form.photo, {'attr': {'style': 'display: none'}}) }}
                             {{ form_widget(form.post, {'attr': {'class': 'btn btn-outline-primary rounded'}}) }}
                             
                         </div>

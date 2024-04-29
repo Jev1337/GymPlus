@@ -42,7 +42,12 @@
                                 <div class="alert alert-danger">
                                     {{ message }}
                                 </div>
-                            {% endfor %}                             
+                            {% endfor %}             
+                            <div>
+                                <p class="h5 mb-0 py-1">
+                                    Why are repporting this post?
+                                </p>
+                            </div>                
                                 {{ form_widget(form.feedback, {'attr': {'class': 'form-control rounded', 'placeholder': 'Express your thoughts' }})}}                                
                                 {{ form_widget(form.send, {'attr': {'class': 'btn h-3 btn-outline-primary rounded' }})}}                        
                             </div>

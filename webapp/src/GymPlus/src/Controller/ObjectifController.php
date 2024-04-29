@@ -24,6 +24,9 @@ use Mukadi\Chart\ChartBuilderInterface;
 use OpenAI;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Console\Output\ConsoleOutput;
+use App\Service\WebSocketServer;
+
+
 class ObjectifController extends AbstractController
 {
 
@@ -224,22 +227,24 @@ public function chat(Request $request): Response
   
 
     #[Route('/StroringData', name: 'app_StroringData')]
-    public function getArduinoData(): StreamedResponse
+    public function getData(): Response
     {
         
-
-        $filePath = 'C:/Users/MSI/IdeaProjects/GymPlus/webapp/src/GymPlus/src/aaaa.txt'; 
+        //kernel + aaaa.txt
+        $filePath = 'aaaa.txt';
         
         $streamedResponse = new StreamedResponse();
 
         $streamedResponse->setCallback(function () use ($filePath) {
-            $fp = fsockopen('192.168.1.162', 80, $errno, $errstr, 30); 
+            $fp = fsockopen('192.168.50.65', 80, $errno, $errstr, 30); 
             
             if ($fp) {
 
                 $file = fopen($filePath, 'a'); 
                 if ($file) {
-                    while (!feof($fp)) {
+                    $i = 0;
+                    while (!feof($fp) && $i < 200) {
+                        $i++;
                         $data = fgets($fp);
                         fwrite($file, $data);
                         echo $data;
@@ -258,8 +263,48 @@ public function chat(Request $request): Response
     
         $streamedResponse->headers->set('Content-Type', 'text/plain');
         $streamedResponse->headers->set('Cache-Control', 'no-cache');
-    
         return $streamedResponse;
+        
+    }
+
+
+    #[Route('/StoringData', name: 'app_StoringData')]
+    public function getArduinoData(): Response
+    {
+        
+        //kernel + aaaa.txt
+        $filePath = 'aaaa.txt';
+        
+        $streamedResponse = new StreamedResponse();
+
+        $streamedResponse->setCallback(function () use ($filePath) {
+            $fp = fsockopen('192.168.50.65', 80, $errno, $errstr, 30); 
+            
+            if ($fp) {
+
+                $file = fopen($filePath, 'a'); 
+                if ($file) {
+                    if (!feof($fp)) {
+                        $data = fgets($fp);
+                        fwrite($file, $data);
+                        echo $data;
+                        flush(); 
+                    }
+                    fclose($file);
+                } else {
+                    echo "Failed to open the file";
+                }
+                fclose($fp);
+            } else {
+                echo "Failed to connect to the Arduino";
+            }
+            
+        });
+    
+        $streamedResponse->headers->set('Content-Type', 'text/plain');
+        $streamedResponse->headers->set('Cache-Control', 'no-cache');
+        return $streamedResponse;
+        
     }
     
 
@@ -309,39 +354,39 @@ public function StatRedirectionTwig(Request $request): Response
 {
     $this->getArduinoData();
 
-    $filePath = 'C:/Users/MSI/IdeaProjects/GymPlus/webapp/src/GymPlus/src/aaaa.txt';
+    $filePath = 'aaaa.txt';
     $values = file($filePath, FILE_IGNORE_NEW_LINES);
     $chart = new ChartView(ChartView::LINE);
 
 
- foreach ($values as $value) {
-    $labels[] = round(microtime(true) * 1000);
+    foreach ($values as $value) {
+        $labels[] = round(microtime(true) * 1000);
 
-}
-$chart->setLabels($labels);
+    }
+    $chart->setLabels($labels);
 
 
-$dataset = [
-    'label' => 'Dataset 1',
-    'data' => $values, 
-    'backgroundColor' => 'rgba(255, 99, 132, 0.2)',
-    'borderColor' => 'rgba(255, 99, 132, 1)',
-    'borderWidth' => 1,
-];
-$chart->setDatasets([$dataset]);
-$chart->pushOptions([
-'scales' => [
-    'y' => [
-        'beginAtZero' => true,
+    $dataset = [
+        'label' => 'Dataset 1',
+        'data' => $values, 
+        'backgroundColor' => 'rgba(255, 99, 132, 0.2)',
+        'borderColor' => 'rgba(255, 99, 132, 1)',
+        'borderWidth' => 1,
+    ];
+    $chart->setDatasets([$dataset]);
+    $chart->pushOptions([
+    'scales' => [
+        'y' => [
+            'beginAtZero' => true,
+        ],
     ],
-],
-]);
-$chart->setId('myChart');
-    return $this->render('main/test2.html.twig', [
-        'chart' => $chart,
-        
     ]);
-}
+    $chart->setId('myChart');
+        return $this->render('main/test2.html.twig', [
+            'chart' => $chart,
+            
+        ]);
+    }
 
 
   /*  #[Route('/RealTimeTracker', name: 'app_Tracker')]
@@ -669,3 +714,5 @@ public function getGeneratedExercices(Request $request): Response
         return new Response($html);
     }
 }
+
+

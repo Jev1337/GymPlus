@@ -13,8 +13,9 @@
 
 							
 
-                  <button class="my-button" onclick="if (xhr) return; xhr=true;startArduinoData();">Start</button>
+                  <button class="my-button" onclick="startArduinoData()">Start</button>
                   <button class="my-button" onclick="stopArduinoData()">Quit</button>
+                    <button onclick="generateChart()">Generate Chart</button>
 
                </div>
             </div>
@@ -54,49 +55,50 @@
          }
       });
       overallData = [];
-      threshold = 2000;
-      xhr= false;
       function startArduinoData() {
          //set timeout]
-            if (xhr == false) {
-               return;
-            }
-            fetch('/StroringData')
-               .then(response => response.text())
+         setInterval(function(){
+            fetch('/StoringData')
+               .then(response => response.json())
                .then(data => {
-                  //data is going to contain 200 seperated with \r\n so we need to split it and store it in data array
-                  data = data.split('\r\n');
-               
+                  overallData.push(data);
                   //append to myChart.data.datasets[0].data
-                  
-                  myChart.data.labels = Array.from(Array(data.length).keys()).map(String);
-                  myChart.data.datasets[0].data = data;
-
+                  if (myChart.data.datasets[0].data.length > 20) {
+                     //remove the first element
+                     myChart.data.datasets[0].data.shift();
+                     myChart.data.labels.shift();
+                  }
+                  myChart.data.labels.push(data);
+                  myChart.data.datasets[0].data.push(data);
                   myChart.update();
-
-
-                     bpm = 0;
-                     for (let i = 0; i < data.length; i++) {
-                        if (data[i] > threshold) {
-                           bpm = bpm + 1;
-                        }
-                     }
-                     if (bpm > 0) {
-                        console.log('Heartbeats: ' + bpm);
-                  
-               }
-                  //call this fetch again
-                  startArduinoData();
                });
-                  
-               
-               
+               if (overallData.length > 60) {
+                  //calculate heartbeats
+                  //calculate the average from the overallData
+
+                  bpm = 0;
+                  for (let i = 0; i < overallData.length; i++) {
+                     if (overallData[i] > 1600) {
+                        bpm = bpm + 1;
+                     }
+                  }
+                  if (bpm > 0) {
+                     console.log('Heartbeats: ' + bpm);
+                  //remove first 20 datas
+                  overallData = overallData.slice(20);
+               }
+               }
+         }, 500);
       }
 
       function stopArduinoData() {
-         xhr = false;
+         myChart.data.labels = [];
+         myChart.data.datasets[0].data = [];
+         myChart.update();
       }
 
-
+      function generateChart() {
+         myChart.update();
+      }
    </script>
 {% endblock %}

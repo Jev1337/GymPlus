@@ -18,7 +18,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class PostController extends AbstractController
 {
-    #[Route('/post', name: 'getAll_post')]
+    #[Route('/blog', name: 'getAll_post')]
     public function getAllPosts(Request $req, PostRepository $rep, EntityManagerInterface $entityManager, CommentaireRepository $crep, ManagerRegistry $manager): Response
     {
         $em = $manager->getManager();
@@ -38,6 +38,9 @@ class PostController extends AbstractController
                 $post->setUser($user);
 
                 $photo = $form['photo']->getData();
+                $content = $form['content']->getData();
+                $clean_words = \ConsoleTVs\Profanity\Builder::blocker($content)->filter();
+                $post->setContent($clean_words);
                 if ($photo) {
                     $filename = 'USERIMG' . $user->getId() . '.' . $photo->guessExtension();
                     $targetdir = $this->getParameter('kernel.project_dir') . '/public/profileuploads/';
@@ -76,7 +79,7 @@ class PostController extends AbstractController
         ]);
     }
     
-    #[Route('/post/{id}', name: 'update_post')]
+    #[Route('/blog/{id}', name: 'update_post')]
     public function updatePosts(Request $req, $id, PostRepository $rep, ManagerRegistry $manager): Response
     {
         // $user = $this->getUser();
@@ -96,7 +99,7 @@ class PostController extends AbstractController
             "post" => $post
         ]);
     }
-    #[Route('/post/delete/{id}', name: 'delete_post')]
+    #[Route('/blog/delete/{id}', name: 'delete_post')]
     public function delete(PostRepository $rep, $id, ManagerRegistry $manager, CommentaireRepository $repc): Response
     {
         // $user = $this->getUser();
@@ -122,7 +125,7 @@ class PostController extends AbstractController
         $em->flush();
     }
     
-    #[Route('/post/like/{id}', name: 'updateLikes_post')]
+    #[Route('/blog/like/{id}', name: 'updateLikes_post')]
     public function updateNbLikes($id, PostRepository $rep, ManagerRegistry $manager)
     {
         $em = $manager->getManager();

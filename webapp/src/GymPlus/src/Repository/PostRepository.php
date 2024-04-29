@@ -53,6 +53,7 @@ class PostRepository extends ServiceEntityRepository
         $builder
             // ->leftJoin('p.likes', 'l')
             ->OrderBy('p.likes', 'DESC')
+            ->addOrderBy('p.nbComnts', 'DESC')
             ->addOrderBy('p.date', 'DESC');
     
         return $builder->getQuery()->getResult();

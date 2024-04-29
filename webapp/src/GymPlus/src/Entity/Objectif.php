@@ -42,10 +42,16 @@ class Objectif
     private ?float $taille;
 
     #[ORM\Column]
-    private ?string $alergie;
+    #[Assert\Length(max: 20)]
+/**
+     * @Assert\Regex(
+     *     pattern="/^[a-zA-Z\s', ]*$/",
+     *     message="Invalid characters detected."
+     * )
+     */    private ?string $alergie;
 
     #[ORM\Column]  
-    #[Assert\NotEqualTo(value:"Select an option", message:"Please select your choice.")]
+    #[Assert\NotBlank(message: "Select an option")]
      private ?string $typeobj;
 
 
@@ -55,6 +61,7 @@ class Objectif
 
     #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(name: "coachid", referencedColumnName: "id")]
+    #[Assert\NotBlank(message: "Select an option")]
     private ?User $coachid;
 
  

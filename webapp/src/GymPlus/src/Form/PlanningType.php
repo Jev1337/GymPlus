@@ -23,9 +23,9 @@ class PlanningType extends AbstractType
 
             
         ]) 
-            ->add('submit', SubmitType::class)
-
-        ;
+            ->add('submit', SubmitType::class);
+            $builder->get('trainingprog')->addModelTransformer(new StringToFileTransformer());
+            $builder->get('foodprog')->addModelTransformer(new StringToFileTransformer());
     }
 
     public function configureOptions(OptionsResolver $resolver): void

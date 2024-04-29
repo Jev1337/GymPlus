@@ -94,7 +94,7 @@
 																												
 
 															<label class="form-label">Something To Say*</label>
-															<div class="input-group">
+															<div class="input-group" id="alergie">
 															{{ form_widget(form.alergie, {'attr': {'class': 'form-control', 'placeholder': 'Something To Say*','onpaste': 'return false'}}) }}
 															</div>
 									                                        {% set alergieErrors = form_errors(form.alergie) | striptags %}
@@ -109,10 +109,10 @@
 																		{% endif %}
 
 
-												<label class="form-label" for="{{ form.typeobj.vars.id }}">Type Objectif</label>
-												<div class="input-group">
-												{{ form_widget(form.typeobj, {'attr': {'class': 'form-control', 'placeholder': '', 'id': form.typeobj.vars.id}}) }}
-												</div>
+																	<label class="form-label" for="{{ form.typeobj.vars.id }}">Type Objectif</label>
+																	<div class="input-group" id="typeobj">
+																	{{ form_widget(form.typeobj, {'attr': {'class': 'form-control', 'placeholder': '', 'id': form.typeobj.vars.id}}) }}
+																	</div>
                                                                                
 															<label class="form-label">Date</label>
 																<div class="input-group" id="datef">
@@ -130,7 +130,7 @@
 																		{% endif %}
                                                                                           
 																<label class="form-label">Coach</label>
-																<div class="input-group">
+																<div class="input-group" id="coachid">
 															{{ form_widget(form.coachid, {'attr': {'class': 'form-control'}}) }}
 																		</div>
 
@@ -226,9 +226,10 @@
 			</div>
 		</section>
 		<!-- Call To Action -->
-		</div>
+<iframe width="1920" height="720" src="https://www.artsteps.com/embed/662a8d1d03d2be2cf66a4e9d/1280/720" frameborder="0" allowfullscreen></iframe>
 
- 
+
+
 {% endblock %}
 
 {% block js %}
@@ -266,7 +267,7 @@
 		 $('.form-error').remove();
 
     for(var key in errors) {
-
+		console.log(key);
         var error = errors[key];
         var fieldId = key.replace('data.', '');
  $('#' + key).after('<div class="alert alert-danger alert-dismissible fade show form-error wow flash" data-wow-duration="2s" data-wow-delay="0.2s"style="visibility: visible; animation-duration: 2s; animation-delay: 0.2s; animation-name: flash;">' +

@@ -1,0 +1,37 @@
+<div class="card border-0 pb-0" id="ListeFieldRefresh">
+                            <div class="card-header border-0 pb-0">
+                                <h4 class="card-title">Planning Created</h4>
+                            </div>
+                            <div class="card-body"> 
+                                <div id="DZ_W_Todo3" class="widget-media dz-scroll height370" >
+                                    <ul class="timeline" >
+                                        <li>
+										  {% for plann in planningList %}
+
+                                            <div class="timeline-panel" >
+												<div class="media mr-2">
+													<img alt="image" width="50" src="images/avatar/1.jpg">
+												</div>
+                                                <div class="media-body" >
+													<h5 class="mb-1">Alfie Mason <small class="text-muted">{{obj.typeobj}}</small></h5>
+													<p class="mb-1">I shared this on my fb wall a few months back..</p>
+                                               								
+                                                	</div>
+												<div class="dropdown">
+													<button type="button" class="btn btn-primary light sharp" data-toggle="dropdown">
+														<svg width="18px" height="18px" viewBox="0 0 24 24" version="1.1"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><rect x="0" y="0" width="24" height="24"/><circle fill="#000000" cx="5" cy="12" r="2"/><circle fill="#000000" cx="12" cy="12" r="2"/><circle fill="#000000" cx="19" cy="12" r="2"/></g></svg>
+													</button>
+													<div class="dropdown-menu dropdown-menu-right">
+                                          {% if plann.idPlanning is not empty and obj.idobjectif is not empty %}
+                                                    <a class="dropdown-item" href="{{ path('updatePlan', {'idPlanning': plann.idPlanning, 'objectiveId': obj.idobjectif}) }}">Edit</a>
+                                                {% else %}
+                                                    <span class="dropdown-item disabled">Edit</span>
+                                                {% endif %}															</div>
+												</div>
+											</div>
+											{% endfor %}
+                                        </li>
+                          			 </ul>
+                                </div>
+                            </div>
+                        </div>

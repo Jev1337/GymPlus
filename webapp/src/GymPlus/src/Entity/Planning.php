@@ -17,10 +17,12 @@ class Planning
     private ?int $idPlanning;
 
     #[ORM\Column]
+    #[Assert\NotBlank(message: "Field is required")]
 
     private ?string $trainingprog;
 
     #[ORM\Column]
+    #[Assert\NotBlank(message: "Field is required")]
     private ?string $foodprog;
 
 

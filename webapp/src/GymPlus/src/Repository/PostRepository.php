@@ -47,12 +47,14 @@ class PostRepository extends ServiceEntityRepository
     //    }
 
     
-    // public function findAllPosts()
-    // {
-    //     $query = $this->createQueryBuilder('p')
-    //         ->where('p.id')
-    //     ;
+    public function findAll()
+    {
+        $builder = $this->createQueryBuilder('p');
+        $builder
+            // ->leftJoin('p.likes', 'l')
+            ->OrderBy('p.likes', 'DESC')
+            ->addOrderBy('p.date', 'DESC');
     
-    //     return $query->getQuery()->getResult();
-    // }
+        return $builder->getQuery()->getResult();
+    }
 }

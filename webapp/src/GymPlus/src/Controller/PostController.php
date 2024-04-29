@@ -60,6 +60,7 @@ class PostController extends AbstractController
         // $posts1 = array();
         // $j = 0;
 
+
         for ($i=0; $i < sizeof($posts); $i++) {
             if($this->checkPostComplaintsCount($posts[$i], $entityManager)){
                 $this->updateNbComnt($crep,$posts[$i],$rep,$manager);
@@ -119,6 +120,20 @@ class PostController extends AbstractController
         $post->setNbComnts($crep->getNbComnts($post->getId()));
         $em->persist($post);
         $em->flush();
+    }
+    
+    #[Route('/post/like/{id}', name: 'updateLikes_post')]
+    public function updateNbLikes($id, PostRepository $rep, ManagerRegistry $manager)
+    {
+        $em = $manager->getManager();
+        $post = $rep->find($id);
+        $likes = $post->getLikes()+1;
+        $post->setLikes($likes);
+        $em->persist($post);
+        $em->flush();
+
+        return $this->redirectToRoute('getAll_post');
+
     }
 
     //check if Post is signaled or not

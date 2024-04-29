@@ -41,15 +41,18 @@ public function findAllPastEvents()
     return $qb->execute();
 }
 
+
 public function getEachMonthEventsCount()
 {
     $qb = $this->createQueryBuilder('e')
-        ->select('MONTH(e.eventDate) as month, COUNT(e.id) as eventCount')
+        ->select("SUBSTRING(e.eventDate, 6, 2) as month, COUNT(e.id) as eventCount")
         ->groupBy('month')
         ->getQuery();
 
     return $qb->execute();
 }
+
+
 
 
 public function getEventRate(int $id): ?float

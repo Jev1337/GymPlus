@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\EventDetails;
 use App\Entity\EventParticipants;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -76,6 +77,26 @@ public function findPastEventsByUser($userId)
 
     return $results;
 }
+
+public function findVoteByUser(array $eventDetails, int $userId): ?int
+{
+    $conn = $this->getEntityManager()->getConnection();
+
+    $sql = '
+        SELECT rate
+        FROM event_participants
+        WHERE event_details_id = :id AND user_id = :userId
+    ';
+
+    $stmt = $conn->executeQuery($sql, [
+        'id' => $eventDetails['id'],
+        'userId' => $userId,
+    ]);
+    $rate = $stmt->fetchOne();
+
+    return $rate;
+}
+
 
 
 

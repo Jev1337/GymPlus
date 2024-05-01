@@ -53,7 +53,7 @@
 
                     function filterByCategory(category) {
                         $("#complete-products-table tbody tr").each(function() {
-                            var rowCategory = $(this).find("td:eq(5)").text().toLowerCase(); // Index 5 corresponds to the column containing the category
+                            var rowCategory = $(this).find("td:eq(6)").text().toLowerCase(); // debut tab indice[0]
                             if (category === "" || rowCategory === category) {
                                 $(this).show();
                             } else {
@@ -80,8 +80,8 @@
                         var rows = $("#complete-products-table tbody tr").get();
 
                         rows.sort(function(a, b) {
-                            var priceA = parseFloat($(a).find("td:eq(2)").text()); // Index 2 corresponds to the column containing the price
-                            var priceB = parseFloat($(b).find("td:eq(2)").text());
+                            var priceA = parseFloat($(a).find("td:eq(3)").text()); // Index 3 corresponds to the column containing the price
+                            var priceB = parseFloat($(b).find("td:eq(3)").text());
 
                             if (order === 'asc') {
                                 return priceA - priceB;

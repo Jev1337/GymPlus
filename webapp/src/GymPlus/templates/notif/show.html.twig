@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+
+<title>Notif</title>
+
+{% block body %}
+    <h1>Notif</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ notif.id }}</td>
+            </tr>
+            <tr>
+                <th>IdProduit</th>
+                <td>{{ notif.idProduit }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ notif.Description }}</td>
+            </tr>
+            <tr>
+                <th>Etat</th>
+                <td>{{ notif.etat }}</td>
+            </tr>
+            <tr>
+                <th>EtatCommentaire</th>
+                <td>{{ notif.etatCommentaire }}</td>
+            </tr>
+            <tr>
+                <th>Titre</th>
+                <td>{{ notif.titre }}</td>
+            </tr>
+            <tr>
+                <th>NomUser</th>
+                <td>{{ notif.nomUser }}</td>
+            </tr>
+            <tr>
+                <th>Date ded creation</th>
+                <td>{{ notif.datevente ? notif.datevente|date('Y-m-d') : '' }} </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_notif_index') }}">back to list</a>
+
+    <a href="{{ path('app_notif_edit', {'id': notif.id}) }}">edit</a>
+
+    {{ include('notif/_delete_form.html.twig') }}
+{% endblock %}

@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Livraison;
 use App\Form\LivraisonType;
+use App\Repository\LivraisonRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,14 +15,17 @@ use Symfony\Component\Routing\Annotation\Route;
 class LivraisonController extends AbstractController
 {
     #[Route('/', name: 'app_livraison_index', methods: ['GET'])]
-    public function index(EntityManagerInterface $entityManager): Response
+    public function index(EntityManagerInterface $entityManager , LivraisonRepository $livraisonRepository): Response
     {
         $livraisons = $entityManager
             ->getRepository(Livraison::class)
             ->findAll();
 
+            $statistics = $livraisonRepository->countByEtat();
+
         return $this->render('livraison/index.html.twig', [
             'livraisons' => $livraisons,
+            'statistics' => $statistics,
         ]);
     }
 
@@ -82,4 +86,5 @@ class LivraisonController extends AbstractController
 
         return $this->redirectToRoute('app_livraison_index', [], Response::HTTP_SEE_OTHER);
     }
+    
 }

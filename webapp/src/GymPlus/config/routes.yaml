@@ -1,3 +1,10 @@
 #index:
 #    path: /
 #    controller: App\Controller\DefaultController::index
+generate_barcode:
+    path: /generate
+    controller: App\Controller\YourController::generateBarcode
+
+pdf_generate:
+    path: '/generate-pdf/{idFacture}'
+    controller: 'App\Controller\CustomPdfController::generatePdf'

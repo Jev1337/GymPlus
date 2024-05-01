@@ -21,6 +21,19 @@ class LivraisonRepository extends ServiceEntityRepository
         parent::__construct($registry, Livraison::class);
     }
 
+    public function countByEtat()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $query = $entityManager->createQuery(
+            'SELECT l.etat, COUNT(l.idlivraison) AS count
+             FROM App\Entity\Livraison l
+             GROUP BY l.etat'
+        );
+
+        return $query->getResult();
+    }
+
 //    /**
 //     * @return Livraison[] Returns an array of Livraison objects
 //     */

@@ -70,13 +70,39 @@
                                 {% endfor %}           
                             </div>
 
-<style>
-    .dz-media img {
-        width: 100%;
-        height: 100%/*300px*/; /* Hauteur fixe pour toutes les images */
-        object-fit: cover; /* Pour couvrir toute la zone de l'image */
-    }
-</style>
+                            <!-- Affichage des produits les plus vendus -->
+                            <h2>Most Sold Products :</h2> 
+                            <div class="row">
+                                {% for mostSoldProduct in mostSoldProducts %}  {# |slice(0, 2) %} #}
+                                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12">
+                                        <div class="shop-card style-1 hover-aware wow fadeInUp" data-wow-delay="0.6s">
+                                            <div class="dz-media">
+                                                <img src="{{ asset('images/img_product/' ~ mostSoldProduct.photo) }}" alt="">
+                                                <div class="shop-meta">
+                                                    <ul>
+                                                        <li><a href="{{ path('app_produit_show', {'idproduit': mostSoldProduct.idproduit}) }}">Quick View</a></li>
+                                                        <li><a href="{{ path('wishList_add', {'idproduit': mostSoldProduct.idproduit}) }}"><i class="yith-wcwl-icon fa fa-heart"></i></a></li>  
+                                                        <li><a href="{{ path('panier_add', {'idproduit': mostSoldProduct.idproduit}) }}"><i class="fa-solid fa-cart-shopping"></i></a></li>
+                                                    </ul>
+                                                </div> 
+                                                <div class="effect"></div>
+                                            </div>
+                                            <div class="dz-content">
+                                                <h4 class="title"><a href="product-detail.html">{{ mostSoldProduct.name }}</a></h4>
+                                                <p><span class="font-weight-600">$ {{ mostSoldProduct.prix }}</span></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+                            <style>
+                                .dz-media img {
+                                    width: 100%;
+                                    height: 100%/*300px*/; /* Hauteur fixe pour toutes les images */
+                                    object-fit: cover; /* Pour couvrir toute la zone de l'image */
+                                }
+                            </style>
 
                             <hr> <!-- Séparateur entre les deux tableaux -->
                             <h2>Our Products :</h2>
@@ -138,23 +164,17 @@
                             </div> #}
 
 
-                            <div class="row page wow fadeInUp" data-wow-delay="2.4s">
-                                <div class="col-sm-6 m-b15">
-                                    <p class="page-text"></p>
-                                </div>
-                                <div class="col-sm-6 m-b15">
-                                    <nav aria-label="Shop Pagination">
-                                        <ul class="pagination style-1">
-                                            <li class="page-item"><a class="page-link prev" href="javascript:void(0);">Prev</a></li>
-                                            <li class="page-item"><a class="page-link active" href="javascript:void(0);">1</a></li>
-                                            <li class="page-item"><a class="page-link" href="javascript:void(0);">2</a></li>
-                                            <li class="page-item"><a class="page-link" href="javascript:void(0);">3</a></li>
-                                            <li class="page-item"><a class="page-link next" href="javascript:void(0);">Next</a></li>
-                                        </ul>
-                                    </nav>
+
+                            <div class="row page wow fadeInUp" data-wow-delay="1s">
+                                <div class="d-flex justify-center">
+                                    {% do produits.setPageRange(2) %}
+                                    {{ knp_pagination_render(produits , 'produit/paginator.html.twig')}}
                                 </div>
                             </div>
+
+                            
                         </div>
+
                         <div class="col-xl-4 col-lg-12">
                             <div class="shop-filter side-bar sticky-top">
                                 <aside>

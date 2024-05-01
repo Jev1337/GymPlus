@@ -30,6 +30,21 @@ class DetailfactureRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    
+    public function findMostSoldProducts(int $limit = 3): array
+    {
+        return $this->createQueryBuilder('d')
+            ->select('p.idproduit AS idproduit', 'SUM(d.quantite) AS totalQuantite', 'p.photo' , 'p.name' , 'p.prix' ) // Sélectionnez également la colonne photo
+            ->join('d.idproduit', 'p') // Joignez l'entité Produit avec l'entité Detailfacture
+            ->groupBy('p.idproduit') // Groupez par l'identifiant du produit
+            ->orderBy('totalQuantite', 'DESC') // Triez par la somme des quantités vendues
+            ->setMaxResults($limit) // Limitez le nombre de résultats
+            ->getQuery()
+            ->getResult();
+    }
+   
+
+
 //    /**
 //     * @return Detailfacture[] Returns an array of Detailfacture objects
 //     */

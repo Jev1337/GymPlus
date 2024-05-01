@@ -84,9 +84,11 @@ class UserRepository extends ServiceEntityRepository
     
     }
 
-    public function getUserCount(){
+    public function getClientCount(){
         return $this->createQueryBuilder('u')
             ->select('count(u.id)')
+            ->where('u.role LIKE :role')
+            ->setParameter('role', 'client')
             ->getQuery()
             ->getSingleScalarResult();
     }

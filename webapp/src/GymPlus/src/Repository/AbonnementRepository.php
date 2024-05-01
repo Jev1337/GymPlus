@@ -67,14 +67,7 @@ class AbonnementRepository extends ServiceEntityRepository
         $qb->andWhere('a.datefinab > :now');
         $qb->setParameter('now', new \DateTime());
         $active = $qb->getQuery()->getSingleScalarResult();
-
-        $qb = $this->createQueryBuilder('a');
-        $qb->select('COUNT(a.id)');
-        $total = $qb->getQuery()->getSingleScalarResult();
-        if ($total == 0) {
-            return 0;
-        }
-        return $active / $total * 100;
+        return $active;
     
     }
 

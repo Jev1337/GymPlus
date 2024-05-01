@@ -42,9 +42,9 @@ class UserController extends AbstractController
     public function dashboard(UserRepository $repoUser, AbonnementRepository $repoAbon, MaintenancesRepository $repoMaint ): Response
     {
         $stats = [
-            ['title' => 'User Count', 'content' => $repoUser->getUserCount(), 'percent' => '100'],
+            ['title' => 'Members Count', 'content' => $repoUser->getClientCount(), 'percent' => '100'],
             ['title' => 'Active Membership Count', 'content' => $repoAbon->getActiveMembershipCount(),'percent' => '100'],
-            ['title' => 'Active Membership Percent', 'content' => $repoAbon->getActiveMembershipPercent(), 'percent' => $repoAbon->getActiveMembershipPercent()],
+            ['title' => 'Active Membership Percent', 'content' => $repoAbon->getActiveMembershipPercent()/$repoUser->getClientCount()*100, 'percent' => $repoAbon->getActiveMembershipPercent()/$repoUser->getClientCount()*100],
             ['title' => 'Event Count', 'content' => '', 'percent' => '100'] // Replace with actual event count
         ];
 

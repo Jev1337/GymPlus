@@ -1,0 +1,112 @@
+{% extends "dashboard/base.html.twig" %}
+
+{% block content %}
+<div class="content-body default-height" style="min-height: 878px;">
+    <div class="container-fluid">
+        <div class="page-titles">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
+                <li class="breadcrumb-item active"><a href="javascript:void(0)">Notif</a></li>
+            </ol>
+        </div>
+        <!-- row -->
+
+         {% block stylesheetscolor %}
+            <style>
+                .etat-Completed {
+                    color: #28a745; /* texte vert */
+                }
+
+                .etat-Unread {
+                    color: #ff0000; /* texte rouge */
+                }
+            </style>
+        {% endblock %}
+            
+        <input id="search-input" type="form-control" placeholder="search..." style="width: 400px; border-radius: 10px;" >
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            <script>
+                $(document).ready(function() {
+                    $("#search-input").on("keyup", function() {
+                        var value = $(this).val().toLowerCase();
+                        // Sélectionner les lignes du deuxième tableau seulement
+                        $("#complete-products-table tbody tr").filter(function() {
+                            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+                        });
+                    });
+                });
+            </script>
+
+        <br>
+        <br>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Notif</h4>
+                    </div>
+                    <div class="card-body">
+                        {# <div class="table-title">Facture</div> #}
+                        <div class="table-responsive">
+                            <table class="table table-responsive-md" id="complete-products-table">
+                            {# <table class="table" id="complete-products-table"> #}
+                            <thead>
+                                <tr>
+                                    <th> <strong class="text-black" style="font-weight: 600;"> #</strong> </th>
+                                    <th> <strong class="text-black" style="font-weight: 600;"> Title</strong> </th>
+                                    <th> <strong class="text-black" style="font-weight: 600;"> Date</strong> </th>
+                                    <th> <strong class="text-black" style="font-weight: 600;"> State</strong> </th>
+                                    <th> <strong class="text-black" style="font-weight: 600;"> Description</strong> </th>
+                                    <th> <strong class="text-black" style="font-weight: 600;"> Id Product </strong> </th>
+                                    {# <th> <strong class="text-black" style="font-weight: 600;"> User Name</strong> </th> #}
+                                    <th> <strong class="text-black" style="font-weight: 600;"> Actions</strong> </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for notif in notifs %}
+                                    <tr>
+                                        <td>{{ notif.id }}</td>
+                                        <td>{{ notif.titre }}</td>                                      
+                                        <td>{{ notif.datevente ? notif.datevente|date('Y-m-d') : '' }} </td>
+                                        <td class="{% if notif.etat == 'Completed' %}etat-Completed{% elseif notif.etat == 'Unread' %}etat-Unread{% endif %}">
+                                            {{ notif.etat }}
+                                        </td>
+                                        <td>{{ notif.Description }}</td>
+                                        <td>{{ notif.idProduit }}</td>
+                                        {# <td>{{ notif.nomUser }}</td> #}
+                                        <td>
+                                            <div class="dropdown ms-auto text-end c-pointer">
+                                                <div class="btn-link" data-toggle="dropdown">
+                                                    <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><rect x="0" y="0" width="24" height="24"></rect><circle fill="#000000" cx="5" cy="12" r="2"></circle><circle fill="#000000" cx="12" cy="12" r="2"></circle><circle fill="#000000" cx="19" cy="12" r="2"></circle></g></svg>
+                                                </div>
+                                                <div class="dropdown-menu dropdown-menu-right">
+                                                    <div class="text-center">
+                                                         <a href="{{ path('app_notif_show', {'id': notif.id}) }}">show</a>
+                                                    </div> 
+                                                    <div class="text-center">
+                                                        <a href="{{ path('app_notif_edit', {'id': notif.id}) }}">edit</a>
+                                                    </div>  
+                                                    <div class="text-center">
+                                                        {{ include('notif/_delete_form.html.twig') }} 
+                                                    </div>                               
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% else %}
+                                    <tr>
+                                        <td colspan="8">no records found</td>
+                                    </tr>
+                                {% endfor %}                         
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

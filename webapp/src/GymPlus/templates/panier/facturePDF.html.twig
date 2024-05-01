@@ -1,0 +1,86 @@
+
+<!DOCTYPE html>
+<html lang="en"> 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice {{ facture.idfacture }}</title> <!-- Changement du titre en anglais -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f5ff; /* Bleu clair */
+            color: #333;
+        }
+        .container {
+            width: 80%;
+            margin: 30px auto; /* Ajout de marge en haut et en bas */
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+        h2, h3, h4 {
+            color: #4169E1; /* Bleu royal plus foncé */
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .total {
+            font-weight: bold;
+        }
+        .message {
+            margin-top: 20px;
+            font-style: italic;
+            color: #008080; /* Bleu turquoise */
+        }
+    </style>
+</head>
+<body>
+<h1>GymPlus</h1>
+
+    <div class="container">
+        <h2>Invoice #{{ facture.idfacture }}</h2> 
+        <h3>Sale Date: {{ facture.datevente ? facture.datevente|date('d/m/Y') : 'Not specified' }}</h3> <!-- Changement de la date en anglais -->
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th> 
+                    <th>Unit Price</th> 
+                    <th>Quantity</th> 
+                    <th>Discount Rate</th> 
+                    <th>Total Article</th> 
+                </tr>
+            </thead>
+            <tbody>
+                {% for detail in detailsFacture %}
+                    <tr>
+                        <td>{{ detail.iddetailfacture }}</td>
+                        <td>{{ detail.prixventeunitaire }}</td>
+                        <td>{{ detail.quantite }}</td>
+                        <td>{{ detail.tauxremise }}</td>
+                        <td>{{ detail.prixtotalarticle }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <h4 class="total">Total Invoice Amount: {{ facture.prixtatalpaye }}</h4> 
+        <h4>Payment Method: {{ facture.methodedepaiement }}</h4> 
+
+        <p class="message">Thank you for choosing to shop with us!</p> 
+    </div>
+</body>
+</html>

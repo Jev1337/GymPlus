@@ -7,7 +7,7 @@
   <h3 align="center">GymPlus</h3>
 
   <p align="center">
-    A Gym Management Software in JavaFX and Symphony.
+    A Gym Management Software in JavaFX and Symfony.
     <br/>
     <br/>
     <a href="https://github.com/Jev1337/GymPlus"><strong>Explore the docs »</strong></a>

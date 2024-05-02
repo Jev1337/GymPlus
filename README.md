@@ -50,7 +50,7 @@ You just have to clone the Repo and run, make sure to install the Prerequisites.
 
 This is an example of how to list things you need to use the software and how to install them.
 * JavaFX [https://openjfx.io/](https://openjfx.io/)
-* Symphony [https://symfony.com/](https://symfony.com/)
+* Symfony [https://symfony.com/](https://symfony.com/)
 * MySQL via XAMPP [https://www.apachefriends.org/index.html](https://www.apachefriends.org/index.html)
 
 ## Usage

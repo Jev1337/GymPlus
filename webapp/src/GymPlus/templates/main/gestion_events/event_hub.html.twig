@@ -20,9 +20,9 @@
 						<!-- Breadcrumb Row -->
 						<nav aria-label="breadcrumb" class="breadcrumb-row">
 							<ul class="breadcrumb">
-								<li class="breadcrumb-item"><a href="index.html">Home</a></li>
-								
-								<li class="breadcrumb-item active" aria-current="page">Events</li>
+								<li class="breadcrumb-item"><a href={{ path('app_home') }}>Home</a></li>
+									
+									<li class="breadcrumb-item active" aria-current="page">Rewards</li>
 							</ul>
 						</nav>
 						<!-- Breadcrumb Row End -->
@@ -39,8 +39,8 @@
 		<a href="{{ path('rewards') }}" class="text-decoration-none text-dark">
 			<div class="card">
 				<div class="card-body">
-					<h5 class="card-title">Event Points</h5>
-					<p class="card-text">{{ user_points }}</p>
+					<h5 class="card-title" style="color: red;"><i class="fas fa-trophy"></i> Event Points</h5>      
+					<p class="card-text" style="color: red;">{{ user_points }}</p>
 				   
 				</div>
 				

@@ -27,6 +27,7 @@ use Symfony\Component\Mime\Part\Multipart\FormDataPart;
 use GuzzleHttp\Client as GuzzleClient;
 use App\Entity\AbonnementDetails;
 use App\Form\GPPricesType;
+use App\Repository\EventDetailsRepository;
 use App\Repository\MaintenancesRepository;
 use Google_Service_Oauth2;
 use Google_Client;
@@ -39,17 +40,17 @@ class UserController extends AbstractController
         return $this->redirectToRoute('app_home');
     }
     #[Route('/dashboard/home', name: 'app_dashboard')]
-    public function dashboard(UserRepository $repoUser, AbonnementRepository $repoAbon, MaintenancesRepository $repoMaint ): Response
+    public function dashboard(UserRepository $repoUser, AbonnementRepository $repoAbon, MaintenancesRepository $repoMaint,EventDetailsRepository $repoEvents ): Response
     {
         $stats = [
             ['title' => 'Members Count', 'content' => $repoUser->getClientCount(), 'percent' => '100'],
             ['title' => 'Active Membership Count', 'content' => $repoAbon->getActiveMembershipCount(),'percent' => '100'],
             ['title' => 'Active Membership Percent', 'content' => $repoAbon->getActiveMembershipPercent()/$repoUser->getClientCount()*100, 'percent' => $repoAbon->getActiveMembershipPercent()/$repoUser->getClientCount()*100],
-            ['title' => 'Event Count', 'content' => '', 'percent' => '100'] // Replace with actual event count
+            ['title' => 'Live Events', 'content' => count($repoEvents->findFutureEvents()),'percent' => '100']
         ];
 
         $barchart1 = $repoMaint->getEachMonthMaintenancesCount();
-        // $barchart2 = eventchart
+        $barchart2 = $repoEvents->getEachMonthEventsCount(); 
 
         $start = microtime(true);
         $res = $repoUser->findUserById($this->getUser()->getId());
@@ -64,7 +65,7 @@ class UserController extends AbstractController
             'controller_name' => 'UserController',
             'stats' => $stats,
             'barchart1' => $barchart1,
-            'barchart2' => [],
+            'barchart2' =>  $barchart2,
             'dblatency' => $dblatency,
             'gpc' => $gpc
         ]);

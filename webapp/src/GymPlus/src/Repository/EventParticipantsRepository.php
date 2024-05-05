@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\EventDetails;
 use App\Entity\EventParticipants;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -41,12 +42,15 @@ public function getNextEventDate($userId)
         SELECT ed.event_date as date 
         FROM event_participants ep
         INNER JOIN event_details ed ON ep.event_details_id = ed.id
-        WHERE ep.user_id = :userId
+        WHERE ep.user_id = :userId AND ed.event_date >= :current_Date
         ORDER BY ed.event_date ASC
         LIMIT 1
     ';
 
-    $stmt = $conn->executeQuery($sql, ['userId' => $userId]);
+    $stmt = $conn->executeQuery($sql, [
+        'userId' => $userId,
+        'current_Date' => (new \DateTime())->format('Y-m-d H:i:s'),
+    ]);
 
     // Fetch the result as an associative array
     $result = $stmt->fetchAssociative();
@@ -73,6 +77,26 @@ public function findPastEventsByUser($userId)
 
     return $results;
 }
+
+public function findVoteByUser(array $eventDetails, int $userId): ?int
+{
+    $conn = $this->getEntityManager()->getConnection();
+
+    $sql = '
+        SELECT rate
+        FROM event_participants
+        WHERE event_details_id = :id AND user_id = :userId
+    ';
+
+    $stmt = $conn->executeQuery($sql, [
+        'id' => $eventDetails['id'],
+        'userId' => $userId,
+    ]);
+    $rate = $stmt->fetchOne();
+
+    return $rate;
+}
+
 
 
 

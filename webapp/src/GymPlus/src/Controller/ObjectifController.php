@@ -199,30 +199,6 @@ public function chat(Request $request): Response
         ]);
     }
 
-/* #[Route('/RealTimeTracker', name: 'app_Tracker')] 
- public function getArduinoData(Request $request): StreamedResponse
- {
-        $arduinoIp = '192.168.1.162'; 
-        $arduinoPort = 80; 
-        $streamedResponse = new StreamedResponse();
-        $streamedResponse->setCallback(function () use ($arduinoIp, $arduinoPort) {
-            $fp = fsockopen($arduinoIp, $arduinoPort, $errno, $errstr, 30);
-            if ($fp) {
-                fwrite($fp, "GET / HTTP/1.0\r\n\r\n");
-                while (!feof($fp)) {
-                    echo fgets($fp);
-                }
-                fclose($fp);
-            } else {
-                echo "Failed to connect to the Arduino";
-            }
-        });
-    
-        $streamedResponse->headers->set('Content-Type', 'text/plain');
-        $streamedResponse->headers->set('Cache-Control', 'no-cache');
-    
-        return $streamedResponse;
-    }*/
 
   
 
@@ -236,7 +212,7 @@ public function chat(Request $request): Response
         $streamedResponse = new StreamedResponse();
 
         $streamedResponse->setCallback(function () use ($filePath) {
-            $fp = fsockopen('192.168.50.65', 80, $errno, $errstr, 30); 
+            $fp = fsockopen('172.21.3.131', 80, $errno, $errstr, 30); 
             
             if ($fp) {
 
@@ -268,6 +244,15 @@ public function chat(Request $request): Response
     }
 
 
+
+
+
+
+
+
+
+
+    
     #[Route('/StoringData', name: 'app_StoringData')]
     public function getArduinoData(): Response
     {
@@ -398,7 +383,13 @@ public function StatRedirectionTwig(Request $request): Response
     }
 */
 
+#[Route('/BmiCalculator', name: 'app_bmi')]
+    public function Bmi(Request $request): Response
+    {
+    return $this->render('main\BMI_Calculator.html.twig', [
 
+    ]);
+    }
 
 
 
@@ -486,6 +477,8 @@ public function getGeneratedExercices(Request $request): Response
     #[Route('/dashbord_Objective', name: 'Dashbord_Objective')]
     public function dash_obj(ManagerRegistry $registry): Response
     {  
+     
+
         $user = $this->getUser();
         $userId = $user->getId(); 
         $entityManager = $registry->getManager();
@@ -497,7 +490,15 @@ public function getGeneratedExercices(Request $request): Response
         ->getQuery()
         ->setParameter('userId', $userId)
         ->getResult();
-       
+
+        $objectifsDefaultType = $entityManager->getRepository(Objectif::class)
+        ->findBy([
+            'coachid' => $userId,
+            'typeobj' => 'Default' 
+        ]);
+        $countTypeDefault = count($objectifsDefaultType);
+
+
         $notInPlanning = $entityManager->createQueryBuilder()
         ->select('o.idobjectif')
         ->from(Planning::class, 'p')
@@ -515,12 +516,102 @@ public function getGeneratedExercices(Request $request): Response
         ->getQuery()
         ->getResult();
 
+   
+
+        $count = count($objFinished);
+        $count2 = count($objNotFinished);
+        $count3 =  $count2 +  $count ;
+        $stats = [
+            ['title' => 'Plans Finished', 'content' => $count, 'percent' => '100'],
+            ['title' => 'Plans Unfinished', 'content' => $count2 ,'percent' => '100'],
+            ['title' => 'Plans Count', 'content' => $count3 ,'percent' => '100'],
+            ['title' => 'Objectif Type', 'content' => $countTypeDefault ,'percent' => '100'],
+
+        ];
+
+
+        
+        $gainWeight = 0;
+        $loseWeight = 0;
+        $maintainWeight = 0;
+
+        foreach ($objNotFinished as $obj) {
+            if ($obj->getPoidsobj() > $obj->getPoidsact()) {
+                $gainWeight++;
+            }
+            if ($obj->getPoidsobj() < $obj->getPoidsact()) {
+                $loseWeight++;
+            }
+            else {
+                $maintainWeight++;
+            }
+        }
+
+        $chart = new ChartView(ChartView::BAR);
+        $values = [  $gainWeight,$loseWeight, $maintainWeight];
+        $labels = ["Gain Weight", "Lose Weight", "Maintain Weig"];
+        $chart->setLabels($labels);
+        $dataset = [
+            'label' => 'Unfinished Plans',
+            'data' => $values, 
+            'backgroundColor' => 'rgba(255, 99, 132, 0.2)',
+            'borderColor' => 'rgba(255, 99, 132, 1)',
+            'borderWidth' => 1,
+        ];
+        $chart->setDatasets([$dataset]);
+        $chart->pushOptions([
+        'scales' => [
+            'y' => [
+                'beginAtZero' => true,
+            ],
+        ],
+    ]);
+
+    $gainWeight2 = 0;
+        $loseWeight2 = 0;
+        $maintainWeight2 = 0;
+    foreach ($objectifs as $obj2) {
+        if ($obj2->getPoidsobj() > $obj2->getPoidsact()) {
+            $gainWeight2++;
+        }
+        if ($obj2->getPoidsobj() < $obj2->getPoidsact()) {
+            $loseWeight2++;
+        }
+        else {
+            $maintainWeight2++;
+        }
+    }
+
+    $chart2 = new ChartView(ChartView::BAR);
+    $values2 = [  $gainWeight2,$loseWeight2, $maintainWeight2];
+    $labels2 = ["Gain Weight", "Lose Weight", "Maintain Weig"];
+    $chart2->setLabels($labels2);
+    $dataset2 = [
+        'label' => 'All The Plans',
+        'data' => $values2, 
+        'backgroundColor' => 'rgba(255, 99, 132, 0.2)',
+        'borderColor' => 'rgba(255, 99, 132, 1)',
+        'borderWidth' => 1,
+    ];
+    $chart2->setDatasets([$dataset2]);
+    $chart2->pushOptions([
+    'scales' => [
+        'y' => [
+            'beginAtZero' => true,
+        ],
+    ],
+]);
+
+
         return $this->render('dashboard\gestionSuivi/plan.html.twig', [
             'controller_name' => 'ObjectifController',
             'user' => $user,
             'objectifs' => $objectifs,
              'objFinished'=> $objFinished,
              'objNotFinished'=> $objNotFinished,
+             'stats' => $stats,
+             'chart' => $chart,
+             'chart2' => $chart2,
 
         ]);
     }

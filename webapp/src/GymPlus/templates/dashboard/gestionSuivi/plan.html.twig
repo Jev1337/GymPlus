@@ -2,7 +2,6 @@
 
 {% block content %}
         <div class="content-body">
-            <!-- row -->
 			<div class="container-fluid">
 				<div class="row">
 					<div class="col-xl-6 col-xxl-12">
@@ -24,8 +23,9 @@
 												</svg>
 											</span>
 											<div class="media-body">
-												<p class="fs-14 mb-2">Weekly Progress</p>
-												<span class="title text-black font-w600">42%</span>
+												<p class="fs-14 mb-2">{{stats[0].title}}</p>
+												<span class="title text-black font-w600">{{stats[0].content}}</span>
+
 											</div>
 										</div>
 										<div class="progress" style="height:5px;">
@@ -49,15 +49,11 @@
 												</svg>
 											</span>
 											<div class="media-body">
-												<p class="fs-14 mb-2">Weekly Progress</p>
-												<span class="title text-black font-w600">42km</span>
+												<p class="fs-14 mb-2">{{stats[1].title}}</p>
+												<span class="title text-black font-w600">{{stats[1].content}}</span>
 											</div>
 										</div>
-										<div class="progress" style="height:5px;">
-											<div class="progress-bar bg-secondary" style="width: 82%; height:5px;" role="progressbar">
-												<span class="sr-only">42% Complete</span>
-											</div>
-										</div>
+										
 									</div>
 									<div class="effect bg-secondary"></div>
 								</div>
@@ -75,8 +71,8 @@
 												</svg>
 											</span>
 											<div class="media-body">
-												<p class="fs-14 mb-2">Daily Cycling</p>
-												<span class="title text-black font-w600">230 Km</span>
+												<p class="fs-14 mb-2">{{ stats[2].title }}</p>
+												<span class="title text-black font-w600">{{ stats[2].content }}</span>
 											</div>
 										</div>
 										<div class="progress" style="height:5px;">
@@ -102,8 +98,8 @@
 												</svg>
 											</span>
 											<div class="media-body">
-												<p class="fs-14 mb-2">Morning Yoga</p>
-												<span class="title text-black font-w600">18:34:21”</span>
+												<p class="fs-14 mb-2">{{ stats[3].title }}</p>
+												<span class="title text-black font-w600">{{ stats[3].content }}</span>
 											</div>
 										</div>
 										<div class="progress" style="height:5px;">
@@ -138,22 +134,28 @@
 											</clipPath>
 											</defs>
 										</svg>
-										Running
+										Plans Type
 										<svg class="ml-2" width="14" height="8" viewBox="0 0 14 8" fill="none" xmlns="http://www.w3.org/2000/svg">
 											<path d="M1 0.999999L7 7L13 1" stroke="#0B2A97" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 										</svg>
 									</button>
 									<div class="dropdown-menu dropdown-menu-right">
-										<a class="dropdown-item" href="javascript:void(0);">Edit</a>
-										<a class="dropdown-item" href="javascript:void(0);">Delete</a>
+										<a class="dropdown-item" href="#" onclick="toggleCharts2()">Unifinshed</a>
+
+							            <a class="dropdown-item" href="#" onclick="toggleCharts()">All The Plans</a>
 									</div>
 								</div>
 							</div>
 							<div class="card-body pt-0 pb-0">
-								<div id="chartBar"></div>
+								<div id="chart"> {{ mukadi_chart(chart) }}</div>
+								<div id="chart2" style="display: none;">{{ mukadi_chart(chart2) }}</div>
+
 							</div>
 						</div>
 					</div>
+
+
+
 					<div class="col-xl-9 col-xxl-8" >
 						<div class="row">
 							<div class="col-xl-12" >
@@ -353,7 +355,7 @@
 														<span class="fs-14">{{ objNotFinished.dated|date('M') }}</span>
 											</div>
 										</div>
-{% endfor %}
+			{% endfor %}
 										
 									</div>
 								</div>
@@ -362,15 +364,33 @@
 					</div>
 				</div>
           </div>
-     </div>              
+     </div>   
+	            
 {% endblock %}
 
 
 {% block js %} 
 {{ parent() }}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.2.1/chart.umd.min.js"></script>
+    <script src="/bundles/mukadichartjs/mukadi.chart.min.js"></script>
 <script>
+function toggleCharts() {
+  var chart = document.getElementById("chart");
+  var chart2 = document.getElementById("chart2");
+
+  chart.style.display = "none"; 
+  chart2.style.display = "block"; 
+}
+function toggleCharts2() {
+  var chart = document.getElementById("chart");
+  var chart2 = document.getElementById("chart2");
+
+  chart.style.display = "block"; 
+  chart2.style.display = "none"; 
+}
+
+
 	$(document).ready(function() {
     $('.delete-objective').click(function(event) {
         event.preventDefault();
@@ -384,7 +404,7 @@
             success: function(response) {
                 $('#objective-list').html(response);
                 console.log('titi');
-                                console.log(response);
+                   console.log(response);
 
             },
             error: function() {

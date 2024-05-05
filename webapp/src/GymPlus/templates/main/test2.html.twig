@@ -3,23 +3,110 @@
 {% block content %}
    <div class="page-content bg-white">		
       <!-- banner -->
-      <div class="contact-bnr" style="background-image: url({{ asset('main/images/background/bg9.png') }});">
-         <div class="container">
-            <div class="row">
-               <div class="col-lg-6">
-                  {# {{ mukadi_chart(chart) }} #}
-                  <!-- chartjs displaying ajax'd data from /StroringData with gets Y-axis data from /StroringData -->
-                  <canvas id="chart" width="400" height="400"></canvas>
-
-							
-
-                  <button class="my-button" onclick="if (xhr) return; xhr=true;startArduinoData();">Start</button>
-                  <button class="my-button" onclick="stopArduinoData()">Quit</button>
-
-               </div>
+<div class="background-image-container" style="display: flex; justify-content: center; align-items: center; height: 100vh; backdrop-filter: blur(5px);">
+  <div class="background-image" style="width: 100%; height: 100%; background-image: url({{ asset('main/images/background/health.jpg') }}); background-size: cover; background-position: center;"></div>
+       <div class="container">
+<div class="row" style="margin-top: 25vh;">
+               <div class="col-lg-12">
+               
+                  <canvas id="chart" width="100" height="50"></canvas>
+                
+               <div class="button-container">
+                <button class=" btn btn-primary w-40 btnhover" onclick="if (xhr) return; xhr=true;startArduinoData();">Start</button>
+                <button class=" btn btn-danger w-40 btnhover" onclick="stopArduinoData()">Quit</button>
+                </div>
+                </div>
+               
             </div>
-         </div>
+            
+            <div>
+            <br></br>
+            </div>       
+                   <div class="row">
+                   <div class="col-lg-4 wow fadeInUp" data-wow-delay="0.6s" style="visibility: visible; animation-delay: 0.6s; animation-name: fadeInUp;">
+						<div class="icon-bx-wraper style-1">
+							<div class="icon-bx m-b20"> 
+								<div class="icon-cell text-primary">
+									<i class="flaticon-heart-beat"></i>
+								</div>
+							</div>
+							<div class="icon-content">
+								<h4 class="dz-title m-b10"><a href="service-details.html">Heart Rate</a></h4>
+                                <h2 class="dz-title"><span class="counter">0 </span>    BPM</h2>
+
+								<p>The heart rate refers to the number of times the heart beats per minute (bpm)</p>
+							</div>
+							<div class="effect"></div>
+						</div>
+					</div>
+
+
+                    <div class="col-lg-4 wow fadeInUp" data-wow-delay="0.6s" style="visibility: visible; animation-delay: 0.6s; animation-name: fadeInUp;">
+						<div class="icon-bx-wraper style-1">
+							<div class="icon-bx m-b20"> 
+								<div class="icon-cell text-primary">
+									<i class="flaticon-heart"></i>
+								</div>
+							</div>
+							<div class="icon-content">
+								<h4 class="dz-title m-b10"><a href="service-details.html">Average Heart Rate</a></h4>
+                                <h2 class="dz-title"><span class="counter secondTest">0</span>   AVG BPM</h2>
+
+								<p>It is an essential physiological parameter that provides insights into overall health and fitness</p>
+							</div>
+							<div class="effect"></div>
+						</div>
+					</div>
+                         <div class="col-lg-4 wow fadeInUp" data-wow-delay="0.6s" style="visibility: visible; animation-delay: 0.6s; animation-name: fadeInUp;">
+						<div class="icon-bx-wraper style-1">
+							<div class="icon-bx m-b20"> 
+								<div class="icon-cell text-primary">
+									<i class="flaticon-smart-watch"></i>
+								</div>
+							</div>
+							<div class="icon-content">
+								<h4 class="dz-title m-b10"><a href="service-details.html">Burned Calories Per Minutes</a></h4>
+                                <h2 class="dz-title"><span class="counter ThirdOne">0</span>  Calories</h2>
+
+								<p>Calories burn refers to the process by which the body expends energy during physical activity and daily functions..</p>
+							</div>
+							<div class="effect"></div>
+						</div>
+					</div>
+                    
+                </div>     
+          </div>
       </div>
+      		<section class="call-action style-2 bg-img-fix bg-primary">
+			<div class="container">
+				<div class="inner-content">
+					<div class="row justify-content-between align-items-center">
+						<div class="text-center text-lg-start col-xl-6 m-lg-b20 wow fadeInUp" data-wow-delay="0.2s" style="visibility: visible; animation-delay: 0.2s; animation-name: fadeInUp;">
+							<h2 class="title m-0"><span class="font-weight-400">Subscribe To Our </span>Newsletter</h2>
+						</div>
+						<div class="text-center text-lg-end col-xl-6 wow fadeInUp" data-wow-delay="0.4s" style="visibility: visible; animation-delay: 0.4s; animation-name: fadeInUp;">
+							<form class="dzSubscribe" action="assets/script/mailchamp.php" method="post">
+								<div class="dzSubscribeMsg"></div>
+								<div class="form-group">
+									<div class="input-group mb-0"> 
+										<div class="input-skew">
+											<input name="dzEmail" required="required" type="email" class="form-control" placeholder="Your Email Address">
+										</div>
+										<div class="input-group-addon">
+											<button name="submit" value="Submit" type="submit" class="btn btn-secondary btn-lg btn-skew h-100"><span class="skew-inner"><span class="text">Subscribe Now</span></span></button>
+										</div>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+      </div>
+
+
+      
    </div>
 {% endblock %}
 
@@ -29,8 +116,6 @@
     {{ parent() }}
 
    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-   <!-- chartjs displaying ajax'd data from /StroringData with gets Y-axis data from /StroringData -->
-
    <script>
       var chart = document.getElementById('chart').getContext('2d');
       var myChart = new Chart(chart, {
@@ -54,24 +139,35 @@
          }
       });
       overallData = [];
-      threshold = 2000;
+      threshold = 1900;
       xhr= false;
+        weight = 80;
+        age = 19;
+         bpmTable = [];
+         caloriesBurned = 0;
+            var timeInMinutes = 0;
+
+                function addBpmToTable(bpm) {
+                    bpmTable.push(bpm);
+                    var sum = bpmTable.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+                    var average = (sum / bpmTable.length).toFixed(2); 
+                    
+                     console.log('Average BPM: ' + average);
+                    const counterElement = document.querySelector('.secondTest');
+                      counterElement.textContent = average;
+                 }
+
       function startArduinoData() {
-         //set timeout]
             if (xhr == false) {
                return;
             }
             fetch('/StroringData')
                .then(response => response.text())
                .then(data => {
-                  //data is going to contain 200 seperated with \r\n so we need to split it and store it in data array
                   data = data.split('\r\n');
-               
-                  //append to myChart.data.datasets[0].data
-                  
+                            
                   myChart.data.labels = Array.from(Array(data.length).keys()).map(String);
                   myChart.data.datasets[0].data = data;
-
                   myChart.update();
 
 
@@ -82,20 +178,38 @@
                         }
                      }
                      if (bpm > 0) {
-                        console.log('Heartbeats: ' + bpm);
-                  
+                       const counterElement = document.querySelector('.counter');
+                      counterElement.textContent = bpm;
+                      console.log('Heartbeats: ' + bpm);
+
+                      
+                         addBpmToTable(bpm);                  
                }
-                  //call this fetch again
                   startArduinoData();
+                 
                });
                   
-               
-               
+                   
       }
 
       function stopArduinoData() {
          xhr = false;
       }
+setInterval(function() {
+  calculateCaloriesBurned(weight, age);
+}, 60000);
+
+  function calculateCaloriesBurned(weight, age) {
+   var sumBpm = bpmTable.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+   var avgHeartRate = sumBpm / bpmTable.length;
+    timeInMinutes++; 
+   var caloriesBurned = (timeInMinutes * (0.6309 * avgHeartRate + 0.1988 * weight + 0.2017 * age - 55.0969)) / 4.184;
+   console.log('Calories burned: ' + caloriesBurned);
+   var cals = caloriesBurned.toFixed(2)
+     const counterElement = document.querySelector('.ThirdOne');
+       counterElement.textContent = cals;
+}
+
 
 
    </script>

@@ -42,7 +42,43 @@
 
 								<div class="dz-card style-2 blog-half wow fadeInUp" data-wow-delay="0.4s">
 									<div class="dz-media">
-										<a href="javascript:void(0);"><img src="{{ asset('main/images/gallery/grid2/abs.png') }}" alt="/"></a>
+										<a>
+										{% if exerciseNode.Muscles == 'Abs' %}
+											<img src="{{ asset('main/images/gallery/grid2/abs.png') }}" alt="Abs">
+										{% elseif exerciseNode.Muscles == 'Chest' %}
+											<img src="{{ asset('main/images/gallery/grid2/press.png') }}" alt="Chest">
+										{% elseif exerciseNode.Muscles == 'Shoulders' %}
+											<img src="{{ asset('main/images/gallery/grid2/shoudlers.png') }}" alt="shoudlers">
+
+												{% elseif exerciseNode.Muscles == 'Biceps' %}
+											<img src="{{ asset('main/images/gallery/grid2/biceps.png') }}" alt="biceps">
+
+												{% elseif exerciseNode.Muscles == 'Triceps' %}
+											<img src="{{ asset('main/images/gallery/grid2/triceps.png') }}" alt="triceps">
+												{% elseif exerciseNode.Muscles == 'Back' %}
+											<img src="{{ asset('main/images/gallery/grid2/lowerback.png') }}" alt="Back">
+
+
+																{% elseif exerciseNode.Muscles == 'Hamstring' %}
+											<img src="{{ asset('main/images/gallery/grid2/hamstring.png') }}" alt="Hamstring">
+																{% elseif exerciseNode.Muscles == 'Lats' %}
+											<img src="{{ asset('main/images/gallery/grid2/pulldown.png') }}" alt="Lats">
+																{% elseif exerciseNode.Muscles == 'Calves' %}
+											<img src="{{ asset('main/images/gallery/grid2/calves.png') }}" alt="Calves">
+
+
+														{% elseif exerciseNode.Muscles == 'Quadriceps' %}
+											<img src="{{ asset('main/images/gallery/grid2/quadsss.png') }}" alt="Quadriceps">
+														{% elseif exerciseNode.Muscles == 'Trapezius' %}
+											<img src="{{ asset('main/images/gallery/grid2/trapz.png') }}" alt="Trapezius">
+
+														{% elseif exerciseNode.Muscles == 'Shoulders' %}
+											<img src="{{ asset('main/images/gallery/grid2/shoudlers.png') }}" alt="Shoulders">
+
+														{% elseif exerciseNode.Muscles == 'Glutes' %}
+											<img src="{{ asset('main/images/gallery/grid2/glutes.png') }}" alt="Glutes">
+										{% endif %}
+										</a>						
 									</div>
 									<div class="dz-info">
 											<div class="dz-meta">

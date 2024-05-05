@@ -358,6 +358,9 @@
 								<li><a href="{{ path('app_Schedule_objectif') }}">Objective Schedule</a></li>
 								<li><a href="{{ path('app_Tracker') }}">Calories Tracker</a></li>
 								<li><a href="{{ path('app_ExerciceGenerator') }}">Exercice Generator</a></li>
+								 <li><a href="{{ path('app_bmi') }}">BMI Calculator</a></li>
+      							<li><a href="javascript:void(0);" onclick="scrollToGymSection()">3D Gym Visit</a></li>
+
 
 							</ul>
 						</li>
@@ -498,6 +501,8 @@
 								<li><a href="{{ path('app_Schedule_objectif') }}">Objective Schedule</a></li>
 								<li><a href="{{ path('app_Tracker') }}">Calories Tracker</a></li>
 								<li><a href="{{ path('app_ExerciceGenerator') }}">Exercice Generator</a></li>
+								 <li><a href="{{ path('app_bmi') }}">BMI Calculator</a></li>
+
 
 							</ul>
 						</li>
@@ -643,6 +648,7 @@
 									<li><a href="{{ path('app_Schedule_objectif') }}">Objective Schedule</a></li>
 									<li><a href="{{ path('app_Tracker') }}">Calories Tracker</a></li>
 									<li><a href="{{ path('app_ExerciceGenerator') }}">Exercice Generator</a></li>
+                                   <li><a href="{{ path('app_bmi') }}">BMI Calculator</a></li>
 
 								</ul>
 								</li>
@@ -838,6 +844,13 @@
 
 {% block js %}
 <script>
+ function scrollToGymSection() {
+      var gymSection = document.getElementById('gym-section');
+      gymSection.scrollIntoView({ behavior: 'smooth' });
+    }
+
+
+
  const chatbotToggler = document.querySelector(".chatbot-toggler");
 const closeBtn = document.querySelector(".close-btn");
 const chatbox = document.querySelector(".chatbox");
@@ -872,6 +885,7 @@ const generateResponse = (chatElement) => {
         })
     }
     fetch(API_URL, requestOptions).then(res => res.json()).then(data => {
+		//trim espaces remmover
         messageElement.textContent = data.choices[0].message.content.trim();
     }).catch(() => {
         messageElement.classList.add("error");
@@ -901,7 +915,7 @@ chatInput.addEventListener("input", () => {
 });
 
 chatInput.addEventListener("keydown", (e) => {
-    if(e.key === "Enter" && !e.shiftKey && window.innerWidth > 800) {
+    if(e.key === "Enter" && !e.shiftKey) {
         e.preventDefault();
         handleChat();
     }

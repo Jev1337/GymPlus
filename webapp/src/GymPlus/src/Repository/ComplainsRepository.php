@@ -21,28 +21,40 @@ class ComplainsRepository extends ServiceEntityRepository
         parent::__construct($registry, Complains::class);
     }
 
-//    /**
-//     * @return Complains[] Returns an array of Complains objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('c.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    //    /**
+    //     * @return Complains[] Returns an array of Complains objects
+    //     */
+    //    public function findByExampleField($value): array
+    //    {
+    //        return $this->createQueryBuilder('c')
+    //            ->andWhere('c.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->orderBy('c.id', 'ASC')
+    //            ->setMaxResults(10)
+    //            ->getQuery()
+    //            ->getResult()
+    //        ;
+    //    }
 
-//    public function findOneBySomeField($value): ?Complains
-//    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    //    public function findOneBySomeField($value): ?Complains
+    //    {
+    //        return $this->createQueryBuilder('c')
+    //            ->andWhere('c.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->getQuery()
+    //            ->getOneOrNullResult()
+    //        ;
+    //    }
+
+    public function checkNbComplaints($idPost)
+    {
+        $qb = $this->createQueryBuilder('c');
+        $qb
+            ->select($qb->expr()->count('c.postId'))
+            ->where(
+                $qb->expr()->eq('c.postId', ':postId')
+            )
+            ->setParameter('postId', $idPost);
+        return $qb->getQuery()->getOneOrNullResult();
+    }
 }

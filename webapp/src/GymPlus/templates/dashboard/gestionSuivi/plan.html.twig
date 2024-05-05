@@ -1,0 +1,397 @@
+{% extends "dashboard/base.html.twig" %}
+
+{% block content %}
+        <div class="content-body">
+            <!-- row -->
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-xl-6 col-xxl-12">
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="card avtivity-card">
+									<div class="card-body">
+										<div class="media align-items-center">
+											<span class="activity-icon bgl-success mr-md-4 mr-3">
+												<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+													<g clip-path="url(#clip2)">
+													<path d="M14.6406 24.384C14.4639 24.1871 14.421 23.904 14.5305 23.6633C15.9635 20.513 14.4092 18.7501 14.564 11.6323C14.5713 11.2944 14.8346 10.9721 15.2564 10.9801C15.6201 10.987 15.905 11.2962 15.8971 11.6598C15.8902 11.9762 15.8871 12.2939 15.8875 12.6123C15.888 12.9813 16.1893 13.2826 16.5583 13.2776C17.6426 13.2628 19.752 12.9057 20.5684 10.4567L20.9744 9.23876C21.7257 6.9847 20.4421 4.55115 18.1335 3.91572L13.9816 2.77294C12.3274 2.31768 10.5363 2.94145 9.52387 4.32498C4.66826 10.9599 1.44452 18.5903 0.0754914 26.6727C-0.300767 28.8937 0.754757 31.1346 2.70222 32.2488C13.6368 38.5051 26.6023 39.1113 38.35 33.6379C39.3524 33.1709 40.0002 32.1534 40.0002 31.0457V19.1321C40.0002 18.182 39.5322 17.2976 38.7484 16.7664C34.5339 13.91 29.1672 14.2521 25.5723 18.0448C25.2519 18.3828 25.3733 18.937 25.8031 19.1166C27.4271 19.7957 28.9625 20.7823 30.2439 21.9475C30.5225 22.2008 30.542 22.6396 30.2654 22.9155C30.0143 23.1658 29.6117 23.1752 29.3485 22.9376C25.9907 19.9053 21.4511 18.5257 16.935 19.9686C16.658 20.0571 16.4725 20.3193 16.477 20.61C16.496 21.8194 16.294 22.9905 15.7421 24.2172C15.5453 24.6544 14.9607 24.7409 14.6406 24.384Z" fill="#27BC48"/>
+													</g>
+													<defs>
+													<clipPath id="clip2">
+													<rect width="40" height="40" fill="white"/>
+													</clipPath>
+													</defs>
+												</svg>
+											</span>
+											<div class="media-body">
+												<p class="fs-14 mb-2">Weekly Progress</p>
+												<span class="title text-black font-w600">42%</span>
+											</div>
+										</div>
+										<div class="progress" style="height:5px;">
+											<div class="progress-bar bg-success" style="width: 42%; height:5px;" role="progressbar">
+												<span class="sr-only">42% Complete</span>
+											</div>
+										</div>
+									</div>
+									<div class="effect bg-success"></div>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="card avtivity-card">
+									<div class="card-body">
+										<div class="media align-items-center">
+											<span class="activity-icon bgl-secondary  mr-md-4 mr-3">
+												<svg width="40" height="37" viewBox="0 0 40 37" fill="none" xmlns="http://www.w3.org/2000/svg">
+													<path d="M1.64826 26.5285C0.547125 26.7394 -0.174308 27.8026 0.0366371 28.9038C0.222269 29.8741 1.07449 30.5491 2.02796 30.5491C2.15453 30.5491 2.28531 30.5364 2.41188 30.5112L10.7653 28.908C11.242 28.8152 11.6682 28.5578 11.9719 28.1781L15.558 23.6554L14.3599 23.0437C13.4739 22.5965 12.8579 21.7865 12.6469 20.8035L9.26338 25.0688L1.64826 26.5285Z" fill="#A02CFA"/>
+													<path d="M31.3999 8.89345C33.8558 8.89345 35.8467 6.90258 35.8467 4.44673C35.8467 1.99087 33.8558 0 31.3999 0C28.9441 0 26.9532 1.99087 26.9532 4.44673C26.9532 6.90258 28.9441 8.89345 31.3999 8.89345Z" fill="#A02CFA"/>
+													<path d="M21.6965 3.33297C21.2282 2.85202 20.7937 2.66217 20.3169 2.66217C20.1439 2.66217 19.971 2.68748 19.7853 2.72967L12.1534 4.53958C11.0986 4.78849 10.4489 5.84744 10.6979 6.89795C10.913 7.80079 11.7146 8.40831 12.6048 8.40831C12.7567 8.40831 12.9086 8.39144 13.0605 8.35347L19.5618 6.81357C19.9837 7.28187 22.0974 9.57273 22.4813 9.97775C19.7938 12.855 17.1064 15.7281 14.4189 18.6054C14.3767 18.6519 14.3388 18.6982 14.3008 18.7446C13.5161 19.7445 13.7566 21.3139 14.9379 21.9088L23.1774 26.1151L18.8994 33.0467C18.313 34.0002 18.6083 35.249 19.5618 35.8396C19.8951 36.0464 20.2621 36.1434 20.6249 36.1434C21.3042 36.1434 21.9707 35.8017 22.3547 35.1815L27.7886 26.3766C28.0882 25.8915 28.1683 25.305 28.0122 24.7608C27.8561 24.2123 27.4806 23.7567 26.9702 23.4993L21.3885 20.66L27.2571 14.3823L31.6869 18.1371C32.0539 18.4493 32.5054 18.6012 32.9526 18.6012C33.4335 18.6012 33.9145 18.424 34.2899 18.078L39.3737 13.3402C40.1669 12.6019 40.2133 11.3615 39.475 10.5684C39.0868 10.1549 38.5637 9.944 38.0406 9.944C37.5638 9.944 37.0829 10.117 36.7074 10.4671L32.9019 14.0068C32.8977 14.011 23.363 5.04163 21.6965 3.33297Z" fill="#A02CFA"/>
+												</svg>
+											</span>
+											<div class="media-body">
+												<p class="fs-14 mb-2">Weekly Progress</p>
+												<span class="title text-black font-w600">42km</span>
+											</div>
+										</div>
+										<div class="progress" style="height:5px;">
+											<div class="progress-bar bg-secondary" style="width: 82%; height:5px;" role="progressbar">
+												<span class="sr-only">42% Complete</span>
+											</div>
+										</div>
+									</div>
+									<div class="effect bg-secondary"></div>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="card avtivity-card">
+									<div class="card-body">
+										<div class="media align-items-center">
+											<span class="activity-icon bgl-danger mr-md-4 mr-3">
+												<svg width="40" height="39" viewBox="0 0 40 39" fill="none" xmlns="http://www.w3.org/2000/svg">
+													<path d="M18.0977 7.90402L9.78535 16.7845C9.17929 17.6683 9.40656 18.872 10.2862 19.4738L18.6574 25.2104V30.787C18.6574 31.8476 19.4992 32.7357 20.5598 32.7568C21.6456 32.7735 22.5295 31.9023 22.5295 30.8207V24.1961C22.5295 23.5564 22.2138 22.9588 21.6877 22.601L16.3174 18.9184L20.8376 14.1246L23.1524 19.3982C23.4596 20.101 24.1582 20.5556 24.9243 20.5556H31.974C33.0346 20.5556 33.9226 19.7139 33.9437 18.6532C33.9605 17.5674 33.0893 16.6835 32.0076 16.6835H26.1953C25.4293 14.9411 24.6128 13.2155 23.9015 11.4478C23.5395 10.5556 23.3376 10.1684 22.6726 9.55389C22.5379 9.42763 21.5993 8.56904 20.7618 7.80305C19.9916 7.10435 18.8047 7.15065 18.0977 7.90402Z" fill="#FF3282"/>
+													<path d="M26.0269 8.87206C28.4769 8.87206 30.463 6.88598 30.463 4.43603C30.463 1.98608 28.4769 0 26.0269 0C23.577 0 21.5909 1.98608 21.5909 4.43603C21.5909 6.88598 23.577 8.87206 26.0269 8.87206Z" fill="#FF3282"/>
+													<path d="M8.16498 38.388C12.6744 38.388 16.33 34.7325 16.33 30.2231C16.33 25.7137 12.6744 22.0581 8.16498 22.0581C3.65559 22.0581 0 25.7137 0 30.2231C0 34.7325 3.65559 38.388 8.16498 38.388Z" fill="#FF3282"/>
+													<path d="M31.835 38.388C36.3444 38.388 40 34.7325 40 30.2231C40 25.7137 36.3444 22.0581 31.835 22.0581C27.3256 22.0581 23.67 25.7137 23.67 30.2231C23.67 34.7325 27.3256 38.388 31.835 38.388Z" fill="#FF3282"/>
+												</svg>
+											</span>
+											<div class="media-body">
+												<p class="fs-14 mb-2">Daily Cycling</p>
+												<span class="title text-black font-w600">230 Km</span>
+											</div>
+										</div>
+										<div class="progress" style="height:5px;">
+											<div class="progress-bar bg-danger" style="width: 90%; height:5px;" role="progressbar">
+												<span class="sr-only">42% Complete</span>
+											</div>
+										</div>
+									</div>
+									<div class="effect bg-danger"></div>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="card avtivity-card">
+									<div class="card-body">
+										<div class="media align-items-center">
+											<span class="activity-icon bgl-warning  mr-md-4 mr-3">
+												<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+													<path d="M19.9996 10.0001C22.7611 10.0001 24.9997 7.76148 24.9997 5.00004C24.9997 2.23859 22.7611 0 19.9996 0C17.2382 0 14.9996 2.23859 14.9996 5.00004C14.9996 7.76148 17.2382 10.0001 19.9996 10.0001Z" fill="#FFBC11"/>
+													<path d="M29.7178 36.3838L23.5603 38.6931L26.6224 39.8414C27.9402 40.3307 29.3621 39.6527 29.8413 38.3778C30.0964 37.6976 30.021 36.9851 29.7178 36.3838Z" fill="#FFBC11"/>
+													<path d="M8.37771 27.6588C7.08745 27.1803 5.64452 27.8298 5.15873 29.1224C4.67411 30.4151 5.32967 31.8555 6.62228 32.3413L9.31945 33.3527L16.4402 30.6821L8.37771 27.6588Z" fill="#FFBC11"/>
+													<path d="M34.8413 29.1225C34.3554 27.8297 32.9126 27.1803 31.6223 27.6589L11.6223 35.1589C10.3295 35.6448 9.67401 37.0852 10.1586 38.3779C10.6378 39.6524 12.0594 40.3309 13.3776 39.8415L33.3777 32.3414C34.6705 31.8556 35.326 30.4152 34.8413 29.1225Z" fill="#FFBC11"/>
+													<path d="M37.5001 20.0001H31.5455L27.2364 11.3819C26.7886 10.4871 25.8776 9.97737 24.9388 10.0001L19.9996 10.0001L15.061 10.0001C14.1223 9.97737 13.2125 10.4872 12.7637 11.3819L8.45457 20.0001H2.49998C1.1194 20.0001 0 21.1195 0 22.5001C0 23.8807 1.1194 25.0001 2.49998 25.0001H10C10.9473 25.0001 11.8128 24.4654 12.2363 23.6183L15 18.0909V27.4724L19.9998 29.3472L25 27.4719V18.0909L27.7637 23.6183C28.1873 24.4655 29.0528 25.0001 30 25.0001H37.5C38.8806 25.0001 40 23.8807 40 22.5001C40 21.1195 38.8807 20.0001 37.5001 20.0001Z" fill="#FFBC11"/>
+												</svg>
+											</span>
+											<div class="media-body">
+												<p class="fs-14 mb-2">Morning Yoga</p>
+												<span class="title text-black font-w600">18:34:21”</span>
+											</div>
+										</div>
+										<div class="progress" style="height:5px;">
+											<div class="progress-bar bg-warning" style="width: 42%; height:5px;" role="progressbar">
+												<span class="sr-only">42% Complete</span>
+											</div>
+										</div>
+									</div>
+									<div class="effect bg-warning"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-xl-6 col-xxl-12">
+						<div class="card">
+							<div class="card-header d-sm-flex d-block pb-0 border-0">
+								<div class="mr-auto pr-3 mb-sm-0 mb-3">
+									<h4 class="text-black fs-20">Plan List</h4>
+									<p class="fs-13 mb-0 text-black">don't forget your deadlines on each planning good work !</p>
+								</div>
+								<div class="dropdown mb-3 show">
+									<button type="button" class="btn rounded btn-light" data-toggle="dropdown" aria-expanded="true">
+										<svg class="mr-2" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+											<g clip-path="url(#clip5)">
+											<path d="M0.988957 17.0741C0.328275 17.2007 -0.104585 17.8386 0.0219823 18.4993C0.133362 19.0815 0.644694 19.4865 1.21678 19.4865C1.29272 19.4865 1.37119 19.4789 1.44713 19.4637L6.4592 18.5018C6.74524 18.4461 7.00091 18.2917 7.18316 18.0639L9.33481 15.3503L8.61593 14.9832C8.08435 14.7149 7.71475 14.2289 7.58818 13.6391L5.55804 16.1983L0.988957 17.0741Z" fill="#A02CFA"/>
+											<path d="M18.84 6.49306C20.3135 6.49306 21.508 5.29854 21.508 3.82502C21.508 2.3515 20.3135 1.15698 18.84 1.15698C17.3665 1.15698 16.1719 2.3515 16.1719 3.82502C16.1719 5.29854 17.3665 6.49306 18.84 6.49306Z" fill="#A02CFA"/>
+											<path d="M13.0179 3.15677C12.7369 2.86819 12.4762 2.75428 12.1902 2.75428C12.0864 2.75428 11.9826 2.76947 11.8712 2.79479L7.29203 3.88073C6.6592 4.03008 6.26937 4.66545 6.41872 5.29576C6.54782 5.83746 7.02877 6.20198 7.56289 6.20198C7.65404 6.20198 7.74514 6.19185 7.8363 6.16907L11.7371 5.24513C11.9902 5.52611 13.2584 6.90063 13.4888 7.14364C11.8763 8.87002 10.2639 10.5939 8.65137 12.3202C8.62605 12.3481 8.60329 12.3759 8.58049 12.4038C8.10966 13.0037 8.25397 13.9454 8.96275 14.3023L13.9064 16.826L11.3397 20.985C10.9878 21.5571 11.165 22.3064 11.7371 22.6608C11.9371 22.7848 12.1573 22.843 12.375 22.843C12.7825 22.843 13.1824 22.638 13.4128 22.2659L16.6732 16.983C16.8529 16.6919 16.901 16.34 16.8074 16.0135C16.7137 15.6844 16.4884 15.411 16.1821 15.2566L12.8331 13.553L16.3543 9.78636L19.0122 12.0393C19.2324 12.2266 19.5032 12.3177 19.7716 12.3177C20.0601 12.3177 20.3487 12.2114 20.574 12.0038L23.6243 9.16112C24.1002 8.71814 24.128 7.97392 23.685 7.49803C23.4521 7.24996 23.1383 7.12339 22.8244 7.12339C22.5383 7.12339 22.2497 7.22717 22.0245 7.43727L19.7412 9.56107C19.7386 9.56361 14.0178 4.18196 13.0179 3.15677Z" fill="#A02CFA"/>
+											</g>
+											<defs>
+											<clipPath id="clip5">
+											<rect width="24" height="24" fill="white"/>
+											</clipPath>
+											</defs>
+										</svg>
+										Running
+										<svg class="ml-2" width="14" height="8" viewBox="0 0 14 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+											<path d="M1 0.999999L7 7L13 1" stroke="#0B2A97" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+										</svg>
+									</button>
+									<div class="dropdown-menu dropdown-menu-right">
+										<a class="dropdown-item" href="javascript:void(0);">Edit</a>
+										<a class="dropdown-item" href="javascript:void(0);">Delete</a>
+									</div>
+								</div>
+							</div>
+							<div class="card-body pt-0 pb-0">
+								<div id="chartBar"></div>
+							</div>
+						</div>
+					</div>
+					<div class="col-xl-9 col-xxl-8" >
+						<div class="row">
+							<div class="col-xl-12" >
+								<div class="card plan-list" id="objective-list" >
+									<div class="card-header d-sm-flex flex-wrap d-block pb-0 border-0">
+										<div class="mr-auto pr-3 mb-3">
+											<h4 class="text-black fs-20">Plan List</h4>
+											<p class="fs-13 mb-0 text-black">don't forget your deadlines on each planning good work !</p>
+										</div>
+										<div class="card-action card-tabs mr-4 mt-3 mt-sm-0 mb-3" >
+											<ul class="nav nav-tabs" role="tablist">
+												<li class="nav-item">
+													<a class="nav-link  " data-toggle="tab" href="#Unifinshed" role="tab" aria-selected="false">Unifinshed</a>
+												</li>
+												<li class="nav-item">
+													<a class="nav-link active " data-toggle="tab" href="#All" role="tab" aria-selected="false">All</a>
+												</li>
+												<li class="nav-item">
+													<a class="nav-link" data-toggle="tab" href="#Finished" role="tab" aria-selected="false">Finished</a>
+												</li>
+											</ul>
+										</div>
+										<a href="javascript:void(0);" class="btn rounded btn-primary mb-3">
+											<svg class="mr-2" width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+												<path d="M3.31615 6H14.4744C14.4744 6.53043 14.6882 7.03914 15.0686 7.41421C15.4491 7.78929 15.9651 8 16.5032 8H18.532C19.07 8 19.5861 7.78929 19.9665 7.41421C20.347 7.03914 20.5607 6.53043 20.5607 6H21.5751C21.8442 6 22.1022 5.89464 22.2924 5.70711C22.4827 5.51957 22.5895 5.26522 22.5895 5C22.5895 4.73478 22.4827 4.48043 22.2924 4.29289C22.1022 4.10536 21.8442 4 21.5751 4H20.5607C20.5607 3.46957 20.347 2.96086 19.9665 2.58579C19.5861 2.21071 19.07 2 18.532 2H16.5032C15.9651 2 15.4491 2.21071 15.0686 2.58579C14.6882 2.96086 14.4744 3.46957 14.4744 4H3.31615C3.04711 4 2.7891 4.10536 2.59887 4.29289C2.40863 4.48043 2.30176 4.73478 2.30176 5C2.30176 5.26522 2.40863 5.51957 2.59887 5.70711C2.7891 5.89464 3.04711 6 3.31615 6ZM16.5032 4H18.532V5V6H16.5032V4ZM21.5751 11H12.4456C12.4456 10.4696 12.2319 9.96086 11.8514 9.58579C11.471 9.21071 10.9549 9 10.4169 9H8.38809C7.85002 9 7.334 9.21071 6.95353 9.58579C6.57306 9.96086 6.35931 10.4696 6.35931 11H3.31615C3.04711 11 2.7891 11.1054 2.59887 11.2929C2.40863 11.4804 2.30176 11.7348 2.30176 12C2.30176 12.2652 2.40863 12.5196 2.59887 12.7071C2.7891 12.8946 3.04711 13 3.31615 13H6.35931C6.35931 13.5304 6.57306 14.0391 6.95353 14.4142C7.334 14.7893 7.85002 15 8.38809 15H10.4169C10.9549 15 11.471 14.7893 11.8514 14.4142C12.2319 14.0391 12.4456 13.5304 12.4456 13H21.5751C21.8442 13 22.1022 12.8946 22.2924 12.7071C22.4827 12.5196 22.5895 12.2652 22.5895 12C22.5895 11.7348 22.4827 11.4804 22.2924 11.2929C22.1022 11.1054 21.8442 11 21.5751 11ZM8.38809 13V11H10.4169V12V13H8.38809ZM21.5751 18H18.532C18.532 17.4696 18.3182 16.9609 17.9378 16.5858C17.5573 16.2107 17.0413 16 16.5032 16H14.4744C13.9364 16 13.4203 16.2107 13.0399 16.5858C12.6594 16.9609 12.4456 17.4696 12.4456 18H3.31615C3.04711 18 2.7891 18.1054 2.59887 18.2929C2.40863 18.4804 2.30176 18.7348 2.30176 19C2.30176 19.2652 2.40863 19.5196 2.59887 19.7071C2.7891 19.8946 3.04711 20 3.31615 20H12.4456C12.4456 20.5304 12.6594 21.0391 13.0399 21.4142C13.4203 21.7893 13.9364 22 14.4744 22H16.5032C17.0413 22 17.5573 21.7893 17.9378 21.4142C18.3182 21.0391 18.532 20.5304 18.532 20H21.5751C21.8442 20 22.1022 19.8946 22.2924 19.7071C22.4827 19.5196 22.5895 19.2652 22.5895 19C22.5895 18.7348 22.4827 18.4804 22.2924 18.2929C22.1022 18.1054 21.8442 18 21.5751 18ZM14.4744 20V18H16.5032V19V20H14.4744Z" fill="#fff"></path>
+											</svg>
+										Filter</a>
+									</div>
+									<div class="card-body tab-content pt-2" >
+										<div class="tab-pane active show fade" id="All">
+                                         {% for objectif in objectifs %}
+											<div class="d-flex border-bottom flex-wrap pt-3 list-row align-items-center mb-2">
+												<div class="col-xl-5 col-xxl-8 col-lg-6 col-sm-8 d-flex align-items-center">
+													<div class="list-icon bgl-primary mr-3 mb-3">
+													<p class="fs-24 text-primary mb-0 mt-2">{{ objectif.dated|date('d') }}</p>
+                                                    <span class="fs-14 text-primary">{{ objectif.dated|date('M') }}</span>
+													</div>
+													<div class="info mb-3">
+                                                     {% if objectif.poidsobj > objectif.poidsact %}
+                                                        <h4 class="fs-20 "><a href="workout-statistic.html" class="text-black">Gain Weight</a></h4>
+														{% elseif objectif.poidsobj < objectif.poidsact %}
+                                                         <h4 class="fs-20 "><a href="workout-statistic.html" class="text-black">Lose Weight</a></h4>
+														{% else %}
+                                                         <h4 class="fs-20 "><a href="workout-statistic.html" class="text-black">Maintain Weigh</a></h4>
+														{% endif %}
+														<span class="text-danger font-w600">UNFINISHED AND FINISHED</span>
+													</div>
+												</div>
+												<div class="col-xl-2 col-xxl-4 col-lg-2 col-sm-4 activities mb-3 mr-auto pl-3 pr-3 text-sm-center">
+													<svg width="32" height="31" viewBox="0 0 32 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                <path d="M4 30.5H22.75C23.7442 30.4989 24.6974 30.1035 25.4004 29.4004C26.1035 28.6974 26.4989 27.7442 26.5 26.75V16.75C26.5 16.4185 26.3683 16.1005 26.1339 15.8661C25.8995 15.6317 25.5815 15.5 25.25 15.5C24.9185 15.5 24.6005 15.6317 24.3661 15.8661C24.1317 16.1005 24 16.4185 24 16.75V26.75C23.9997 27.0814 23.8679 27.3992 23.6336 27.6336C23.3992 27.8679 23.0814 27.9997 22.75 28H4C3.66857 27.9997 3.3508 27.8679 3.11645 27.6336C2.88209 27.3992 2.7503 27.0814 2.75 26.75V9.25C2.7503 8.91857 2.88209 8.6008 3.11645 8.36645C3.3508 8.13209 3.66857 8.0003 4 8H15.25C15.5815 8 15.8995 7.8683 16.1339 7.63388C16.3683 7.39946 16.5 7.08152 16.5 6.75C16.5 6.41848 16.3683 6.10054 16.1339 5.86612C15.8995 5.6317 15.5815 5.5 15.25 5.5H4C3.00577 5.50109 2.05258 5.89653 1.34956 6.59956C0.646531 7.30258 0.251092 8.25577 0.25 9.25V26.75C0.251092 27.7442 0.646531 28.6974 1.34956 29.4004C2.05258 30.1035 3.00577 30.4989 4 30.5Z" fill="#EA4989"></path>
+                                                                <path d="M25.25 0.5C24.0138 0.5 22.8055 0.866556 21.7777 1.55331C20.7498 2.24007 19.9488 3.21619 19.4757 4.35823C19.0027 5.50027 18.8789 6.75693 19.1201 7.96931C19.3612 9.1817 19.9565 10.2953 20.8306 11.1694C21.7046 12.0435 22.8183 12.6388 24.0307 12.8799C25.243 13.1211 26.4997 12.9973 27.6417 12.5242C28.7838 12.0512 29.7599 11.2501 30.4466 10.2223C31.1334 9.19451 31.5 7.98613 31.5 6.75C31.498 5.093 30.8389 3.50442 29.6672 2.33274C28.4955 1.16106 26.907 0.501952 25.25 0.5ZM25.25 10.5C24.5083 10.5 23.7833 10.2801 23.1666 9.86801C22.5499 9.45596 22.0692 8.87029 21.7854 8.18506C21.5016 7.49984 21.4273 6.74584 21.572 6.01841C21.7167 5.29098 22.0739 4.6228 22.5983 4.09835C23.1228 3.5739 23.7909 3.21675 24.5184 3.07206C25.2458 2.92736 25.9998 3.00162 26.685 3.28545C27.3702 3.56928 27.9559 4.04993 28.368 4.66661C28.78 5.2833 29 6.00832 29 6.75C28.9989 7.74423 28.6034 8.69742 27.9004 9.40044C27.1974 10.1035 26.2442 10.4989 25.25 10.5Z" fill="#EA4989"></path>
+                                                                <path d="M6.5 13H12.75C13.0815 13 13.3995 12.8683 13.6339 12.6339C13.8683 12.3995 14 12.0815 14 11.75C14 11.4185 13.8683 11.1005 13.6339 10.8661C13.3995 10.6317 13.0815 10.5 12.75 10.5H6.5C6.16848 10.5 5.85054 10.6317 5.61612 10.8661C5.3817 11.1005 5.25 11.4185 5.25 11.75C5.25 12.0815 5.3817 12.3995 5.61612 12.6339C5.85054 12.8683 6.16848 13 6.5 13Z" fill="#EA4989"></path>
+                                                                <path d="M5.25 16.75C5.25 17.0815 5.3817 17.3995 5.61612 17.6339C5.85054 17.8683 6.16848 18 6.5 18H17.75C18.0815 18 18.3995 17.8683 18.6339 17.6339C18.8683 17.3995 19 17.0815 19 16.75C19 16.4185 18.8683 16.1005 18.6339 15.8661C18.3995 15.6317 18.0815 15.5 17.75 15.5H6.5C6.16848 15.5 5.85054 15.6317 5.61612 15.8661C5.3817 16.1005 5.25 16.4185 5.25 16.75Z" fill="#EA4989"></path>
+                                                                </svg>
+                                              <span class="text-warning ml-2">{{ objectif.typeobj }}</span>
+												</div>
+												<div class="col-xl-5 col-xxl-12 col-lg-4 col-sm-12 d-flex align-items-center">
+                                                    <a href="{{ path('MakePlaning', {'objectiveId': objectif.idobjectif}) }}" class="btn mb-3 play-button rounded mr-3"><i class="las la-caret-right scale-2 mr-3"></i>Start Workout</a>													<div class="dropdown mb-3">
+														<a href="javascript:void(0)" class="more-button" data-toggle="dropdown" aria-expanded="false">
+															<svg width="6" height="26" viewBox="0 0 6 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+																<path d="M6 3C6 4.65685 4.65685 6 3 6C1.34315 6 0 4.65685 0 3C0 1.34315 1.34315 0 3 0C4.65685 0 6 1.34315 6 3Z" fill="#585858"></path>
+																<path d="M6 13C6 14.6569 4.65685 16 3 16C1.34315 16 0 14.6569 0 13C0 11.3431 1.34315 10 3 10C4.65685 10 6 11.3431 6 13Z" fill="#585858"></path>
+																<path d="M6 23C6 24.6569 4.65685 26 3 26C1.34315 26 0 24.6569 0 23C0 21.3431 1.34315 20 3 20C4.65685 20 6 21.3431 6 23Z" fill="#585858"></path>
+															</svg>
+														</a>
+														<div class="dropdown-menu dropdown-menu-right">
+                                                            <a class="dropdown-item " ></a></div>
+													</div>
+												</div>
+											</div>
+                                            {% endfor %}
+                                       </div>
+
+                                           <div class="tab-pane  fade hidden" id="Finished">
+                                         		{% for objFinished in objFinished %}
+											<div class="d-flex border-bottom flex-wrap pt-3 list-row align-items-center mb-2">
+												<div class="col-xl-5 col-xxl-8 col-lg-6 col-sm-8 d-flex align-items-center">
+													<div class="list-icon bgl-primary mr-3 mb-3">
+													<p class="fs-24 text-primary mb-0 mt-2">{{ objFinished.idobjectif.dated|date('d') }}</p>
+                                                    <span class="fs-14 text-primary">{{ objFinished.idobjectif.dated|date('M') }}</span>
+													</div>
+													<div class="info mb-3">  
+
+ 														{% if objFinished.idobjectif.poidsobj > objFinished.idobjectif.poidsact %}
+                                                        <h4 class="fs-20 "><a href="workout-statistic.html" class="text-black">Gain Weight</a></h4>
+														{% elseif objFinished.idobjectif.poidsobj < objFinished.idobjectif.poidsact %}
+                                                         <h4 class="fs-20 "><a href="workout-statistic.html" class="text-black">Lose Weight</a></h4>
+														{% else %}
+                                                         <h4 class="fs-20 "><a href="workout-statistic.html" class="text-black">Maintain Weigh</a></h4>
+														{% endif %}
+														<span class="text-danger font-w600">Finished</span>
+													</div>
+												</div>
+												<div class="col-xl-2 col-xxl-4 col-lg-2 col-sm-4 activities mb-3 mr-auto pl-3 pr-3 text-sm-center">
+													<svg width="32" height="31" viewBox="0 0 32 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                <path d="M4 30.5H22.75C23.7442 30.4989 24.6974 30.1035 25.4004 29.4004C26.1035 28.6974 26.4989 27.7442 26.5 26.75V16.75C26.5 16.4185 26.3683 16.1005 26.1339 15.8661C25.8995 15.6317 25.5815 15.5 25.25 15.5C24.9185 15.5 24.6005 15.6317 24.3661 15.8661C24.1317 16.1005 24 16.4185 24 16.75V26.75C23.9997 27.0814 23.8679 27.3992 23.6336 27.6336C23.3992 27.8679 23.0814 27.9997 22.75 28H4C3.66857 27.9997 3.3508 27.8679 3.11645 27.6336C2.88209 27.3992 2.7503 27.0814 2.75 26.75V9.25C2.7503 8.91857 2.88209 8.6008 3.11645 8.36645C3.3508 8.13209 3.66857 8.0003 4 8H15.25C15.5815 8 15.8995 7.8683 16.1339 7.63388C16.3683 7.39946 16.5 7.08152 16.5 6.75C16.5 6.41848 16.3683 6.10054 16.1339 5.86612C15.8995 5.6317 15.5815 5.5 15.25 5.5H4C3.00577 5.50109 2.05258 5.89653 1.34956 6.59956C0.646531 7.30258 0.251092 8.25577 0.25 9.25V26.75C0.251092 27.7442 0.646531 28.6974 1.34956 29.4004C2.05258 30.1035 3.00577 30.4989 4 30.5Z" fill="#EA4989"></path>
+                                                                <path d="M25.25 0.5C24.0138 0.5 22.8055 0.866556 21.7777 1.55331C20.7498 2.24007 19.9488 3.21619 19.4757 4.35823C19.0027 5.50027 18.8789 6.75693 19.1201 7.96931C19.3612 9.1817 19.9565 10.2953 20.8306 11.1694C21.7046 12.0435 22.8183 12.6388 24.0307 12.8799C25.243 13.1211 26.4997 12.9973 27.6417 12.5242C28.7838 12.0512 29.7599 11.2501 30.4466 10.2223C31.1334 9.19451 31.5 7.98613 31.5 6.75C31.498 5.093 30.8389 3.50442 29.6672 2.33274C28.4955 1.16106 26.907 0.501952 25.25 0.5ZM25.25 10.5C24.5083 10.5 23.7833 10.2801 23.1666 9.86801C22.5499 9.45596 22.0692 8.87029 21.7854 8.18506C21.5016 7.49984 21.4273 6.74584 21.572 6.01841C21.7167 5.29098 22.0739 4.6228 22.5983 4.09835C23.1228 3.5739 23.7909 3.21675 24.5184 3.07206C25.2458 2.92736 25.9998 3.00162 26.685 3.28545C27.3702 3.56928 27.9559 4.04993 28.368 4.66661C28.78 5.2833 29 6.00832 29 6.75C28.9989 7.74423 28.6034 8.69742 27.9004 9.40044C27.1974 10.1035 26.2442 10.4989 25.25 10.5Z" fill="#EA4989"></path>
+                                                                <path d="M6.5 13H12.75C13.0815 13 13.3995 12.8683 13.6339 12.6339C13.8683 12.3995 14 12.0815 14 11.75C14 11.4185 13.8683 11.1005 13.6339 10.8661C13.3995 10.6317 13.0815 10.5 12.75 10.5H6.5C6.16848 10.5 5.85054 10.6317 5.61612 10.8661C5.3817 11.1005 5.25 11.4185 5.25 11.75C5.25 12.0815 5.3817 12.3995 5.61612 12.6339C5.85054 12.8683 6.16848 13 6.5 13Z" fill="#EA4989"></path>
+                                                                <path d="M5.25 16.75C5.25 17.0815 5.3817 17.3995 5.61612 17.6339C5.85054 17.8683 6.16848 18 6.5 18H17.75C18.0815 18 18.3995 17.8683 18.6339 17.6339C18.8683 17.3995 19 17.0815 19 16.75C19 16.4185 18.8683 16.1005 18.6339 15.8661C18.3995 15.6317 18.0815 15.5 17.75 15.5H6.5C6.16848 15.5 5.85054 15.6317 5.61612 15.8661C5.3817 16.1005 5.25 16.4185 5.25 16.75Z" fill="#EA4989"></path>
+                                                                </svg>
+																
+                                              <span class="text-warning ml-2">{{  objFinished.idobjectif.typeobj }}</span>
+
+												</div>
+												<div class="col-xl-5 col-xxl-12 col-lg-4 col-sm-12 d-flex align-items-center">
+												        <a href="{{ path('MakePlaning', {'objectiveId': objFinished.idobjectif.getIdobjectif()}) }}" class="btn mb-3 play-button rounded mr-3"><i class="las la-caret-right scale-2 mr-3"></i>Update Workout</a>								
+
+													
+														<a href="javascript:void(0)" class="more-button" data-toggle="dropdown" aria-expanded="false">
+															<svg width="6" height="26" viewBox="0 0 6 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+																<path d="M6 3C6 4.65685 4.65685 6 3 6C1.34315 6 0 4.65685 0 3C0 1.34315 1.34315 0 3 0C4.65685 0 6 1.34315 6 3Z" fill="#585858"></path>
+																<path d="M6 13C6 14.6569 4.65685 16 3 16C1.34315 16 0 14.6569 0 13C0 11.3431 1.34315 10 3 10C4.65685 10 6 11.3431 6 13Z" fill="#585858"></path>
+																<path d="M6 23C6 24.6569 4.65685 26 3 26C1.34315 26 0 24.6569 0 23C0 21.3431 1.34315 20 3 20C4.65685 20 6 21.3431 6 23Z" fill="#585858"></path>
+															</svg>
+														</a>
+														<div class="dropdown-menu dropdown-menu-right">
+													</div>
+												</div>
+											</div>
+                                            {% endfor %}
+                                       </div>
+      											 <div class="tab-pane  fade hidden" id="Unifinshed">
+                                         		{% for objNotFinished in objNotFinished %}
+												<div class="d-flex border-bottom flex-wrap pt-3 list-row align-items-center mb-2">
+												<div class="col-xl-5 col-xxl-8 col-lg-6 col-sm-8 d-flex align-items-center">
+													<div class="list-icon bgl-primary mr-3 mb-3">
+												<p class="fs-24 text-primary mb-0 mt-2">{{ objNotFinished.dated|date('d') }}</p>
+                                                    <span class="fs-14 text-primary">{{ objNotFinished.dated|date('M') }}</span>
+													</div>
+													<div class="info mb-3">  
+
+ 															{% if objNotFinished.poidsobj > objNotFinished.poidsact %}
+                                                        <h4 class="fs-20 "><a href="workout-statistic.html" class="text-black">Gain Weight</a></h4>
+														{% elseif objNotFinished.poidsobj < objNotFinished.poidsact %}
+                                                         <h4 class="fs-20 "><a href="workout-statistic.html" class="text-black">Lose Weight</a></h4>
+														{% else %}
+                                                         <h4 class="fs-20 "><a href="workout-statistic.html" class="text-black">Maintain Weigh</a></h4>
+														{% endif %}
+														<span class="text-danger font-w600">Unifinshed</span>
+													</div>
+												</div>
+												<div class="col-xl-2 col-xxl-4 col-lg-2 col-sm-4 activities mb-3 mr-auto pl-3 pr-3 text-sm-center">
+													<svg width="32" height="31" viewBox="0 0 32 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                <path d="M4 30.5H22.75C23.7442 30.4989 24.6974 30.1035 25.4004 29.4004C26.1035 28.6974 26.4989 27.7442 26.5 26.75V16.75C26.5 16.4185 26.3683 16.1005 26.1339 15.8661C25.8995 15.6317 25.5815 15.5 25.25 15.5C24.9185 15.5 24.6005 15.6317 24.3661 15.8661C24.1317 16.1005 24 16.4185 24 16.75V26.75C23.9997 27.0814 23.8679 27.3992 23.6336 27.6336C23.3992 27.8679 23.0814 27.9997 22.75 28H4C3.66857 27.9997 3.3508 27.8679 3.11645 27.6336C2.88209 27.3992 2.7503 27.0814 2.75 26.75V9.25C2.7503 8.91857 2.88209 8.6008 3.11645 8.36645C3.3508 8.13209 3.66857 8.0003 4 8H15.25C15.5815 8 15.8995 7.8683 16.1339 7.63388C16.3683 7.39946 16.5 7.08152 16.5 6.75C16.5 6.41848 16.3683 6.10054 16.1339 5.86612C15.8995 5.6317 15.5815 5.5 15.25 5.5H4C3.00577 5.50109 2.05258 5.89653 1.34956 6.59956C0.646531 7.30258 0.251092 8.25577 0.25 9.25V26.75C0.251092 27.7442 0.646531 28.6974 1.34956 29.4004C2.05258 30.1035 3.00577 30.4989 4 30.5Z" fill="#EA4989"></path>
+                                                                <path d="M25.25 0.5C24.0138 0.5 22.8055 0.866556 21.7777 1.55331C20.7498 2.24007 19.9488 3.21619 19.4757 4.35823C19.0027 5.50027 18.8789 6.75693 19.1201 7.96931C19.3612 9.1817 19.9565 10.2953 20.8306 11.1694C21.7046 12.0435 22.8183 12.6388 24.0307 12.8799C25.243 13.1211 26.4997 12.9973 27.6417 12.5242C28.7838 12.0512 29.7599 11.2501 30.4466 10.2223C31.1334 9.19451 31.5 7.98613 31.5 6.75C31.498 5.093 30.8389 3.50442 29.6672 2.33274C28.4955 1.16106 26.907 0.501952 25.25 0.5ZM25.25 10.5C24.5083 10.5 23.7833 10.2801 23.1666 9.86801C22.5499 9.45596 22.0692 8.87029 21.7854 8.18506C21.5016 7.49984 21.4273 6.74584 21.572 6.01841C21.7167 5.29098 22.0739 4.6228 22.5983 4.09835C23.1228 3.5739 23.7909 3.21675 24.5184 3.07206C25.2458 2.92736 25.9998 3.00162 26.685 3.28545C27.3702 3.56928 27.9559 4.04993 28.368 4.66661C28.78 5.2833 29 6.00832 29 6.75C28.9989 7.74423 28.6034 8.69742 27.9004 9.40044C27.1974 10.1035 26.2442 10.4989 25.25 10.5Z" fill="#EA4989"></path>
+                                                                <path d="M6.5 13H12.75C13.0815 13 13.3995 12.8683 13.6339 12.6339C13.8683 12.3995 14 12.0815 14 11.75C14 11.4185 13.8683 11.1005 13.6339 10.8661C13.3995 10.6317 13.0815 10.5 12.75 10.5H6.5C6.16848 10.5 5.85054 10.6317 5.61612 10.8661C5.3817 11.1005 5.25 11.4185 5.25 11.75C5.25 12.0815 5.3817 12.3995 5.61612 12.6339C5.85054 12.8683 6.16848 13 6.5 13Z" fill="#EA4989"></path>
+                                                                <path d="M5.25 16.75C5.25 17.0815 5.3817 17.3995 5.61612 17.6339C5.85054 17.8683 6.16848 18 6.5 18H17.75C18.0815 18 18.3995 17.8683 18.6339 17.6339C18.8683 17.3995 19 17.0815 19 16.75C19 16.4185 18.8683 16.1005 18.6339 15.8661C18.3995 15.6317 18.0815 15.5 17.75 15.5H6.5C6.16848 15.5 5.85054 15.6317 5.61612 15.8661C5.3817 16.1005 5.25 16.4185 5.25 16.75Z" fill="#EA4989"></path>
+                                                                </svg>
+																
+                                              <span class="text-warning ml-2">{{  objNotFinished.typeobj }}</span>
+
+												</div>
+												<div class="col-xl-5 col-xxl-12 col-lg-4 col-sm-12 d-flex align-items-center">
+												        <a href="{{ path('MakePlaning', {'objectiveId': objNotFinished.getIdobjectif()}) }}" class="btn mb-3 play-button rounded mr-3"><i class="las la-caret-right scale-2 mr-3"></i>Start Workout</a>																					
+														<a href="javascript:void(0)" class="more-button" data-toggle="dropdown" aria-expanded="false">
+															<svg width="6" height="26" viewBox="0 0 6 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+																<path d="M6 3C6 4.65685 4.65685 6 3 6C1.34315 6 0 4.65685 0 3C0 1.34315 1.34315 0 3 0C4.65685 0 6 1.34315 6 3Z" fill="#585858"></path>
+																<path d="M6 13C6 14.6569 4.65685 16 3 16C1.34315 16 0 14.6569 0 13C0 11.3431 1.34315 10 3 10C4.65685 10 6 11.3431 6 13Z" fill="#585858"></path>
+																<path d="M6 23C6 24.6569 4.65685 26 3 26C1.34315 26 0 24.6569 0 23C0 21.3431 1.34315 20 3 20C4.65685 20 6 21.3431 6 23Z" fill="#585858"></path>
+															</svg>
+														</a>
+														<div class="dropdown-menu dropdown-menu-right">
+														<a class="dropdown-item delete-objective" href="{{ path('delete_Obj', {'id': objNotFinished.idobjectif}) }}">Delete</a>	</div>
+													
+												</div>
+											</div>
+                                            {% endfor %}
+                                       </div>
+									   
+
+                                    </div>
+                                </div>   
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-xxl-4">	
+						<div class="row">	
+							<div class="col-xl-12">
+								<div class="card flex-xl-column flex-md-row flex-column">
+									<div class="card-body border-bottom pb-4 p-2 event-calender">
+										<input type='text' class="form-control d-none" id='datetimepicker1' />
+									</div>
+									<div class="card-body">									
+										<h6 class="fs-16 text-black mb-4">Next week plan</h6>
+								{% for objNotFinished in objNotFinished %}
+										<div class="d-flex mb-4 align-items-center">
+											<span class="date-icon mr-3">{{ objNotFinished.dated|date('d') }}</span>
+											<div>
+										{% if objNotFinished.poidsobj > objNotFinished.poidsact %}
+														<h6 class="fs-16"><a href="#Unifinshed" class="text-black">Gain Weight</a></h6>
+														{% elseif objNotFinished.poidsobj < objNotFinished.poidsact %}
+														<h6 class="fs-16"><a href="#Unifinshed" class="text-black">Lose Weight</a></h6>
+														{% else %}
+														<h6 class="fs-16"><a href="#Unifinshed" class="text-black">Maintain Weigh</a></h6>
+														{% endif %}					
+														<span class="fs-14">{{ objNotFinished.dated|date('M') }}</span>
+											</div>
+										</div>
+{% endfor %}
+										
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+          </div>
+     </div>              
+{% endblock %}
+
+
+{% block js %} 
+{{ parent() }}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+	$(document).ready(function() {
+    $('.delete-objective').click(function(event) {
+        event.preventDefault();
+
+        var url = $(this).attr('href');
+
+        $.ajax({
+            url: url,
+            method: 'POST',
+            dataType: 'html',
+            success: function(response) {
+                $('#objective-list').html(response);
+                console.log('titi');
+                                console.log(response);
+
+            },
+            error: function() {
+                alert('Failed to delete the objective.');
+            }
+        });
+    });
+});
+	</script>
+{% endblock %}

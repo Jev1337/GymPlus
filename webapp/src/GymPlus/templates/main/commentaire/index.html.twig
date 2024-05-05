@@ -9,8 +9,6 @@
                     <div class="dz-bnr-inr-entry">
                         <h1>
                             BLOG
-                                                                        
-                                                    
                         </h1>
                         <!-- Breadcrumb Row -->
                         <nav aria-label="breadcrumb" class="breadcrumb-row">
@@ -18,7 +16,7 @@
                                 <li class="breadcrumb-item">
                                     <a href="index.html">
                                         Home
-                                     </a>
+                                    </a>
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page">
                                     Blog
@@ -41,29 +39,29 @@
             <section class="content-inner">
                 <div class="container">
                     <div class="row justify-content-center gap-5">
-                    {% for message in app.flashes('error') %}
-                        <div class="alert alert-danger">
-                            {{ message }}
-                        </div>
-                    {% endfor %} 
+                        {% for message in app.flashes('error') %}
+                            <div class="alert alert-danger">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
                         {% if app.user.role == "admin" %}
-                        <div >
-                            <a class="d-flex align-items-center" style="width: 7rem;" href="{{ path('show_complaints') }}" aria-expanded="false">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-caret-left" viewBox="0 0 16 16">
-                                    <path d="M10 12.796V3.204L4.519 8zm-.659.753-5.48-4.796a1 1 0 0 1 0-1.506l5.48-4.796A1 1 0 0 1 11 3.204v9.592a1 1 0 0 1-1.659.753" />
-                                </svg>
-                                Go Back
-                            </a>
-                        </div>
+                            <div>
+                                <a class="d-flex align-items-center" style="width: 7rem;" href="{{ path('show_complaints') }}" aria-expanded="false">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-caret-left" viewBox="0 0 16 16">
+                                        <path d="M10 12.796V3.204L4.519 8zm-.659.753-5.48-4.796a1 1 0 0 1 0-1.506l5.48-4.796A1 1 0 0 1 11 3.204v9.592a1 1 0 0 1-1.659.753" />
+                                    </svg>
+                                    Go Back
+                                </a>
+                            </div>
                         {% else %}
-                        <div >
-                            <a class="d-flex align-items-center" style="width: 7rem;" href="{{ path('getAll_post') }}" aria-expanded="false">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-caret-left" viewBox="0 0 16 16">
-                                    <path d="M10 12.796V3.204L4.519 8zm-.659.753-5.48-4.796a1 1 0 0 1 0-1.506l5.48-4.796A1 1 0 0 1 11 3.204v9.592a1 1 0 0 1-1.659.753" />
-                                </svg>
-                                Go Back
-                            </a>
-                        </div>
+                            <div>
+                                <a class="d-flex align-items-center" style="width: 7rem;" href="{{ path('getAll_post') }}" aria-expanded="false">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-caret-left" viewBox="0 0 16 16">
+                                        <path d="M10 12.796V3.204L4.519 8zm-.659.753-5.48-4.796a1 1 0 0 1 0-1.506l5.48-4.796A1 1 0 0 1 11 3.204v9.592a1 1 0 0 1-1.659.753" />
+                                    </svg>
+                                    Go Back
+                                </a>
+                            </div>
                         {% endif %}
                         <div class="card shadow p-3 rounded" style="width: 50rem;">
                             <div class="card-body">
@@ -104,17 +102,17 @@
                                 <div class="d-flex justify-content-between py-3" style="border-bottom: 1px solid #F1EFEF;">
                                     <div>
                                         {{ post.likes }}
-                                        likes                                                 
+                                        likes
                                     </div>
                                     <div>
                                         {{ post.nbComnts }}
-                                        comnts                                                
+                                        comnts
                                     </div>
                                 </div>
                                 <div class="container px-4 mt-2 text-center">
                                     <div class="row gx-5">
                                         <div class="col  pt-2" style="border-right: 1px solid #F1EFEF;">
-                                            <a class="" href="">
+                                            <a class="" href="{{ path('updateLikes_post', {'id': post.id}) }}">
                                                 like
                                             </a>
                                         </div>
@@ -166,14 +164,16 @@
                                 </div>
                             {% else %}
                                 <a colspan="8">
-                                    no records found                             
+                                    no records found
                                 </a>
                             {% endfor %}
                             <div class="card-footer">
                                 {{ form_start(form) }}
-                                {{ form_widget(form.content, {'attr': {'class': 'form-control rounded', 'placeholder': 'write your comnt' }}) }}                         
+                                {{ form_widget(form.content, {'attr': {'class': 'form-control rounded', 'placeholder': 'write your comnt' }}
+                                ) }}
                                 <div class="d-flex align-items-center gap-3">
-                                    {{ form_widget(form.coment, {'attr': {'class': 'btn h-3 btn-outline-primary rounded mt-3' }}) }}
+                                    {{ form_widget(form.coment, {'attr': {'class': 'btn h-3 btn-outline-primary rounded mt-3' }}
+                                    ) }}
                                     {{ form_errors(form.content) }}
                                 </div>
                                 {{ form_end(form) }}

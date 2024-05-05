@@ -1,0 +1,104 @@
+{% extends "main/base.html.twig" %}
+
+{% block content %}
+   <div class="page-content bg-white">		
+      <!-- banner -->
+      <div class="contact-bnr" style="background-image: url({{ asset('main/images/background/bg9.png') }});">
+         <div class="container">
+            <div class="row">
+               <div class="col-lg-6">
+                  {# {{ mukadi_chart(chart) }} #}
+                  <!-- chartjs displaying ajax'd data from /StroringData with gets Y-axis data from /StroringData -->
+                  <canvas id="chart" width="400" height="400"></canvas>
+
+							
+
+                  <button class="my-button" onclick="startArduinoData()">Start</button>
+                  <button class="my-button" onclick="stopArduinoData()">Quit</button>
+                    <button onclick="generateChart()">Generate Chart</button>
+
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+{% endblock %}
+
+
+
+{% block js %}
+    {{ parent() }}
+
+   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+   <!-- chartjs displaying ajax'd data from /StroringData with gets Y-axis data from /StroringData -->
+
+   <script>
+      var chart = document.getElementById('chart').getContext('2d');
+      var myChart = new Chart(chart, {
+         type: 'line',
+         data: {
+            labels: [],
+            datasets: [{
+               label: 'ECG Data',
+               data: [],
+               backgroundColor: 'rgba(255, 99, 132, 0.2)',
+               borderColor: 'rgba(255, 99, 132, 1)',
+               borderWidth: 1
+            }]
+         },
+         options: {
+            scales: {
+               y: {
+                  beginAtZero: true
+               }
+            }
+         }
+      });
+      overallData = [];
+      function startArduinoData() {
+         //set timeout]
+         setInterval(function(){
+            fetch('/StoringData')
+               .then(response => response.json())
+               .then(data => {
+                  overallData.push(data);
+                  //append to myChart.data.datasets[0].data
+                  if (myChart.data.datasets[0].data.length > 20) {
+                     //remove the first element
+                     myChart.data.datasets[0].data.shift();
+                     myChart.data.labels.shift();
+                  }
+                  myChart.data.labels.push(data);
+                  myChart.data.datasets[0].data.push(data);
+                  myChart.update();
+               });
+               if (overallData.length > 60) {
+                  //calculate heartbeats
+                  //calculate the average from the overallData
+
+                  bpm = 0;
+                  for (let i = 0; i < overallData.length; i++) {
+                     if (overallData[i] > 1600) {
+                        bpm = bpm + 1;
+                     }
+                  }
+                  if (bpm > 0) {
+                     console.log('Heartbeats: ' + bpm);
+                  //remove first 20 datas
+                  overallData = overallData.slice(20);
+               }
+               }
+         }, 500);
+      }
+
+      function stopArduinoData() {
+         myChart.data.labels = [];
+         myChart.data.datasets[0].data = [];
+         myChart.update();
+      }
+
+      function generateChart() {
+         myChart.update();
+      }
+   </script>
+{% endblock %}

@@ -1,0 +1,102 @@
+{% extends "main/base.html.twig" %}
+
+{% block content %}
+   <div class="page-content bg-white">		
+      <!-- banner -->
+      <div class="contact-bnr" style="background-image: url({{ asset('main/images/background/bg9.png') }});">
+         <div class="container">
+            <div class="row">
+               <div class="col-lg-6">
+                  {# {{ mukadi_chart(chart) }} #}
+                  <!-- chartjs displaying ajax'd data from /StroringData with gets Y-axis data from /StroringData -->
+                  <canvas id="chart" width="400" height="400"></canvas>
+
+							
+
+                  <button class="my-button" onclick="if (xhr) return; xhr=true;startArduinoData();">Start</button>
+                  <button class="my-button" onclick="stopArduinoData()">Quit</button>
+
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+{% endblock %}
+
+
+
+{% block js %}
+    {{ parent() }}
+
+   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+   <!-- chartjs displaying ajax'd data from /StroringData with gets Y-axis data from /StroringData -->
+
+   <script>
+      var chart = document.getElementById('chart').getContext('2d');
+      var myChart = new Chart(chart, {
+         type: 'line',
+         data: {
+            labels: [],
+            datasets: [{
+               label: 'ECG Data',
+               data: [],
+               backgroundColor: 'rgba(255, 99, 132, 0.2)',
+               borderColor: 'rgba(255, 99, 132, 1)',
+               borderWidth: 1
+            }]
+         },
+         options: {
+            scales: {
+               y: {
+                  beginAtZero: true
+               }
+            }
+         }
+      });
+      overallData = [];
+      threshold = 2000;
+      xhr= false;
+      function startArduinoData() {
+         //set timeout]
+            if (xhr == false) {
+               return;
+            }
+            fetch('/StroringData')
+               .then(response => response.text())
+               .then(data => {
+                  //data is going to contain 200 seperated with \r\n so we need to split it and store it in data array
+                  data = data.split('\r\n');
+               
+                  //append to myChart.data.datasets[0].data
+                  
+                  myChart.data.labels = Array.from(Array(data.length).keys()).map(String);
+                  myChart.data.datasets[0].data = data;
+
+                  myChart.update();
+
+
+                     bpm = 0;
+                     for (let i = 0; i < data.length; i++) {
+                        if (data[i] > threshold) {
+                           bpm = bpm + 1;
+                        }
+                     }
+                     if (bpm > 0) {
+                        console.log('Heartbeats: ' + bpm);
+                  
+               }
+                  //call this fetch again
+                  startArduinoData();
+               });
+                  
+               
+               
+      }
+
+      function stopArduinoData() {
+         xhr = false;
+      }
+
+
+   </script>
+{% endblock %}

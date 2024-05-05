@@ -2,11 +2,14 @@
 
 namespace App\Controller;
 
+use App\Entity\Complains;
 use App\Entity\Post;
 use App\Form\PostType;
 use App\Repository\CommentaireRepository;
+use App\Repository\ComplainsRepository;
 use App\Repository\PostRepository;
 use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,8 +18,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class PostController extends AbstractController
 {
-    #[Route('/post', name: 'getAll_post')]
-    public function getAllPosts(Request $req, PostRepository $rep, UserRepository $urep, CommentaireRepository $crep, ManagerRegistry $manager): Response
+    #[Route('/blog', name: 'getAll_post')]
+    public function getAllPosts(Request $req, PostRepository $rep, EntityManagerInterface $entityManager, CommentaireRepository $crep, ManagerRegistry $manager): Response
     {
         $em = $manager->getManager();
         $dateImmutable = date_create('now');
@@ -35,6 +38,9 @@ class PostController extends AbstractController
                 $post->setUser($user);
 
                 $photo = $form['photo']->getData();
+                $content = $form['content']->getData();
+                $clean_words = \ConsoleTVs\Profanity\Builder::blocker($content)->filter();
+                $post->setContent($clean_words);
                 if ($photo) {
                     $filename = 'USERIMG' . $user->getId() . '.' . $photo->guessExtension();
                     $targetdir = $this->getParameter('kernel.project_dir') . '/public/profileuploads/';
@@ -54,10 +60,17 @@ class PostController extends AbstractController
         //affichage 
 
         $posts = $rep->findAll();
-        for ($i=0; $i < sizeof($posts); $i++) { 
-            $this->updateNbComnt($crep,$posts[$i],$rep,$manager);
-            // echo($posts[$i]->getIdUser().' ');
-            // $posts[$i]->setUser($urep->find($posts[$i]->getIdUser()));   
+        // $posts1 = array();
+        // $j = 0;
+
+
+        for ($i=0; $i < sizeof($posts); $i++) {
+            if($this->checkPostComplaintsCount($posts[$i], $entityManager)){
+                $this->updateNbComnt($crep,$posts[$i],$rep,$manager);
+            }else {
+                $key = array_search($posts[$i], $posts);
+                array_splice($posts, $key, 1);
+            }
         }
         
         return $this->renderForm('main/post/index.html.twig', [
@@ -66,7 +79,7 @@ class PostController extends AbstractController
         ]);
     }
     
-    #[Route('/post/{id}', name: 'update_post')]
+    #[Route('/blog/{id}', name: 'update_post')]
     public function updatePosts(Request $req, $id, PostRepository $rep, ManagerRegistry $manager): Response
     {
         // $user = $this->getUser();
@@ -86,7 +99,7 @@ class PostController extends AbstractController
             "post" => $post
         ]);
     }
-    #[Route('/post/delete/{id}', name: 'delete_post')]
+    #[Route('/blog/delete/{id}', name: 'delete_post')]
     public function delete(PostRepository $rep, $id, ManagerRegistry $manager, CommentaireRepository $repc): Response
     {
         // $user = $this->getUser();
@@ -111,7 +124,34 @@ class PostController extends AbstractController
         $em->persist($post);
         $em->flush();
     }
-
     
+    #[Route('/blog/like/{id}', name: 'updateLikes_post')]
+    public function updateNbLikes($id, PostRepository $rep, ManagerRegistry $manager)
+    {
+        $em = $manager->getManager();
+        $post = $rep->find($id);
+        $likes = $post->getLikes()+1;
+        $post->setLikes($likes);
+        $em->persist($post);
+        $em->flush();
+
+        return $this->redirectToRoute('getAll_post');
+
+    }
+
+    //check if Post is signaled or not
+
+    public function checkPostComplaintsCount(Post $post, EntityManagerInterface $entityManager): bool
+    {
+        $postCount = $entityManager->getRepository(Complains::class)
+            ->createQueryBuilder('c')
+            ->select('COUNT(c.id)')
+            ->where('c.postId = :post')
+            ->setParameter('post', $post->getId())
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        return $postCount < 5;
+    }
 
 }

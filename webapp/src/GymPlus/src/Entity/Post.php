@@ -43,23 +43,9 @@ class Post
 
     #[ORM\Column(name: "nbComnts", nullable: true)]
     private ?int $nbComnts = null;
-    // #[Assert\NotBlank(message: 'you can not add an empty post.')]
-    // #[Vich\UploadableField(mapping: 'img_post', fileNameProperty: 'photo')]
-    // private ?File $imageFile = null;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'posts')]
     private ?User $user = null;
-
-    // #[ORM\OneToMany(mappedBy: 'post', targetEntity: Complains::class)]
-    // private Collection $complains;
-
-    // public function __construct()
-    // {
-    //     $this->complains = new ArrayCollection();
-    // }
-
-    // #[ORM\Column(nullable: true)]
-    // private ?string $imageName = null;
 
     public function getId(): ?int
     {

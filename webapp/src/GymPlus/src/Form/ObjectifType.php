@@ -35,6 +35,7 @@ class ObjectifType extends AbstractType
                     'Default 1' => 'Default',
                     'Version ++' => 'Version ++',
                 ],
+                'placeholder' => 'Select an option', 
                 'label' => 'Type',
             ])
             ->add('datef', DateType::class, [
@@ -48,6 +49,9 @@ class ObjectifType extends AbstractType
                         ->where('u.role LIKE :role')
                         ->setParameter('role', 'staff');
                 },
+                'placeholder' => 'Select your Coach', 
+
+
             ])
             ->add('submit', SubmitType::class)
         ;

@@ -15,9 +15,9 @@
 							<!-- Breadcrumb Row -->
 							<nav aria-label="breadcrumb" class="breadcrumb-row">
 								<ul class="breadcrumb">
-									<li class="breadcrumb-item"><a href="index.html">Home</a></li>
+									<li class="breadcrumb-item"><a href={{ path('app_home') }}>Home</a></li>
 									
-									<li class="breadcrumb-item active" aria-current="page">Events</li>
+									<li class="breadcrumb-item active" aria-current="page">History</li>
 								</ul>
 							</nav>
 							<!-- Breadcrumb Row End -->
@@ -66,9 +66,8 @@
                                             <!-- Rate Event Form -->
                                             <form action="{{ path('event_vote', {'id': event.id}) }}" method="post">
                                                 <select name="rating" class="form-control">
-                                                    <option value="">Select rating</option>
                                                     {% for i in 1..5 %}
-                                                        <option value="{{ i }}">{{ i }}</option>
+                                                      <option value="{{ i }}" {% if valid and i == votes[event.id] %}selected{% endif %}>{{ i }}</option>
                                                     {% endfor %}
                                                 </select>
                                                 <button type="submit" class="btn btn-primary">Submit Rating</button>

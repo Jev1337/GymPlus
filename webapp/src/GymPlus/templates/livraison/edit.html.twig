@@ -12,21 +12,55 @@
             </ol>
         </div>
         <!-- row -->
+
+        <div class="alert alert-warning solid alert-right-icon alert-dismissible fade show">
+            <span><i class="mdi mdi-alert"></i></span>
+                <button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span><i class="mdi mdi-close"></i></span>
+            </button>
+            <strong>Warning!</strong> As a staff/admin, you have the capability to modify only the status.
+		</div>
+
         <div class="row">
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="card-title">Edit Product</h4>
+                        <h4 class="card-title">Edit Delivery</h4>
                     </div>
                     <div class="card-body">
+                        {{ form_start(form, {'attr': {'class': 'centered-form','novalidate' : 'novalidate'}}) }}
                         {# <div class="form-group col-md-4"> #}
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                {{ form_label(form.idfacture) }}
+                                {{ form_widget(form.idfacture, {'attr': {'class': 'form-control'}}) }}
+                                <small class="text-danger">{{ form_errors(form.idfacture) }}</small>
+                            </div>
+                            <div class="form-group col-md-4">
+                                {{ form_label(form.idclient) }}
+                                {{ form_widget(form.idclient, {'attr': {'class': 'form-control'}}) }}
+                                <small class="text-danger">{{ form_errors(form.idclient) }}</small>
+                            </div>
+                            <div class="form-group col-md-4">
+                                {{ form_label(form.lieu) }}
+                                {{ form_widget(form.lieu, {'attr': {'class': 'form-control'}}) }}
+                                <small class="text-danger">{{ form_errors(form.lieu) }}</small>
+                            </div>
+                            <div class="form-group col-md-4">
+                                {{ form_label(form.etat) }}
+                                {{ form_widget(form.etat, {'attr': {'class': 'form-control'}}) }}
+                                <small class="text-danger">{{ form_errors(form.etat) }}</small>
+                            </div>
+                        </div>
+
+                        <br>
+   
                         <div class="text-center" >
                             {{ include('livraison/_form.html.twig', {'button_label': 'Update'}) }}
                         </div>
                         <a href="{{ path('app_livraison_index') }}" class="btn btn-primary">back to list</a>
-
-                        {# {{ include('livraison/_delete_form.html.twig') }} #}
+                        {{ form_end(form) }}
                     </div>
+                    
                 </div>
             </div>
         </div>

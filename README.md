@@ -7,7 +7,7 @@
   <h3 align="center">GymPlus</h3>
 
   <p align="center">
-    A Gym Management Software in JavaFX and Symphony.
+    A Gym Management Software in JavaFX and Symfony.
     <br/>
     <br/>
     <a href="https://github.com/Jev1337/GymPlus"><strong>Explore the docs »</strong></a>
@@ -50,7 +50,7 @@ You just have to clone the Repo and run, make sure to install the Prerequisites.
 
 This is an example of how to list things you need to use the software and how to install them.
 * JavaFX [https://openjfx.io/](https://openjfx.io/)
-* Symphony [https://symfony.com/](https://symfony.com/)
+* Symfony [https://symfony.com/](https://symfony.com/)
 * MySQL via XAMPP [https://www.apachefriends.org/index.html](https://www.apachefriends.org/index.html)
 
 ## Usage

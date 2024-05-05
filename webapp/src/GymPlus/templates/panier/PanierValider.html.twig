@@ -87,8 +87,16 @@
         <h4>Total Invoice Amount : $ {{ facture.prixtatalpaye }} </h4>
         <h4>Payment Method : {{ facture.methodedepaiement }}</h4>
         <br>
+
+        
+        <a href="{{ path('pdf_generate', {'idFacture': facture.idfacture }) }}" class="btn btn-primary btn-skew appointment-btn" target="_blank">
+            <span class="skew-inner"><span class="text"> PDF </span></span>
+        </a>
+        <br>
+        <br>
+
         {% if facture.methodedepaiement == 'Card' %}
-             <form action="{{ path('checkout') }}" method="POST">
+            <form action="{{ path('checkout') }}" method="POST">
                 <button type="submit" class="btn btn-secondary custom-btn-width wow fadeInUp" data-wow-delay="0.9s" style="visibility: visible; animation-delay: 0.9s; animation-name: fadeInUp;">
                     Pay with Stripe
                 </button>
@@ -106,11 +114,8 @@
         <br>
         <br>
 
-
     </div>
-</div>
-
-
+   
 
 
 {% endblock %}

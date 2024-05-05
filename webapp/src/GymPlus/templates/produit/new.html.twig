@@ -21,9 +21,56 @@
                     </div>
                     <div class="card-body">
 
+                        {{ form_start(form, {'attr': {'class': 'centered-form','novalidate' : 'novalidate'}}) }}
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            {{ form_label(form.name) }}
+                            {{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
+                            <small class="text-danger">{{ form_errors(form.name) }}</small>
+                        </div>
+                        <div class="form-group col-md-4">
+                            {{ form_label(form.prix) }}
+                            {{ form_widget(form.prix, {'attr': {'class': 'form-control'}}) }}
+                            <small class="text-danger">{{ form_errors(form.prix) }}</small>
+                        </div>
+                        <div class="form-group col-md-4">
+                            {{ form_label(form.stock) }}
+                            {{ form_widget(form.stock, {'attr': {'class': 'form-control'}}) }}
+                            <small class="text-danger">{{ form_errors(form.stock) }}</small>
+                        </div>
+                        <div class="form-group col-md-4">
+                            {{ form_label(form.description) }}
+                            {{ form_widget(form.description, {'attr': {'class': 'form-control'}}) }}
+                            <small class="text-danger">{{ form_errors(form.description) }}</small>
+                        </div>
+                        <div class="form-group col-md-4">
+                            {{ form_label(form.categorie) }}
+                            {{ form_widget(form.categorie, {'attr': {'class': 'form-control'}}) }}
+                            <small class="text-danger">{{ form_errors(form.categorie) }}</small>
+                        </div>
+                        <div class="form-group col-md-4">
+                            {{ form_label(form.photo) }}
+                            {{ form_widget(form.photo, {'attr': {'class': 'form-control'}}) }}
+                            <small class="text-danger">{{ form_errors(form.photo) }}</small>
+                        </div>
+                        <div class="form-group col-md-4">
+                            {{ form_label(form.seuil) }}
+                            {{ form_widget(form.seuil, {'attr': {'class': 'form-control'}}) }}
+                            <small class="text-danger">{{ form_errors(form.seuil) }}</small>
+                        </div>
+                        <div class="form-group col-md-4">
+                            {{ form_label(form.promo) }}
+                            {{ form_widget(form.promo, {'attr': {'class': 'form-control'}}) }}
+                            <small class="text-danger">{{ form_errors(form.promo) }}</small>
+                        </div>
+                    </div>
+                   
+                    <br>
+
+
                         {# <div class="form-group col-md-4" > #}
                         <div class="text-center" >
-                            {{ form_start(form,{'attr': {'novalidate': 'novalidate'}} ) }} 
+                            {# {{ form_start(form,{'attr': {'novalidate': 'novalidate'}} ) }}  #}
                             {{ include('produit/_form.html.twig') }}
                         </div>
 

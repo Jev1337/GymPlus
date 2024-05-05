@@ -16,18 +16,12 @@ class PostType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            // ->add('idUser')
-            // ->add('mode')
             ->add('content', TextareaType::class, [
                 'required' => false
             ])
-            // ->add('imageFile', VichImageType::class, [
-            //     'required' => false,
-            //     'attr' => ["class" => 'text-center btn btn-outline-primary rounded', "style" => 'height:2.5rem;width: 5rem;']
-            // ])
             ->add('photo', FileType::class, [
                 'required' => false,
-                'attr' => ["class" => 'form-control btn btn-outline-primary rounded' , "style" => 'height:2.5rem;width: 5rem;']
+                'label_attr' => ["class" => 'form-control btn btn-outline-primary rounded' , "style" => 'height:2.5rem;width: 5rem;']
             ])  
             ->add('post', SubmitType::class);
     }

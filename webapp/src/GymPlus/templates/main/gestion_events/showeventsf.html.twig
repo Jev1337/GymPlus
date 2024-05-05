@@ -24,7 +24,7 @@
 							<!-- Breadcrumb Row -->
 							<nav aria-label="breadcrumb" class="breadcrumb-row">
 								<ul class="breadcrumb">
-									<li class="breadcrumb-item"><a href="index.html">Home</a></li>
+									<li class="breadcrumb-item"><a href={{ path('app_home') }}>Home</a></li>
 									
 									<li class="breadcrumb-item active" aria-current="page">Events</li>
 								</ul>
@@ -43,21 +43,20 @@
     <a href="{{ path('rewards') }}" class="text-decoration-none text-dark">
         <div class="card">
             <div class="card-body">
-                <h5 class="card-title">Event Points</h5>
-                <p class="card-text">{{ user_points }}</p>
+                <h5 class="card-title" style="color: red;"><i class="fas fa-trophy"></i> Event Points</h5>      
+                 <p class="card-text" style="color: red;">{{ user_points }}</p>
                
-            </div>
+            </a> 
             <a href="{{ path('past_events') }}" class="text-decoration-none text-dark">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Past Events</h5>
-                        
+                        <h5 class="card-title"><i class="fas fa-history"></i> Past Events</h5>                        
                        
                     </div>
                 </div>
             </a>
         </div>
-    </a>
+    
     <div id="countdown"></div>
     
 </div>
@@ -119,10 +118,11 @@
 {% block js %}
 {{parent()}}
 <script>
-     {% if nextEventDate is null %}
+    
+     {% if nextEventDate is null  %}
      document.getElementById("countdown").innerHTML = "<h2>No Upcoming Events For You</h2>";
  {% else %}
-     
+        
          var countdown = new Date("{{ nextEventDate|date('Y/m/d H:i:s') }}").getTime();
         
          var x = setInterval(function() {

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Generate Bar Codes</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <style>
+        .btn-secondary {
+            background-color: #007bff; /* Blue button */
+            border-color: #007bff;
+            border-radius: 25px; /* Rounded button */
+            padding: 10px 20px; /* Padding */
+            font-size: 16px; /* Font size */
+            color: #fff; /* Text color */
+            text-decoration: none; /* Remove underline */
+            transition: background-color 0.3s; /* Smooth transition */
+        }
+        .btn-secondary:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+            border-color: #0056b3;
+        }
+    </style>
+</head>
+<body class="bg">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header" >
+                        <h3>Generated Bar Code</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-center mb-4">
+                            <div id="qrbox">
+                                {{ code|raw }}
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <a href="{{ path('app_produit_indexAdmin') }}" class="btn btn-secondary">Back</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

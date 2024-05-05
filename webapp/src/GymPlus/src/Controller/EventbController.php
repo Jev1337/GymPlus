@@ -450,12 +450,12 @@ $result = Builder::create()
     // Save the QR code as an image
 $qrCodePath = $this->getParameter('kernel.project_dir').'/public/main/images/qrcodes/qrcode1.png';
 
-// Check if the directory is writable
+
 if (!is_writable(dirname($qrCodePath))) {
     throw new \Exception('The directory is not writable: ' . dirname($qrCodePath));
 }
 
-// Try to save the QR code and catch any errors
+
 try {
     $result->saveToFile($qrCodePath);
 } catch (\Exception $e) {
@@ -469,13 +469,13 @@ try {
             ->to($emailu)
             ->subject('GymPlus Whey')
             ->text('Thank you for claiming GymPlus Whey!')
-            ->attachFromPath($qrCodePath); // Attach the QR code
+            ->attachFromPath($qrCodePath); 
         $mailer->send($email);
     } else {
         $this->addFlash('error', 'Not enough points');
     }
 
-    return $this->redirectToRoute('rewards'); // Redirect back to the rewards page
+    return $this->redirectToRoute('rewards');
 }
 
 #[Route('/rewards/bag', name: 'bag')]
@@ -488,7 +488,7 @@ public function claimBag(Request $request, EntityManagerInterface $entityManager
     if ($user->getEventPoints() >= 3000) {
         $user->setEventPoints($user->getEventPoints() - 3000);
 
-        // Update user points in the database
+       
         $entityManager->persist($user);
         $entityManager->flush();
         $this->addFlash('success', 'Successfully claimed GymPlus Bag!');
@@ -584,52 +584,57 @@ try {
         return $this->redirectToRoute('blacklised');
     }
     #[Route('/past-events', name: 'past_events')]
-public function pastEvents(ManagerRegistry $registry)
-{
-    $user = $this->getUser();
+        public function pastEvents(ManagerRegistry $registry)
+    {
+        $user = $this->getUser();
 
-    $pastEvents = $registry->getRepository(EventParticipants::class)->findPastEventsByUser($user->getId());
-
-    //show user past events the events user joined in the past
-    return $this->render('main\gestion_events/past_events.html.twig', [
-        'controller_name' => 'EventbController',
-        'pastEvents' => $pastEvents,
-        'user' => $user,
-    ]);
-
-}
-
-#[Route('/event_vote/{id}', name: 'event_vote')]
-public function rateEvent($id, Request $request, EventParticipantsRepository $eventParticipantsRepository)
-{
-    $user = $this->getUser();
-    $event = $this->eventdetailsRepository->find($id);
-
-    // Find the EventParticipants record for the current user and the specified event
-    $eventParticipant = $eventParticipantsRepository->findOneBy([
-        'user_id' => $user->getId(),
-        'event_details_id' => $event->getId(),
-    ]);
-
-    // If the user is a participant of the event
-    if ($eventParticipant) {
-        // Get the rating from the request
-        $rating = $request->request->get('rating');
-
-        // Set the rating
-        $eventParticipant->setRate($rating);
-
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->persist($eventParticipant);
-        $entityManager->flush();
-
-        $this->addFlash('success', 'Rating submitted. Thank you for rating ' . $event->getName());
-    } else {
-        $this->addFlash('error', 'No event selected. Please select an event to rate');
+        $pastEvents = $registry->getRepository(EventParticipants::class)->findPastEventsByUser($user->getId());
+        $votes = [];
+        foreach ($pastEvents as $pastEvent) {
+            $votes[$pastEvent['id']] = $registry->getRepository(EventParticipants::class)->findVoteByUser($pastEvent, $user->getId());
+        }
+        $valid = !empty($votes);
+        //show user past events the events user joined in the past
+        return $this->render('main\gestion_events/past_events.html.twig', [
+            'controller_name' => 'EventbController',
+            'pastEvents' => $pastEvents,
+            'user' => $user,
+            'valid'=> $valid,
+            'votes'=> $votes, 
+        ]);
     }
 
-    return $this->redirectToRoute('past_events');
-}
+ 
+    #[Route('/event_vote/{id}', name: 'event_vote')]
+    public function rateEvent($id, Request $request, EventParticipantsRepository $eventParticipantsRepository, EntityManagerInterface $entityManager)
+    {
+        $user = $this->getUser();
+        $event = $this->eventdetailsRepository->find($id);
+    
+        $eventParticipant = $eventParticipantsRepository->findOneBy([
+            'user_id' => $user->getId(),
+            'event_details_id' => $event->getId(),
+        ]);
+    
+        if ($eventParticipant) {
+            $rating = $request->request->get('rating');
+            $rating = filter_var($rating, FILTER_VALIDATE_INT);
+    
+            if ($rating === false) {
+                $this->addFlash('error', 'Invalid rating. Please enter a valid number.');
+                return $this->redirectToRoute('past_events');
+            }
+    
+            $eventParticipant->setRate($rating);
+    
+          
+            $entityManager->persist($eventParticipant);
+            $entityManager->flush();
+        }
+    
+        return $this->redirectToRoute('past_events');
+    }
+    
 
 #[Route('/past-events-history', name: 'past_events_history')]
 public function pastEventsHistory(ManagerRegistry $registry)

@@ -35,7 +35,19 @@ CREATE TABLE `abonnement` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
+CREATE TABLE `notif` (
+  `id` int(11) NOT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `etat` varchar(255) DEFAULT NULL,
+  `etat_commentaire` varchar(255) DEFAULT NULL,
+  `titre` varchar(255) DEFAULT NULL,
+  `nomUser` varchar(255) DEFAULT NULL,
+  `idProduit` int(11) DEFAULT NULL,
+  `datevente` date DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Déchargement des données de la table `notif`
 --
 -- Table structure for table `abonnement_details`
 --
@@ -424,6 +436,14 @@ ALTER TABLE `maintenances`
   ADD KEY `equipements_details_id` (`equipements_details_id`);
 
 --
+-- AUTO_INCREMENT pour la table `notif`
+--
+ALTER TABLE `notif`
+  ADD PRIMARY KEY (`id`);
+ALTER TABLE `notif`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+
+--
 -- Indexes for table `objectif`
 --
 ALTER TABLE `objectif`
@@ -580,6 +600,7 @@ CREATE TABLE `complains` (
   `feedback` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+
 --
 -- Index pour les tables déchargées
 --
@@ -588,9 +609,12 @@ CREATE TABLE `complains` (
 -- Index pour la table `complains`
 --
 ALTER TABLE `complains`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `user_id` (`user_id`),
-  ADD KEY `post_id` (`post_id`);
+    ADD PRIMARY KEY (`id`),
+    ADD KEY `user_id` (`user_id`),
+    ADD KEY `post_id` (`post_id`);
+
+ALTER TABLE `complains`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
 --
 -- AUTO_INCREMENT pour les tables déchargées
@@ -599,8 +623,6 @@ ALTER TABLE `complains`
 --
 -- AUTO_INCREMENT pour la table `complains`
 --
-ALTER TABLE `complains`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

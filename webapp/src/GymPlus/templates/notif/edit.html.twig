@@ -1,0 +1,82 @@
+{% extends 'dashboard/base.html.twig' %}
+
+
+{% block content %}
+
+<div class="content-body default-height" style="min-height: 878px;">
+    <div class="container-fluid">
+        <div class="page-titles">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
+                <li class="breadcrumb-item active"><a href="javascript:void(0)">Notif</a></li>
+            </ol>
+        </div>
+        <!-- row -->
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Edit Notif</h4>
+                    </div>
+                    <div class="card-body">
+                    {{ form_start(form, {'attr': {'class': 'centered-form','novalidate' : 'novalidate'}}) }}
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            {{ form_label(form.titre) }}
+                            {{ form_widget(form.titre, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+                        <div class="form-group col-md-4">
+                            {{ form_label(form.datevente) }}
+                            {{ form_widget(form.datevente, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+                        <div class="form-group col-md-4">
+                            {{ form_label(form.etat) }}
+                            {{ form_widget(form.etat, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+                        <div class="form-group col-md-4">
+                            {{ form_label(form.Description) }}
+                            {{ form_widget(form.Description, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+                        <div class="form-group col-md-4">
+                            {{ form_label(form.idProduit) }}
+                            {{ form_widget(form.idProduit, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+                        <div class="form-group col-md-4">
+                            {{ form_label(form.nomUser) }}
+                            {{ form_widget(form.nomUser, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+                    </div>
+                   
+                    <br>
+                        <div class="text-center" >
+                              {{ include('notif/_form.html.twig', {'button_label': 'Update'}) }}                       
+                        </div>
+                        <a href="{{ path('app_notif_index') }}" class="btn btn-primary" >back to list</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    
+{% endblock %}
+
+
+
+{# 
+<!DOCTYPE html>
+
+<title>Edit Notif</title>
+
+{% block body %}
+    <h1>Edit Notif</h1>
+
+    {{ include('notif/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_notif_index') }}">back to list</a>
+
+    {{ include('notif/_delete_form.html.twig') }}
+{% endblock %} #}
+
+

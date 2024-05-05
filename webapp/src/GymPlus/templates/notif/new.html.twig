@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+
+<title>New Notif</title>
+
+{% block body %}
+    <h1>Create new Notif</h1>
+
+    {{ include('notif/_form.html.twig') }}
+
+    <a href="{{ path('app_notif_index') }}">back to list</a>
+{% endblock %}

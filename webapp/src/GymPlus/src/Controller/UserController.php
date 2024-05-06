@@ -42,10 +42,15 @@ class UserController extends AbstractController
     #[Route('/dashboard/home', name: 'app_dashboard')]
     public function dashboard(UserRepository $repoUser, AbonnementRepository $repoAbon, MaintenancesRepository $repoMaint,EventDetailsRepository $repoEvents ): Response
     {
+        $perc = 0;
+        if ($repoUser->getClientCount() != 0) {
+            $perc = $repoAbon->getActiveMembershipPercent()/$repoUser->getClientCount()*100;
+        }
+
         $stats = [
             ['title' => 'Members Count', 'content' => $repoUser->getClientCount(), 'percent' => '100'],
             ['title' => 'Active Membership Count', 'content' => $repoAbon->getActiveMembershipCount(),'percent' => '100'],
-            ['title' => 'Active Membership Percent', 'content' => $repoAbon->getActiveMembershipPercent()/$repoUser->getClientCount()*100, 'percent' => $repoAbon->getActiveMembershipPercent()/$repoUser->getClientCount()*100],
+            ['title' => 'Active Membership Percent', 'content' => $perc, 'percent' => $perc],
             ['title' => 'Live Events', 'content' => count($repoEvents->findFutureEvents()),'percent' => '100']
         ];
 

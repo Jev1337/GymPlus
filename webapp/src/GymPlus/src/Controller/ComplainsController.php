@@ -18,6 +18,7 @@ class ComplainsController extends AbstractController
     public function index(ComplainsRepository $complainsRepository): Response
     {
         $complains = $complainsRepository->findAll();
+        
         return $this->render('dashboard/blog/index.html.twig', [
             'complains' => $complains,
         ]);

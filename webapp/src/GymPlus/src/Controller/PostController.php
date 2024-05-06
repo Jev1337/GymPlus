@@ -11,6 +11,7 @@ use App\Repository\PostRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
+use Illuminate\Support\Facades\File;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -60,9 +61,6 @@ class PostController extends AbstractController
         //affichage 
 
         $posts = $rep->findAll();
-        // $posts1 = array();
-        // $j = 0;
-
 
         for ($i=0; $i < sizeof($posts); $i++) {
             if($this->checkPostComplaintsCount($posts[$i], $entityManager)){
@@ -82,12 +80,24 @@ class PostController extends AbstractController
     #[Route('/blog/{id}', name: 'update_post')]
     public function updatePosts(Request $req, $id, PostRepository $rep, ManagerRegistry $manager): Response
     {
-        // $user = $this->getUser();
+        $user = $this->getUser();
         $em = $manager->getManager();
         $post = $rep->find($id);
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($req);
         if ($form->isSubmitted() && $form->isValid()) {
+            $photo = $form['photo']->getData();
+                $content = $form['content']->getData();
+                $clean_words = \ConsoleTVs\Profanity\Builder::blocker($content)->filter();
+                $post->setContent($clean_words);
+                if ($photo) {
+                    $filename = 'USERIMG' . $user->getId() . '.' . $photo->guessExtension();
+                    $targetdir = $this->getParameter('kernel.project_dir') . '/public/profileuploads/';
+                    $photo->move($targetdir, $filename);
+                    $post->setPhoto($filename);
+                }else{
+                    $post->setPhoto('');
+                }
             $em->persist($post);
             $em->flush();
 
@@ -151,7 +161,7 @@ class PostController extends AbstractController
             ->getQuery()
             ->getSingleScalarResult();
 
-        return $postCount < 5;
+        return $postCount < 2;
     }
 
 }

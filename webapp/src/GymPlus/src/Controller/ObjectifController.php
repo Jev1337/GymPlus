@@ -25,6 +25,8 @@ use OpenAI;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use App\Service\WebSocketServer;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 
 
 class ObjectifController extends AbstractController
@@ -671,7 +673,7 @@ public function getGeneratedExercices(Request $request): Response
 
 
     #[Route('/make-planing/{objectiveId}', name: 'MakePlaning')]
-    public function MakePlaning($objectiveId, ManagerRegistry $registry, Request $request): Response
+    public function MakePlaning($objectiveId, ManagerRegistry $registry, Request $request,MailerInterface $mailer): Response
     {  
         $plan = new Planning();
         $form = $this->createForm(PlanningType::class, $plan);
@@ -690,12 +692,24 @@ public function getGeneratedExercices(Request $request): Response
             $filename = 'PlanIMG' . $plan->getTrainingprog() . '.' . $file->guessExtension();
             $targetdir = $this->getParameter('kernel.project_dir') . '/public/capturesPlaning/';
             $file->move($targetdir, $filename);
-            $user->setPhoto($filename);
+            $user1 = $obj->getUserid();    
+
+
+            $useremail=$user1->getEmail();
+           
 
 
                 $entityManager = $registry->getManager();
                 $entityManager->persist($plan);
                 $entityManager->flush();
+                
+                 $email = (new Email())
+                ->from('gymplus-noreply@grandelation.com')
+                ->to( $useremail)
+                ->subject('Your Plans Are Ready!')
+                ->text('Stay Consistent!');
+                
+                 $mailer->send($email);
 
                 if ($request->isXmlHttpRequest()) {
                     return new JsonResponse(['success' => 'Success! Ajax kae3d yet3ada.']);

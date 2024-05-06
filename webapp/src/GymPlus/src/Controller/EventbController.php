@@ -407,7 +407,7 @@ try {
             ->to($emailu)
             ->subject('GymPlus Whey')
             ->text('Thank you for claiming GymPlus Whey!')
-            ->attachFromPath($qrCodePath); // Attach the QR code
+            ->attachFromPath($qrCodePath);
         $mailer->send($email);
 
     } else {

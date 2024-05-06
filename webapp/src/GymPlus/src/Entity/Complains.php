@@ -27,6 +27,7 @@ class Complains
     #[ORM\ManyToOne(inversedBy: 'complains')]
     private ?User $user = null;
 
+
     // #[ORM\ManyToOne(inversedBy: 'complains')]
     // private ?Post $post = null;
 
@@ -94,4 +95,5 @@ class Complains
 
     //     return $this;
     // }
+
 }

@@ -21,7 +21,8 @@ class PostType extends AbstractType
             ])
             ->add('photo', FileType::class, [
                 'required' => false,
-                'label_attr' => ["class" => 'form-control btn btn-outline-primary rounded' , "style" => 'height:2.5rem;width: 5rem;']
+                'label_attr' => ["class" => 'form-control btn btn-outline-primary rounded' , "style" => 'height:2.5rem;width: 5rem;'],
+                'data_class' => null,
             ])  
             ->add('post', SubmitType::class);
     }

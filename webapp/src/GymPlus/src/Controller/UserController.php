@@ -129,10 +129,10 @@ class UserController extends AbstractController
         if (!$phone) {
             return new Response('Invalid Phone Number', 400);
         }
-        $sid = "AC6dc66bc270d75e383b6b6faedf1a7805";
-        $token = "8ef079e198d30e29784c3f5c3840dbc8";
+        $sid = "AC392ce1296b06bc72abd1a8b959a5c498";
+        $token = "34de2df868906e39474cfcdf2d3c919a";
         $twilio = new Client($sid, $token);
-        $verification = $twilio->verify->v2->services("VA1a9fc1403057f6ddc645002f416c50bc")
+        $verification = $twilio->verify->v2->services("VA953e50d7cb3df0aa6777c2fbc4829b95")
                                    ->verifications
                                    ->create("sms:+216". $phone, "sms");
         return new Response($verification->status, 200);
@@ -146,10 +146,10 @@ class UserController extends AbstractController
         if (!$phone || !$code) {
             return new Response('Invalid Phone Number or Code', 400);
         }
-        $sid = "AC6dc66bc270d75e383b6b6faedf1a7805";
-        $token = "8ef079e198d30e29784c3f5c3840dbc8";
+        $sid = "AC392ce1296b06bc72abd1a8b959a5c498";
+        $token = "34de2df868906e39474cfcdf2d3c919a";
         $twilio = new Client($sid, $token);
-        $verificationCheck = $twilio->verify->v2->services("VA1a9fc1403057f6ddc645002f416c50bc")
+        $verificationCheck = $twilio->verify->v2->services("VA953e50d7cb3df0aa6777c2fbc4829b95")
                                    ->verificationChecks
                                    ->create(["to"=> "sms:+216. " . $phone, "code" => $code]);
         if ($verificationCheck->status == 'approved') {

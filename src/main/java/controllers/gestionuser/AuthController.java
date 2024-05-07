@@ -1206,15 +1206,15 @@ public class AuthController {
     private void sendSms(String phone) {
         try {
             //using twilio to send sms
-            String account_sid = "ACa0a9c02e124f285821fe62b736260421";
-            String auth_token = "e8cd361a90ce0dbcd5485d5719f935fb";
-            String verify_sid = "VA10dd8bfd053741ce7361fd967c83a1e6";
+            String account_sid = "AC392ce1296b06bc72abd1a8b959a5c498";
+            String auth_token = "34de2df868906e39474cfcdf2d3c919a";
+            String verify_sid = "VA953e50d7cb3df0aa6777c2fbc4829b95";
 
             Twilio.init(account_sid, auth_token);
             Verification verification = Verification.creator(
                     verify_sid,
-                    "whatsapp:+216"+phone,
-                    "whatsapp")
+                    "sms:+216"+phone,
+                    "sms")
                     .create();
             System.out.println(verification.getStatus());
         } catch (Exception e) {
@@ -1224,9 +1224,9 @@ public class AuthController {
 
     private Boolean checkSms(String phone, String code){
         try {
-            String account_sid = "ACa0a9c02e124f285821fe62b736260421";
-            String auth_token = "e8cd361a90ce0dbcd5485d5719f935fb";
-            String verify_sid = "VA10dd8bfd053741ce7361fd967c83a1e6";
+            String account_sid = "AC392ce1296b06bc72abd1a8b959a5c498";
+            String auth_token = "34de2df868906e39474cfcdf2d3c919a";
+            String verify_sid = "VA953e50d7cb3df0aa6777c2fbc4829b95";
             Twilio.init(account_sid, auth_token);
             VerificationCheck verificationCheck = VerificationCheck.creator(
                             verify_sid)

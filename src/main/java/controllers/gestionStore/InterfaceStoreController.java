@@ -357,7 +357,7 @@ public class InterfaceStoreController implements Initializable {
 
             VBox productBox = new VBox();
             productBox.getChildren().addAll(imageView, nameLabel, priceLabel);
-
+            productBox.setStyle("-fx-border-color: -color-bg-subtle; -fx-border-width: 3px;");
             // Ajouter un espacement entre chaque produit
             HBox.setMargin(productBox, new Insets(0, 0, 0, 10)); // Ajoute une marge à gauche de 10 pixels
 
@@ -502,6 +502,7 @@ public class InterfaceStoreController implements Initializable {
             });
 
             // espace vertical entre les colonnes
+            vbox.setStyle("-fx-border-color: -color-bg-subtle; -fx-border-width: 3px;");
             if (col > 0)
             {
                 Insets insets = new Insets(0, 10, 10, 0); //haut / droite / bas / gauche
@@ -574,6 +575,8 @@ public class InterfaceStoreController implements Initializable {
 
         String photo = p.getPhoto();
         ImageView imageView = new ImageView(new Image(pathPhoto + photo));
+        imageView.setFitWidth(200);
+        imageView.setFitHeight(200);
         //ImageView imageView = new ImageView(new Image((new File("src/assets/imageProduit/" +p.getPhoto()).toURI().toString())));
 
 
@@ -962,7 +965,7 @@ public class InterfaceStoreController implements Initializable {
         l.setIdClient(GlobalVar.getUser().getId());
         villeLabel.setText(location);
         l.setLieu(villeLabel.getText());
-        l.setEtat("en cours");
+        l.setEtat("In progress");
 
         return l;
     }
@@ -1135,9 +1138,10 @@ public class InterfaceStoreController implements Initializable {
                 Label labelNom = new Label("Nom: " + nom);
                 Label labelPrix = new Label("Prix: " + prix);
                 Label labelPrixTotalArtile = new Label("Prix Total: " + prixtotalArticle);
-                Button Supprimer = new Button("Supprimer"); //RetirerProduit()
+                Button Supprimer = new Button("Delete"); //RetirerProduit()
 
                 int index = i;
+                Supprimer.setStyle("-fx-background-color:-color-bg-overlay");
                 Supprimer.setOnAction(event -> {
                     //System.out.println("Indice à supprimer : " + index);
                     //System.out.println("Taille de la liste avant supp : " + MonPanier.getMonPanier().ListeDetails.size());
@@ -1787,12 +1791,12 @@ public class InterfaceStoreController implements Initializable {
                         setText(item);
 
                         // Définir le style en fonction de la valeur de l'état
-                        if ("en cours".equals(item.toLowerCase())) {
-                            setTextFill(Color.RED); // Texte en rouge pour "en cours"
-                        } else if ("delivered".equals(item.toLowerCase())) {
-                            setTextFill(Color.GREEN); // Texte en vert pour "delivered"
+                        if ("In progress".equals(item)) {
+                            setTextFill(Color.RED); // Texte en rouge pour "In progress"
+                        } else if ("Delivered".equals(item)) {
+                            setTextFill(Color.GREEN); // Texte en vert pour "Delivered"
                         } else {
-                            // Réinitialiser le style par défaut si l'état n'est ni "en cours" ni "delivered"
+                            // Réinitialiser le style par défaut si l'état n'est ni "In progress" ni "Delivered"
                             setTextFill(Color.BLACK); // Vous pouvez choisir une autre couleur par défaut si nécessaire
                         }
                     }

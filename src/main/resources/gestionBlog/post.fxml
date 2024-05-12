@@ -61,7 +61,7 @@
             <Insets top="5.0" />
          </VBox.margin>
       </HBox>
-      <Pane maxWidth="500.0" prefHeight="1.0" style="-fx-background-color: #F0F2F1;" />
+      <Pane maxWidth="500.0" prefHeight="1.0" style="-fx-background-color: -color-bg-subtle;" />
       <Label fx:id="captionTxt" maxWidth="1.7976931348623157E308">
          <VBox.margin>
             <Insets left="20.0" right="20.0" />
@@ -88,7 +88,7 @@
             <Insets left="20.0" right="20.0" />
          </padding>
       </HBox>
-      <Pane maxWidth="500.0" prefHeight="1.0" style="-fx-background-color: #F0F2F1;" VBox.vgrow="ALWAYS" />
+      <Pane maxWidth="500.0" prefHeight="1.0" style="-fx-background-color: -color-bg-subtle;" VBox.vgrow="ALWAYS" />
       <HBox alignment="CENTER_LEFT" maxHeight="50.0" nodeOrientation="LEFT_TO_RIGHT" VBox.vgrow="ALWAYS">
          <VBox.margin>
             <Insets />
@@ -106,7 +106,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </HBox>
-            <Pane layoutX="65.0" layoutY="10.0" prefHeight="50.0" prefWidth="1.0" style="-fx-background-color: #F0F2F5;">
+            <Pane layoutX="65.0" layoutY="10.0" prefHeight="50.0" prefWidth="1.0" style="-fx-background-color: -color-bg-subtle;">
                <HBox.margin>
                   <Insets />
                </HBox.margin>
@@ -128,21 +128,21 @@
             <Insets bottom="5.0" />
          </padding>
       </HBox>
-      <Pane prefHeight="1.0" prefWidth="200.0" style="-fx-background-color: #F0F2F5;">
+      <Pane prefHeight="1.0" prefWidth="200.0" style="-fx-background-color: -color-bg-subtle;">
          <VBox.margin>
             <Insets left="20.0" right="20.0" />
          </VBox.margin>
       </Pane>
       <VBox fx:id="cmntsContainer" visible="false">
          <children>
-            <ScrollPane fx:id="comntListContainer" maxHeight="200.0" styleClass="bodyBackground">
+            <ScrollPane fx:id="comntListContainer" maxHeight="200.0">
                <content>
-                  <VBox fx:id="comntsList" alignment="CENTER_LEFT" prefWidth="550.0" spacing="5.0" style="-fx-background-color: #DDDDDD;" />
+                  <VBox fx:id="comntsList" alignment="CENTER_LEFT" prefWidth="550.0" spacing="5.0" style="-fx-background-color: -color-bg-subtle;" />
                </content>
             </ScrollPane>
             <VBox fx:id="addComnt">
                <children>
-                  <Pane prefHeight="1.0" prefWidth="200.0" style="-fx-background-color: #F0F2F5;" />
+                  <Pane prefHeight="1.0" prefWidth="200.0" style="-fx-background-color: -color-bg-subtle;" />
                   <HBox alignment="CENTER" prefHeight="62.0" spacing="20.0">
                      <children>
                         <TextField fx:id="comntContent" prefHeight="34.0" prefWidth="416.0" promptText="write your comment..." styleClass="textField" stylesheets="@../assets/css/style.css">

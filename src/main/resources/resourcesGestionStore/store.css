@@ -4,8 +4,9 @@
 }
 
 .bleu-Background{
-    -fx-background-color: #DFE9F5;
+    -fx-background-color: -color-bg-overlay;
 }
+
 
 .table-view {
     -fx-background-color: #DFE9F5;

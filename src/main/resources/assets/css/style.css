@@ -1,32 +1,33 @@
 .postBackground {
-    -fx-background-color: #fff;
+    -fx-background-color: -color-bg-overlay;
     -fx-background-radius: 15;
     -fx-effect: dropShadow(three-pass-box, rgba(0,0,0,0.1), 5.0,0.0,0.0,5.0);
 }
 
 .topBorder{
     -fx-border-width: 1 0 1 0;
-    -fx-background-color: #F0F2F1;
+    -fx-background-color: -color-bg-subtle;
     -fx-background-radius: 5;
 }
 
 .roundButton{
-    -fx-background-color: #F0F2F5;
+    -fx-background-color: transparent;
     -fx-background-radius: 50;
 }
 
 .simpleButton{
-    -fx-background-color: #F0F2F5;
+    -fx-background-color: transparent;
+    -fx-border-width: 1 0 1 0;
     -fx-background-radius: 5;
 }
 .simpleButton:hover{
-    -fx-background-color: #F0F2F3;
+    -fx-background-color: -color-bg-subtle;
 }
 .bodyBackground{
-    -fx-background-color: #F0F2F5;
+    -fx-background-color: -color-bg-subtle;
 }
 .navbarBackground{
-    -fx-background-color: #fff;
+    -fx-background-color: -color-bg-subtle;
 }
 
 .scrollPane > .viewport{
@@ -34,7 +35,7 @@
 }
 
 .textField{
-    -fx-background-color: #F0F2F5;
+    -fx-background-color: -color-bg-subtle;
     -fx-background-radius: 5;
 }
 

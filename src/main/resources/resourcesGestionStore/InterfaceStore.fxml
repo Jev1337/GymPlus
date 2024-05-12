@@ -312,36 +312,36 @@
             </Button>
             <Button layoutX="704.0" layoutY="637.0" mnemonicParsing="false" onAction="#PaiementStipe" prefHeight="30.0" prefWidth="205.0" style="-fx-background-color: -color-bg-overlay;" text="Paiement Stripe" />
          </children></Pane>
-      <Pane fx:id="GetAllProduit" prefHeight="767.0" prefWidth="1163.0">
+      <Pane fx:id="GetAllProduit" prefHeight="767.0" prefWidth="1163.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <VBox prefHeight="767.0" prefWidth="208.0">
                <children>
                   <Label prefHeight="38.0" prefWidth="206.0" text="Search" textFill="BLUE">
                      <font>
-                        <Font name="Calibri Light Italic" size="20.0" />
+                        <Font name="Calibri Light" size="20.0" />
                      </font>
                   </Label>
                   <TextField fx:id="searchFX" prefHeight="33.0" prefWidth="173.0" promptText="Search..." styleClass="bleu-Background" stylesheets="@store.css" />
                   <Label prefHeight="38.0" prefWidth="206.0" text="SORT BY :" textFill="BLUE">
                      <font>
-                        <Font name="Calibri Light Italic" size="20.0" />
+                        <Font name="Calibri Light" size="20.0" />
                      </font>
                   </Label>
                   <Label prefHeight="38.0" prefWidth="206.0" text="             Category" textFill="BLUE">
                      <font>
-                        <Font name="Calibri Light Italic" size="20.0" />
+                        <Font name="Calibri Light" size="20.0" />
                      </font>
                   </Label>
                   <ComboBox fx:id="boxCategorieFX" onAction="#boxCategorie" prefHeight="33.0" prefWidth="208.0" styleClass="bleu-Background" stylesheets="@store.css" />
                   <Label prefHeight="38.0" prefWidth="206.0" text="                 Price" textFill="BLUE">
                      <font>
-                        <Font name="Calibri Light Italic" size="20.0" />
+                        <Font name="Calibri Light" size="20.0" />
                      </font>
                   </Label>
                   <ComboBox fx:id="boxMontantFX" onAction="#boxMontant" prefHeight="33.0" prefWidth="209.0" styleClass="bleu-Background" stylesheets="@store.css" />
                   <Label prefHeight="35.0" prefWidth="206.0" text="Shopping Cart" textFill="BLUE">
                      <font>
-                        <Font name="Calibri Light Italic" size="20.0" />
+                        <Font name="Calibri Light" size="20.0" />
                      </font>
                   </Label>
                   <Button fx:id="ConsulterPnaierFX" mnemonicParsing="false" onAction="#ConsulterPanier" prefHeight="33.0" prefWidth="209.0" style="-fx-background-color: -color-bg-overlay;" styleClass="bleu-Background" stylesheets="@store.css" text="Check Cart">
@@ -351,13 +351,13 @@
                   </Button>
                   <Label fx:id="getAlldelevFX" prefHeight="38.0" prefWidth="206.0" text="Get all deliveries" textFill="BLUE">
                      <font>
-                        <Font name="Calibri Light Italic" size="20.0" />
+                        <Font name="Calibri Light" size="20.0" />
                      </font>
                   </Label>
                   <Button fx:id="BtnLivraisonFX" mnemonicParsing="false" onAction="#BtnLivraison" prefHeight="30.0" prefWidth="208.0" style="-fx-background-color: -color-bg-overlay;" styleClass="bleu-Background" stylesheets="@store.css" text="Check delivery" />
                   <Label fx:id="AddProdFX" prefHeight="38.0" prefWidth="206.0" text="Add Product" textFill="BLUE">
                      <font>
-                        <Font name="Calibri Light Italic" size="20.0" />
+                        <Font name="Calibri Light" size="20.0" />
                      </font>
                   </Label>
                   <Button fx:id="ajouterProduitBtn" mnemonicParsing="false" onAction="#ajouterProduitFX" prefHeight="33.0" prefWidth="209.0" style="-fx-background-color: -color-bg-overlay;" styleClass="bleu-Background" stylesheets="@store.css" text="Add Product">
@@ -367,7 +367,7 @@
                   </Button>
                   <Label fx:id="GetAllFactureLB" prefHeight="38.0" prefWidth="206.0" text="Get all Invoices " textFill="BLUE">
                      <font>
-                        <Font name="Calibri Light Italic" size="20.0" />
+                        <Font name="Calibri Light" size="20.0" />
                      </font>
                   </Label>
                   <Button fx:id="GetAllFactureBtn" mnemonicParsing="false" onAction="#GetAllFactureFX" prefHeight="33.0" prefWidth="209.0" style="-fx-background-color: -color-bg-overlay;" styleClass="bleu-Background" stylesheets="@store.css" text="Show Invoices ">
@@ -377,7 +377,7 @@
                   </Button>
                   <Label fx:id="stockProductFX" prefHeight="38.0" prefWidth="206.0" text="Stock Product" textFill="BLUE">
                      <font>
-                        <Font name="Calibri Light Italic" size="20.0" />
+                        <Font name="Calibri Light" size="20.0" />
                      </font>
                   </Label>
                   <Button fx:id="BtnStock" mnemonicParsing="false" onAction="#checkStock" prefHeight="30.0" prefWidth="208.0" style="-fx-background-color: -color-bg-overlay;" styleClass="bleu-Background" stylesheets="@store.css" text="Check Stock" />
@@ -387,7 +387,7 @@
                <children>
                   <Label text="Recently Added" textFill="BLUE">
                      <font>
-                        <Font name="Calibri Light Italic" size="20.0" />
+                        <Font name="Calibri Light" size="20.0" />
                      </font>
                   </Label>
                   <ScrollPane prefHeight="213.0" prefWidth="938.0" styleClass="white-Background" stylesheets="@store.css">
@@ -397,7 +397,7 @@
                   </ScrollPane>
                   <Label text="All Product" textFill="BLUE">
                      <font>
-                        <Font name="Calibri Light Italic" size="20.0" />
+                        <Font name="Calibri Light" size="20.0" />
                      </font>
                   </Label>
                   <ScrollPane fx:id="ScrollAllProduct" prefHeight="496.0" prefWidth="938.0" styleClass="white-Background" stylesheets="@store.css" VBox.vgrow="ALWAYS">
@@ -568,4 +568,7 @@
          </children>
       </Pane>
    </children>
+   <padding>
+      <Insets left="30.0" right="30.0" top="30.0" />
+   </padding>
 </AnchorPane>

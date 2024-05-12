@@ -57,6 +57,7 @@ This is an example of how to list things you need to use the software and how to
 
 The only thing you need to do is to run the project and you are good to go. One note however is that in order to create an Admin account you have to create a Member account with the sign up
 then change the role in the database to Admin. This is a temporary solution and will be fixed in the future.
+NOTE: Using Scenebuilder you have to install the fontawesome back inside scenebuilder before opening the project.
 
 ## Roadmap
 

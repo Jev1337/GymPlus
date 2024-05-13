@@ -398,7 +398,8 @@ public class eventbController {
         }
         if (selectedEvent != null) {
             editeventname_id.setText(selectedEvent.getName());
-            editeventtype_id.setItems(FXCollections.observableArrayList(selectedEvent.getType()));
+            editeventtype_id.setItems(FXCollections.observableArrayList("Swimming", "Boxing", "Crossfit", "Bodybuilding", "Spinning", "Gymnastic"));
+            editeventtype_id.getSelectionModel().select(selectedEvent.getType());
             //date only without hour  in date picker editevent_date_id and hour in textfield editevent_date_id1
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             LocalDateTime dateTime = LocalDateTime.parse(selectedEvent.getEvent_date(), formatter);

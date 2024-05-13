@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
@@ -90,10 +91,9 @@
                </content>
             </ScrollPane>
             <CheckBox fx:id="table_view" layoutX="691.0" layoutY="437.0" mnemonicParsing="false" onAction="#show_table" text="Table" />
-            <Pane fx:id="ajout_event" layoutX="34.0" layoutY="140.0" prefHeight="416.0" prefWidth="253.0" style="-fx-background-radius: 20; -fx-background-color: linear-gradient(to left, #006277, #00aaff);">
+            <Pane fx:id="ajout_event" layoutX="34.0" layoutY="140.0" prefHeight="416.0" prefWidth="253.0" style="-fx-background-radius: 20; -fx-background-color: linear-gradient(to left, #006277, #00aaff);" visible="false">
                <children>
                   <TextField fx:id="eventname_id" layoutX="36.0" layoutY="84.0" style="-fx-background-radius: 15;" />
-                  <TextField fx:id="eventtype_id" layoutX="36.0" layoutY="140.0" style="-fx-background-radius: 15;" />
                   <Button fx:id="ajouter_id" layoutX="102.0" layoutY="366.0" mnemonicParsing="false" onAction="#add_event" prefHeight="36.0" prefWidth="75.0" text="Add">
                      <effect>
                         <DropShadow />
@@ -135,12 +135,13 @@
                         <Image url="@../assets/icon/addevent.png" />
                      </image>
                   </ImageView>
+                  <ComboBox fx:id="eventtype_id" layoutX="38.0" layoutY="139.0" prefHeight="36.0" prefWidth="181.0" style="-fx-background-radius: 15;" />
                </children>
                <effect>
                   <DropShadow />
                </effect>
             </Pane>
-            <Pane fx:id="editevent_id" layoutX="34.0" layoutY="140.0" prefHeight="416.0" prefWidth="253.0" style="-fx-background-color: linear-gradient(to left, #006277, #00aaff); -fx-background-radius: 20;" visible="false">
+            <Pane fx:id="editevent_id" layoutX="34.0" layoutY="140.0" prefHeight="416.0" prefWidth="253.0" style="-fx-background-color: linear-gradient(to left, #006277, #00aaff); -fx-background-radius: 20;">
                <children>
                   <Label layoutX="36.0" layoutY="71.0" text="Event Name" textFill="#354d86" />
                   <Label layoutX="36.0" layoutY="134.0" text="Type" textFill="#354d86" />
@@ -159,10 +160,10 @@
                   <TextField fx:id="editeventduration_id" layoutX="32.0" layoutY="291.0" prefHeight="36.0" prefWidth="189.0" promptText="New Event Euration" style="-fx-background-radius: 15;" />
                   <DatePicker fx:id="editeventdate_id" layoutX="40.0" layoutY="218.0" prefHeight="36.0" prefWidth="101.0" style="-fx-background-radius: 15;" />
                   <TextField fx:id="editeventdate_id1" layoutX="145.0" layoutY="218.0" prefHeight="36.0" prefWidth="75.0" promptText="New Event Date" style="-fx-background-radius: 15;" />
-                  <TextField fx:id="editeventtype_id" layoutX="35.0" layoutY="154.0" prefHeight="36.0" prefWidth="181.0" promptText="New Event Type" style="-fx-background-radius: 15;" />
                   <TextField fx:id="editeventname_id" layoutX="35.0" layoutY="91.0" prefHeight="36.0" prefWidth="181.0" promptText="New Event Eame" style="-fx-background-radius: 15;" />
                   <Button fx:id="editeventconfirm_id" layoutX="136.0" layoutY="353.0" mnemonicParsing="false" onAction="#edit_event_confirm" prefHeight="36.0" prefWidth="98.0" text="Edit" />
                   <Button fx:id="editeventconfirm_id1" layoutX="21.0" layoutY="353.0" mnemonicParsing="false" onAction="#edit_event_cancel" prefHeight="36.0" prefWidth="98.0" text="Cancel" />
+                  <ComboBox fx:id="editeventtype_id" layoutX="36.0" layoutY="154.0" prefHeight="36.0" prefWidth="181.0" style="-fx-background-radius: 15;" />
                </children>
             </Pane>
             <Pane fx:id="title_events" layoutX="-4.0" layoutY="-9.0" prefHeight="93.0" prefWidth="1166.0" style="-fx-background-color: linear-gradient(to right, #00aaff, #00627f);">

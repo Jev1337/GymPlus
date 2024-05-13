@@ -86,7 +86,7 @@ public class eventbController {
     private TextField eventname_id;
 
     @FXML
-    private TextField eventtype_id;
+    private ComboBox eventtype_id;
     @FXML
     private TextField eventspots_id;
     @FXML
@@ -94,7 +94,7 @@ public class eventbController {
     @FXML
     private TextField editeventname_id;
     @FXML
-    private TextField editeventtype_id;
+    private ComboBox editeventtype_id;
     @FXML
     private DatePicker editeventdate_id;
     @FXML
@@ -191,7 +191,7 @@ public class eventbController {
         try {
 
             // Input validation
-            if (eventname_id.getText().isEmpty() || eventtype_id.getText().isEmpty() || eventdate_id.getValue() == null || eventdate_id1.getText().isEmpty() || eventduree_id.getText().isEmpty() || eventspots_id.getText().isEmpty()) {
+            if (eventname_id.getText().isEmpty() || eventtype_id.getItems().isEmpty()|| eventdate_id.getValue() == null || eventdate_id1.getText().isEmpty() || eventduree_id.getText().isEmpty() || eventspots_id.getText().isEmpty()) {
                 showAlert(Alert.AlertType.ERROR, "Please fill in all fields.");
                 return;
             }
@@ -214,7 +214,7 @@ public class eventbController {
                 showAlert(Alert.AlertType.ERROR, "Invalid date or time format.");
                 return;
             }
-
+            /*
             if (!eventtype_id.getText().matches("[a-zA-Z]+")) {
                 showAlert(Alert.AlertType.ERROR, "Type should be alphabets only.");
                 return;
@@ -233,7 +233,7 @@ public class eventbController {
                 showAlert(Alert.AlertType.ERROR, "Hour should be in HH:mm format.");
                 return;
             }
-
+            */
             int nbPlaces;
             try {
                 nbPlaces = Integer.parseInt(eventspots_id.getText());
@@ -263,7 +263,7 @@ public class eventbController {
             }
             // Check if an event with the same date and type already exists
             String newEventDate = eventdate_id.getValue().toString() + " " + eventdate_id1.getText() + ":00";
-            String newEventType = eventtype_id.getText();
+            String newEventType = eventtype_id.getItems().toString();
             for (Event_details existingEvent : eventDetailsService.getAll()) {
                 if (existingEvent.getEvent_date().equals(newEventDate) && existingEvent.getType().equals(newEventType)) {
                     showAlert(Alert.AlertType.ERROR, "An event with the same date and type already exists.");
@@ -275,7 +275,7 @@ public class eventbController {
             Event_detailsService eventDetailsService = new Event_detailsService();
             Event_details eventDetails = new Event_details();
             eventDetails.setName(eventname_id.getText());
-            eventDetails.setType(eventtype_id.getText());
+            eventDetails.setType(eventtype_id.getItems().toString());
             eventDetails.setEvent_date(eventdate_id.getValue().toString() + " " + eventdate_id1.getText() + ":00");
             eventDetails.setDuree(eventduree_id.getText());
             eventDetails.setNb_places(nbPlaces);
@@ -283,7 +283,7 @@ public class eventbController {
 
             // Clear fields
             eventname_id.clear();
-            eventtype_id.clear();
+            eventtype_id.getSelectionModel().selectFirst();
             eventdate_id.getEditor().clear();
             eventdate_id1.clear();
             eventduree_id.clear();
@@ -398,7 +398,7 @@ public class eventbController {
         }
         if (selectedEvent != null) {
             editeventname_id.setText(selectedEvent.getName());
-            editeventtype_id.setText(selectedEvent.getType());
+            editeventtype_id.setItems(FXCollections.observableArrayList(selectedEvent.getType()));
             //date only without hour  in date picker editevent_date_id and hour in textfield editevent_date_id1
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             LocalDateTime dateTime = LocalDateTime.parse(selectedEvent.getEvent_date(), formatter);
@@ -546,16 +546,16 @@ public class eventbController {
             }
             if (selectedEvent != null) {
                 // Input validation
-                if (editeventname_id.getText().isEmpty() || editeventtype_id.getText().isEmpty() || editeventdate_id.getValue() == null || editeventdate_id1.getText().isEmpty() || editeventduration_id.getText().isEmpty()) {
+                if (editeventname_id.getText().isEmpty() || editeventtype_id.getItems().isEmpty() || editeventdate_id.getValue() == null || editeventdate_id1.getText().isEmpty() || editeventduration_id.getText().isEmpty()) {
                     showAlert(Alert.AlertType.ERROR, "Please fill in all fields.");
                     return;
                 }
-
+/*
                 if (!editeventtype_id.getText().matches("[a-zA-Z]+")) {
                     showAlert(Alert.AlertType.ERROR, "Type should be alphabets only.");
                     return;
                 }
-
+*/
                 if (!editeventdate_id1.getText().matches("([01]?[0-9]|2[0-3]):[0-5][0-9]")) {
                     showAlert(Alert.AlertType.ERROR, "Hour should be in HH:mm format.");
                     return;
@@ -565,10 +565,10 @@ public class eventbController {
                     showAlert(Alert.AlertType.ERROR, "Name must be at least 4 characters.");
                     return;
                 }
-                if (editeventtype_id.getText().length() < 4) {
+            /*    if (editeventtype_id.getText().length() < 4) {
                     showAlert(Alert.AlertType.ERROR, "Type must be at least 4 characters.");
                     return;
-                }
+                }*/
                 // Parse the time from the TextField
                 LocalTime eventTime = LocalTime.parse(editeventdate_id1.getText(), DateTimeFormatter.ofPattern("HH:mm"));
 
@@ -594,7 +594,7 @@ public class eventbController {
 
                 // Check if an event with the same date and type already exists
                 String newEventDate = editeventdate_id.getValue().toString() + " " + editeventdate_id1.getText() + ":00";
-                String newEventType = editeventtype_id.getText();
+                String newEventType = editeventtype_id.getItems().toString();
                 for (Event_details existingEvent : eventDetailsService.getAll()) {
                     if (existingEvent.getId() != selectedEvent.getId() && existingEvent.getEvent_date().equals(newEventDate) && existingEvent.getType().equals(newEventType)) {
                         showAlert(Alert.AlertType.ERROR, "An event with the same date and type already exists.");
@@ -607,7 +607,7 @@ public class eventbController {
                 Event_details eventDetails = new Event_details();
                 eventDetails.setId(selectedEvent.getId());
                 eventDetails.setName(editeventname_id.getText());
-                eventDetails.setType(editeventtype_id.getText());
+                eventDetails.setType(editeventtype_id.getItems().toString());
                 eventDetails.setEvent_date(editeventdate_id.getValue().toString() + " " + editeventdate_id1.getText() + ":00");
                 eventDetails.setDuree(editeventduration_id.getText());
                 eventDetails.setNb_places(selectedEvent.getNb_places());
@@ -834,6 +834,8 @@ public class eventbController {
 
         eventList.setStyle(style);
         eventList.getSelectionModel().selectFirst();
+        eventtype_id.getItems().addAll("Swimming", "Boxing", "Crossfit", "Bodybuilding", "Spinning", "Gymnastic");
+        eventtype_id.getSelectionModel().selectFirst();
 
 
 

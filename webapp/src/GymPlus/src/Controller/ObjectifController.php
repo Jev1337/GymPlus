@@ -28,6 +28,7 @@ use App\Service\WebSocketServer;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Mime\Part\DataPart;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 
 
 class ObjectifController extends AbstractController
@@ -433,6 +434,7 @@ public function getGeneratedExercices(Request $request): Response
         return $this->redirectToRoute('app_Schedule_objectif');
     }
 
+ 
 
     
     #[Route('/objectif/edit/{id}', name: 'obj_edit')]
@@ -671,6 +673,15 @@ public function getGeneratedExercices(Request $request): Response
     }
     
 
+    #[Route('/test', name: 'test')]
+    public function test(): Response
+    {
+        return $this->render('main\email.html.twig', [
+        
+    
+        ]);
+    }
+
 
 
     #[Route('/make-planing/{objectiveId}', name: 'MakePlaning')]
@@ -705,16 +716,24 @@ if ($objFinished !== null) {
 
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
+                
+
              $photo1 = $form['foodprog']->getData();    
-            $filename = 'PlanIMG' . $plan->getFoodprog() . '.jpg'; 
+           // $filename = 'PlanIMG' . $plan->getFoodprog() . '.jpg'; 
+            $filename = 'FoodDiet.jpg'; 
             $targetdir = $this->getParameter('kernel.project_dir') . '/public/capturesPlaning/';
             $file = new \Symfony\Component\HttpFoundation\File\File($photo1);
             $file->move($targetdir, $filename);
+
+
             $photo2 = $form['trainingprog']->getData();
-            $file2 = new \Symfony\Component\HttpFoundation\File\File($photo2);
-            $filename2 = 'ExercicesIMG' . $plan->getTrainingprog() . '.' . $file2->guessExtension();
+            $filename = 'ExercicesProg.jpg'; 
             $targetdir2 = $this->getParameter('kernel.project_dir') . '/public/capturesExercices/';
+            $file2 = new \Symfony\Component\HttpFoundation\File\File($photo2);
             $file2->move($targetdir2, $filename2);
+
+
+
             $user1 = $obj->getUserid();   
             $useremail=$user1->getEmail();
         
@@ -722,14 +741,21 @@ if ($objFinished !== null) {
                 $entityManager->persist($plan);
                 $entityManager->flush();
                 
-                $email = (new Email())
+                $email = (new TemplatedEmail())
                 ->from('gymplus-noreply@grandelation.com')
                 ->to($useremail)
                 ->subject('Your Plans Are Ready!')
                 ->text('Stay Consistent!')
-                ->html('<p>Stay Consistent!</p><img src="cid:plan_image" alt="Plan Image"><img src="cid:exercices_image" alt="Exercices Image">');
-            
-            $mailer->send($email);
+                ->attachFromPath('public/capturesExercices/FoodDiet.jpg', 'Diet.jpg', 'image/jpg')
+                ->attachFromPath('public/capturesExercices/ExercicesProg.jpg', 'Exercices.jpg', 'image/jpg')
+                ->htmlTemplate('main/email.html.twig')
+                ->context([
+                    'DietJpg' => 'cid:Diet.jpg',
+                    'ExerciceJpg' => 'cid:Exercices.jpg',
+                ]);
+                $mailer->send($email);
+
+                //->html('<p>Stay Consistent!</p><img src="cid:Diet" alt="Plan Image"><img src="cid:Exercices" alt="Exercices Image">')
 
 
                 if ($request->isXmlHttpRequest()) {

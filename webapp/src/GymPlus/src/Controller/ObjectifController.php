@@ -721,14 +721,15 @@ if ($objFinished !== null) {
              $photo1 = $form['foodprog']->getData();    
            // $filename = 'PlanIMG' . $plan->getFoodprog() . '.jpg'; 
             $filename = 'FoodDiet.jpg'; 
-            $targetdir = $this->getParameter('kernel.project_dir') . '/public/capturesPlaning/';
+        
+            $targetdir = $this->getParameter('kernel.project_dir') . '/public/capturesExercices/';
             $file = new \Symfony\Component\HttpFoundation\File\File($photo1);
             $file->move($targetdir, $filename);
-
+            
 
             $photo2 = $form['trainingprog']->getData();
-            $filename = 'ExercicesProg.jpg'; 
-            $targetdir2 = $this->getParameter('kernel.project_dir') . '/public/capturesExercices/';
+            $filename2 = 'ExercicesProg.jpg'; 
+            $targetdir2 = $this->getParameter('kernel.project_dir') . '/public/capturesPlaning/';
             $file2 = new \Symfony\Component\HttpFoundation\File\File($photo2);
             $file2->move($targetdir2, $filename2);
 
@@ -746,12 +747,16 @@ if ($objFinished !== null) {
                 ->to($useremail)
                 ->subject('Your Plans Are Ready!')
                 ->text('Stay Consistent!')
-                ->attachFromPath('public/capturesExercices/FoodDiet.jpg', 'Diet.jpg', 'image/jpg')
-                ->attachFromPath('public/capturesExercices/ExercicesProg.jpg', 'Exercices.jpg', 'image/jpg')
-                ->htmlTemplate('main/email.html.twig')
+              
+                ->attachFromPath($this->getParameter('kernel.project_dir') . '/public/capturesExercices/FoodDiet.jpg', 'Exercices.jpg', 'image/jpg')
+                ->attachFromPath($this->getParameter('kernel.project_dir') . '/public/capturesPlaning/ExercicesProg.jpg', 'Diet.jpg', 'image/jpg')
+                //send the two pics.jpg too as attachement
+            
+                
+                ->htmlTemplate('main/email.html')
                 ->context([
-                    'DietJpg' => 'cid:Diet.jpg',
-                    'ExerciceJpg' => 'cid:Exercices.jpg',
+                    'Diet.jpg' => 'cid:Diet.jpg',
+                    'Exercice.jpg' => 'cid:Exercices.jpg',
                 ]);
                 $mailer->send($email);
 

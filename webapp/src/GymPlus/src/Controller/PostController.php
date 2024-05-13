@@ -43,8 +43,8 @@ class PostController extends AbstractController
                 $clean_words = \ConsoleTVs\Profanity\Builder::blocker($content)->filter();
                 $post->setContent($clean_words);
                 if ($photo) {
-                    $filename = 'USERIMG' . $user->getId() . '.' . $photo->guessExtension();
-                    $targetdir = $this->getParameter('kernel.project_dir') . '/public/profileuploads/';
+                    $filename = 'USERIMG' . $post->getId() . '.' . $photo->guessExtension();
+                    $targetdir = $this->getParameter('kernel.project_dir') . '/public/postPic/';
                     $photo->move($targetdir, $filename);
                     $post->setPhoto($filename);
                 }else{
@@ -91,8 +91,8 @@ class PostController extends AbstractController
                 $clean_words = \ConsoleTVs\Profanity\Builder::blocker($content)->filter();
                 $post->setContent($clean_words);
                 if ($photo) {
-                    $filename = 'USERIMG' . $user->getId() . '.' . $photo->guessExtension();
-                    $targetdir = $this->getParameter('kernel.project_dir') . '/public/profileuploads/';
+                    $filename = 'USERIMG' . $post->getId() . '.' . $photo->guessExtension();
+                    $targetdir = $this->getParameter('kernel.project_dir') . '/public/postPic/';
                     $photo->move($targetdir, $filename);
                     $post->setPhoto($filename);
                 }else{

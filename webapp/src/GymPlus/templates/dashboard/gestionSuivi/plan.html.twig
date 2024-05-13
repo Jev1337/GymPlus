@@ -359,22 +359,17 @@
 										
 									</div>
 								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-          </div>
-     </div>   
+							  
 	            
 {% endblock %}
 
 
 {% block js %} 
 {{ parent() }}
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.2.1/chart.umd.min.js"></script>
     <script src="/bundles/mukadichartjs/mukadi.chart.min.js"></script>
 <script>
+
 function toggleCharts() {
   var chart = document.getElementById("chart");
   var chart2 = document.getElementById("chart2");

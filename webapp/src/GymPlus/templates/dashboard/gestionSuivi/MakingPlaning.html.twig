@@ -34,8 +34,7 @@
 														<svg width="18px" height="18px" viewBox="0 0 24 24" version="1.1"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><rect x="0" y="0" width="24" height="24"/><circle fill="#000000" cx="5" cy="12" r="2"/><circle fill="#000000" cx="12" cy="12" r="2"/><circle fill="#000000" cx="19" cy="12" r="2"/></g></svg>
 													</button>
 													<div class="dropdown-menu dropdown-menu-right">
-														<a class="dropdown-item" href="{{ path('updatePlan', {'idPlanning': plann.idPlanning, 'objectiveId': obj.idobjectif}) }}">Edit</a>
-													</div>
+													<a class="dropdown-item" href="{{ path('updatePlan', {'idPlanning': plann.idPlanning, 'objectiveId': obj.idobjectif}) }}" onclick="togglePlanningForm(event)">Edit</a>													</div>
 												</div>
 											</div>
 											{% endfor %}
@@ -50,13 +49,12 @@
                                 </div>
                             </div>
                         </div>
-					</div>
-                
-						<div class="col-xl-8 col-lg-6" id="planning-testValidation">
-									{{ form_start(form, {'attr': {'class': 'card','onpaste': 'return false', 'novalidate': 'novalidate'} }) }} 
+					</div>					    
+					<div class="col-xl-8 col-lg-6" id="planning-testValidation" style="display: block;">	
+							{{ form_start(form, {'attr': {'class': 'card','onpaste': 'return false', 'novalidate': 'novalidate'} }) }} 
 							
 								<div class="card-header" >
-									<h4 class="card-title">Add Your Planning</h4>
+									<h4 class="card-title">Manipulate The Planning</h4>
 								</div>
 								<div class="card-body">
 											<div class="form-group">
@@ -98,7 +96,7 @@
 								</div>
 							{{ form_end(form) }}
 							</div>
-							
+			
 						</div>
 						
 				</div>
@@ -111,9 +109,13 @@
 
 {% block js %}
     {{ parent() }}
-	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
+
+ 
+
+
+
 
 $(document).ready(function() {
     $('.delete-plan').click(function(e) {
@@ -143,6 +145,8 @@ $(document).ready(function() {
         container.hide();
     }
 });
+
+
 
 
 

@@ -49,9 +49,16 @@ import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
 import java.util.Properties;
 import java.util.ResourceBundle;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 
 public class ObjectifAddPlanningOnLeft implements Initializable {
 
@@ -139,13 +146,35 @@ public class ObjectifAddPlanningOnLeft implements Initializable {
     public void loadPdfExercice(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("PDF Files", "*.pdf"));
+                new FileChooser.ExtensionFilter("Image Files", "*.jpg"));
         File selectedFile = fileChooser.showOpenDialog(null);
         if (selectedFile != null) {
             String filePath = selectedFile.getAbsolutePath();
-            exerciceLabel.setText(filePath);
             String fileName = selectedFile.getName();
-            System.out.println("Selected PDF file: " + fileName);
+            System.out.println("Selected image file: " + fileName);
+
+            // Specify the destination directory
+            String destinationDirectory = "src/assets/html/assets/captures2";
+            String Data1= destinationDirectory+"/"+fileName;
+            exerciceLabel.setText(Data1);
+
+
+            // Create the destination directory if it doesn't exist
+            File destinationDir = new File(destinationDirectory);
+            if (!destinationDir.exists()) {
+                destinationDir.mkdirs();
+                System.out.println("Destination directory created: " + destinationDirectory);
+
+            }
+
+            // Save the selected file to the destination directory
+            File destination = new File(destinationDirectory, fileName);
+            try {
+                Files.copy(selectedFile.toPath(), destination.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                System.out.println("Image saved to: " + destination.getAbsolutePath());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -153,16 +182,36 @@ public class ObjectifAddPlanningOnLeft implements Initializable {
     void loadPdfDiet(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("PDF Files", "*.pdf"));
+                new FileChooser.ExtensionFilter("Image Files", "*.jpg"));
         File selectedFile = fileChooser.showOpenDialog(null);
         if (selectedFile != null) {
             String filePath = selectedFile.getAbsolutePath();
-            DietLabel.setText(filePath);
             String fileName = selectedFile.getName();
-            System.out.println("Selected PDF file: " + fileName);
+            System.out.println("Selected image file: " + fileName);
+
+            // Specify the destination directory
+            String destinationDirectory = "src/assets/html/assets/captures";
+            String Data2= destinationDirectory+"/"+fileName;
+            DietLabel.setText(Data2);
+
+            // Create the destination directory if it doesn't exist
+            File destinationDir = new File(destinationDirectory);
+            if (!destinationDir.exists()) {
+                destinationDir.mkdirs();
+                System.out.println("Destination directory created: " + destinationDirectory);
+
+            }
+
+            // Save the selected file to the destination directory
+            File destination = new File(destinationDirectory, fileName);
+            try {
+                Files.copy(selectedFile.toPath(), destination.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                System.out.println("Image saved to: " + destination.getAbsolutePath());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
-
 
 
 

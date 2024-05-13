@@ -527,7 +527,7 @@ public function getGeneratedExercices(Request $request): Response
             ['title' => 'Plans Finished', 'content' => $count, 'percent' => '100'],
             ['title' => 'Plans Unfinished', 'content' => $count2 ,'percent' => '100'],
             ['title' => 'Plans Count', 'content' => $count3 ,'percent' => '100'],
-            ['title' => 'Objectif Type', 'content' => $countTypeDefault ,'percent' => '100'],
+            ['title' => 'Default Objectif Type', 'content' => $countTypeDefault ,'percent' => '100'],
 
         ];
 
@@ -544,7 +544,7 @@ public function getGeneratedExercices(Request $request): Response
             if ($obj->getPoidsobj() < $obj->getPoidsact()) {
                 $loseWeight++;
             }
-            else {
+            if ($obj->getPoidsobj() == $obj->getPoidsact()) {
                 $maintainWeight++;
             }
         }
@@ -579,14 +579,14 @@ public function getGeneratedExercices(Request $request): Response
         if ($obj2->getPoidsobj() < $obj2->getPoidsact()) {
             $loseWeight2++;
         }
-        else {
+        if ($obj2->getPoidsobj() == $obj2->getPoidsact()) {
             $maintainWeight2++;
         }
     }
 
     $chart2 = new ChartView(ChartView::BAR);
-    $values2 = [  $gainWeight2,$loseWeight2, $maintainWeight2];
-    $labels2 = ["Gain Weight", "Lose Weight", "Maintain Weig"];
+    $values2 = [  $gainWeight2, $loseWeight2, $maintainWeight2];
+    $labels2 = ["Gain Weight", "Lose Weight", "Maintain Weight"];
     $chart2->setLabels($labels2);
     $dataset2 = [
         'label' => 'All The Plans',
@@ -675,6 +675,23 @@ public function getGeneratedExercices(Request $request): Response
     #[Route('/make-planing/{objectiveId}', name: 'MakePlaning')]
     public function MakePlaning($objectiveId, ManagerRegistry $registry, Request $request,MailerInterface $mailer): Response
     {  
+        $entityManager = $registry->getManager();
+
+        $objFinished = $entityManager->getRepository(Planning::class)->createQueryBuilder('p')
+        ->innerJoin('p.idobjectif', 'o')
+        ->andWhere('p.idobjectif = :objectifId')
+        ->setParameter('objectifId', $objectiveId)
+        ->getQuery()
+        ->getResult();
+
+        $isVar1InList = 0;
+if ($objFinished !== null) {
+    $isVar1InList = 1;
+
+}
+
+
+
         $plan = new Planning();
         $form = $this->createForm(PlanningType::class, $plan);
         $user = $this->getUser();
@@ -687,14 +704,25 @@ public function getGeneratedExercices(Request $request): Response
 
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
-                $photo1 = $form['foodprog']->getData();
-            $file = new \Symfony\Component\HttpFoundation\File\File($photo1);
-            $filename = 'PlanIMG' . $plan->getTrainingprog() . '.' . $file->guessExtension();
+             $photo1 = $form['foodprog']->getData();    
+          //  $file = new \Symfony\Component\HttpFoundation\File\File($photo1);
+          //  $filename = 'PlanIMG' . $plan->getFoodprog() . '.' . $file->guessExtension();
+            $filename = 'PlanIMG' . $plan->getFoodprog() . '.jpg'; 
             $targetdir = $this->getParameter('kernel.project_dir') . '/public/capturesPlaning/';
+            $file = new \Symfony\Component\HttpFoundation\File\File($photo1);
+
+           // $targetdir = $this->getParameter('kernel.project_dir') . '/public/capturesPlaning/';
             $file->move($targetdir, $filename);
-            $user1 = $obj->getUserid();    
+
+            $photo2 = $form['trainingprog']->getData();
+            $file2 = new \Symfony\Component\HttpFoundation\File\File($photo2);
+            $filename2 = 'ExercicesIMG' . $plan->getTrainingprog() . '.' . $file2->guessExtension();
+            $targetdir2 = $this->getParameter('kernel.project_dir') . '/public/capturesExercices/';
+            $file2->move($targetdir2, $filename2);
 
 
+
+            $user1 = $obj->getUserid();   
             $useremail=$user1->getEmail();
            
 
@@ -708,8 +736,38 @@ public function getGeneratedExercices(Request $request): Response
                 ->to( $useremail)
                 ->subject('Your Plans Are Ready!')
                 ->text('Stay Consistent!');
-                
-                 $mailer->send($email);
+                $multipart = new AlternativePart();
+
+$multipart->addPart('Stay Consistent!', 'text/plain');
+
+$htmlContent = '<html><body>
+    <p>Stay Consistent!</p>
+    <img src="cid:plan_image" alt="Plan Image">
+    <img src="cid:exercices_image" alt="Exercices Image">
+</body></html>';
+
+$multipart->addPart($htmlContent, 'text/html');
+
+$planImagePath = $targetdir . $filename;
+$planImagePart = new DataPart(fopen($planImagePath, 'r'));
+$planImagePart->setDisposition('inline');
+$planImagePart->setContentType('image/jpg');
+$planImagePart->setFilename($filename);
+$planImagePart->setId('plan_image');
+$multipart->addPart($planImagePart);
+
+$exercicesImagePath = $targetdir2 . $filename2;
+$exercicesImagePart = new DataPart(fopen($exercicesImagePath, 'r'));
+$exercicesImagePart->setDisposition('inline');
+$exercicesImagePart->setContentType('image/jpg');
+$exercicesImagePart->setFilename($filename2);
+$exercicesImagePart->setId('exercices_image');
+$multipart->addPart($exercicesImagePart);
+
+$email->html($multipart);
+
+$mailer->send($email);
+                // $mailer->send($email);
 
                 if ($request->isXmlHttpRequest()) {
                     return new JsonResponse(['success' => 'Success! Ajax kae3d yet3ada.']);
@@ -736,6 +794,7 @@ public function getGeneratedExercices(Request $request): Response
             'obj' => $obj,
             'form' => $form->createView(),
             'planningList' => $planningList,
+            'isVar1InList' => $isVar1InList
         ]);
     }
 

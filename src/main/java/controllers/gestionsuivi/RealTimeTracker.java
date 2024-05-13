@@ -194,7 +194,7 @@ private Text caloriesTextField;
 
     @FXML
     private Text totalCalsFields;
-    private static final int THRESHOLD = 2000; // Set this to a suitable value for your sensor
+    private static final int THRESHOLD = 1900; // Set this to a suitable value for your sensor
     private static long lastBeatTime = 0;
 
     private static int count = 0;
@@ -332,6 +332,148 @@ private Text caloriesTextField;
     public static double calculateCaloriesBurned(int heartRate, double weight, int age, double timeInMinutes) {
         return (timeInMinutes * (0.6309 * heartRate + 0.1988 * weight + 0.2017 * age - 55.0969)) / 4.184;
     }
+
+
+
+    public void callChartWiFi() {
+        Task<Void> task = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                String ipAddress = "192.168.1.162";
+                int port = 80;
+
+                try (Socket socket = new Socket(ipAddress, port)) {
+                    System.out.println("Wi-Fi connection established.");
+
+                    InputStream inputStream = socket.getInputStream();
+
+                    byte[] buffer = new byte[1024];
+                    int bytesRead;
+
+                    try {
+                        XYChart.Series<String, Number> series = new XYChart.Series<>();
+                        XYChart.Series<String, Number> series2 = new XYChart.Series<>();
+                        List<Double> caloriesBurnedList = new ArrayList<>();
+
+                        while (!isCancelled()) {
+                            if (inputStream.available() > 0) {
+                                bytesRead = inputStream.read(buffer);
+                                String data = new String(buffer, 0, bytesRead);
+                                Platform.runLater(() -> {
+                                    if (!data.trim().isEmpty()) {
+                                        float ecgData = Float.parseFloat(data.trim());
+                                        series.getData().add(new XYChart.Data<>(String.valueOf(System.currentTimeMillis()), ecgData));
+                                        double weight = 91; // in kg
+                                        int age = 21; // in years
+                                        double timeInMinutes = 0; // start with 0 minutes
+                                        hearRateSound.setText(String.valueOf(ecgData));
+
+                                        if (ecgData > THRESHOLD) {
+                                            long currentTime = System.currentTimeMillis();
+                                            int beatInterval = (int) (currentTime - lastBeatTime);
+                                            lastBeatTime = currentTime;
+                                            if (beatInterval != 0) {
+                                                int beatsPerMinute = 60000 / beatInterval;
+                                                if (beatsPerMinute >= 40 && beatsPerMinute <= 160) {
+                                                    System.out.println("Heart rate: " + beatsPerMinute + " bpm");
+                                                    BpmTextField.setText(String.valueOf(beatsPerMinute));
+                                                    series2.getData().add(new XYChart.Data<>(String.valueOf(System.currentTimeMillis()), beatsPerMinute));
+
+                                                    heartRateSum += beatsPerMinute;
+                                                    count++;
+                                                }
+                                            }
+                                        }
+                                        if (count == 30) { // If a minute has passed
+                                            int averageHeartRate = heartRateSum / count;
+                                            System.out.println("Average heart rate over the last minute: " + averageHeartRate + " bpm");
+                                            AverageBpmField.setText(String.valueOf(averageHeartRate));
+                                            timeInMinutes++;
+                                            double caloriesBurned = calculateCaloriesBurned(averageHeartRate, weight, age, timeInMinutes);
+                                            System.out.println("Estimated calories burned: " + caloriesBurned);
+                                            DecimalFormat decimalFormat = new DecimalFormat("00.00");
+                                            caloriesTextField.setText(decimalFormat.format(caloriesBurned));
+                                            caloriesBurnedList.add(caloriesBurned);
+                                            double sumCalories = 0.0;
+
+                                            for (double calories : caloriesBurnedList) {
+                                                sumCalories += calories;
+                                            }
+                                            totalCalsFields.setText(decimalFormat.format(caloriesBurned));
+
+                                            heartRateSum = 0;
+                                            count = 0;
+                                        }
+
+                                    }
+                                    if (series2.getData().size() > 100)
+                                        series2.getData().remove(0);
+                                    RateChart.getData().clear();
+                                    RateChart.getData().add(series2);
+
+                                    if (series.getData().size() > 100)
+                                        series.getData().remove(0);
+                                    ChartHearrate.getData().clear();
+                                    ChartHearrate.getData().add(series);
+                                });
+                            }
+                            Thread.sleep(70);
+                        }
+                    } catch (IOException | InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                } catch (IOException e) {
+                    System.err.println("Failed to establish Wi-Fi connection: " + e.getMessage());
+                }
+
+                SttartB.setOnAction((E) -> {
+                    Animations.wobble(SttartB).playFromStart();
+                    callChartWiFi();
+                    startProgressBarAnimation();
+                    startProgressBarAnimation2();
+                    startProgressBarAnimation3();
+                    startProgressBarAnimation4();
+                });
+
+                return null;
+            }
+        };
+
+        new Thread(task).start();
+
+        SttartB.setOnAction((E) -> {
+            Animations.wobble(SttartB).playFromStart();
+            task.cancel(false);
+            stopProgressBarAnimation();
+            stopProgressBarAnimation2();
+            stopProgressBarAnimation3();
+            stopProgressBarAnimation4();
+        });
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 void  WifiCOnnection(){
 
     String serverIP = "172.20.10.4"; // Replace with the ESP32 IP address
@@ -404,7 +546,8 @@ void  WifiCOnnection(){
         SttartB.setMnemonicParsing(true);
         SttartB.setOnAction((E) -> {
             Animations.wobble(SttartB).playFromStart();
-            callChart();
+            //callChart();
+            callChartWiFi();
             startProgressBarAnimation();
             startProgressBarAnimation2();
             startProgressBarAnimation3();

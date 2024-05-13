@@ -42,7 +42,7 @@ class Objectif
     private ?float $taille;
 
     #[ORM\Column]
-    #[Assert\Length(max: 20)]
+    #[Assert\Length(max: 1000)]
 /**
      * @Assert\Regex(
      *     pattern="/^[a-zA-Z\s', ]*$/",

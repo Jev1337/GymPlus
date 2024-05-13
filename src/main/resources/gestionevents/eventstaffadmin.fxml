@@ -91,7 +91,7 @@
                </content>
             </ScrollPane>
             <CheckBox fx:id="table_view" layoutX="691.0" layoutY="437.0" mnemonicParsing="false" onAction="#show_table" text="Table" />
-            <Pane fx:id="ajout_event" layoutX="34.0" layoutY="140.0" prefHeight="416.0" prefWidth="253.0" style="-fx-background-radius: 20; -fx-background-color: linear-gradient(to left, #006277, #00aaff);" visible="false">
+            <Pane fx:id="ajout_event" layoutX="34.0" layoutY="140.0" prefHeight="416.0" prefWidth="253.0" style="-fx-background-radius: 20; -fx-background-color: linear-gradient(to left, #006277, #00aaff);">
                <children>
                   <TextField fx:id="eventname_id" layoutX="36.0" layoutY="84.0" style="-fx-background-radius: 15;" />
                   <Button fx:id="ajouter_id" layoutX="102.0" layoutY="366.0" mnemonicParsing="false" onAction="#add_event" prefHeight="36.0" prefWidth="75.0" text="Add">
@@ -141,7 +141,7 @@
                   <DropShadow />
                </effect>
             </Pane>
-            <Pane fx:id="editevent_id" layoutX="34.0" layoutY="140.0" prefHeight="416.0" prefWidth="253.0" style="-fx-background-color: linear-gradient(to left, #006277, #00aaff); -fx-background-radius: 20;">
+            <Pane fx:id="editevent_id" layoutX="34.0" layoutY="140.0" prefHeight="416.0" prefWidth="253.0" style="-fx-background-color: linear-gradient(to left, #006277, #00aaff); -fx-background-radius: 20;" visible="false">
                <children>
                   <Label layoutX="36.0" layoutY="71.0" text="Event Name" textFill="#354d86" />
                   <Label layoutX="36.0" layoutY="134.0" text="Type" textFill="#354d86" />

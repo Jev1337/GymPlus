@@ -103,7 +103,7 @@ public class BlogController {
         File file = new File(photo_tf.getText());
         try {
             if (!photo_tf.getText().isEmpty()) {
-                File dest = new File("webapp/src/gymplus/public/profileuploads/USERIMG" + file.getName().substring(file.getName().lastIndexOf(".")));
+                File dest = new File("webapp/src/gymplus/public/postPic/USERIMG" + file.getName().substring(file.getName().lastIndexOf(".")));
                 Files.copy(file.toPath(), dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
                 photo = dest.getName();
             }

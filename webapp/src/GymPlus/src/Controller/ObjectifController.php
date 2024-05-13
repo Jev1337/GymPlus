@@ -705,28 +705,18 @@ if ($objFinished !== null) {
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
              $photo1 = $form['foodprog']->getData();    
-          //  $file = new \Symfony\Component\HttpFoundation\File\File($photo1);
-          //  $filename = 'PlanIMG' . $plan->getFoodprog() . '.' . $file->guessExtension();
             $filename = 'PlanIMG' . $plan->getFoodprog() . '.jpg'; 
             $targetdir = $this->getParameter('kernel.project_dir') . '/public/capturesPlaning/';
             $file = new \Symfony\Component\HttpFoundation\File\File($photo1);
-
-           // $targetdir = $this->getParameter('kernel.project_dir') . '/public/capturesPlaning/';
             $file->move($targetdir, $filename);
-
             $photo2 = $form['trainingprog']->getData();
             $file2 = new \Symfony\Component\HttpFoundation\File\File($photo2);
             $filename2 = 'ExercicesIMG' . $plan->getTrainingprog() . '.' . $file2->guessExtension();
             $targetdir2 = $this->getParameter('kernel.project_dir') . '/public/capturesExercices/';
             $file2->move($targetdir2, $filename2);
-
-
-
             $user1 = $obj->getUserid();   
             $useremail=$user1->getEmail();
-           
-
-
+        
                 $entityManager = $registry->getManager();
                 $entityManager->persist($plan);
                 $entityManager->flush();
@@ -736,38 +726,28 @@ if ($objFinished !== null) {
                 ->to( $useremail)
                 ->subject('Your Plans Are Ready!')
                 ->text('Stay Consistent!');
-                $multipart = new AlternativePart();
 
-$multipart->addPart('Stay Consistent!', 'text/plain');
 
-$htmlContent = '<html><body>
-    <p>Stay Consistent!</p>
-    <img src="cid:plan_image" alt="Plan Image">
-    <img src="cid:exercices_image" alt="Exercices Image">
-</body></html>';
 
-$multipart->addPart($htmlContent, 'text/html');
 
-$planImagePath = $targetdir . $filename;
-$planImagePart = new DataPart(fopen($planImagePath, 'r'));
-$planImagePart->setDisposition('inline');
-$planImagePart->setContentType('image/jpg');
-$planImagePart->setFilename($filename);
-$planImagePart->setId('plan_image');
-$multipart->addPart($planImagePart);
+                $attachment1 = new Attachment(
+                    file_get_contents($targetdir . $filename),
+                    $filename,
+                    'image/jpeg'
+                );
+                
+                $attachment2 = new Attachment(
+                    file_get_contents($targetdir2 . $filename2),
+                    $filename2,
+                    'image/jpeg'
+                );
+                
+                $email->attach($attachment1);
+                $email->attach($attachment2);
+                
+                $mailer->send($email);
 
-$exercicesImagePath = $targetdir2 . $filename2;
-$exercicesImagePart = new DataPart(fopen($exercicesImagePath, 'r'));
-$exercicesImagePart->setDisposition('inline');
-$exercicesImagePart->setContentType('image/jpg');
-$exercicesImagePart->setFilename($filename2);
-$exercicesImagePart->setId('exercices_image');
-$multipart->addPart($exercicesImagePart);
 
-$email->html($multipart);
-
-$mailer->send($email);
-                // $mailer->send($email);
 
                 if ($request->isXmlHttpRequest()) {
                     return new JsonResponse(['success' => 'Success! Ajax kae3d yet3ada.']);

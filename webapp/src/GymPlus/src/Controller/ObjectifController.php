@@ -673,14 +673,7 @@ public function getGeneratedExercices(Request $request): Response
     }
     
 
-    #[Route('/test', name: 'test')]
-    public function test(): Response
-    {
-        return $this->render('main\email.html.twig', [
-        
-    
-        ]);
-    }
+
 
 
 

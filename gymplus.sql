@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : lun. 13 mai 2024 à 20:59
+-- Généré le : lun. 13 mai 2024 à 22:14
 -- Version du serveur : 10.4.32-MariaDB
 -- Version de PHP : 8.2.12
 
@@ -74,6 +74,13 @@ CREATE TABLE `black_listed` (
   `end_ban` date NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Déchargement des données de la table `black_listed`
+--
+
+INSERT INTO `black_listed` (`id_user`, `start_ban`, `end_ban`) VALUES
+(13371337, '2024-05-13', '2024-05-31');
+
 -- --------------------------------------------------------
 
 --
@@ -143,6 +150,17 @@ CREATE TABLE `detailfacture` (
   `prixTotalArticle` float DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Déchargement des données de la table `detailfacture`
+--
+
+INSERT INTO `detailfacture` (`idFacture`, `idDetailFacture`, `idProduit`, `prixVenteUnitaire`, `quantite`, `tauxRemise`, `prixTotalArticle`) VALUES
+(1, 1, 6, 30, 1, 0, 30),
+(2, 1, 6, 30, 1, 0, 30),
+(3, 1, 5, 800, 1, 0, 800),
+(4, 1, 4, 900, 1, 0, 900),
+(1, 2, 5, 800, 1, 0, 800);
+
 -- --------------------------------------------------------
 
 --
@@ -192,6 +210,16 @@ CREATE TABLE `event_details` (
   `nb_total` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Déchargement des données de la table `event_details`
+--
+
+INSERT INTO `event_details` (`id`, `name`, `type`, `event_date`, `duree`, `nb_places`, `nb_total`) VALUES
+(1, 'competition', 'Swimming', '2024-05-10 12:00:00', '30', 19, 20),
+(2, 'match', 'Boxing', '2024-05-22 20:00:00', '80', 50, 50),
+(3, 'session', 'Crossfit', '2024-05-16 08:00:00', '30', 25, 25),
+(4, 'Pro Competition', 'Bodybuilding', '2024-05-29 09:00:00', '150', 15, 16);
+
 -- --------------------------------------------------------
 
 --
@@ -203,6 +231,14 @@ CREATE TABLE `event_participants` (
   `user_id` int(11) NOT NULL,
   `rate` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Déchargement des données de la table `event_participants`
+--
+
+INSERT INTO `event_participants` (`event_details_id`, `user_id`, `rate`) VALUES
+(1, 12340000, NULL),
+(4, 12340000, NULL);
 
 -- --------------------------------------------------------
 
@@ -218,6 +254,16 @@ CREATE TABLE `facture` (
   `id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Déchargement des données de la table `facture`
+--
+
+INSERT INTO `facture` (`idFacture`, `dateVente`, `prixTatalPaye`, `methodeDePaiement`, `id`) VALUES
+(1, '2024-05-13', 830, 'Card', 12340000),
+(2, '2024-05-13', 30, 'cheque', 12345632),
+(3, '2024-05-13', 800, 'carte', 12345632),
+(4, '2024-05-13', 900, 'carte', 12345632);
+
 -- --------------------------------------------------------
 
 --
@@ -231,6 +277,16 @@ CREATE TABLE `livraison` (
   `Lieu` varchar(255) DEFAULT NULL,
   `etat` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Déchargement des données de la table `livraison`
+--
+
+INSERT INTO `livraison` (`idLivraison`, `idFacture`, `idClient`, `Lieu`, `etat`) VALUES
+(8, 1, 12345632, 'Cité de Londres, Royaume-Uni', 'Delivered'),
+(9, 2, 12345632, 'Atlantia do Norte', 'Delivered'),
+(10, 3, 12345632, 'Richards Bay', 'Delivered'),
+(11, 4, 12345632, 'Cumaribo', 'In progress');
 
 -- --------------------------------------------------------
 
@@ -284,6 +340,23 @@ CREATE TABLE `notif` (
   `datevente` date DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Déchargement des données de la table `notif`
+--
+
+INSERT INTO `notif` (`id`, `description`, `etat`, `etat_commentaire`, `titre`, `nomUser`, `idProduit`, `datevente`) VALUES
+(1, 'All products have sufficient stock.', 'Unread', NULL, 'sufficient stock', NULL, NULL, '2024-05-13'),
+(3, 'All products have sufficient stock.', 'Unread', NULL, 'sufficient stock', NULL, NULL, '2024-05-13'),
+(4, 'All products have sufficient stock.', 'Completed', NULL, 'sufficient stock', NULL, NULL, '2024-05-13'),
+(6, 'All products have sufficient stock.', 'Unread', NULL, 'sufficient stock', NULL, NULL, '2024-05-13'),
+(7, 'All products have sufficient stock.', 'Unread', NULL, 'sufficient stock', NULL, NULL, '2024-05-13'),
+(8, 'All products have sufficient stock.', 'Unread', NULL, 'sufficient stock', NULL, NULL, '2024-05-13'),
+(9, 'All products have sufficient stock.', 'Unread', NULL, 'sufficient stock', NULL, NULL, '2024-05-13'),
+(10, 'All products have sufficient stock.', 'Unread', NULL, 'sufficient stock', NULL, NULL, '2024-05-13'),
+(11, 'good product', 'Unread', 'yes', 'Comment', 'rania', 6, '2024-05-13'),
+(12, 'wawww', 'Unread', 'yes', 'Comment', 'ilyes', 5, '2024-05-13'),
+(13, 'All products have sufficient stock.', 'Unread', NULL, 'sufficient stock', NULL, NULL, '2024-05-13');
+
 -- --------------------------------------------------------
 
 --
@@ -302,6 +375,16 @@ CREATE TABLE `objectif` (
   `TypeObj` varchar(255) DEFAULT NULL,
   `CoachId` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Déchargement des données de la table `objectif`
+--
+
+INSERT INTO `objectif` (`idObjectif`, `userId`, `poidsObj`, `dateD`, `dateF`, `PoidsAct`, `Taille`, `Alergie`, `TypeObj`, `CoachId`) VALUES
+(1, 12340000, 100, '2024-05-13', '2024-06-30', 85, 192, 'i want to get in shape as fast as possible', 'Version ++', 17171717),
+(2, 12340000, 78, '2024-05-13', '2024-06-30', 85, 172, 'I want to lose weight for this summer', 'Default', 17171717),
+(3, 12340000, 105, '2024-05-13', '2024-06-26', 109, 186, 'I am competing soon i want to be ready', 'Default', 17171717),
+(4, 12340000, 82, '2024-05-13', '2024-06-18', 75, 100, 'milk', 'Version ++', 17171717);
 
 -- --------------------------------------------------------
 
@@ -327,6 +410,13 @@ CREATE TABLE `planning` (
   `TrainingProg` text DEFAULT NULL,
   `FoodProg` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Déchargement des données de la table `planning`
+--
+
+INSERT INTO `planning` (`id_Planning`, `idObjectif`, `TrainingProg`, `FoodProg`) VALUES
+(1, 1, 'C:\\xamp\\tmp\\php488.tmp', 'C:\\xamp\\tmp\\php489.tmp');
 
 -- --------------------------------------------------------
 
@@ -372,6 +462,19 @@ CREATE TABLE `produit` (
   `promo` float DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Déchargement des données de la table `produit`
+--
+
+INSERT INTO `produit` (`idProduit`, `name`, `prix`, `stock`, `description`, `categorie`, `photo`, `seuil`, `promo`) VALUES
+(1, 'alter5Kg', 100, 100, 'alter5Kg', 'equipement', 'alter5Kg.jpg', 10, 0.5),
+(2, 'DoubleChocolat2Kg', 50, 60, 'Double Chocolat 2Kg', 'food', 'DoubleChocolat2Kg.jpg', 3, 0),
+(3, 'espadrille Nike', 500, 550, 'espadrille Nike', 'equipement', 'espadrille Nike.png', 3, 0),
+(4, 'NikeDunkLowPremium', 900, 999, 'Nike DunkLow Premium', 'vetement', 'NikeDunkLowPremium.png', 100, 0),
+(5, 'Nikenoire', 800, 598, 'Nike noire', 'vetement', 'Nikenoire.png', 20, 0),
+(6, 'sweatCapucheOversize', 30, 198, 'sweat Capuche Oversize', 'vetement', 'sweatCapucheOversize.png', 1, 0),
+(8, 'Tournament Gloves', 40, 400, 'Tournament Gloves', 'equipement', 'Tournament Gloves.jpg', 3, 0.5);
+
 -- --------------------------------------------------------
 
 --
@@ -400,11 +503,11 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `username`, `firstname`, `lastname`, `date_naiss`, `password`, `email`, `role`, `num_tel`, `adresse`, `photo`, `event_points`, `faceid`, `faceid_ts`) VALUES
-(12340000, 'FaroukChb53', 'Farouk', 'Chbichib', '2024-02-09', '$2b$10$gSdsptgM8hfCuK0Fc8g8Ye2rzZHUJtO0QJAwkIIJcjaWrxGJLTyJy', 'mrtngamer53@gmail.com', 'client', '12340000', 'Ben Arous', 'USERIMG12340000.jpg', 5000, '', '2024-04-24'),
+(12340000, 'FaroukChb53', 'Farouk', 'Chbichib', '2024-02-09', '$2b$10$gSdsptgM8hfCuK0Fc8g8Ye2rzZHUJtO0QJAwkIIJcjaWrxGJLTyJy', 'mrtngamer53@gmail.com', 'client', '12340000', 'Ben Arous', 'USERIMG12340000.jpg', 5200, '', '2024-04-24'),
 (12345632, 'aaaa', 'aaaa', 'aaaa', '2024-02-09', '$2b$10$gSdsptgM8hfCuK0Fc8g8Ye2rzZHUJtO0QJAwkIIJcjaWrxGJLTyJy', 'aa@aa.aa', 'admin', '22335566', 'aaaa', 'USERIMG12345632.jpg', 600, '', '2024-02-24'),
 (13371337, 'malekamir34', 'AbdelMalek', 'Amir', '2024-02-09', '$2b$10$gSdsptgM8hfCuK0Fc8g8Ye2rzZHUJtO0QJAwkIIJcjaWrxGJLTyJy', 'malekamir34@yahoo.com', 'client', '13371337', 'Ennasr', 'USERIMG13371337.jpg', 600, '', '2024-04-24'),
 (14509889, 'malekamir56', 'Malek', 'Amir', '2024-02-09', '$2b$10$gSdsptgM8hfCuK0Fc8g8Ye2rzZHUJtO0QJAwkIIJcjaWrxGJLTyJy', 'malekamir56@gmail.com', 'admin', '52920276', 'Riadh el Andalous', 'USERIMG14509889.jpg', 600, 'c8115ae846844aaa9e53ab84fc0e6ebe', '2024-05-13'),
-(17171717, 'Yasmine1337', 'Yasmine', 'Ayadi', '2024-02-09', '$2b$10$gSdsptgM8hfCuK0Fc8g8Ye2rzZHUJtO0QJAwkIIJcjaWrxGJLTyJy', 'yasminetools@gmail.com', 'staff', '17171717', 'Ennasr', 'USERIMG17171717.jpg', 600, '', '2024-04-24'),
+(17171717, 'Yasmine1337', 'Yasmine', 'Ayadi', '2024-02-09', '$2b$10$gSdsptgM8hfCuK0Fc8g8Ye2rzZHUJtO0QJAwkIIJcjaWrxGJLTyJy', 'yasminetools@gmail.com', 'staff', '17171717', 'Ennasr', 'USERIMG17171717.png', 600, '', '2024-04-24'),
 (19191919, 'donaldtr', 'Donald', 'Trump', '2024-02-09', '$2b$10$gSdsptgM8hfCuK0Fc8g8Ye2rzZHUJtO0QJAwkIIJcjaWrxGJLTyJy', 'donaldtrumpp78@gmail.com', 'client', '19191919', 'USA', 'USERIMG19191919.jpg', 600, '', '2024-04-24'),
 (87654321, 'Farou', 'Fares', 'Ben Ammar', '2024-02-09', '$2b$10$gSdsptgM8hfCuK0Fc8g8Ye2rzZHUJtO0QJAwkIIJcjaWrxGJLTyJy', 'benammar.fares@esprit.tn', 'client', '87654321', 'La Marsa', 'USERIMG87654321.jpg', 600, '', '2024-04-24');
 
@@ -593,19 +696,19 @@ ALTER TABLE `equipements_details`
 -- AUTO_INCREMENT pour la table `event_details`
 --
 ALTER TABLE `event_details`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT pour la table `facture`
 --
 ALTER TABLE `facture`
-  MODIFY `idFacture` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `idFacture` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT pour la table `livraison`
 --
 ALTER TABLE `livraison`
-  MODIFY `idLivraison` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `idLivraison` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT pour la table `maintenances`
@@ -623,13 +726,13 @@ ALTER TABLE `message`
 -- AUTO_INCREMENT pour la table `notif`
 --
 ALTER TABLE `notif`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT pour la table `objectif`
 --
 ALTER TABLE `objectif`
-  MODIFY `idObjectif` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `idObjectif` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT pour la table `participantmessanger`
@@ -641,7 +744,7 @@ ALTER TABLE `participantmessanger`
 -- AUTO_INCREMENT pour la table `planning`
 --
 ALTER TABLE `planning`
-  MODIFY `id_Planning` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_Planning` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT pour la table `post`
@@ -653,7 +756,7 @@ ALTER TABLE `post`
 -- AUTO_INCREMENT pour la table `produit`
 --
 ALTER TABLE `produit`
-  MODIFY `idProduit` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `idProduit` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- Contraintes pour les tables déchargées

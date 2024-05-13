@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 23, 2024 at 01:29 AM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.2.4
+-- Generation Time: May 13, 2024 at 08:25 PM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -34,20 +34,16 @@ CREATE TABLE `abonnement` (
   `type` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- --------------------------------------------------------
-CREATE TABLE `notif` (
-  `id` int(11) NOT NULL,
-  `description` varchar(255) DEFAULT NULL,
-  `etat` varchar(255) DEFAULT NULL,
-  `etat_commentaire` varchar(255) DEFAULT NULL,
-  `titre` varchar(255) DEFAULT NULL,
-  `nomUser` varchar(255) DEFAULT NULL,
-  `idProduit` int(11) DEFAULT NULL,
-  `datevente` date DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
 --
--- Déchargement des données de la table `notif`
+-- Dumping data for table `abonnement`
+--
+
+INSERT INTO `abonnement` (`id`, `user_id`, `dateFinAb`, `type`) VALUES
+(1, 13371337, '2025-05-13', 'GP 3'),
+(2, 19191919, '2024-11-13', 'GP 2');
+
+-- --------------------------------------------------------
+
 --
 -- Table structure for table `abonnement_details`
 --
@@ -69,6 +65,18 @@ INSERT INTO `abonnement_details` (`name`, `prix`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `black_listed`
+--
+
+CREATE TABLE `black_listed` (
+  `id_user` int(11) NOT NULL,
+  `start_ban` date NOT NULL DEFAULT current_timestamp(),
+  `end_ban` date NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `commentaire`
 --
 
@@ -80,40 +88,31 @@ CREATE TABLE `commentaire` (
   `date` date DEFAULT NULL,
   `likes` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 -- --------------------------------------------------------
 
 --
--- Structure de la table `conversation`
+-- Table structure for table `complains`
+--
+
+CREATE TABLE `complains` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `post_id` int(11) NOT NULL,
+  `feedback` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `conversation`
 --
 
 CREATE TABLE `conversation` (
   `id` int(11) NOT NULL,
   `last_message_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
--- --------------------------------------------------------
 
---
--- Structure de la table `message`
---
-
-CREATE TABLE `message` (
-  `id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `conversation_id` int(11) NOT NULL,
-  `content` text NOT NULL,
-  `createdAt` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
--- --------------------------------------------------------
-
---
--- Structure de la table `participantmessanger`
---
-
-CREATE TABLE `participantmessanger` (
-  `id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `conversation_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 -- --------------------------------------------------------
 
 --
@@ -130,20 +129,6 @@ CREATE TABLE `detailfacture` (
   `prixTotalArticle` float DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-
--- --------------------------------------------------------
-
---
--- Table structure for table `livraison`
---
-CREATE TABLE `livraison` (
-  `idLivraison` int(11) NOT NULL,
-  `idFacture` int(11) DEFAULT NULL,
-  `idClient` int(11) DEFAULT NULL,
-  `Lieu` varchar(255) DEFAULT NULL,
-  `etat` varchar(100) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
 -- --------------------------------------------------------
 
 --
@@ -157,6 +142,25 @@ CREATE TABLE `equipements_details` (
   `duree_de_vie` varchar(255) DEFAULT NULL,
   `etat` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `equipements_details`
+--
+
+INSERT INTO `equipements_details` (`id`, `name`, `description`, `duree_de_vie`, `etat`) VALUES
+(1, '2 KG Dumbbell', 'Dumbbell 1', '2', 'Good'),
+(2, '4 KG Dumbbell', 'Dumbbell 2', '2', 'Good'),
+(3, '6 KG Dumbbell', 'Dumbbell 3', '2', 'Bad'),
+(4, '8 KG Dumbbell', 'Dumbbell 4', '2', 'Good'),
+(5, '10 KG Dumbbell', 'Dumbbell 5', '2', 'Under Maintenance'),
+(6, '12 KG Dumbbell', 'Dumbbell 6', '2', 'Good'),
+(7, '14 KG Dumbbell', 'Dumbbell 7', '2', 'Good'),
+(8, '16 KG Dumbbell', 'Dumbbell 8', '2', 'Bad'),
+(9, '20 KG Dumbbell', 'Dumbbell 9', '2', 'Good'),
+(10, '22 KG Dumbbell', 'Dumbbell 10', '2', 'Good'),
+(11, '20 KG Barbell', 'Barbell 1', '2', 'Good'),
+(12, '10 KG Barbell', 'Barbell 2', '2', 'Under Maintenance'),
+(13, '10 KG Z-BAR Barbell', 'Barbell 3', '2', 'Good');
 
 -- --------------------------------------------------------
 
@@ -172,7 +176,6 @@ CREATE TABLE `event_details` (
   `duree` varchar(255) DEFAULT NULL,
   `nb_places` int(11) DEFAULT NULL,
   `nb_total` int(11) DEFAULT NULL
-
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -185,12 +188,6 @@ CREATE TABLE `event_participants` (
   `event_details_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `rate` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-CREATE TABLE `black_listed` (
-  `id_user` int(11) NOT NULL,
-  `start_ban` date NOT NULL DEFAULT current_timestamp(),
-  `end_ban` date NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -210,6 +207,20 @@ CREATE TABLE `facture` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `livraison`
+--
+
+CREATE TABLE `livraison` (
+  `idLivraison` int(11) NOT NULL,
+  `idFacture` int(11) DEFAULT NULL,
+  `idClient` int(11) DEFAULT NULL,
+  `Lieu` varchar(255) DEFAULT NULL,
+  `etat` varchar(100) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `maintenances`
 --
 
@@ -219,6 +230,45 @@ CREATE TABLE `maintenances` (
   `date_maintenance` date DEFAULT NULL,
   `status` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `maintenances`
+--
+
+INSERT INTO `maintenances` (`id`, `equipements_details_id`, `date_maintenance`, `status`) VALUES
+(1, 12, '2024-05-02', 'Almost Done'),
+(2, 5, '2024-05-09', 'Just Started');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `message`
+--
+
+CREATE TABLE `message` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `conversation_id` int(11) NOT NULL,
+  `content` text NOT NULL,
+  `createdAt` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `notif`
+--
+
+CREATE TABLE `notif` (
+  `id` int(11) NOT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `etat` varchar(255) DEFAULT NULL,
+  `etat_commentaire` varchar(255) DEFAULT NULL,
+  `titre` varchar(255) DEFAULT NULL,
+  `nomUser` varchar(255) DEFAULT NULL,
+  `idProduit` int(11) DEFAULT NULL,
+  `datevente` date DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -237,6 +287,18 @@ CREATE TABLE `objectif` (
   `Alergie` varchar(255) DEFAULT NULL,
   `TypeObj` varchar(255) DEFAULT NULL,
   `CoachId` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `participantmessanger`
+--
+
+CREATE TABLE `participantmessanger` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `conversation_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -289,6 +351,7 @@ CREATE TABLE `produit` (
 
 -- --------------------------------------------------------
 
+--
 -- Table structure for table `user`
 --
 
@@ -310,13 +373,17 @@ CREATE TABLE `user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `abonnement_details`
+-- Dumping data for table `user`
 --
 
 INSERT INTO `user` (`id`, `username`, `firstname`, `lastname`, `date_naiss`, `password`, `email`, `role`, `num_tel`, `adresse`, `photo`, `event_points`, `faceid`, `faceid_ts`) VALUES
-(12345632, 'aaaa', 'aaaa', 'aaaa', '2024-02-09', '$2b$10$gSdsptgM8hfCuK0Fc8g8Ye2rzZHUJtO0QJAwkIIJcjaWrxGJLTyJy', 'aa@aa.aa', 'admin', '22335566', 'aaaa', 'USERIMG12345632.jpg', 600, '', '2024-02-24');
-
--- --------------------------------------------------------
+(12340000, 'FaroukChb53', 'Farouk', 'Chbichib', '2024-02-09', '$2b$10$gSdsptgM8hfCuK0Fc8g8Ye2rzZHUJtO0QJAwkIIJcjaWrxGJLTyJy', 'mrtngamer53@gmail.com', 'client', '12340000', 'Ben Arous', 'USERIMG12340000.jpg', 5000, '', '2024-04-24'),
+(12345632, 'aaaa', 'aaaa', 'aaaa', '2024-02-09', '$2b$10$gSdsptgM8hfCuK0Fc8g8Ye2rzZHUJtO0QJAwkIIJcjaWrxGJLTyJy', 'aa@aa.aa', 'admin', '22335566', 'aaaa', 'USERIMG12345632.jpg', 600, '', '2024-02-24'),
+(13371337, 'malekamir34', 'AbdelMalek', 'Amir', '2024-02-09', '$2b$10$gSdsptgM8hfCuK0Fc8g8Ye2rzZHUJtO0QJAwkIIJcjaWrxGJLTyJy', 'malekamir34@yahoo.com', 'client', '13371337', 'Ennasr', 'USERIMG13371337.jpg', 600, '', '2024-04-24'),
+(14509889, 'malekamir56', 'Malek', 'Amir', '2024-02-09', '$2b$10$gSdsptgM8hfCuK0Fc8g8Ye2rzZHUJtO0QJAwkIIJcjaWrxGJLTyJy', 'malekamir56@gmail.com', 'admin', '52920276', 'Riadh el Andalous', 'USERIMG14509889.jpg', 600, 'c8115ae846844aaa9e53ab84fc0e6ebe', '2024-05-13'),
+(17171717, 'Yasmine1337', 'Yasmine', 'Ayadi', '2024-02-09', '$2b$10$gSdsptgM8hfCuK0Fc8g8Ye2rzZHUJtO0QJAwkIIJcjaWrxGJLTyJy', 'yasminetools@gmail.com', 'staff', '17171717', 'Ennasr', 'USERIMG17171717.jpg', 600, '', '2024-04-24'),
+(19191919, 'donaldtr', 'Donald', 'Trump', '2024-02-09', '$2b$10$gSdsptgM8hfCuK0Fc8g8Ye2rzZHUJtO0QJAwkIIJcjaWrxGJLTyJy', 'donaldtrumpp78@gmail.com', 'client', '19191919', 'USA', 'USERIMG19191919.jpg', 600, '', '2024-04-24'),
+(87654321, 'Farou', 'Fares', 'Ben Ammar', '2024-02-09', '$2b$10$gSdsptgM8hfCuK0Fc8g8Ye2rzZHUJtO0QJAwkIIJcjaWrxGJLTyJy', 'benammar.fares@esprit.tn', 'client', '87654321', 'La Marsa', 'USERIMG87654321.jpg', 600, '', '2024-04-24');
 
 --
 -- Indexes for dumped tables
@@ -337,19 +404,6 @@ ALTER TABLE `abonnement_details`
   ADD PRIMARY KEY (`name`);
 
 --
--- Index pour la table `livraison`
---
-ALTER TABLE `livraison`
-    ADD PRIMARY KEY (`idLivraison`);
-
---
--- AUTO_INCREMENT pour la table `livraison`
---
-ALTER TABLE `livraison`
-    MODIFY `idLivraison` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
-
-
---
 -- Indexes for table `commentaire`
 --
 ALTER TABLE `commentaire`
@@ -357,42 +411,20 @@ ALTER TABLE `commentaire`
   ADD KEY `user_id` (`user_id`),
   ADD KEY `commentaire_ibfk_2` (`id_post`);
 
+--
+-- Indexes for table `complains`
+--
+ALTER TABLE `complains`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `post_id` (`post_id`);
 
 --
--- Index pour la table `conversation`
+-- Indexes for table `conversation`
 --
 ALTER TABLE `conversation`
   ADD PRIMARY KEY (`id`),
   ADD KEY `last_message_id_index` (`last_message_id`);
---
--- AUTO_INCREMENT pour la table `conversation`
---
-ALTER TABLE `conversation`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
---
--- Index pour la table `message`
---
-ALTER TABLE `message`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `user_id` (`user_id`),
-  ADD KEY `conversation_id` (`conversation_id`);
---
--- AUTO_INCREMENT pour la table `message`
---
-ALTER TABLE `message`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
---
--- Index pour la table `participantmessanger`
---
-ALTER TABLE `participantmessanger`
-ADD PRIMARY KEY (`id`),
-ADD KEY `user_id` (`user_id`),
-ADD KEY `conversation_id` (`conversation_id`);
---
--- AUTO_INCREMENT pour la table `participantmessanger`
---
-ALTER TABLE `participantmessanger`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
 --
 -- Indexes for table `detailfacture`
@@ -429,6 +461,12 @@ ALTER TABLE `facture`
   ADD KEY `FK_id` (`id`);
 
 --
+-- Indexes for table `livraison`
+--
+ALTER TABLE `livraison`
+  ADD PRIMARY KEY (`idLivraison`);
+
+--
 -- Indexes for table `maintenances`
 --
 ALTER TABLE `maintenances`
@@ -436,12 +474,18 @@ ALTER TABLE `maintenances`
   ADD KEY `equipements_details_id` (`equipements_details_id`);
 
 --
--- AUTO_INCREMENT pour la table `notif`
+-- Indexes for table `message`
+--
+ALTER TABLE `message`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `conversation_id` (`conversation_id`);
+
+--
+-- Indexes for table `notif`
 --
 ALTER TABLE `notif`
   ADD PRIMARY KEY (`id`);
-ALTER TABLE `notif`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
 --
 -- Indexes for table `objectif`
@@ -452,11 +496,18 @@ ALTER TABLE `objectif`
   ADD KEY `coachId` (`CoachId`);
 
 --
+-- Indexes for table `participantmessanger`
+--
+ALTER TABLE `participantmessanger`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `conversation_id` (`conversation_id`);
+
+--
 -- Indexes for table `planning`
 --
 ALTER TABLE `planning`
   ADD PRIMARY KEY (`id_Planning`),
-  MODIFY `id_Planning` int(11) NOT NULL AUTO_INCREMENT,
   ADD KEY `idObjectif` (`idObjectif`);
 
 --
@@ -489,13 +540,31 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `abonnement`
 --
 ALTER TABLE `abonnement`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `commentaire`
+--
+ALTER TABLE `commentaire`
+  MODIFY `id_comment` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
+-- AUTO_INCREMENT for table `complains`
+--
+ALTER TABLE `complains`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `conversation`
+--
+ALTER TABLE `conversation`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `equipements_details`
 --
 ALTER TABLE `equipements_details`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `event_details`
@@ -510,10 +579,52 @@ ALTER TABLE `facture`
   MODIFY `idFacture` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `livraison`
+--
+ALTER TABLE `livraison`
+  MODIFY `idLivraison` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
 -- AUTO_INCREMENT for table `maintenances`
 --
 ALTER TABLE `maintenances`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `message`
+--
+ALTER TABLE `message`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `notif`
+--
+ALTER TABLE `notif`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `objectif`
+--
+ALTER TABLE `objectif`
+  MODIFY `idObjectif` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `participantmessanger`
+--
+ALTER TABLE `participantmessanger`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `planning`
+--
+ALTER TABLE `planning`
+  MODIFY `id_Planning` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `post`
+--
+ALTER TABLE `post`
+  MODIFY `id_post` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
 -- AUTO_INCREMENT for table `produit`
@@ -533,21 +644,11 @@ ALTER TABLE `abonnement`
   ADD CONSTRAINT `abonnement_ibfk_2` FOREIGN KEY (`type`) REFERENCES `abonnement_details` (`name`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `post`
---
-ALTER TABLE `post`
-  ADD CONSTRAINT `post_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE `post`
-  MODIFY `id_post` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
-
---
 -- Constraints for table `commentaire`
 --
 ALTER TABLE `commentaire`
   ADD CONSTRAINT `commentaire_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `commentaire_ibfk_2` FOREIGN KEY (`id_post`) REFERENCES `post` (`id_post`) ON DELETE CASCADE ON UPDATE CASCADE;
-  ALTER TABLE `commentaire`
-    MODIFY `id_comment` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- Constraints for table `detailfacture`
@@ -580,8 +681,7 @@ ALTER TABLE `maintenances`
 --
 ALTER TABLE `objectif`
   ADD CONSTRAINT `objectif_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `objectif_ibfk_2` FOREIGN KEY (`CoachId`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-   MODIFY `idObjectif` int(11) NOT NULL AUTO_INCREMENT;
+  ADD CONSTRAINT `objectif_ibfk_2` FOREIGN KEY (`CoachId`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `planning`
@@ -590,41 +690,12 @@ ALTER TABLE `planning`
   ADD CONSTRAINT `planning_ibfk_1` FOREIGN KEY (`idObjectif`) REFERENCES `objectif` (`idObjectif`);
 
 --
--- Structure de la table `complains`
+-- Constraints for table `post`
 --
-
-CREATE TABLE `complains` (
-  `id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `post_id` int(11) NOT NULL,
-  `feedback` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-
---
--- Index pour les tables déchargées
---
-
---
--- Index pour la table `complains`
---
-ALTER TABLE `complains`
-    ADD PRIMARY KEY (`id`),
-    ADD KEY `user_id` (`user_id`),
-    ADD KEY `post_id` (`post_id`);
-
-ALTER TABLE `complains`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
-
---
--- AUTO_INCREMENT pour les tables déchargées
---
-
---
--- AUTO_INCREMENT pour la table `complains`
---
+ALTER TABLE `post`
+  ADD CONSTRAINT `post_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */; 
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

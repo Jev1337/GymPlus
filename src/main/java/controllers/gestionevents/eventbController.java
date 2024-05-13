@@ -275,7 +275,7 @@ public class eventbController {
             Event_detailsService eventDetailsService = new Event_detailsService();
             Event_details eventDetails = new Event_details();
             eventDetails.setName(eventname_id.getText());
-            eventDetails.setType(eventtype_id.getItems().toString());
+            eventDetails.setType(eventtype_id.getSelectionModel().getSelectedItem().toString());
             eventDetails.setEvent_date(eventdate_id.getValue().toString() + " " + eventdate_id1.getText() + ":00");
             eventDetails.setDuree(eventduree_id.getText());
             eventDetails.setNb_places(nbPlaces);
@@ -594,7 +594,7 @@ public class eventbController {
 
                 // Check if an event with the same date and type already exists
                 String newEventDate = editeventdate_id.getValue().toString() + " " + editeventdate_id1.getText() + ":00";
-                String newEventType = editeventtype_id.getItems().toString();
+                String newEventType = editeventtype_id.getSelectionModel().getSelectedItem().toString();
                 for (Event_details existingEvent : eventDetailsService.getAll()) {
                     if (existingEvent.getId() != selectedEvent.getId() && existingEvent.getEvent_date().equals(newEventDate) && existingEvent.getType().equals(newEventType)) {
                         showAlert(Alert.AlertType.ERROR, "An event with the same date and type already exists.");
@@ -607,7 +607,7 @@ public class eventbController {
                 Event_details eventDetails = new Event_details();
                 eventDetails.setId(selectedEvent.getId());
                 eventDetails.setName(editeventname_id.getText());
-                eventDetails.setType(editeventtype_id.getItems().toString());
+                eventDetails.setType(editeventtype_id.getSelectionModel().getSelectedItem().toString());
                 eventDetails.setEvent_date(editeventdate_id.getValue().toString() + " " + editeventdate_id1.getText() + ":00");
                 eventDetails.setDuree(editeventduration_id.getText());
                 eventDetails.setNb_places(selectedEvent.getNb_places());
@@ -836,6 +836,8 @@ public class eventbController {
         eventList.getSelectionModel().selectFirst();
         eventtype_id.getItems().addAll("Swimming", "Boxing", "Crossfit", "Bodybuilding", "Spinning", "Gymnastic");
         eventtype_id.getSelectionModel().selectFirst();
+        editeventtype_id.getItems().addAll("Swimming", "Boxing", "Crossfit", "Bodybuilding", "Spinning", "Gymnastic");
+        editeventtype_id.getSelectionModel().selectFirst();
 
 
 

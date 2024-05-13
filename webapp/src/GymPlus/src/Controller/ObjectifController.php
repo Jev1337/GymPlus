@@ -27,6 +27,7 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 use App\Service\WebSocketServer;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
+use Symfony\Component\Mime\Part\DataPart;
 
 
 class ObjectifController extends AbstractController
@@ -721,32 +722,14 @@ if ($objFinished !== null) {
                 $entityManager->persist($plan);
                 $entityManager->flush();
                 
-                 $email = (new Email())
+                $email = (new Email())
                 ->from('gymplus-noreply@grandelation.com')
-                ->to( $useremail)
+                ->to($useremail)
                 ->subject('Your Plans Are Ready!')
-                ->text('Stay Consistent!');
-
-
-
-
-                $attachment1 = new Attachment(
-                    file_get_contents($targetdir . $filename),
-                    $filename,
-                    'image/jpeg'
-                );
-                
-                $attachment2 = new Attachment(
-                    file_get_contents($targetdir2 . $filename2),
-                    $filename2,
-                    'image/jpeg'
-                );
-                
-                $email->attach($attachment1);
-                $email->attach($attachment2);
-                
-                $mailer->send($email);
-
+                ->text('Stay Consistent!')
+                ->html('<p>Stay Consistent!</p><img src="cid:plan_image" alt="Plan Image"><img src="cid:exercices_image" alt="Exercices Image">');
+            
+            $mailer->send($email);
 
 
                 if ($request->isXmlHttpRequest()) {

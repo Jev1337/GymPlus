@@ -702,6 +702,7 @@ if ($objFinished !== null) {
         $user = $this->getUser();
         $obj = $registry->getRepository(Objectif::class)->find($objectiveId);    
         $plan->setIdobjectif($obj);
+
         $form->handleRequest($request);
 
         $planningList = $registry->getRepository(Planning::class)->findBy(['idobjectif' => $obj]);
@@ -712,19 +713,20 @@ if ($objFinished !== null) {
                 
 
              $photo1 = $form['foodprog']->getData();    
-           // $filename = 'PlanIMG' . $plan->getFoodprog() . '.jpg'; 
             $filename = 'FoodDiet.jpg'; 
-        
             $targetdir = $this->getParameter('kernel.project_dir') . '/public/capturesExercices/';
             $file = new \Symfony\Component\HttpFoundation\File\File($photo1);
             $file->move($targetdir, $filename);
-            
+
+            $plan->setFoodprog($targetdir . $filename);
+
 
             $photo2 = $form['trainingprog']->getData();
             $filename2 = 'ExercicesProg.jpg'; 
             $targetdir2 = $this->getParameter('kernel.project_dir') . '/public/capturesPlaning/';
             $file2 = new \Symfony\Component\HttpFoundation\File\File($photo2);
             $file2->move($targetdir2, $filename2);
+            $plan->setTrainingprog($targetdir2 . $filename2);
 
 
 
@@ -743,9 +745,6 @@ if ($objFinished !== null) {
               
                 ->attachFromPath($this->getParameter('kernel.project_dir') . '/public/capturesExercices/FoodDiet.jpg', 'Exercices.jpg', 'image/jpg')
                 ->attachFromPath($this->getParameter('kernel.project_dir') . '/public/capturesPlaning/ExercicesProg.jpg', 'Diet.jpg', 'image/jpg')
-                //send the two pics.jpg too as attachement
-            
-                
                 ->htmlTemplate('main/email.html')
                 ->context([
                     'Diet.jpg' => 'cid:Diet.jpg',

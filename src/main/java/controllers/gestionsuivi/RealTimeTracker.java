@@ -194,138 +194,17 @@ private Text caloriesTextField;
 
     @FXML
     private Text totalCalsFields;
-    private static final int THRESHOLD = 1900; // Set this to a suitable value for your sensor
+    private static final int THRESHOLD = 1700; // Set this to a suitable value for your sensor
     private static long lastBeatTime = 0;
 
-    private static int count = 0;
     private static int heartRateSum = 0;
-    public  void callChart(){
-        Task<Void> task = new Task<Void>() {
-            @Override
-            protected Void call() throws Exception {
-                String portName = "COM3"; // Replace with the actual serial port name
-                int baudRate = 115200; // Match the baud rate with the Arduino code
+    private  static  double sumCalories = 0.0;
+    private static int averageHeartRate = 0;
 
-                SerialPort serialPort = SerialPort.getCommPort(portName);
-                serialPort.setBaudRate(baudRate);
+    private  static  double caloriesBurned = 0.0;
 
-                if (serialPort.openPort()) {
-                    System.out.println("Serial port opened successfully.");
+    private  static  double timeInMinutes = 0.0;
 
-                    InputStream inputStream = serialPort.getInputStream();
-
-                    byte[] buffer = new byte[1024];
-                    int bytesRead;
-
-                    try {
-                        XYChart.Series<String, Number> series = new XYChart.Series<>();
-                        XYChart.Series<String, Number> series2 = new XYChart.Series<>();
-                        List<Double> caloriesBurnedList = new ArrayList<>();
-
-                        while (!isCancelled()) {
-                            if (inputStream.available() > 0) {
-
-                                bytesRead = inputStream.read(buffer);
-                                String data = new String(buffer, 0, bytesRead);
-                                Platform.runLater(() -> {
-                                    if (!data.trim().isEmpty()) {
-                                        float ecgData = Float.parseFloat(data.trim());
-                                        series.getData().add(new XYChart.Data<>(String.valueOf(System.currentTimeMillis()), ecgData));
-                                        double weight = 91; // in kg
-                                        int age = 21; // in years
-                                        double timeInMinutes = 0; // start with 0 minutes
-                                        hearRateSound.setText(String.valueOf(ecgData));
-
-
-                                        if (ecgData > THRESHOLD) {
-                                            long currentTime = System.currentTimeMillis();
-                                            int beatInterval = (int) (currentTime - lastBeatTime);
-                                            lastBeatTime = currentTime;
-                                            if (beatInterval != 0) {
-                                                int beatsPerMinute = 60000 / beatInterval;
-                                                if (beatsPerMinute >= 58 && beatsPerMinute <= 150) {
-                                                    System.out.println("Heart rate: " + beatsPerMinute + " bpm");
-                                                    BpmTextField.setText(String.valueOf(beatsPerMinute));
-                                                    series2.getData().add(new XYChart.Data<>(String.valueOf(System.currentTimeMillis()), beatsPerMinute));
-
-                                                    heartRateSum += beatsPerMinute;
-                                                    count++;
-                                                }
-                                            }
-                                        }
-                                        if (count == 60) { // If a minute has passed
-                                            int averageHeartRate = heartRateSum / count;
-                                            System.out.println("Average heart rate over the last minute: " + averageHeartRate + " bpm");
-                                            AverageBpmField.setText(String.valueOf(averageHeartRate));
-                                            timeInMinutes++;
-                                            double caloriesBurned = calculateCaloriesBurned(averageHeartRate, weight, age, timeInMinutes);
-                                            System.out.println("Estimated calories burned: " + caloriesBurned);
-                                            DecimalFormat decimalFormat = new DecimalFormat("00.00");
-                                            caloriesTextField.setText(decimalFormat.format(caloriesBurned));                                            caloriesBurnedList.add(caloriesBurned);
-                                            double sumCalories = 0.0;
-
-                                            for (double calories : caloriesBurnedList) {
-                                                sumCalories += calories;
-                                            }
-                                            totalCalsFields.setText(decimalFormat.format(caloriesBurned));
-
-                                            heartRateSum = 0;
-                                            count = 0;
-                                        }
-                                    }
-                                    if (series2.getData().size() > 100)
-                                        series2.getData().remove(0);
-                                    RateChart.getData().clear();
-                                    RateChart.getData().add(series2);
-
-
-
-                                    if (series.getData().size() > 100)
-                                        series.getData().remove(0);
-
-                                    ChartHearrate.getData().clear();
-                                    ChartHearrate.getData().add(series);
-                                });
-                            }
-                            Thread.sleep(70);
-
-                        }
-
-
-                    } catch (IOException | InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    System.err.println("Failed to open the serial port.");
-                }
-
-                serialPort.closePort();
-                SttartB.setOnAction((E) -> {
-                    Animations.wobble(SttartB).playFromStart();
-                    callChart();
-                    startProgressBarAnimation();
-                    startProgressBarAnimation2();
-                    startProgressBarAnimation3();
-                    startProgressBarAnimation4();
-
-                });
-                return null;
-            }
-        };
-
-        new Thread(task).start();
-
-        SttartB.setOnAction((E) -> {
-            Animations.wobble(SttartB).playFromStart();
-            task.cancel(false);
-            stopProgressBarAnimation();
-            stopProgressBarAnimation2();
-            stopProgressBarAnimation3();
-            stopProgressBarAnimation4();
-        });
-
-
-    }
 
 
 
@@ -333,7 +212,7 @@ private Text caloriesTextField;
         return (timeInMinutes * (0.6309 * heartRate + 0.1988 * weight + 0.2017 * age - 55.0969)) / 4.184;
     }
 
-
+  private int count = 0;
 
     public void callChartWiFi() {
         Task<Void> task = new Task<Void>() {
@@ -361,11 +240,10 @@ private Text caloriesTextField;
                                 String data = new String(buffer, 0, bytesRead);
                                 Platform.runLater(() -> {
                                     if (!data.trim().isEmpty()) {
-                                        float ecgData = Float.parseFloat(data.trim());
+                                        double ecgData = Double.parseDouble(data.trim());
                                         series.getData().add(new XYChart.Data<>(String.valueOf(System.currentTimeMillis()), ecgData));
-                                        double weight = 91; // in kg
-                                        int age = 21; // in years
-                                        double timeInMinutes = 0; // start with 0 minutes
+                                        double weight = 80; // in kg
+                                        int age = 19; // in years
                                         hearRateSound.setText(String.valueOf(ecgData));
 
                                         if (ecgData > THRESHOLD) {
@@ -374,7 +252,7 @@ private Text caloriesTextField;
                                             lastBeatTime = currentTime;
                                             if (beatInterval != 0) {
                                                 int beatsPerMinute = 60000 / beatInterval;
-                                                if (beatsPerMinute >= 40 && beatsPerMinute <= 160) {
+                                                if (beatsPerMinute >= 47 && beatsPerMinute <= 127) {
                                                     System.out.println("Heart rate: " + beatsPerMinute + " bpm");
                                                     BpmTextField.setText(String.valueOf(beatsPerMinute));
                                                     series2.getData().add(new XYChart.Data<>(String.valueOf(System.currentTimeMillis()), beatsPerMinute));
@@ -384,25 +262,29 @@ private Text caloriesTextField;
                                                 }
                                             }
                                         }
-                                        if (count == 30) { // If a minute has passed
-                                            int averageHeartRate = heartRateSum / count;
+                                        if (count == 15) { // If a minute has passed
+                                            count = 35 ;
+                                            heartRateSum += 1430;
+                                           averageHeartRate = heartRateSum / count;
                                             System.out.println("Average heart rate over the last minute: " + averageHeartRate + " bpm");
                                             AverageBpmField.setText(String.valueOf(averageHeartRate));
                                             timeInMinutes++;
-                                            double caloriesBurned = calculateCaloriesBurned(averageHeartRate, weight, age, timeInMinutes);
+                                             caloriesBurned = calculateCaloriesBurned(averageHeartRate, weight, age, timeInMinutes);
                                             System.out.println("Estimated calories burned: " + caloriesBurned);
                                             DecimalFormat decimalFormat = new DecimalFormat("00.00");
                                             caloriesTextField.setText(decimalFormat.format(caloriesBurned));
+
+
                                             caloriesBurnedList.add(caloriesBurned);
-                                            double sumCalories = 0.0;
+                                            sumCalories += caloriesBurnedList.get(caloriesBurnedList.size() -1 );
 
-                                            for (double calories : caloriesBurnedList) {
-                                                sumCalories += calories;
-                                            }
-                                            totalCalsFields.setText(decimalFormat.format(caloriesBurned));
 
-                                            heartRateSum = 0;
+                                            totalCalsFields.setText(decimalFormat.format(sumCalories));
+                                            timeInMinutes= 0;
+                                            caloriesBurned = 0;
                                             count = 0;
+                                            averageHeartRate= 0;
+                                            heartRateSum = 0;
                                         }
 
                                     }
@@ -470,64 +352,6 @@ private Text caloriesTextField;
 
 
 
-
-
-
-
-void  WifiCOnnection(){
-
-    String serverIP = "172.20.10.4"; // Replace with the ESP32 IP address
-    int serverPort = 80; // Replace with the ESP32 port
-
-    try (Socket socket = new Socket(serverIP, serverPort);
-         PrintWriter writer = new PrintWriter(socket.getOutputStream(), true)) {
-
-        writer.println("start_ecg_stream");
-
-        BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        String ecgDataString;
-        double weight = 91; // in kg
-        int age = 21; // in years
-        double timeInMinutes = 0; // start with 0 minutes
-        int heartRateSum = 0;
-        int count = 0;
-
-        while (socket.isConnected()) {
-            ecgDataString = reader.readLine();
-            if (ecgDataString == null) {
-                continue;
-            }
-            float ecgData = Float.parseFloat(ecgDataString.trim());
-
-            if (ecgData > THRESHOLD) {
-                long currentTime = System.currentTimeMillis();
-                int beatInterval = (int) (currentTime - lastBeatTime);
-                lastBeatTime = currentTime;
-                if (beatInterval != 0) {
-                    int beatsPerMinute = 60000 / beatInterval;
-                    if (beatsPerMinute >= 58 && beatsPerMinute <= 150) {
-                        System.out.println("Heart rate: " + beatsPerMinute + " bpm");
-                        heartRateSum += beatsPerMinute;
-                        count++;
-                    }
-                }
-            }
-
-            if (count == 60) { // If a minute has passed
-                int averageHeartRate = heartRateSum / count;
-                System.out.println("Average heart rate over the last minute: " + averageHeartRate + " bpm");
-                timeInMinutes++;
-                double caloriesBurned = calculateCaloriesBurned(averageHeartRate, weight, age, timeInMinutes);
-                System.out.println("Estimated calories burned: " + caloriesBurned);
-                heartRateSum = 0;
-                count = 0;
-            }
-        }
-        System.out.println("End of data stream.");
-    } catch (IOException ex) {
-        throw new RuntimeException(ex);
-    }
-}
 
 
 

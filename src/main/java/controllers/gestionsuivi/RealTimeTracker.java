@@ -264,7 +264,7 @@ private Text caloriesTextField;
                                         }
                                         if (count == 15) { // If a minute has passed
                                             count = 35 ;
-                                            heartRateSum += 1430;
+                                            heartRateSum += 1410;
                                            averageHeartRate = heartRateSum / count;
                                             System.out.println("Average heart rate over the last minute: " + averageHeartRate + " bpm");
                                             AverageBpmField.setText(String.valueOf(averageHeartRate));
@@ -280,11 +280,11 @@ private Text caloriesTextField;
 
 
                                             totalCalsFields.setText(decimalFormat.format(sumCalories));
-                                            timeInMinutes= 0;
+                                            timeInMinutes= 0.1;
                                             caloriesBurned = 0;
                                             count = 0;
                                             averageHeartRate= 0;
-                                            heartRateSum = 0;
+                                            heartRateSum = 20;
                                         }
 
                                     }

@@ -446,6 +446,45 @@ public class UserDashboardController {
         }
     }
 
+    @FXML private void scanvid_act(ActionEvent event){
+
+        var choices = List.of("Dumbbell Curls", "Squats or Situps", "Dumbell Lateral Raises", "Pushups");
+        var dialog = new ChoiceDialog<>(choices.get(0), choices);
+        dialog.setTitle("Exercises List");
+        dialog.setHeaderText("Exercise Scanner");
+        dialog.setContentText("Choose your Exercise");
+        dialog.initOwner(total_events.getScene().getWindow());
+        var result = dialog.showAndWait();
+        result.ifPresent(exercise -> {
+            try {
+                //dialog asking for mp4 location
+                FileChooser fileChooser = new FileChooser();
+                fileChooser.getExtensionFilters().addAll(
+                        new FileChooser.ExtensionFilter("Video Files", "*.mp4")
+                );
+                fileChooser.setTitle("Choose a video file");
+                File file = fileChooser.showOpenDialog(new Stage());
+                //execute python file via os's terminal
+                //python file located in  "webapp/src/gymplus/exercise-counter-main/main.py"
+                //params are py main.py --exercise_type 4 --filename "path to mp4 file"
+                int index = switch (exercise) {
+                    case "Dumbbell Curls" -> 4;
+                    case "Squats or Situps" -> 2;
+                    case "Dumbell Lateral Raises" -> 5;
+                    case "Pushups" -> 1;
+                    default -> 0;
+                };
+                File f = new File("webapp/src/gymplus/exercise-counter-main/main.py");
+                String command = "py " + f.getAbsolutePath() + " --exercise_type " + index + " --filename " + file.getAbsolutePath();
+                System.out.println(command);
+                Runtime.getRuntime().exec(command);
+
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
     @FXML
     private void tts_cb_act(ActionEvent event){
         if (tts_cb.isSelected()){

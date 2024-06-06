@@ -32,7 +32,10 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class BurnedCaloriesController implements Initializable {
@@ -90,7 +93,7 @@ public class BurnedCaloriesController implements Initializable {
     private BarChart<String, Number> barChart;
 
 
-
+/*
 public void BurnedCaloriesFromActivity(int age,double weight, double height) throws IOException, InterruptedException {
 
    HttpRequest request = HttpRequest.newBuilder()
@@ -127,7 +130,51 @@ public void BurnedCaloriesFromActivity(int age,double weight, double height) thr
         System.out.println("Error: " + e.getMessage());
 
     }
-}
+} */
+
+
+    public void BurnedCaloriesFromActivity(double weight, double height) throws IOException, InterruptedException {
+        String url = "https://gym-fit.p.rapidapi.com/v1/calculator/bmi";
+        Map<String, Object> params = new HashMap<>();
+        params.put("weight", weight);
+        params.put("height", height);
+
+        String queryString = params.entrySet().stream()
+                .map(e -> e.getKey() + "=" + e.getValue())
+                .collect(Collectors.joining("&"));
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(url + "?" + queryString))
+                .header("X-RapidAPI-Key", "9a7fad510bmshbf2b51b4ee46d1ep1c825ajsn3b160cb04779")
+                .header("X-RapidAPI-Host", "gym-fit.p.rapidapi.com")
+                .method("GET", HttpRequest.BodyPublishers.noBody())
+                .build();
+
+        try {
+            HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+            System.out.println(response.body());
+            String responseBody = response.body();
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode jsonNode = objectMapper.readTree(responseBody);
+
+            if (jsonNode.has("result")) {
+                double result = jsonNode.get("result").asDouble();
+                System.out.println("Result: " + result);
+                barChart.getData().clear();
+                XYChart.Series<String, Number> bmiSeries = new XYChart.Series<>();
+                bmiSeries.setName("YOUR BMI");
+                bmiSeries.getData().add(new XYChart.Data<>("Your BMI", result));
+                barChart.getData().add(bmiSeries);
+
+            } else {
+                System.out.println("Response did not contain the expected 'result' field.");
+            }
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
     @FXML
     private Pane Pane2MacrosCalculator;
     @FXML
@@ -450,7 +497,8 @@ private String gender;
                 double height = Double.parseDouble(heightField.getText());
 
                 try {
-                    BurnedCaloriesFromActivity(age,weight,height);
+                    //BurnedCaloriesFromActivity(age,weight,height);
+                    BurnedCaloriesFromActivity(weight,height);
 
                 } catch (IOException | InterruptedException e) {
                     throw new RuntimeException(e);

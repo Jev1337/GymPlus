@@ -21,7 +21,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="996.0" prefWidth="1171.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionsuivi.ObjectifController">
+<AnchorPane prefHeight="1101.0" prefWidth="1172.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.gestionsuivi.ObjectifController">
    <children>
       <ScrollPane fx:id="ScrollPanelExerciceGen" layoutX="40.0" layoutY="190.0" prefHeight="823.0" prefWidth="1052.0" visible="false">
          <effect>
@@ -72,11 +72,6 @@
                   <DropShadow />
                </effect>
             </ScrollPane>
-            <Pane layoutX="9.0" layoutY="847.0" prefHeight="25.0" prefWidth="1171.0" styleClass="degrade-diagonal" stylesheets="@../assets/images/style.css" translateZ="-1.0">
-               <effect>
-                  <DropShadow />
-               </effect>
-            </Pane>
             <Pane fx:id="ResearchPan" layoutX="514.0" layoutY="100.0" prefHeight="25.0" prefWidth="288.0" visible="false">
                <children>
                   <Text fill="#3a1c9d" layoutY="-12.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Research" wrappingWidth="58.7001953125" x="2.0" y="30.0">
@@ -296,10 +291,11 @@
             <DropShadow />
          </effect>
       </Pane>
-      <Pane fx:id="RealTimePan" layoutX="40.0" layoutY="294.0" prefHeight="769.0" prefWidth="1093.0" visible="false">
+      <Pane fx:id="RealTimePan" layoutX="40.0" layoutY="294.0" prefHeight="759.0" prefWidth="1093.0" visible="false">
          <effect>
             <DropShadow />
-         </effect></Pane>
+         </effect>
+      </Pane>
       <Pane fx:id="PlanningOnglet" layoutX="31.0" layoutY="477.0" prefHeight="446.0" prefWidth="373.0" stylesheets="@../assets/images/style.css" visible="false">
          <styleClass>
             <String fx:value="border-table" />
@@ -407,13 +403,18 @@
             <Text fill="#575757" layoutX="96.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Plans in progress" wrappingWidth="105.240234375" />
             <ImageView fitHeight="40.0" fitWidth="48.0" layoutX="30.0" layoutY="27.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../assets/images/Progress%20Indicator.png" />
+                  <Image url="@../assets/images/Progress Indicator.png.png" />
                </image>
                <effect>
                   <DropShadow />
                </effect>
             </ImageView>
          </children>
+      </Pane>
+      <Pane layoutX="1.0" layoutY="1071.0" prefHeight="25.0" prefWidth="1171.0" styleClass="degrade-diagonal" stylesheets="@../assets/images/style.css">
+         <effect>
+            <DropShadow />
+         </effect>
       </Pane>
    </children>
 </AnchorPane>

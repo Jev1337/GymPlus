@@ -55,8 +55,8 @@ public class ChatControler implements Initializable{
         textFieldPrompt.setText("");
         System.out.println("generating .....");
         String url = "https://api.openai.com/v1/chat/completions";
-        String apiKey = "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";
-        String model = "gpt-3.5-turbo";
+        String apiKey = "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";
+        String model = "gpt-4o";
 
         try {
             URL obj = new URL(url);

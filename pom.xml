@@ -193,6 +193,14 @@
             <artifactId>spring-core</artifactId>
             <version>6.1.4</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>2.19.0</version>
+        </dependency>
+
+
         <dependency>
             <groupId>com.github.javafaker</groupId>
             <artifactId>javafaker</artifactId>
@@ -244,10 +252,17 @@
             <artifactId>jfoenix</artifactId>
             <version>9.0.1</version>
         </dependency>
+
+
         <dependency>
             <groupId>com.vdurmont</groupId>
             <artifactId>emoji-java</artifactId>
             <version>5.1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.vladsch.flexmark</groupId>
+            <artifactId>flexmark-html-parser</artifactId>
+            <version>0.42.14</version>
         </dependency>
 
     </dependencies>

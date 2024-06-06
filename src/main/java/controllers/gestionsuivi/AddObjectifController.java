@@ -4,6 +4,8 @@ import atlantafx.base.controls.Message;
 import atlantafx.base.controls.RingProgressIndicator;
 import atlantafx.base.theme.Styles;
 import com.github.javafaker.Faker;
+import com.itextpdf.html2pdf.ConverterProperties;
+import com.itextpdf.html2pdf.HtmlConverter;
 import controllers.gestionuser.GlobalVar;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
@@ -30,14 +32,28 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import services.gestionSuivi.ObjectifService;
 import utils.MyDatabase;
 
-import java.io.IOException;
+import java.io.*;
+import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -46,6 +62,7 @@ import java.time.LocalDate;
 import java.util.Date;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.Scanner;
 
 public class AddObjectifController implements Initializable {
 
@@ -390,6 +407,12 @@ public void danger(){
                     try {
                         querry.add(obj);
                         addingNotif();
+
+                        Thread thread = new Thread(() -> {
+                            chatGPT(poidsObjectif, poidsActuel, taille1,coachId);
+                        });
+                        thread.start();
+
                         if (objectifController != null) {
                             objectifController.refreshNodesListeItems();
                         } else {
@@ -408,6 +431,294 @@ public void danger(){
         //******************************************************************************************************************//
 
     }
+
+
+    void chatGPT(float ObjectiveWeight , float ActualWeight , float Height,int IdCoach) {
+        String message ="I want you to act like a Diet Food Model i don't need you to be specific just give me a diet of food based on Objective weight & Actual Weight and the height is does not need to be correct So i will give first thing thee Objective Weight :" + ObjectiveWeight+ " and Actual Weight :"+ ActualWeight+ " and Height is :" +Height+ "I will put the response into a pdf so i need it to be structured and to have at first this sentence : Hello! We are GymPlus Diet Making Model and we are happy to tell you that your plan is ready after this i will put the content that will be the diet and in the footer i want to put :We hope the Diet helped you to achieve your goal. note that the diet got to have only (Breakfast,Lunch,Dinner,Snacks)and to be returned on a table specified with quantity with grams";
+        // Construct the message content
+
+
+
+        System.out.println("generating .....");
+        String url = "https://api.openai.com/v1/chat/completions";
+        String apiKey = "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";
+        String model = "gpt-4o";
+        try {
+            URL obj = new URL(url);
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+            con.setRequestMethod("POST");
+            con.setRequestProperty("Authorization", "Bearer " + apiKey);
+            con.setRequestProperty("Content-Type", "application/json");
+
+            String body = "{\n" +
+                    "  \"model\": \"" + model + "\",\n" +
+                    "  \"messages\": [\n" +
+                    "    {\n" +
+                    "      \"role\": \"system\",\n" +
+                    "      \"content\": \"You are a helpful assistant.\"\n" +
+                    "    },\n" +
+                    "    {\n" +
+                    "      \"role\": \"user\",\n" +
+                    "      \"content\": \"" + message + "\"\n" +
+                    "    }\n" +
+                    "  ]\n" +
+                    "}";
+
+            con.setDoOutput(true);
+            OutputStreamWriter writer = new OutputStreamWriter(con.getOutputStream());
+            writer.write(body);
+            writer.flush();
+            writer.close();
+
+            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+
+            String inputLine;
+            StringBuilder response = new StringBuilder();
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            in.close();
+
+            // Parse the response JSON to extract the assistant's reply
+            JSONObject jsonObject = new JSONObject(response.toString());
+            JSONArray choicesArray = jsonObject.getJSONArray("choices");
+            if (choicesArray != null && choicesArray.length() > 0) {
+                JSONObject choiceObject = choicesArray.getJSONObject(0);
+                System.out.println(choiceObject.getJSONObject("message").getString("content"));
+                String content = choiceObject.getJSONObject("message").getString("content");
+                System.out.println("*******************************************");
+
+
+                String[] rows = content.split("\n");
+                String[][] foodDietData = new String[rows.length][1]; // Only one column
+
+                for (int i = 0; i < rows.length; i++) {
+                    foodDietData[i][0] = rows[i]; // Store the entire line in the first (and only) column
+                }
+
+
+
+                //léna lambda expression fel test function  for pdf generating ofc fi thread 2 threads tawa 3andi maa aiModel Call
+                System.out.println("now going to generate a pdf ");
+                Thread thread = new Thread(() -> {
+                    ConvertingIntoHtmlPdf(foodDietData,IdCoach);
+                });
+                thread.start();
+
+                return;
+            }
+
+            throw new RuntimeException("Failed to extract response content.");
+
+        } catch (IOException | JSONException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+  /*  void ConvertingIntoHtmlPdf(String contentComing,int IdCoach) {
+        try {
+
+            File file = new File("src/assets/html/PlanDietPdf.html");
+            String content = new String(java.nio.file.Files.readAllBytes(file.toPath()));
+            //content = content.replace("{E1}", EquipementService.getEquipementById(selectedMaint.getIde()).getName());
+           // content = content.replace("{E2}", String.valueOf(java.time.temporal.ChronoUnit.DAYS.between(LocalDate.parse(selectedMaint.getDate_maintenance()), LocalDate.now())));
+            content = content.replace("{E3}", contentComing);
+            //content = content.replace("{E4}", LocalDate.now().toString());
+            //content = content.replace("{E5}", String.valueOf(selectedMaint.getIdm()));
+
+            File newFile = new File("src/assets/html/PlanDietPdf.html" + IdCoach + ".html");
+            FileWriter writer = new FileWriter(newFile);
+            writer.write(content);
+            writer.close();
+            ConverterProperties properties = new ConverterProperties();
+
+            properties.setBaseUri("src/assets/html/");
+            properties.setCharset("UTF-8");
+            properties.setImmediateFlush(true);
+            properties.setCreateAcroForm(true);
+
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Save PDF");
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF", "*.pdf"));
+            fileChooser.setInitialFileName("attestation" + IdCoach);
+            File file1 = fileChooser.showSaveDialog(gotoequip_btn.getScene().getWindow());
+            if (file1 == null) {
+                throw new IllegalArgumentException("No file selected");
+            }
+            HtmlConverter.convertToPdf(new FileInputStream("src/assets/html/attestation" + IdCoach + ".html"), new FileOutputStream(file1), properties);
+            java.awt.Desktop.getDesktop().open(file1);
+            newFile.delete();
+
+
+        } catch (Exception e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setContentText(e.getMessage());
+            alert.showAndWait();
+        }
+    }
+*/
+  /*  void ConvertingIntoHtmlPdf(String contentComing, int IdCoach) {
+        try {
+            File file = new File("src/assets/html/PlanDietPdf.html");
+            String content = new String(java.nio.file.Files.readAllBytes(file.toPath()));
+            content = content.replace("{E3}", contentComing);
+
+            File newFile = new File("src/assets/html/PlanDietPdf.html" + IdCoach + ".html");
+            FileWriter writer = new FileWriter(newFile);
+            writer.write(content);
+            writer.close();
+
+            ConverterProperties properties = new ConverterProperties();
+            properties.setBaseUri("src/assets/html/");
+            properties.setCharset("UTF-8");
+            properties.setImmediateFlush(true);
+            properties.setCreateAcroForm(true);
+
+            HtmlConverter.convertToPdf(new FileInputStream("src/assets/html/PlanDietPdf" + IdCoach + ".html"), new FileOutputStream("src/assets/pdf/PlanDietPdf" + IdCoach + ".pdf"), properties);
+        } catch (Exception e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setContentText(e.getMessage());
+            alert.showAndWait();
+        }
+    }
+*/
+
+
+
+
+
+    private String generateFoodDietTable(String[][] data) {
+        StringBuilder tableHtml = new StringBuilder();
+        tableHtml.append("<table style=\"width: 100%; border: 1px solid #ccc;\">\n");
+        tableHtml.append("<tr>\n");
+        tableHtml.append("<th>Meal</th>\n");
+        tableHtml.append("</tr>\n");
+
+        for (String[] row : data) {
+            if (!row[0].isEmpty()) { // If the "Meal" cell is not empty
+                tableHtml.append("<tr><td colspan=\"3\"></td></tr>\n"); // Add an empty row
+            }
+            tableHtml.append("<tr>\n");
+            for (String cell : row) {
+                tableHtml.append("<td>").append(cell).append("</td>\n");
+            }
+            tableHtml.append("</tr>\n");
+        }
+
+        tableHtml.append("</table>");
+        return tableHtml.toString();
+    }
+    void ConvertingIntoHtmlPdf(String[][] foodDietData, int IdCoach) {
+        try {
+            File file = new File("src/assets/html/PlanDietPdf.html");
+            String content = new String(java.nio.file.Files.readAllBytes(file.toPath()));
+            String foodDietTable = generateFoodDietTable(foodDietData);
+            content = content.replace("{E3}", foodDietTable);
+
+            File newFile = new File("src/assets/html/PlanDietPdf" + IdCoach + ".html");
+            FileWriter writer = new FileWriter(newFile);
+            writer.write(content);
+            writer.close();
+
+            ConverterProperties properties = new ConverterProperties();
+            properties.setBaseUri("src/assets/html/");
+            properties.setCharset("UTF-8");
+            properties.setImmediateFlush(true);
+            properties.setCreateAcroForm(true);
+
+            HtmlConverter.convertToPdf(new FileInputStream("src/assets/html/PlanDietPdf" + IdCoach + ".html"), new FileOutputStream("src/assets/pdf/PlanDietPdf" + IdCoach + ".pdf"), properties);
+        } catch (Exception e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setContentText(e.getMessage());
+            alert.showAndWait();
+        }
+    }
+
+  /*  public String insertLineBreaks(String text, int maxLineWidth) {
+        String[] words = text.split(" ");
+        StringBuilder line = new StringBuilder();
+        StringBuilder result = new StringBuilder();
+
+        for (String word : words) {
+            if (line.length() + word.length() > maxLineWidth) {
+                result.append(line).append("\n");
+                line = new StringBuilder();
+            }
+            line.append(word).append(" ");
+        }
+        result.append(line);  // Add the final line
+
+        return result.toString();
+    }
+
+
+    void testing(String content) {
+        Path pdfPath = Paths.get("chatgpt_response.pdf");
+
+
+        content = insertLineBreaks(content, 50);  // Assuming max line width of 50 characters
+
+        try {
+            // Create a new PDF document
+            PDDocument document = new PDDocument();
+
+            // Create a new page for the PDF
+            PDPage page = new PDPage(PDRectangle.A4);
+            document.addPage(page);
+
+            // Create a content stream to write text on the page
+            PDPageContentStream contentStream = new PDPageContentStream(document, page);
+
+            // Add a header with a logo
+            PDImageXObject logo = PDImageXObject.createFromFile("src/assets/html/assets/GP.png", document);
+            contentStream.drawImage(logo, 50, page.getMediaBox().getHeight() - 100, 100, 100);
+            contentStream.setFont(PDType1Font.HELVETICA_BOLD, 18);
+            contentStream.beginText();
+            contentStream.newLineAtOffset(200, page.getMediaBox().getHeight() - 100);
+            contentStream.showText("ChatGPT Response");
+            contentStream.endText();
+
+            // Begin the text stream
+            contentStream.beginText();
+
+            // Write the text on the page, one line at a time
+            contentStream.setFont(PDType1Font.HELVETICA, 12);
+            contentStream.setLeading(14.5f);  // Set line spacing
+            contentStream.newLineAtOffset(50, page.getMediaBox().getHeight() - 200);  // Starting position
+            for (String line : content.split("\\n")) {
+                contentStream.showText(line);
+                contentStream.newLine();  // Move to the next line
+            }
+
+            // Close the text stream
+            contentStream.endText();
+
+            // Close the content stream
+            contentStream.close();
+
+            // Save the PDF document
+            try (OutputStream out = Files.newOutputStream(pdfPath)) {
+                document.save(out);
+            }
+
+            // Close the PDF document
+            document.close();
+
+            System.out.println("PDF generated successfully at: " + pdfPath.toAbsolutePath());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+*/
+
+
+
+
 
 
 

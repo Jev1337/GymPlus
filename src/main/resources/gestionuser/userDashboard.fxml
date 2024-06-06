@@ -312,6 +312,32 @@
                                           </FontAwesomeIconView>
                                        </children>
                                     </Pane>
+                                    <Pane layoutX="368.0" layoutY="234.0" prefHeight="124.0" prefWidth="280.0" styleClass="pane">
+                                       <children>
+                                          <Button layoutX="89.0" layoutY="42.0" mnemonicParsing="false" onAction="#scanvid_act" prefHeight="36.0" prefWidth="161.0" text="Scan Video for Reps" />
+                                          <FontAwesomeIconView glyphName="CAMERA" layoutX="26.0" layoutY="73.0" size="36">
+                                             <cursor>
+                                                <Cursor fx:constant="HAND" />
+                                             </cursor>
+                                             <fill>
+                                                <LinearGradient endX="1.0" endY="1.0">
+                                                   <stops>
+                                                      <Stop>
+                                                         <color>
+                                                            <Color green="0.6666666865348816" blue="1.0" />
+                                                         </color>
+                                                      </Stop>
+                                                      <Stop offset="1.0">
+                                                         <color>
+                                                            <Color green="0.40784314274787903" blue="0.545098066329956" />
+                                                         </color>
+                                                      </Stop>
+                                                   </stops>
+                                                </LinearGradient>
+                                             </fill>
+                                          </FontAwesomeIconView>
+                                       </children>
+                                    </Pane>
                                  </children>
                               </Pane>
                            </content>

@@ -11,6 +11,12 @@ import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import entities.gestionSuivi.Objectif;
 import entities.gestionSuivi.Planning;
+import jakarta.mail.Multipart;
+import jakarta.mail.Session;
+import jakarta.mail.Transport;
+import jakarta.mail.internet.MimeBodyPart;
+import jakarta.mail.internet.MimeMessage;
+import jakarta.mail.internet.MimeMultipart;
 import javafx.animation.KeyFrame;
 import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
@@ -46,6 +52,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import services.gestionSuivi.ObjectifService;
+import services.gestionuser.AdminService;
 import utils.MyDatabase;
 
 import java.io.*;
@@ -59,10 +66,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.Optional;
-import java.util.ResourceBundle;
-import java.util.Scanner;
+import java.util.*;
 
 public class AddObjectifController implements Initializable {
 
@@ -613,7 +617,7 @@ public void danger(){
     }
     void ConvertingIntoHtmlPdf(String[][] foodDietData, int IdCoach) {
         try {
-            File file = new File("src/assets/html/PlanDietPdf.html");
+                File file = new File("src/assets/html/PlanDietPdf.html");
             String content = new String(java.nio.file.Files.readAllBytes(file.toPath()));
             String foodDietTable = generateFoodDietTable(foodDietData);
             content = content.replace("{E3}", foodDietTable);
@@ -630,11 +634,41 @@ public void danger(){
             properties.setCreateAcroForm(true);
 
             HtmlConverter.convertToPdf(new FileInputStream("src/assets/html/PlanDietPdf" + IdCoach + ".html"), new FileOutputStream("src/assets/pdf/PlanDietPdf" + IdCoach + ".pdf"), properties);
+
+            String mail = "gymplus-noreply@grandelation.com";
+            String password = "yzDvS_UoSL7b";
+            String to = GlobalVar.getUser().getEmail();
+            String subject = "Your Diet Plan";
+            //the body will be "index.html" inside src/assets/html
+            String body = "Here is your plan";
+            String host = "mail.grandelation.com";
+
+            Properties props = new Properties();
+            props.put("mail.smtp.host", host);
+            props.put("mail.debug", "true");
+            props.put("mail.smtp.auth", "true");
+            props.put("mail.smtp.ssl.enable", "true");
+            props.put("mail.smtp.port", "465");
+
+            Session session = Session.getInstance(props, null);
+            MimeMessage msg = new MimeMessage(session);
+            msg.setFrom(mail);
+            msg.setRecipients(jakarta.mail.Message.RecipientType.TO, to);
+            msg.setSubject(subject);
+            msg.setSentDate(new java.util.Date());
+            MimeBodyPart mimeBodyPart = new MimeBodyPart();
+            mimeBodyPart.setContent(body, "text/html");
+            Multipart multipart = new MimeMultipart();
+            multipart.addBodyPart(mimeBodyPart);
+            MimeBodyPart attachmentBodyPart = new MimeBodyPart();
+            attachmentBodyPart.attachFile("src/assets/pdf/PlanDietPdf" + IdCoach + ".pdf");
+            multipart.addBodyPart(attachmentBodyPart);
+            msg.setContent(multipart);
+
+            Transport.send(msg, mail, password);
+
         } catch (Exception e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setContentText(e.getMessage());
-            alert.showAndWait();
+            System.out.println(e.getMessage());
         }
     }
 

@@ -98,29 +98,52 @@ public class ObjectifDisplayOnRightController implements Initializable {
     }
 
     void  dataInfos2(Objectif objPlan) throws IOException {
-        String coachPhotoPath = "webapp/src/gymplus/public/profileuploads/" + objPlan.getCoachPhoto();
+        String coachPhotoPath =  "webapp/src/gymplus/public/profileuploads/"+ objPlan.getCoachPhoto();
+        System.out.println(coachPhotoPath);
         if (coachPhotoPath != null && !coachPhotoPath.isEmpty()) {
             File file = new File(coachPhotoPath);
             if (file.exists()) {
                 try {
                     String imageUrl = file.toURI().toURL().toString();
-                    System.out.println(imageUrl);
+                    System.out.println("iamge Url "+imageUrl);
                     ImageUser.setImage(null);
                     Image coachImage = new Image(imageUrl, true);
                     ImageUser.setImage(coachImage);
 
                     //*** rendering into cercle
-                    Circle clip = new Circle(ImageUser.getFitWidth() / 2, ImageUser.getFitHeight() / 2, ImageUser.getFitWidth() / 2
+                    Circle clip = new Circle(ImageUser.getFitWidth()/2, ImageUser.getFitHeight()/2, ImageUser.getFitWidth()/2
                     );
                     ImageUser.setClip(clip);
                     ImageUser.setPreserveRatio(false);
 
 
+
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
+            }else {
+                String imageUrl = file.toURI().toURL().toString();
+                file = new File(imageUrl);
+                ImageUser.setImage(null);
+                Image coachImage = new Image(imageUrl, true);
+                ImageUser.setImage(coachImage);
+                //*** rendering into cercle
+                Circle clip = new Circle(ImageUser.getFitWidth()/2, ImageUser.getFitHeight()/2, ImageUser.getFitWidth()/2
+                );
+                ImageUser.setClip(clip);
+                ImageUser.setPreserveRatio(false);
+
+
+                System.out.println("File does not exist: " + file.getAbsolutePath());
+
             }
+        } else {
+            ImageUser.setImage(null);
+            System.out.println("no pic");
+
         }
+
+
         descriptionLbale.setText(objPlan.getAlergie());
         NameLabel.setText(objPlan.getFirstName());
         PoidsObjLabel.setText(Float.toString(objPlan.getPoids_Obj()));
@@ -130,30 +153,61 @@ public class ObjectifDisplayOnRightController implements Initializable {
         DateFinLabel.setText(objPlan.getDateF().toString());
     }
 
+
+
+
+
+
   void  dataInfos(Objectif objPlan) throws IOException {
-      String coachPhotoPath = "webapp/src/gymplus/public/profileuploads/" + objPlan.getCoachPhoto();
+
+      String coachPhotoPath =  "webapp/src/gymplus/public/profileuploads/"+ objPlan.getCoachPhoto();
+      System.out.println(coachPhotoPath);
       if (coachPhotoPath != null && !coachPhotoPath.isEmpty()) {
           File file = new File(coachPhotoPath);
           if (file.exists()) {
               try {
                   String imageUrl = file.toURI().toURL().toString();
-                  System.out.println(imageUrl);
+                  System.out.println("iamge Url "+imageUrl);
                   ImageUser.setImage(null);
                   Image coachImage = new Image(imageUrl, true);
                   ImageUser.setImage(coachImage);
 
                   //*** rendering into cercle
-                  Circle clip = new Circle(ImageUser.getFitWidth() / 2, ImageUser.getFitHeight() / 2, ImageUser.getFitWidth() / 2
+                  Circle clip = new Circle(ImageUser.getFitWidth()/2, ImageUser.getFitHeight()/2, ImageUser.getFitWidth()/2
                   );
                   ImageUser.setClip(clip);
                   ImageUser.setPreserveRatio(false);
 
 
+
               } catch (MalformedURLException e) {
                   e.printStackTrace();
               }
+          }else {
+              String imageUrl = file.toURI().toURL().toString();
+              file = new File(imageUrl);
+              ImageUser.setImage(null);
+              Image coachImage = new Image(imageUrl, true);
+              ImageUser.setImage(coachImage);
+              //*** rendering into cercle
+              Circle clip = new Circle(ImageUser.getFitWidth()/2, ImageUser.getFitHeight()/2, ImageUser.getFitWidth()/2
+              );
+              ImageUser.setClip(clip);
+              ImageUser.setPreserveRatio(false);
+
+
+              System.out.println("File does not exist: " + file.getAbsolutePath());
+
           }
+      } else {
+          ImageUser.setImage(null);
+          System.out.println("no pic");
+
       }
+
+
+
+
       descriptionLbale.setText(objPlan.getAlergie());
       NameLabel.setText(objPlan.getFirstName());
       PoidsObjLabel.setText(Float.toString(objPlan.getPoids_Obj()));
@@ -209,7 +263,6 @@ public class ObjectifDisplayOnRightController implements Initializable {
       });
 
 
-
       DeletePlan.getStyleClass().addAll(
               Styles.BUTTON_OUTLINED, Styles.ACCENT
       );
@@ -236,6 +289,16 @@ public class ObjectifDisplayOnRightController implements Initializable {
           }
       });
 }
+
+
+
+
+
+
+
+
+
+
 
     void setButtonInvisible() {
         DeletePlan.setTranslateX(DeletePlan.getWidth());

@@ -87,7 +87,10 @@ public class ObjectifAddPlanningOnLeft implements Initializable {
     }
 
 
-   public void getTheBmiCahrt(int agee, double weight,double height){
+   public void getTheBmiCahrt(int agee, double weightt,double heightt){
+       int weight = (int)Math.round(weightt);
+       int height = (int)Math.round(heightt);
+
        String url = "https://gym-fit.p.rapidapi.com/v1/calculator/bmi";
        Map<String, Object> params = new HashMap<>();
        params.put("weight", weight);
@@ -129,6 +132,8 @@ public class ObjectifAddPlanningOnLeft implements Initializable {
        }
 
     }
+
+
 
     @FXML
     private HBox goBackHbix;

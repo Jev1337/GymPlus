@@ -171,6 +171,9 @@ $(document).ready(function() {
                     successMessage.hide();
                 }, 3000)
             }
+			
+			window.location.href = "{{ path('Dashbord_Objective') }}";
+
         },
 
                 error: function(jqXHR, textStatus, errorThrown) {

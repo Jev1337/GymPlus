@@ -282,7 +282,7 @@ public class ObjectifListController implements Initializable  {
             if (file.exists()) {
                 try {
                     String imageUrl = file.toURI().toURL().toString();
-                    System.out.println(imageUrl);
+                    System.out.println("iamge Url "+imageUrl);
                     CoachPic.setImage(null);
                     Image coachImage = new Image(imageUrl, true);
                     CoachPic.setImage(coachImage);
@@ -316,6 +316,8 @@ public class ObjectifListController implements Initializable  {
             }
         } else {
             CoachPic.setImage(null);
+            System.out.println("no pic");
+
         }
 
         }

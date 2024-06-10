@@ -52,12 +52,15 @@ import java.net.http.HttpResponse;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.stream.Collectors;
 
 
 public class ObjectifAddPlanningOnLeft implements Initializable {
@@ -83,41 +86,47 @@ public class ObjectifAddPlanningOnLeft implements Initializable {
         id_objectifStatic = id_objectif;
     }
 
+
    public void getTheBmiCahrt(int agee, double weight,double height){
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("https://fitness-calculator.p.rapidapi.com/bmi?age=" + agee + "&weight=" + weight + "&height=" + height))
-                .header("X-RapidAPI-Key", "18ae9b5d60msh7e6247128682805p139e5djsna435480ded7c")
-                .header("X-RapidAPI-Host", "fitness-calculator.p.rapidapi.com")
-                .method("GET", HttpRequest.BodyPublishers.noBody())
-                .build();
+       String url = "https://gym-fit.p.rapidapi.com/v1/calculator/bmi";
+       Map<String, Object> params = new HashMap<>();
+       params.put("weight", weight);
+       params.put("height", height);
 
-        try {
+       String queryString = params.entrySet().stream()
+               .map(e -> e.getKey() + "=" + e.getValue())
+               .collect(Collectors.joining("&"));
 
-            HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
-            System.out.println(response.body());
-            String responseBody = response.body();
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode jsonNode = objectMapper.readTree(responseBody);
-            JsonNode dataNode = jsonNode.get("data");
-            double bmi = dataNode.get("bmi").asDouble();
-            String health = dataNode.get("health").asText();
-            String healthy_bmi_range = dataNode.get("healthy_bmi_range").asText();
-            String[] bounds = healthy_bmi_range.split(" - ");
-            double lowerBound = Double.parseDouble(bounds[0]);
-            double upperBound = Double.parseDouble(bounds[1]);
-            CahrtBmi.getData().clear();
-            XYChart.Series<String, Number> bmiSeries = new XYChart.Series<>();
-            bmiSeries.setName("YOUR BMI");
-            bmiSeries.getData().add(new XYChart.Data<>("Client BMI", bmi));
-            XYChart.Series<String, Number> healthyRangeSeries = new XYChart.Series<>();
-            healthyRangeSeries.setName("Healthy BMI Range");
-            healthyRangeSeries.getData().add(new XYChart.Data<>("Lower Bound", lowerBound));
-            healthyRangeSeries.getData().add(new XYChart.Data<>("Upper Bound", upperBound));
-            CahrtBmi.getData().addAll(bmiSeries, healthyRangeSeries);
-        }catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
+       HttpRequest request = HttpRequest.newBuilder()
+               .uri(URI.create(url + "?" + queryString))
+               .header("X-RapidAPI-Key", "9a7fad510bmshbf2b51b4ee46d1ep1c825ajsn3b160cb04779")
+               .header("X-RapidAPI-Host", "gym-fit.p.rapidapi.com")
+               .method("GET", HttpRequest.BodyPublishers.noBody())
+               .build();
 
-        }
+       try {
+           HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+           System.out.println(response.body());
+           String responseBody = response.body();
+
+           ObjectMapper objectMapper = new ObjectMapper();
+           JsonNode jsonNode = objectMapper.readTree(responseBody);
+
+           if (jsonNode.has("result")) {
+               double result = jsonNode.get("result").asDouble();
+               System.out.println("Result: " + result);
+               CahrtBmi.getData().clear();
+               XYChart.Series<String, Number> bmiSeries = new XYChart.Series<>();
+               bmiSeries.setName("YOUR BMI");
+               bmiSeries.getData().add(new XYChart.Data<>("Your BMI", result));
+               CahrtBmi.getData().add(bmiSeries);
+
+           } else {
+               System.out.println("Response did not contain the expected 'result' field.");
+           }
+       } catch (IOException | InterruptedException e) {
+           e.printStackTrace();
+       }
 
     }
 

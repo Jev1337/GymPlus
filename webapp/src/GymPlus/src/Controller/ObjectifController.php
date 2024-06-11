@@ -216,7 +216,7 @@ public function chat(Request $request): Response
         $streamedResponse = new StreamedResponse();
 
         $streamedResponse->setCallback(function () use ($filePath) {
-            $fp = fsockopen('172.21.3.131', 80, $errno, $errstr, 30); 
+            $fp = fsockopen('192.168.1.162', 80, $errno, $errstr, 30); 
             
             if ($fp) {
 

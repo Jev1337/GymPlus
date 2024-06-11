@@ -21,7 +21,26 @@
             
             <div>
             <br></br>
-            </div>       
+
+
+
+            <div class="col-xl-4 col-md-6 m-lg-b30 wow fadeInUp" data-wow-delay="1.2s" style="visibility: visible; animation-delay: 1.2s; animation-name: fadeInUp;  margin-left: 350px;">
+						<div class="icon-bx-wraper style-3">
+							<div class="icon-bx"> 
+								<div class="icon-cell">
+									<i class="flaticon-stationary-bike"></i>
+								</div>
+							</div>
+							<div class="icon-content">
+								<h4 class="dz-title"><a href="service-details.html">Calories Burned Total</a></h4>
+								<p class="caloriesTableSum">0</p>
+							</div>
+						</div>
+					</div>
+            </div>  
+
+
+
                    <div class="row">
                    <div class="col-lg-4 wow fadeInUp" data-wow-delay="0.6s" style="visibility: visible; animation-delay: 0.6s; animation-name: fadeInUp;">
 						<div class="icon-bx-wraper style-1">
@@ -65,11 +84,13 @@
 								</div>
 							</div>
 							<div class="icon-content">
-								<h4 class="dz-title m-b10"><a href="service-details.html">Burned Calories Per Minutes</a></h4>
+								<h4 class="dz-title m-b10"><a href="service-details.html">Burned Calories Per 20 secondes</a></h4>
                                 <h2 class="dz-title"><span class="counter ThirdOne">0</span>  Calories</h2>
 
 								<p>Calories burn refers to the process by which the body expends energy during physical activity and daily functions..</p>
 							</div>
+                     
+
 							<div class="effect"></div>
 						</div>
 					</div>
@@ -89,12 +110,13 @@
 								<div class="dzSubscribeMsg"></div>
 								<div class="form-group">
 									<div class="input-group mb-0"> 
+                           	<div class="input-group-addon">
+											<button name="submit" value="Submit" type="submit" class="btn btn-secondary btn-lg btn-skew h-100"><span class="skew-inner"><span class="text">Subscribe Now</span></span></button>
+										</div>
 										<div class="input-skew">
 											<input name="dzEmail" required="required" type="email" class="form-control" placeholder="Your Email Address">
 										</div>
-										<div class="input-group-addon">
-											<button name="submit" value="Submit" type="submit" class="btn btn-secondary btn-lg btn-skew h-100"><span class="skew-inner"><span class="text">Subscribe Now</span></span></button>
-										</div>
+									
 									</div>
 								</div>
 							</form>
@@ -138,11 +160,12 @@
             }
          }
       });
+      let caloriesTable = [];
       overallData = [];
       threshold = 1900;
       xhr= false;
-        weight = 80;
-        age = 19;
+        weight = 55;
+        age = 16;
          bpmTable = [];
          caloriesBurned = 0;
             var timeInMinutes = 0;
@@ -181,7 +204,7 @@
                        const counterElement = document.querySelector('.counter');
                       counterElement.textContent = bpm;
                       console.log('Heartbeats: ' + bpm);
-
+                     
                       
                          addBpmToTable(bpm);                  
                }
@@ -195,21 +218,34 @@
       function stopArduinoData() {
          xhr = false;
       }
+
 setInterval(function() {
   calculateCaloriesBurned(weight, age);
-}, 60000);
+  displayCaloriesTableSum();
+}, 20000);
+
 
   function calculateCaloriesBurned(weight, age) {
    var sumBpm = bpmTable.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
    var avgHeartRate = sumBpm / bpmTable.length;
-    timeInMinutes++; 
+    timeInMinutes =  timeInMinutes + 0.1 ; 
    var caloriesBurned = (timeInMinutes * (0.6309 * avgHeartRate + 0.1988 * weight + 0.2017 * age - 55.0969)) / 4.184;
    console.log('Calories burned: ' + caloriesBurned);
    var cals = caloriesBurned.toFixed(2)
+     caloriesTable.push(parseFloat(cals)); 
+
      const counterElement = document.querySelector('.ThirdOne');
        counterElement.textContent = cals;
+       sumBpm = 0;
+       timeInMinutes = 0.1;
+
 }
 
+function displayCaloriesTableSum() {
+  const tableSum = caloriesTable.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+  const counterElement = document.querySelector('.caloriesTableSum');
+  counterElement.textContent = tableSum.toFixed(2);
+}
 
 
    </script>

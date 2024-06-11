@@ -1057,6 +1057,12 @@ class UserController extends AbstractController
             }
         }
         return $this->redirectToRoute('app_home');
-
     }
+    #[Route('/vr', name: 'vr')]
+    public function vr(): Response
+    {
+        #redirect to https://www.oculus.com/casting
+        return $this->redirect('https://www.oculus.com/casting');
+    }
+
 }

@@ -1,0 +1,78 @@
+{% extends "main/base.html.twig" %}
+
+{% block content %}
+
+	<div class="page-content bg-white">
+		
+		<!-- Banner  -->
+		<div class="dz-bnr-inr style-2" style="background-image: url('{{asset('main/images/banner/banner-2.png')}}')">
+			<div class="banner-gradient"></div>
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="dz-bnr-inr-entry">
+							<h1>VR Experience</h1>
+							<!-- Breadcrumb Row -->
+							<nav aria-label="breadcrumb" class="breadcrumb-row">
+								<ul class="breadcrumb">
+									<li class="breadcrumb-item"><a href="index.html">Home</a></li>
+									<li class="breadcrumb-item active" aria-current="page">VR Experience</li>
+								</ul>
+							</nav>
+							<!-- Breadcrumb Row End -->
+						</div>
+					</div>
+				</div>
+				<div class="banner-media">
+					<img src="{{asset('main/images/banner/pic1.png')}}" alt="/">
+				</div>				
+			</div>	
+		</div>
+		<!-- Banner End -->
+		
+		<!-- inner page banner End-->
+		<div class="content-inner-1">
+			<div class="container">
+				<div class="row shop-checkout">
+					<div class="col-xl-8">
+						<iframe src="https://www.oculus.com/casting" style="width: 100%; height: 100vh;"></iframe>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+
+		<!-- Call To Action -->
+		<section class="call-action style-2 bg-img-fix bg-primary">
+			<div class="container">
+				<div class="inner-content">
+					<div class="row justify-content-between align-items-center">
+						<div class="text-center text-lg-start col-xl-6 m-lg-b20 wow fadeInUp" data-wow-delay="0.2s">
+							<h2 class="title m-0"><span class="font-weight-400">Subscribe To Our </span>Newsletter</h2>
+						</div>
+						<div class="text-center text-lg-end col-xl-6 wow fadeInUp" data-wow-delay="0.4s">
+							<form class="dzSubscribe" action="{{asset('main/script/mailchamp.php')}}" method="post">
+								<div class="dzSubscribeMsg"></div>
+								<div class="form-group">
+									<div class="input-group mb-0"> 
+										<div class="input-skew">
+											<input name="dzEmail" required="required" type="email" class="form-control" placeholder="Your Email Address">
+										</div>
+										<div class="input-group-addon">
+											<button name="submit" value="Submit" type="submit" class="btn btn-secondary btn-lg btn-skew h-100"><span class="skew-inner"><span class="text">Subscribe Now</span></span></button>
+										</div>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		<!-- Call To Action -->
+		
+	</div>
+
+	
+	
+{% endblock %}

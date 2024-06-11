@@ -411,11 +411,13 @@ public void danger(){
                     try {
                         querry.add(obj);
                         addingNotif();
+                        int randomInt2 = (int) (Math.random() * 50) + 1;
 
+                        if (Objects.equals(typeObj, "Version ++")) {
 
-                        if (lsTypeObjectif.getSelectionModel().getSelectedItem().equals("Version++")) {
                             Thread thread = new Thread(() -> {
                                 chatGPT(poidsObjectif, poidsActuel, taille1,coachId);
+                                chatGptExercercice(alergie,randomInt2);
                             });
                             thread.start();
                         }
@@ -440,6 +442,86 @@ public void danger(){
 
     }
 
+
+    void chatGptExercercice (String descriptiion, int randomInt2) {
+        String message ="I want you to act like a Exercices Workout Model , i don't need you to be specific just give me a list of exercices based on the description that i will give you So i will give first thing the description :" + descriptiion+ " after the exercices based on the description give me the rest basic exercices for basic muscles , I will put the response into a pdf so i need it to be structured and to have at first this sentence : Hello! We are GymPlus Workout  Model and we are happy to tell you that your Workout list is ready after this i will put the content that will be the Workout and in the footer i want to put :We hope the Workout helped you to achieve your goal";
+        System.out.println("generating .....");
+        String url = "https://api.openai.com/v1/chat/completions";
+        String apiKey = "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";
+        String model = "gpt-4o";
+        try {
+            URL obj = new URL(url);
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+            con.setRequestMethod("POST");
+            con.setRequestProperty("Authorization", "Bearer " + apiKey);
+            con.setRequestProperty("Content-Type", "application/json");
+
+            String body = "{\n" +
+                    "  \"model\": \"" + model + "\",\n" +
+                    "  \"messages\": [\n" +
+                    "    {\n" +
+                    "      \"role\": \"system\",\n" +
+                    "      \"content\": \"You are a helpful assistant.\"\n" +
+                    "    },\n" +
+                    "    {\n" +
+                    "      \"role\": \"user\",\n" +
+                    "      \"content\": \"" + message + "\"\n" +
+                    "    }\n" +
+                    "  ]\n" +
+                    "}";
+
+            con.setDoOutput(true);
+            OutputStreamWriter writer = new OutputStreamWriter(con.getOutputStream());
+            writer.write(body);
+            writer.flush();
+            writer.close();
+
+            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+
+            String inputLine;
+            StringBuilder response = new StringBuilder();
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            in.close();
+
+            // Parse the response JSON to extract the assistant's reply
+            JSONObject jsonObject = new JSONObject(response.toString());
+            JSONArray choicesArray = jsonObject.getJSONArray("choices");
+            if (choicesArray != null && choicesArray.length() > 0) {
+                JSONObject choiceObject = choicesArray.getJSONObject(0);
+                System.out.println(choiceObject.getJSONObject("message").getString("content"));
+                String content = choiceObject.getJSONObject("message").getString("content");
+                System.out.println("*******************************************");
+
+
+                String[] rows = content.split("\n");
+                String[][] foodDietData = new String[rows.length][1]; // Only one column
+
+                for (int i = 0; i < rows.length; i++) {
+                    foodDietData[i][0] = rows[i]; // Store the entire line in the first (and only) column
+                }
+
+
+
+                //léna lambda expression fel test function  for pdf generating ofc fi thread 2 threads tawa 3andi maa aiModel Call
+                System.out.println("now going to generate a pdf ");
+                Thread thread = new Thread(() -> {
+                    ConvertingIntoHtmlPdf2(foodDietData,randomInt2);
+                });
+                thread.start();
+
+                return;
+            }
+
+            throw new RuntimeException("Failed to extract response content.");
+
+        } catch (IOException | JSONException e) {
+            throw new RuntimeException(e);
+        }
+
+
+    }
 
     void chatGPT(float ObjectiveWeight , float ActualWeight , float Height,int IdCoach) {
         String message ="I want you to act like a Diet Food Model i don't need you to be specific just give me a diet of food based on Objective weight & Actual Weight and the height is does not need to be correct So i will give first thing thee Objective Weight :" + ObjectiveWeight+ " and Actual Weight :"+ ActualWeight+ " and Height is :" +Height+ "I will put the response into a pdf so i need it to be structured and to have at first this sentence : Hello! We are GymPlus Diet Making Model and we are happy to tell you that your plan is ready after this i will put the content that will be the diet and in the footer i want to put :We hope the Diet helped you to achieve your goal. note that the diet got to have only (Breakfast,Lunch,Dinner,Snacks)and to be returned on a table specified with quantity with grams";
@@ -675,6 +757,65 @@ public void danger(){
             System.out.println(e.getMessage());
         }
     }
+
+
+    void ConvertingIntoHtmlPdf2(String[][] foodDietData, int IdCoach) {
+        try {
+            File file = new File("src/assets/html/Workout.html");
+            String content = new String(java.nio.file.Files.readAllBytes(file.toPath()));
+            String foodDietTable = generateFoodDietTable(foodDietData);
+            content = content.replace("{E3}", foodDietTable);
+
+            File newFile = new File("src/assets/html/Workout" + IdCoach + ".html");
+            FileWriter writer = new FileWriter(newFile);
+            writer.write(content);
+            writer.close();
+
+            ConverterProperties properties = new ConverterProperties();
+            properties.setBaseUri("src/assets/html/");
+            properties.setCharset("UTF-8");
+            properties.setImmediateFlush(true);
+            properties.setCreateAcroForm(true);
+
+            HtmlConverter.convertToPdf(new FileInputStream("src/assets/html/Workout" + IdCoach + ".html"), new FileOutputStream("src/assets/pdf/Workout" + IdCoach + ".pdf"), properties);
+
+            String mail = "gymplus-noreply@grandelation.com";
+            String password = "yzDvS_UoSL7b";
+            String to = GlobalVar.getUser().getEmail();
+            String subject = "Your Workout Plan";
+            //the body will be "index.html" inside src/assets/html
+            String body = "Here is your Workout";
+            String host = "mail.grandelation.com";
+
+            Properties props = new Properties();
+            props.put("mail.smtp.host", host);
+            props.put("mail.debug", "true");
+            props.put("mail.smtp.auth", "true");
+            props.put("mail.smtp.ssl.enable", "true");
+            props.put("mail.smtp.port", "465");
+
+            Session session = Session.getInstance(props, null);
+            MimeMessage msg = new MimeMessage(session);
+            msg.setFrom(mail);
+            msg.setRecipients(jakarta.mail.Message.RecipientType.TO, to);
+            msg.setSubject(subject);
+            msg.setSentDate(new java.util.Date());
+            MimeBodyPart mimeBodyPart = new MimeBodyPart();
+            mimeBodyPart.setContent(body, "text/html");
+            Multipart multipart = new MimeMultipart();
+            multipart.addBodyPart(mimeBodyPart);
+            MimeBodyPart attachmentBodyPart = new MimeBodyPart();
+            attachmentBodyPart.attachFile("src/assets/pdf/Workout" + IdCoach + ".pdf");
+            multipart.addBodyPart(attachmentBodyPart);
+            msg.setContent(multipart);
+
+            Transport.send(msg, mail, password);
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
 
   /*  public String insertLineBreaks(String text, int maxLineWidth) {
         String[] words = text.split(" ");

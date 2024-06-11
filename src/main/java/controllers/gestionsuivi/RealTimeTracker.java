@@ -245,7 +245,7 @@ private Text caloriesTextField;
 
     @FXML
     private Text totalCalsFields;
-    private static final int THRESHOLD = 1700; // Set this to a suitable value for your sensor
+    private static final int THRESHOLD = 1800; // Set this to a suitable value for your sensor
     private static long lastBeatTime = 0;
 
     private static int heartRateSum = 0;
@@ -262,6 +262,10 @@ private Text caloriesTextField;
     public static double calculateCaloriesBurned(int heartRate, double weight, int age, double timeInMinutes) {
         return (timeInMinutes * (0.6309 * heartRate + 0.1988 * weight + 0.2017 * age - 55.0969)) / 4.184;
     }
+
+
+
+
 
   private int count = 0;
 
@@ -437,8 +441,8 @@ private Text caloriesTextField;
                                     if (!data.trim().isEmpty()) {
                                         double ecgData = Double.parseDouble(data.trim());
                                         series.getData().add(new XYChart.Data<>(String.valueOf(System.currentTimeMillis()), ecgData));
-                                        double weight = 80; // in kg
-                                        int age = 19; // in years
+                                        double weight = 70; // in kg
+                                        int age = 16; // in years
                                         hearRateSound.setText(String.valueOf(ecgData));
 
                                         if (ecgData > THRESHOLD) {
@@ -446,8 +450,8 @@ private Text caloriesTextField;
                                             int beatInterval = (int) (currentTime - lastBeatTime);
                                             lastBeatTime = currentTime;
                                             if (beatInterval != 0) {
-                                                int beatsPerMinute = 60000 / beatInterval;
-                                                if (beatsPerMinute >= 47 && beatsPerMinute <= 127) {
+                                                int beatsPerMinute = 20000 / beatInterval;
+                                                if (beatsPerMinute >= 55 && beatsPerMinute <= 100) {
                                                     System.out.println("Heart rate: " + beatsPerMinute + " bpm");
                                                     BpmTextField.setText(String.valueOf(beatsPerMinute));
                                                     series2.getData().add(new XYChart.Data<>(String.valueOf(System.currentTimeMillis()), beatsPerMinute));
@@ -457,13 +461,13 @@ private Text caloriesTextField;
                                                 }
                                             }
                                         }
-                                        if (count == 15) { // If a minute has passed
-                                            count = 35 ;
-                                            heartRateSum += 1410;
+                                        if (count == 22) { // If a minute has passed
+                                            count = 23;
+                                          //  heartRateSum += 1410;
                                            averageHeartRate = heartRateSum / count;
                                             System.out.println("Average heart rate over the last minute: " + averageHeartRate + " bpm");
                                             AverageBpmField.setText(String.valueOf(averageHeartRate));
-                                            timeInMinutes++;
+                                            timeInMinutes = timeInMinutes + 0.2 ;
                                              caloriesBurned = calculateCaloriesBurned(averageHeartRate, weight, age, timeInMinutes);
                                             System.out.println("Estimated calories burned: " + caloriesBurned);
                                             DecimalFormat decimalFormat = new DecimalFormat("00.00");
@@ -475,8 +479,8 @@ private Text caloriesTextField;
 
 
                                             totalCalsFields.setText(decimalFormat.format(sumCalories));
-                                            timeInMinutes= 0.1;
-                                            caloriesBurned = 0;
+                                            timeInMinutes= 0.2;
+                                            caloriesBurned = 10;
                                             count = 0;
                                             averageHeartRate= 0;
                                             heartRateSum = 20;

@@ -62,7 +62,7 @@
                </effect>
             </Slider>
             <Text fx:id="labelTaille" fill="WHITE" layoutX="257.0" layoutY="90.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Précisez votre Taille" />
-            <TextArea fx:id="taAlergie" layoutX="50.0" layoutY="240.0" prefHeight="53.0" prefWidth="208.0" promptText="Alergie">
+            <TextArea fx:id="taAlergie" layoutX="50.0" layoutY="240.0" prefHeight="53.0" prefWidth="208.0" promptText="Description">
                <effect>
                   <DropShadow />
                </effect></TextArea>

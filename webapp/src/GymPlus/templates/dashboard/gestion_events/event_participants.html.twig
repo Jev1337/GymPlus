@@ -68,14 +68,14 @@
             </tr>
                                 </thead>
                                 <tbody>
-           {% for user in participantsUsers %}
+           {% for userp in participantsUsers %}
             <tr>
-                <td><strong class="text-black">{{ app.user.id }}</strong></td>
-                <td>{{ app.user.firstname }}</td>
-                <td>{{ app.user.lastname }}</td>
-                <td>{{ app.user.username }}</td>
+                <td><strong class="text-black">{{ userp.id }}</strong></td>
+                <td>{{ userp.firstname }}</td>
+                <td>{{ userp.lastname }}</td>
+                <td>{{ userp.username }}</td>
                 <td>
-                    <a href="{{ path('eventParticipant_kick', {'userId': user.id, 'eventDetailsId': event.id}) }}" class="btn btn-danger">Kick</a>
+                    <a href="{{ path('eventParticipant_kick', {'userId': userp.id, 'eventDetailsId': event.id}) }}" class="btn btn-danger">Kick</a>
                 </td>
             </tr>
             {% else %}

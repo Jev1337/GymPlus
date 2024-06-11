@@ -416,8 +416,9 @@ public void danger(){
                         if (Objects.equals(typeObj, "Version ++")) {
 
                             Thread thread = new Thread(() -> {
-                                chatGPT(poidsObjectif, poidsActuel, taille1,coachId);
                                 chatGptExercercice(alergie,randomInt2);
+                                chatGPT(poidsObjectif, poidsActuel, taille1,coachId);
+
                             });
                             thread.start();
                         }

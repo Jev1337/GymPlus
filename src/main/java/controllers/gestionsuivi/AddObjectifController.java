@@ -412,10 +412,14 @@ public void danger(){
                         querry.add(obj);
                         addingNotif();
 
-                        Thread thread = new Thread(() -> {
-                            chatGPT(poidsObjectif, poidsActuel, taille1,coachId);
-                        });
-                        thread.start();
+
+                        if (lsTypeObjectif.getSelectionModel().getSelectedItem().equals("Version++")) {
+                            Thread thread = new Thread(() -> {
+                                chatGPT(poidsObjectif, poidsActuel, taille1,coachId);
+                            });
+                            thread.start();
+                        }
+
 
                         if (objectifController != null) {
                             objectifController.refreshNodesListeItems();
